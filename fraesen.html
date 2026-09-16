@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="16.09.2026 20:59 (cb2ab31e)";</script>
+<script>window.__DZ_STAND="16.09.2026 22:07 (4c13fd5b)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4121,7 +4121,7 @@ var F_MASKE = {
   modellSchlichten:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','winkelMin','winkel','#Mass','rautiefe','tolBahn','strategie','#!Sicherheit','sc','sc2'],
                feldText:{f:'F Vorschub Schlichten', fTief:'FZ Vorschub Zustellen', tiefe:'Z1 unterste Höhe (Bereich)',
                  q203:'Z0 oberste Höhe (Bereich)', strategie:'Zeilenrichtung', sc2:'SC2 Rückzug über Z0'},
-               feldWahl:{strategie:[['0','Zeilen in X'],['1','Zeilen in Y']]},
+               feldWahl:{strategie:[['2','automatisch (quer zum Gefälle)'],['0','Zeilen in X'],['1','Zeilen in Y']]},
                ohneQ:['t','s','f','fTief','kuehl','q203','tiefe','winkelMin','winkel','rautiefe','tolBahn','strategie','sc','sc2']}
 };
 // Softkey-Gruppen wie an der TNC (CYCL DEF -> Bohren/Gewinde, Taschen/
@@ -4623,7 +4623,7 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
       // der Rautiefe. Grenzwinkel 45 Grad: steiler wird eine Zeilenbahn
       // ungenau, dort gehoert die Z-konstante Bahn hin (noch nicht gebaut).
       Object.assign(s, {q203:+k.z1 || 0, tiefe:-Math.max(1, fRund((+k.z1 || 0) - (+k.z0 || 0))),
-        rautiefe:0.01, tolBahn:0.005, winkelMin:5, winkel:45, strategie:0,
+        rautiefe:0.01, tolBahn:0.005, winkelMin:5, winkel:45, strategie:2,
         f:t.f || 600, fTief:fRund((t.f || 600) * 0.3), ausgabe:'einzel'});
     }
     if(art === 'planfraesen'){
@@ -4880,7 +4880,7 @@ function fBahnSchritt(s, tool, prog, punkte){
   const nein = (g) => ({ok:false, grund:g, bahn:[], warn:warn});
   if(F_ZYKLEN[art] && F_ZYKLEN[art].sl) return fBahnSL(s, tool, prog);                   // Paket D3 (vor der Kontur-Weiche: die SL-Familien tragen kontur:true)
   if(F_ZYKLEN[art] && F_ZYKLEN[art].kontur) return fBahnKontur(s, tool, prog);           // Paket C3
-  if(F_ZYKLEN[art] && F_ZYKLEN[art].schlicht) return fBahnSchlichten(s, tool, prog);     // Stufe 4: ueber die Rautiefe, die Bahn folgt der Flaeche
+  if(F_ZYKLEN[art] && F_ZYKLEN[art].schlicht) return fBahnSchlichtenKomplett(s, tool, prog);  // Stufe 4 + S2/S3: flach ueber die Zeilen, steil Z-konstant
   if(F_ZYKLEN[art] && F_ZYKLEN[art].modell) return fBahnModell(s, tool, prog);          // Stufe 3 Teil B: gegen die Sollform, keine Form mit Massen
   if(F_ZYKLEN[art] && F_ZYKLEN[art].fraes && !F_ZYKLEN[art].gewf && !F_ZYKLEN[art].modell) return fBahnFormen(s, tool, prog, punkte);   // Paket C2 (Paket E: Gewindefraesen sind keine Form)
   if(art === 'bohrfraesen' || art === 'einlippen') return fBahnSimSonder(s, tool, prog, punkte);   // Paket D3: Helix bzw. Drehzahlfolge
@@ -7417,7 +7417,7 @@ function fPlanFlaechen(prog, A, F){
   if(F && bef.imBand > 0 && wKugel){
     schritte.push({art:'modellSchlichten', t:wKugel.nr, werte:{
       q203:fRund(B ? B.z1 : (+k.z1 || 0)), tiefe:fRund(zTief - (B ? B.z1 : 0)),
-      winkelMin:wMin, winkel:wMax, rautiefe:0.01, tolBahn:0.005, strategie:0, ausgabe:'einzel'},
+      winkelMin:wMin, winkel:wMax, rautiefe:0.01, tolBahn:0.005, strategie:2, ausgabe:'einzel'},
       text:'Schraegen schlichten (' + wMin + ' bis ' + wMax + ' Grad, ' + anteil + ' % der Flaeche), Kugelfraeser ' + wKugel.nr + ' (⌀' + wKugel.d + ')'});
   } else if(F && bef.imBand > 0) hinweise.push('Im Band ' + wMin + ' bis ' + wMax + ' Grad liegen ' + anteil + ' % der Flaeche, aber die Tabelle hat keinen Kugelfraeser — nicht geschlichtet.' + holWeg);
   else if(F) hinweise.push('Keine Schraege im Band ' + wMin + ' bis ' + wMax + ' Grad (' + Math.round(bef.zuFlach / (bef.zellen || 1) * 100) + ' % flacher, ' + Math.round(bef.zuSteil / (bef.zellen || 1) * 100) + ' % steiler) — nichts zu schlichten.');
@@ -8313,6 +8313,45 @@ function fNeigFeld(F){
   }
   return N;
 }
+// WELCHE ZEILENRICHTUNG? [16.09.2026 spaet, Daniels Befund an der Simulation:
+// "du zerspanst von oben nach unten ... das ist ein Stechfraesen. Man macht
+// eine Zustellung in der Z und faehrt dann in XY-Bewegungen."]
+// Eine Zeile soll QUER zum Gefaelle laufen. Dann bleibt Z auf ihr nahezu
+// konstant, und die Kugel schneidet mit der FLANKE statt mit der Spitze, wo
+// die Schnittgeschwindigkeit null ist. Laeuft sie MIT dem Gefaelle, faehrt
+// das Werkzeug die Schraege hinunter und wieder hinauf.
+// GEMESSEN an der 45-Grad-Rampe des Pruefabschnitts 20: mit dem Gefaelle
+// 3611 mm Weg in 1197 Saetzen, jeder mit Z-Aenderung; quer dazu 2653 mm in
+// 67 Saetzen, alle Z-konstant. Dieselbe Flaeche, dieselbe Rautiefe.
+// Gemessen wird nur ueber die Zellen, die DIESE Bahn wirklich bearbeitet -
+// das Gefaelle der ungenutzten Bereiche geht niemanden etwas an. Die
+// Nachbarschaftsrechnung ist dieselbe wie in fNeigFeld, nur behalten wir
+// hier die beiden Anteile statt ihres Betrags.
+function fZeilenAchse(F, gut){
+  const r = F.raster, nx = F.nx, ny = F.ny;
+  const gef = (c, cA, cB, w) => {
+    const a = F.quelle[cA], b = F.quelle[cB];
+    if(a && b) return (F.h[cB] - F.h[cA]) / w;
+    if(a) return (F.h[c] - F.h[cA]) / (w / 2);
+    if(b) return (F.h[cB] - F.h[c]) / (w / 2);
+    return 0;
+  };
+  let sx = 0, sy = 0, n = 0;
+  for(let j = 0; j < ny; j++) for(let q = 0; q < nx; q++){
+    const c = j * nx + q;
+    if(!gut[c]) continue;
+    const q0 = Math.max(0, q - 1), q1 = Math.min(nx - 1, q + 1);
+    const j0 = Math.max(0, j - 1), j1 = Math.min(ny - 1, j + 1);
+    sx += Math.abs(gef(c, j * nx + q0, j * nx + q1, (q1 - q0) * r));
+    sy += Math.abs(gef(c, j0 * nx + q, j1 * nx + q, (j1 - j0) * r));
+    n++;
+  }
+  // quer = Zeilen in Y. Faellt die Flaeche vorwiegend in X, gehoeren die
+  // Zeilen nach Y. Bei Gleichstand bleibt es bei Zeilen in X (sx > sy ist
+  // echt groesser) - eine Kugelkalotte hat keine Vorzugsrichtung, und so
+  // bleibt die Wahl bei symmetrischen Flaechen wiederholbar.
+  return {sx:sx, sy:sy, n:n, quer:(sx > sy)};
+}
 // Maske um k Zellen aufweiten, getrennt in X und Y — das genuegt: eine
 // Verbindungsfahrt laeuft zwischen zwei Schlichtzellen, also innerhalb des
 // aufgeweiteten Gebiets.
@@ -8376,6 +8415,82 @@ function fBallMax(BF, F, x0, y0, x1, y1){
   return isFinite(m) ? m : Infinity;
 }
 // Die Bahn: Zeilen ueber die Sollform, die Hoehe folgt der Kugel-Versatzflaeche.
+// ===================================================================
+// S2: DIE Z-KONSTANTE SCHLICHTBAHN (16.09.2026 spaet)
+// -------------------------------------------------------------------
+// Steile Flanken gehoerten bisher NIEMANDEM: die Zeilenbahn meldete sie
+// nur ("gehoeren der Z-konstanten Bahn — noch nicht gebaut"). hyperMILL
+// nennt die beiden Haelften Profilschlichten (flach) und
+// Ebenenschlichten (steil) und schaltet zwischen ihnen ueber die
+// "neigungsabhaengige Bearbeitung" um.
+//
+// WARUM DER GRENZWINKEL 45 GRAD RICHTIG IST, und das ist keine Meinung:
+// die Kugel darf laengs der Flaeche hoechstens s = wurzel(8 r Rz) weit
+// versetzt werden. Waagerecht gemessen ist das s * cos(alpha), senkrecht
+// gemessen s * sin(alpha). Bei 45 Grad sind beide gleich; darunter ist
+// die Zeilenbahn die feinere, darueber die Z-konstante.
+// -------------------------------------------------------------------
+// HOEHENLINIE eines Feldes auf der Hoehe z (Marching Squares ueber die
+// ZELLENMITTEN). Gerechnet wird nur ueber Quadrate, deren vier Ecken alle
+// gueltig und in der Maske sind - an einer halb bekannten Ecke laesst sich
+// nicht ehrlich interpolieren, und eine geratene Bahn schneidet echtes
+// Material. Die Linie bricht dort ab, das ist die sichere Seite.
+function fHoehenlinie(B, nx, ny, x0, y0, r, z, gut){
+  // Kantennummern: 0 unten, 1 rechts, 2 oben, 3 links.
+  const FALL = [[], [[3,0]], [[0,1]], [[3,1]], [[1,2]], [[3,0],[1,2]], [[0,2]], [[3,2]],
+                [[2,3]], [[2,0]], [[0,1],[2,3]], [[2,1]], [[1,3]], [[1,0]], [[0,3]], []];
+  const seg = [];
+  for(let j = 0; j + 1 < ny; j++) for(let q = 0; q + 1 < nx; q++){
+    const c00 = j * nx + q, c10 = c00 + 1, c01 = c00 + nx, c11 = c01 + 1;
+    if(gut && (!gut[c00] || !gut[c10] || !gut[c01] || !gut[c11])) continue;
+    const v00 = B[c00], v10 = B[c10], v01 = B[c01], v11 = B[c11];
+    if(!isFinite(v00) || !isFinite(v10) || !isFinite(v01) || !isFinite(v11)) continue;
+    const idx = (v00 >= z ? 1 : 0) | (v10 >= z ? 2 : 0) | (v11 >= z ? 4 : 0) | (v01 >= z ? 8 : 0);
+    const F2 = FALL[idx]; if(!F2.length) continue;
+    const X0 = x0 + (q + 0.5) * r, Y0 = y0 + (j + 0.5) * r, X1 = X0 + r, Y1 = Y0 + r;
+    const misch = (va, vb, ax, ay, bx, by) => {
+      const d = vb - va, t = (Math.abs(d) < 1e-12) ? 0.5 : (z - va) / d;
+      const u = Math.max(0, Math.min(1, t));
+      return [ax + (bx - ax) * u, ay + (by - ay) * u];
+    };
+    const kante = (e) => e === 0 ? misch(v00, v10, X0, Y0, X1, Y0)
+                       : e === 1 ? misch(v10, v11, X1, Y0, X1, Y1)
+                       : e === 2 ? misch(v11, v01, X1, Y1, X0, Y1)
+                                 : misch(v01, v00, X0, Y1, X0, Y0);
+    F2.forEach(pp => seg.push([kante(pp[0]), kante(pp[1])]));
+  }
+  return fZugKette(seg, r / 64);
+}
+// Einzelne Segmente zu Linienzuegen verketten. Zwei Enden gelten als
+// derselbe Punkt, wenn sie im selben Feinraster liegen - die Punkte kommen
+// aus derselben Interpolation auf derselben Kante und sind deshalb
+// bitgenau gleich oder gar nicht benachbart.
+function fZugKette(seg, eps){
+  if(!seg.length) return [];
+  const kk = (p) => Math.round(p[0] / eps) + ':' + Math.round(p[1] / eps);
+  const karte = new Map();
+  seg.forEach((sg, i) => [0, 1].forEach(e => {
+    const k = kk(sg[e]); if(!karte.has(k)) karte.set(k, []); karte.get(k).push([i, e]);
+  }));
+  const weg = new Uint8Array(seg.length), zuege = [];
+  const weiter = (zug) => {
+    for(;;){
+      const ende = zug[zug.length - 1];
+      const kand = (karte.get(kk(ende)) || []).filter(e => !weg[e[0]]);
+      if(!kand.length) return;
+      const i = kand[0][0], e = kand[0][1];
+      weg[i] = 1; zug.push(seg[i][1 - e]);
+    }
+  };
+  for(let i = 0; i < seg.length; i++){
+    if(weg[i]) continue;
+    weg[i] = 1;
+    const zug = [seg[i][0], seg[i][1]];
+    weiter(zug); zug.reverse(); weiter(zug);
+    if(zug.length >= 2) zuege.push(zug);
+  }
+  return zuege;
+}
 function fBahnSchlichten(s, tool, prog){
   const warn = [];
   const nein = (g) => ({ok:false, grund:g, bahn:[], warn:warn});
@@ -8401,7 +8516,11 @@ function fBahnSchlichten(s, tool, prog){
   const sc = +s.sc || 0; if(!(sc > 0)) return nein('Sicherheitsabstand fehlt');
   const sc2 = Math.max(+s.sc2 || 0, sc);
   const f = +s.f || 0; if(!(f > 0)) return nein('Vorschub fehlt');
-  const quer = Math.round(+s.strategie || 0) === 1;        // 0 = Zeilen in X, 1 = in Y
+  // 0 = Zeilen in X, 1 = Zeilen in Y, 2 = automatisch (quer zum Gefaelle).
+  // Die Wahl faellt erst, wenn feststeht, WELCHE Zellen bearbeitet werden —
+  // deshalb hier nur der Modus, der Rest unten hinter der Zellenauswahl.
+  const stratW = Math.round(+s.strategie || 0);
+  let quer = (stratW === 1), achse = null;
 
   // DER STAND NACH DEM SCHRUPPEN, wenn der Planer ihn beigelegt hat. Ohne
   // ihn rechnet die Bahn wie bisher gegen die Sollform allein.
@@ -8448,6 +8567,12 @@ function fBahnSchlichten(s, tool, prog){
     ? 'in Z1..Z0 liegt keine Flaeche im Winkelband ' + fRund(grenzU) + ' bis ' + fRund(grenz) + ' Grad ('
       + nSteil + ' Rasterstellen sind steiler, ' + nFlach + ' flacher) — Band weiter stellen oder Z-konstant schlichten'
     : 'in Z1..Z0 liegt keine Flaeche der Sollform'));
+  // JETZT die Zeilenrichtung, wenn sie automatisch gewaehlt wird: quer zum
+  // Gefaelle der wirklich bearbeiteten Zellen (s. fZeilenAchse).
+  if(stratW === 2){
+    achse = fZeilenAchse(F, gut);
+    quer = achse.quer;
+  }
   // Bahnabstand aus der Rautiefe: h = s²/(8r) beim Kugelfraeser, also
   // s = wurzel(8 r h) LAENGS der Flaeche. Waagerecht gemessen ist der
   // Abstand auf einer Schraege um cos alpha kleiner — gerechnet wird mit der
@@ -8530,9 +8655,17 @@ function fBahnSchlichten(s, tool, prog){
     + ' mm aus Rautiefe ' + fRund(rz) + ' und Kugelradius ' + fRund(rk)
     + ' (erlaubt waeren ' + fRund(schrittMm) + ' mm bei der steilsten bearbeiteten Stelle '
     + fRund(aMax) + ' Grad; gefahrene Rautiefe ' + fRund(istRz) + ' mm).');
+  // Die Zeilenrichtung ist keine Nebensache — sie entscheidet, ob die Kugel
+  // mit der Flanke oder mit der Spitze schneidet. Deshalb steht sie im
+  // Klartext im Bericht, samt dem gemessenen Gefaelle.
+  warn.push('Zeilen in ' + (quer ? 'Y' : 'X') + (achse
+    ? ' — automatisch gewaehlt, quer zum Gefaelle (gemessen ueber ' + achse.n
+      + ' Rasterstellen: Gefaelle in X ' + fRund(achse.sx / Math.max(1, achse.n))
+      + ', in Y ' + fRund(achse.sy / Math.max(1, achse.n)) + ' je Zelle).'
+    : ' — von Hand gewaehlt. Quer zum Gefaelle bleibt Z auf der Zeile nahezu konstant und die Kugel schneidet mit der Flanke; laengs dazu faehrt sie die Schraege hinauf und hinunter.'));
   if(istRz > rz + 1e-9) warn.push('Die Rautiefe ' + fRund(rz) + ' mm ist mit diesem Raster NICHT zu halten: der Bahnabstand kann nur ein Vielfaches der Rasterweite ' + fRund(r) + ' mm sein, gefahren wird ' + fRund(istMm) + ' mm und damit ' + fRund(istRz) + ' mm Rautiefe. Kleineres Modell-Raster waehlen oder groesseren Kugelradius.');
   if(nSteil) warn.push(nSteil + ' Rasterstelle(n) sind steiler als der Grenzwinkel ' + fRund(grenz)
-    + ' Grad und bleiben hier UNBEARBEITET — sie gehoeren der Z-konstanten Bahn (noch nicht gebaut).');
+    + ' Grad — sie bekommen im selben Schritt die Z-konstante Bahn (seit 16.09.2026).');
   if(nFlach) warn.push(nFlach + ' Rasterstelle(n) sind flacher als ' + fRund(grenzU)
     + ' Grad und bleiben hier UNBEARBEITET — waagerechte Flaechen gehoeren dem Schaft- oder Messerkopf, nicht der Kugel.');
   if(nSteht) warn.push(nSteht + ' Rasterstelle(n) (' + fRund(nSteht * r * r) + ' mm2) sind AUSGELASSEN: dort steht nach dem Schruppen noch bis '
@@ -8546,6 +8679,196 @@ function fBahnSchlichten(s, tool, prog){
     schritt:fRund(istMm), soll:fRund(schrittMm), rz:fRund(istRz), spruenge:spruenge,
     steil:nSteil, flach:nFlach, steht:nSteht, stehtMax:fRund(stehtMax), mitStand:!!SG,
     aMax:fRund(aMax), ball:BF, neig:NF, gut:gut};
+}
+
+// ===================================================================
+// S2: Z-KONSTANT SCHLICHTEN — die Bahn fuer die STEILEN Flanken.
+// -------------------------------------------------------------------
+// Je Z-Ebene die Hoehenlinie der Kugel-Versatzflaeche, dann XY. Genau
+// das, was Daniel an der Simulation vermisst hat: "man macht eine
+// Zustellung in der Z und faehrt dann in XY-Bewegungen".
+//
+// DER Z-ABSTAND aus der Rautiefe: laengs der Flaeche darf die Kugel
+// s = wurzel(8 r Rz) versetzt werden; senkrecht gemessen sind das
+// s * sin(alpha). Gerechnet wird mit der FLACHSTEN bearbeiteten Stelle —
+// dort streckt sich ein Z-Schritt am weitesten ueber die Flaeche, dort
+// entsteht also die groesste Rautiefe. (Die Zeilenbahn rechnet
+// spiegelbildlich mit der steilsten Stelle und cos.)
+// -------------------------------------------------------------------
+function fBahnSchlichtenZ(s, tool, prog, vorgabe){
+  const warn = [];
+  const nein = (g) => ({ok:false, grund:g, bahn:[], warn:warn});
+  const F = F_SOLLFELD;
+  if(!F) return nein('keine Sollform geladen — im STEP-Fenster ein Modell laden und "Sollform ans Programm" druecken');
+  const rt = (tool && +tool.d > 0) ? +tool.d / 2 : 0;
+  const rk = (tool && +tool.r2 > 0) ? +tool.r2 : 0;
+  if(!(rt > 0)) return nein('Werkzeug-Durchmesser fehlt (Werkzeugtabelle)');
+  if(!(rk > 0)) return nein('T' + s.t + ' hat keinen Eckenradius R2 — die Rautiefe gilt fuer den KUGELFRAESER; in der Werkzeugtabelle R2 eintragen');
+  const rz = +s.rautiefe || 0;
+  if(!(rz > 0)) return nein('Rautiefe fehlt — sie ist das Mass dieser Bahn');
+  const tol = (+s.tolBahn > 0) ? +s.tolBahn : 0.005;
+  // Das Band ist hier das OBERE: alles STEILER als der Grenzwinkel.
+  const grenz = (+s.winkel > 0) ? Math.min(89, +s.winkel) : 45;
+  const zOben = +s.q203 || 0;
+  const tiefe = +s.tiefe || 0; if(!(tiefe < 0)) return nein('Tiefe fehlt');
+  const zTief = fRund(zOben + tiefe);
+  const sc = +s.sc || 0; if(!(sc > 0)) return nein('Sicherheitsabstand fehlt');
+  const sc2 = Math.max(+s.sc2 || 0, sc);
+  const f = +s.f || 0; if(!(f > 0)) return nein('Vorschub fehlt');
+  const SG = (F.standG && F.standG.stand && F.standG.nx > 0) ? F.standG : null;
+  const sTol = (+F.standTol > 0) ? +F.standTol : rk;
+  const NF = (vorgabe && vorgabe.neig) ? vorgabe.neig : fNeigFeld(F);
+  const nx = F.nx, ny = F.ny, r = F.raster;
+  // Zellen dieser Bahn: STEILER als der Grenzwinkel, Sollhoehe im Bereich,
+  // und nach dem Schruppen darf dort nicht mehr stehen als erklaerbar.
+  const gut = new Uint8Array(nx * ny);
+  let nGut = 0, aMin = 90, nSteht = 0, stehtMax = 0;
+  for(let q = 0; q < nx * ny; q++){
+    if(!F.quelle[q]) continue;
+    const h = F.h[q];
+    if(h > zOben + 1e-6 || h < zTief - 1e-6) continue;
+    // ECHT STEILER ALS DER GRENZWINKEL. Die Toleranz liegt hier auf DERSELBEN
+    // Seite wie bei der Zeilenbahn (die nimmt alles bis grenz + Toleranz) —
+    // sonst gehoert eine Flaeche von GENAU 45 Grad beiden Baendern, und sie
+    // wird zweimal bearbeitet. Gefunden hat das der Haken DZ15: dessen
+    // Rampe steht mit Absicht genau auf dem Grenzwinkel, und unser Programm
+    // wuchs von 75 auf 105 Saetze. Am Grenzwinkel gewinnt die Zeilenbahn.
+    if(NF[q] <= grenz + F_WINKEL_TOL) continue;
+    if(SG){
+      const st = fStandAt(SG, F.x0 + ((q % nx) + 0.5) * r, F.y0 + (Math.floor(q / nx) + 0.5) * r);
+      if(st != null && st > h + sTol + 1e-6){ nSteht++; if(st - h > stehtMax) stehtMax = st - h; continue; }
+    }
+    gut[q] = 1; nGut++;
+    if(NF[q] < aMin) aMin = NF[q];
+  }
+  if(!nGut) return nein(nSteht
+    ? 'ueber dem Grenzwinkel liegt Flaeche, aber dort steht nach dem Schruppen noch mehr Material, als Zustellung und Aufmass erklaeren (bis '
+      + fRund(stehtMax) + ' mm) — erst mit einem kleineren Werkzeug schruppen'
+    : 'in Z1..Z0 liegt keine Flaeche steiler als ' + fRund(grenz) + ' Grad — fuer diese Flaeche ist die Zeilenbahn zustaendig');
+  // Die Versatzflaeche, aufgeweitet: die Hoehenlinie braucht auch die
+  // Nachbarzellen der Randquadrate.
+  const BF = (vorgabe && vorgabe.ball) ? vorgabe.ball
+           : fBallFeld(F, rk, fMaskeWeiten(gut, nx, ny, Math.max(2, Math.ceil(rk / r) + 2)));
+  const sFlaeche = Math.sqrt(8 * rk * rz);
+  const dzSoll = sFlaeche * Math.sin(aMin * Math.PI / 180);
+  if(!(dzSoll > 1e-6)) return nein('der Z-Abstand aus der Rautiefe wird null — Grenzwinkel oder Rautiefe pruefen');
+  // Der Bereich, in dem Hoehenlinien liegen koennen: die Kugelmitten ueber
+  // den bearbeiteten Zellen.
+  let bMax = -Infinity, bMin = Infinity;
+  for(let q = 0; q < nx * ny; q++) if(gut[q] && isFinite(BF[q])){ if(BF[q] > bMax) bMax = BF[q]; if(BF[q] < bMin) bMin = BF[q]; }
+  if(!isFinite(bMax) || !isFinite(bMin)) return nein('die Versatzflaeche der Kugel ist ueber diesen Zellen leer');
+  // GANZZAHLIG aufteilen und den Abstand dabei VERKLEINERN, nie vergroessern:
+  // ein zu grosser Schritt heisst mehr Rautiefe als bestellt.
+  const nEben = Math.max(1, Math.ceil((bMax - bMin) / dzSoll));
+  const dz = (bMax - bMin) / nEben;
+  const B = [], sicher = fRund(zOben + sc2);
+  const eil = (o) => B.push(Object.assign({a:'eil'}, o));
+  const vor = (o) => B.push(Object.assign({a:'vor'}, o));
+  let zuege = 0, punkte = 0, roh = 0, letzt = null, ebenen = 0;
+  // DIE HOEHENLINIE LIEGT EINEN HAUCH ZU TIEF, und das ist keine Schlamperei,
+  // sondern die Natur der Sache: zwischen zwei Zellenmitten wird LINEAR
+  // interpoliert, die Versatzflaeche der Kugel ist dort aber gewoelbt und
+  // liegt HOEHER. Der Bahnpunkt kaeme damit bis zu einer Pfeilhoehe zu tief -
+  // gemessen 4 Mikrometer bei Raster 0,3 und Kugel 4. Deshalb faehrt die
+  // Ebene um diesen Betrag HOEHER: lieber ein paar Mikrometer stehen lassen
+  // als sie zu viel wegnehmen. Der Betrag ist die Pfeilhoehe der Kugel ueber
+  // einer Zellenweite, verdoppelt - denn auch das Feld selbst ist schon ein
+  // diskretes Maximum. Der Haken "keine Kugelmitte naeher als der
+  // Kugelradius" ist der Beweis, nicht diese Rechnung.
+  const epsI = r * r / (3 * rk);
+  for(let e = 0; e <= nEben; e++){
+    const zc = bMax - e * dz;                      // Hoehe der KUGELMITTE
+    const zTip = fRund(zc + epsI - rk);            // Bahnpunkt = Kugelunterkante
+    const linien = fHoehenlinie(BF, nx, ny, F.x0, F.y0, r, zc, gut);
+    if(!linien.length) continue;
+    ebenen++;
+    linien.forEach(L => {
+      if(L.length < 2) return;
+      // ZICKZACK: die naechste Linie dort anfangen, wo die letzte aufgehoert
+      // hat. Sonst faehrt das Werkzeug nach jeder Ebene ueber das ganze Teil
+      // zurueck und muss dafuer auf die sichere Hoehe - gemessen 49
+      // Hochfahrten bei 46 Ebenen. hyperMILL nennt dieselbe Sache ZickZack.
+      if(letzt && L.length > 1){
+        const dA = Math.hypot(L[0][0] - letzt[0], L[0][1] - letzt[1]);
+        const dE = Math.hypot(L[L.length - 1][0] - letzt[0], L[L.length - 1][1] - letzt[1]);
+        if(dE < dA) L.reverse();
+      }
+      roh += L.length;
+      const Z3 = L.map(p => [fRund(p[0]), fRund(p[1]), zTip]);
+      const D2 = fZugDuennen(Z3, tol);
+      if(D2.length < 2) return;
+      const A0 = D2[0];
+      // Anfahrt: ueber die Versatzflaeche hinweg ist nur der Weg zwischen
+      // zwei Bahnpunkten DERSELBEN Ebene beweisbar frei. Zwischen Ebenen
+      // wird auf die sichere Hoehe zurueckgezogen - eine Z-konstante Bahn
+      // umrundet steile Flanken, und was dazwischen steht, weiss sie nicht.
+      if(!letzt || Math.hypot(A0[0] - letzt[0], A0[1] - letzt[1]) > 3 * dz + 1e-9){
+        eil({z:sicher}); eil({x:A0[0], y:A0[1]});
+      } else {
+        let zv = fRund(Math.min(sicher, Math.max(fBallMax(BF, F, letzt[0], letzt[1], A0[0], A0[1]) - rk, letzt[2], A0[2]) + sc));
+        if(SG){ const hs = fStandMax(SG, letzt[0], letzt[1], A0[0], A0[1], rt); if(isFinite(hs) && hs + sc > zv) zv = fRund(hs + sc); }
+        eil({z:zv}); eil({x:A0[0], y:A0[1]});
+      }
+      let zA = fRund(A0[2] + sc);
+      if(SG){ const ha = fStandMax(SG, A0[0], A0[1], A0[0], A0[1], rt); if(isFinite(ha) && ha + sc > zA) zA = fRund(ha + sc); }
+      eil({z:zA});
+      vor({z:A0[2], f:(+s.fTief > 0) ? +s.fTief : f});
+      for(let q = 1; q < D2.length; q++) vor({x:D2[q][0], y:D2[q][1], z:D2[q][2], f:f});
+      punkte += D2.length; zuege++; letzt = D2[D2.length - 1];
+    });
+  }
+  if(!zuege) return nein('aus den steilen Flaechen entsteht keine Hoehenlinie — Bereich oder Grenzwinkel pruefen');
+  eil({z:sicher});
+  const istRz = (dz / Math.max(0.05, Math.sin(aMin * Math.PI / 180))) ** 2 / (8 * rk);
+  warn.push('Z-konstant schlichten: ' + ebenen + ' Ebene(n), ' + zuege + ' Zug/Zuege, ' + punkte
+    + ' Punkte (roh ' + roh + ', mit Sehnentoleranz ' + fRund(tol) + ' mm ausgeduennt). Z-Abstand '
+    + fRund(dz) + ' mm aus Rautiefe ' + fRund(rz) + ' und Kugelradius ' + fRund(rk)
+    + ' (flachste bearbeitete Stelle ' + fRund(aMin) + ' Grad; gefahrene Rautiefe ' + fRund(istRz) + ' mm).');
+  warn.push('Z ist die KUGELUNTERKANTE (die Spitze), so wie die Werkzeuglaenge L gemessen wird — nicht die Kugelmitte.');
+  warn.push('Geprueft wird nur die KUGEL, nicht der Schaft und nicht der Halter: an einer hohen steilen Wand kann der Schaft anstehen, ohne dass die App es sagt. Vor dem ersten Lauf Programm-Test und Einzelsatz.');
+  if(nSteht) warn.push(nSteht + ' Rasterstelle(n) bleiben aus: dort steht nach dem Schruppen bis ' + fRund(stehtMax) + ' mm ueber der Sollform.');
+  return {ok:true, bahn:B, warn:warn, zuege:zuege, punkte:punkte, roh:roh,
+    ebenen:ebenen, dz:fRund(dz), rz:fRund(istRz), aMin:fRund(aMin),
+    steht:nSteht, mitStand:!!SG, ball:BF, neig:NF, gut:gut};
+}
+
+// ===================================================================
+// S3: EIN Zyklus, der selbst aufteilt — hyperMILLs "neigungsabhaengige
+// Bearbeitung" in schlank. Flache Flaechen bekommen die Zeilenbahn
+// (quer zum Gefaelle), steile die Z-konstante. Der Grenzwinkel ist
+// dasselbe Feld wie bisher; er trennt jetzt, statt abzuschneiden.
+// Reihenfolge: erst flach, dann steil. Beide Bahnen enden auf der
+// sicheren Hoehe, das Aneinanderhaengen ist damit unbedenklich.
+// Faellt eine der beiden aus (keine Flaeche in ihrem Band), laeuft die
+// andere allein - mit Ansage, WARUM die andere nichts hatte.
+// ===================================================================
+function fBahnSchlichtenKomplett(s, tool, prog){
+  const flach = fBahnSchlichten(s, tool, prog);
+  const steil = fBahnSchlichtenZ(s, tool, prog, flach.ok ? {neig:flach.neig} : null);
+  if(!flach.ok && !steil.ok)
+    return {ok:false, bahn:[], warn:(flach.warn || []).concat(steil.warn || []),
+      grund:'flach: ' + flach.grund + '  |  steil: ' + steil.grund};
+  const warn = [];
+  if(flach.ok) warn.push.apply(warn, flach.warn || []);
+  else warn.push('Zeilenbahn (flache Flaechen) faellt aus: ' + flach.grund);
+  if(steil.ok) warn.push.apply(warn, (steil.warn || []).filter(w => !/KUGELUNTERKANTE|nicht der Schaft/.test(w)));
+  else warn.push('Z-konstante Bahn (steile Flaechen) faellt aus: ' + steil.grund);
+  if(!flach.ok || !steil.ok) warn.push('Hinweis: dieser Schritt fasst beide Bahnen zusammen — flach ueber die Zeilen, steil Z-konstant. Der Grenzwinkel ' + fRund((+s.winkel > 0) ? +s.winkel : 45) + ' Grad trennt sie.');
+  // DIE FELDER DER ZEILENBAHN BLEIBEN OBEN STEHEN (schritt, soll, rz, flach,
+  // steil, aMax, ball, neig, gut). Sie werden von der Oberflaeche und vom
+  // Pruefstand gelesen; ein Zusammenfassen darf sie nicht verschlucken.
+  // Die beiden Teilergebnisse heissen deshalb teilFlach/teilSteil - "flach"
+  // und "steil" sind schon die ZELLENZAEHLER der Zeilenbahn.
+  return Object.assign({}, flach.ok ? flach : {}, {
+    ok:true,
+    bahn:(flach.ok ? flach.bahn : []).concat(steil.ok ? steil.bahn : []),
+    warn:warn,
+    zuege:(flach.zuege || 0) + (steil.zuege || 0),
+    punkte:(flach.punkte || 0) + (steil.punkte || 0),
+    ebenen:steil.ebenen || 0,
+    teilFlach:flach.ok ? flach : null, teilSteil:steil.ok ? steil : null,
+    ball:flach.ok ? flach.ball : steil.ball, neig:flach.ok ? flach.neig : steil.neig,
+    gut:flach.ok ? flach.gut : steil.gut});
 }
 
 // ---------------------------------------------------------------------
