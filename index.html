@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="16.09.2026 01:18 (ae7313be)";</script>
+<script>window.__DZ_STAND="16.09.2026 18:38 (d5ffca8b)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4758,7 +4758,7 @@ Freigaben G74/G75/Einstich/Freistich/Abspanen, G81ff gesperrt A019G=0, Sicherhei
 1-mm-Wiederanfahrweg beim Tieflochbohren; Futter Bauh&ouml;he 95, Backen 32 (&Uuml;berstand 45
 als Annahme).</dd>
 <dt id="ba-ma-1000">Monforts 1000 MTC-K</dt>
-<dd><b>Stand 11.09.2026.</b> Die Chronik der Termine steht in den Protokollen
+<dd><b>Stand 16.09.2026.</b> Die Chronik der Termine steht in den Protokollen
 <code>maschinentermin/ERGEBNISSE-*.md</code>; die Merkmale (Knopf in der G-Code-Ansicht)
 zeigen denselben Stand in drei Gruppen: best&auml;tigt, Satz belegt, noch zu testen.
 <br><b>Best&auml;tigt an der Maschine:</b> &Uuml;bertragung 9600/7/EVEN/2 mit RTS/CTS in beide
@@ -4776,15 +4776,39 @@ stehen aus.
 <br><b>Aus Maskenfotos gebaut (Dateien noch zu ziehen):</b> G73 Gewinde-Freistich DIN 76 und
 Freistich Form E (G79) schreibt die App in der Form der Fotos P102&ndash;P105: PH ist V/2, beim
 Form E ist X der Freistichgrund und I die Welle, innen PJ1 (G79) bzw. PN1 (G73).
-<br><b>Hergeleitet &mdash; plausibel, an der Maschine zu pr&uuml;fen:</b> G72 Abspanen (aus Deinen
-eigenen Bestandss&auml;tzen: PA/PB sind der Anfahrpunkt relativ zum Bezugspunkt, PE0.5 der
-Sicherheitsabstand aus Parameter 5205, PF = D, PG = U &mdash; au&szlig;en, innen, Schenkelwinkel;
-Stirnkante, Rundungskanten und plan bleiben Einzels&auml;tze), Freistich Form F (G78, aus dem
-Form-E-Satz) und Kegelgewinde G76 (aus der G75-Realform, I = X1&minus;X0). Jeder dieser S&auml;tze
-tr&auml;gt im Programm die Zeile HERGELEITET und eine gelbe Warnung: <b>vor dem ersten Lauf den
-Maskensatz ziehen</b> (Probenzettel 231, 251/252, 261&ndash;264) und mit der App-Ausgabe vergleichen.
-<br><b>Noch zu testen:</b> Plangewinde G77 (bewusst nicht hergeleitet, G33-Einzels&auml;tze), W
-ungleich D beim Bohren, N&nbsp;2 und Fasen beim Einstich, die L&auml;ufe O9167&ndash;O9169.
+<br><b>Seit dem 16.09.2026 ebenfalls Satz belegt:</b> G72 Abspanen und G77 Plangewinde.
+Beim G72 war unsere Herleitung in vier W&ouml;rtern falsch &mdash; die Maschine schreibt
+<code>PG</code> f&uuml;r die Zustellung und <code>PI</code> f&uuml;r das Aufma&szlig; (nicht PF/PG),
+die Fase als <code>PO</code>, gar keine Winkelw&ouml;rter, und kein PA/PB/PC/PD/PE &mdash; die
+entstehen beim Teach-In aus der Werkzeugposition. Was h&auml;lt, ist die Formel f&uuml;r den
+Schenkel-Schnittpunkt PM/PN: am 75/70-Satz auf drei Nachkommastellen nachgerechnet.
+Die drei Kanten bleiben Einzels&auml;tze, weil die Maske nur EIN Feld FS kennt und unbelegt
+ist, an welcher Kante es sitzt. Der G77 ist der G75 mit der Radialstrecke statt der L&auml;nge.
+<br><b>Vier Pr&uuml;fungen der Steuerung, die Deine Eingabe zur&uuml;ckweisen k&ouml;nnen</b>
+(am 16.09.2026 alle vier am Bildschirm gesehen). Die App pr&uuml;ft sie jetzt selbst und sagt
+es in der Ampel, bevor Du das Programm &uuml;bertr&auml;gst:
+<br>&bull; <i>E+D+U ist gr&ouml;sser K</i> &mdash; Eintauchtiefe, Zustellung und Aufma&szlig;
+zusammen d&uuml;rfen die Gewindetiefe nicht &uuml;berschreiten. E ist bei uns ein Vorgabewert;
+bleibt Platz, klemmt die App ihn, sonst gibt es Einzels&auml;tze.
+<br>&bull; <i>X ist gr&ouml;sser Z</i> &mdash; beim Kegelgewinde muss der Z-Weg l&auml;nger sein
+als der X-Weg.
+<br>&bull; <i>Schneidenradius zu gro&szlig;</i> &mdash; kein Eckenradius des Einstichs darf
+kleiner sein als der Schneidenradius des Stechers. Das gilt auch f&uuml;r Einzels&auml;tze:
+dort wird die Rundung sonst stumm gr&ouml;&szlig;er als gezeichnet.
+<br>&bull; <i>Unzul&auml;ssige Geometriewerte</i> &mdash; beim Abspanen mit Schenkelwinkeln
+muss sich der Schnittpunkt der beiden Schenkel INNERHALB der Ecke ergeben. Flacherer
+Winkel oder l&auml;ngere Ecke l&ouml;st es.
+<br><b>Der Schneidenradius kommt aus der Maschine.</b> Die Steuerung schreibt ihn beim
+Teach-In als <code>PF</code> aus ihrer eigenen Werkzeugkorrektur (Spalte RS) in den Satz.
+Die App schreibt ihn NICHT &mdash; sie kennt diese Tabelle nicht, und ein eigener Wert
+w&uuml;rde die Korrektur der Maschine &uuml;berschreiben. <b>Offen:</b> ob die Steuerung bei
+fehlendem PF mit Radius 0 rechnet; an einer Fase oder Rundung w&auml;re das ein Ma&szlig;fehler.
+<br><b>Hergeleitet &mdash; plausibel, an der Maschine zu pr&uuml;fen:</b> Freistich Form F
+(G78, aus dem Form-E-Satz) und Kegelgewinde G76 (aus der G75-Realform, I = X1&minus;X0).
+Beide tragen im Programm die Zeile HERGELEITET und eine gelbe Warnung: <b>vor dem ersten
+Lauf den Maskensatz ziehen</b> (Probenzettel 231, 251/252) und mit der App-Ausgabe vergleichen.
+<br><b>Noch zu testen:</b> W ungleich D beim Bohren, N&nbsp;2 und Fasen beim Einstich,
+Gewinde innen, die drei anderen Freistich-Formen, die L&auml;ufe O9167&ndash;O9169.
 <br><b>Dateiregeln:</b> ASCII, CR LF, Kommentare bis 62 Zeichen ohne innere Klammer
 (Fehler 153), T nur bis 32 (Fehler 152, real 16 Pl&auml;tze &mdash; Lagerwerkzeuge im
 Werkzeuglager auf Pl&auml;tze legen, dann ruft die NC den Platz), Fortsetzungszeilen setzt
@@ -5013,7 +5037,7 @@ vorschruppen.</dd>
      TT.MM.JJJJ" ergaenzt, MUSS dieses Datum mitziehen — sonst schlaegt
      der Pruefstand an. [Daniels Befund 06.09.2026: die Anleitung war
      inhaltlich nachgezogen, das Standdatum stand noch auf 31.08.] -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 11.09.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 16.09.2026. Sie
 w&auml;chst mit der App &mdash; das Inhaltsverzeichnis wird aus den Kapiteln
 erzeugt und ist damit immer vollst&auml;ndig.</p>
 
@@ -21044,7 +21068,7 @@ const MASCHINEN_PROFILE = {
     // 'Prog. Pruefen' - Lauf am Teil offen.
     fahrtests:'gefahren: Kantenwelle O9016 komplett (NMAX 600), Spanbrechen G04 F2, NMAX-Wache haelt die G96-Anwahl (Alarm 007 bleibt aus), SSV auf DM130 pendelt fliegend, M00-Messhalt haelt, Vorschub je Element wirkt, Bemerkung hinter dem Stopp, G33-Gewinde zieht in der Steigung',
     fahrtestsOffen:'Laeufe der Realformen O9167 (G75), O9168 (G74), O9169 (G71); hergeleitete Formen (G72, G76, Form F) erst nach dem Maskensatz fahren (Probenzettel)',
-    termine:'07.09.2026 — Uebertragung 9600/7/E/2 RTS/CTS bewiesen, 17 Bestandsprogramme gesichert, G71-Satz aus der Maske · 09.09.2026 — Web-Serial beide Richtungen, Fortsetzungszeilen tot, G71 mit Winkeln und D · 10.09.2026 — Zeichenbremse, M30 kommt an, erster kompletter Lauf, Alarm 007 = Anwahlfalle · 11.09.2026 — SSV, M00, Realformen G75/G74/G71, G73/G79 gelesen, Backenueberstand 65',
+    termine:'07.09.2026 — Uebertragung 9600/7/E/2 RTS/CTS bewiesen, 17 Bestandsprogramme gesichert, G71-Satz aus der Maske · 09.09.2026 — Web-Serial beide Richtungen, Fortsetzungszeilen tot, G71 mit Winkeln und D · 10.09.2026 — Zeichenbremse, M30 kommt an, erster kompletter Lauf, Alarm 007 = Anwahlfalle · 11.09.2026 — SSV, M00, Realformen G75/G74/G71, G73/G79 gelesen, Backenueberstand 65 · 16.09.2026 — Realformen G72/G77/G78 aus der Zyklen-Maske gezogen (G72 anders als hergeleitet: PG=D, PI=U), drei Plausibilitaetspruefungen der Steuerung gefunden, PF = Schneidenradius aus der WZ-KORR belegt',
     // P5105=1: X = Durchmesserachse -> der ABSOLUTE X-Mittelpunkt I wird
     // unter G90 ebenfalls im DURCHMESSERMASS ausgegeben (IBN-belegt).
     ikDurchmesser:true, ikStatus:'confirmed_on_machine', ikBeleg:'P5105=1, IBN',
@@ -21266,8 +21290,8 @@ function ppMerkmale(){
     // HERGELEITETE FORMEN [Daniels "go" 11.09.2026 spaet]: die App schreibt
     // sie nativ mit stehender Warnung; Status "hergeleitet" (Gruppe offen),
     // der Maskensatz vom Probenzettel entscheidet.
-    M.push({t:'Abspanzyklus G72 (Ecke)', s:'derived',
-      w:'HERGELEITET aus Daniels eigenen 1000er-Saetzen (G95 F G72 X Z I K PA PB PC95 PD PE0.5 PF PG PK PL PM PN PQ PR P240/P241) und der 1500er-Realform: PA/PB = Anfahrpunkt relativ zum Bezugspunkt (aus dem Anfahrsatz gerechnet), PE0.5 = Parameter 5205, PF = D, PG = U; aussen, innen und Schenkelwinkel nativ — Stirnkante K1, Rundungskanten und plan fallen auf Einzelsaetze zurueck',
+    M.push({t:'Abspanzyklus G72 (Ecke)', s:'machine_syntax_1000',
+      w:'Realform aus der Zyklen-Maske, gezogen 16.09.2026: PG=D, PI=U, PK/PL signierte Strecken, PM/PN Schenkel-Schnittpunkt (Formel wie an der 1500er, am 75/70-Satz nachgerechnet), PQ = Richtung (2 parallel Z, 1 parallel X). Keine Winkelwoerter, kein PA/PB/PC/PD/PE — die entstehen beim Teach-In. Aussen, innen und Schenkelwinkel nativ; alle drei Kanten Einzelsaetze, weil die Maske nur EIN Feld FS kennt',
       offen:'Maskensatz ziehen (Probenzettel 261-264) VOR dem ersten Lauf; PQ1PR1 der Bestandssaetze als Auslauffase gelesen; MINI_G72 ohne PA/PB'});
     M.push({t:'Freistich G73 / Form E G79', s:'machine_syntax_1000',
       w:'Realform aus den Maskenfotos P102-P105 (11.09.2026), nativ geschrieben: G73 mit PH = V/2 absolut, PN1 innen, P227:90; G79 mit X = Freistichgrund, I = Welle, G91 K0, PH = V/2, PK = Tiefe mit Vorzeichen, PJ1 innen; PF (Schneidenradius der Maschinentabelle) schreibt die App nicht',
@@ -21275,8 +21299,8 @@ function ppMerkmale(){
     M.push({t:'Form F G78 / Kegelgewinde G76', s:'derived',
       w:'HERGELEITET: G78 aus dem Form-E-Satz (G91 K0, kein Z-Aufmass, t2 ueber PM); G76 aus der G75-Realform mit I = X1-X0 als Gewindeschraege (DV 594 Kap. 4.6.2)',
       offen:'Maskensatz ziehen (Probenzettel 251/252 und 231) VOR dem ersten Lauf — ob I im Radius- oder Durchmessermass gilt, ist offen'});
-    M.push({t:'Plangewinde G77', s:'disabled',
-      w:'gesperrt — die Achswoerter des Plangewindes sind aus der G75-Realform nicht ableitbar (bewusst nicht hergeleitet); Ausgabe als G33-Einzelsaetze',
+    M.push({t:'Plangewinde G77', s:'machine_syntax_1000',
+      w:'Realform aus der Zyklen-Maske, gezogen 16.09.2026 (O112233 N0220): Steigung im F-Wort und als PU, X/Z absolut, G91 I = Radialstrecke inkremental, G90 K0, PG=U PK=I PM=W PN=R PO=K POSITIV PP=I PQ=D PR=E PT=V PZ=D. Offen: das Vorzeichen von I (Daniels Satz laeuft nach innen und schreibt +I)',
       offen:'Maskensatz ziehen (Probenzettel 241)'});
   }
   // Der Wechselpunkt ist BEDIENERSACHE je Bauteil [Daniel, 31.08.]:
@@ -22128,11 +22152,11 @@ function genAbspanenEinfach(p, N, bump, lines, warnings){
     warnings.push('G72: wie der Satz FASE und RUNDUNG an den Endkanten unterscheidet, ist am Maschinensatz nicht belegt (P235 stand in beiden Belegen auf 6) — bei Rundungskanten erfolgt die Ausgabe als G-Einzelsaetze.');
     zyklusModusAe=false;
   }
-  if(zyklusModusAe && mtckAe && kantStirnAe>0){
+  if(zyklusModusAe && mtckAe && (kantStirnAe>0 || kantAuslaufAe>0)){
     // Daniels Bestandssaetze tragen nur PQ1PR1 (Auslaufkante) — fuer die
     // Stirnkante K1 gibt es dort kein Wortpaar; die 1500er-Form (PO) ohne
     // Flag koennte die Maschine als Rundung lesen. Einzelsaetze, mit Ansage.
-    warnings.push('G72 der 1000er: fuer die Stirnkante K1 gibt es in Daniels Bestandssaetzen kein Vorbild (Flag-Wort unbelegt) — Ausgabe erfolgt als G-Einzelsaetze.');
+    warnings.push('G72 der 1000er: die Maske kennt nur EIN Kantenfeld FS (= PO, belegt 16.09.2026 mit FS 1,4 -> PO1.4); an WELCHER der drei Kanten es sitzt, ist nicht belegt (das Maskenbild zeigt die Rundung am Eckuebergang). Bis zur Probe Ausgabe als G-Einzelsaetze.');
     zyklusModusAe=false;
   }
   if(zyklusModusAe && sbAe){
@@ -22155,9 +22179,25 @@ function genAbspanenEinfach(p, N, bump, lines, warnings){
     warnings.push('Schlichtrichtung links→rechts und G72-Zyklussatz schliessen sich aus (der Zyklus schlichtet fest rechts→links) — Ausgabe erfolgt als G-Einzelsaetze.');
     zyklusModusAe=false;
   }
+  // DER SCHENKEL-SCHNITTPUNKT MUSS INNERHALB DER ECKE LIEGEN
+  // [belegt 16.09.2026: die 1000er lehnt mit "Unzulässige Geometriewerte!"
+  //  ab, wenn er dahinter faellt - bei ⌀68 -> ⌀50 ueber 23 mm mit 60/80
+  //  Grad traefen sich die Schenkel erst 0,8 mm hinter Z1].
+  // PM ist der radiale, PN der axiale Abstand des Schnittpunkts; bei 90/90
+  // liegt er genau auf der Ecke (PM = |PK|, PN = |PL|), deshalb <=.
+  const t1Ae=Math.tan((90-w1Ae)*Math.PI/180), t2Ae=Math.tan((90-w2Ae)*Math.PI/180);
+  const rDAe=((+p.x0)-(+p.x1))/2, zmAe2=(+p.z1)-(+p.z0);
+  const pnAe=Math.abs((zmAe2 + rDAe*t2Ae)/(t1Ae*t2Ae - 1));
+  const pmAe=Math.abs(rDAe - t1Ae*pnAe);
+  if(zyklusModusAe && (pnAe > Math.abs(zmAe2) + 1e-6 || pmAe > Math.abs(rDAe) + 1e-6)){
+    warnings.push('G72: mit den Schenkelwinkeln ' + fmt(w1Ae) + ' und ' + fmt(w2Ae) +
+      ' Grad treffen sich die beiden Schenkel erst AUSSERHALB der Ecke (Schnittpunkt ' + fmt(pmAe) + ' radial / ' + fmt(pnAe) +
+      ' axial gegen ' + fmt(Math.abs(rDAe)) + ' / ' + fmt(Math.abs(zmAe2)) + ' verfuegbar) — die Steuerung lehnt das mit "Unzulaessige Geometriewerte" ab (belegt 16.09.2026). Ausgabe erfolgt als G-Einzelsaetze; flacherer Winkel oder laengere Ecke loest es.');
+    zyklusModusAe=false;
+  }
   if(zyklusModusAe){
     if(doFinish && Math.abs((+p.uz||0)-(+p.ux||0))>1e-9){
-      warnings.push('G72: der Zyklus kennt nur EIN Schlichtaufmass U (PG'+fmt(p.ux||0)+', allseitig). UZ '+fmt(p.uz||0)+' wird im Zyklussatz nicht abgebildet — das Fertigmass in Z haengt dann an der Steuerung.');
+      warnings.push('G72: der Zyklus kennt nur EIN Schlichtaufmass U ('+(mtckAe?'PI':'PG')+fmt(p.ux||0)+', allseitig). UZ '+fmt(p.uz||0)+' wird im Zyklussatz nicht abgebildet — das Fertigmass in Z haengt dann an der Steuerung.');
     }
     // Realform 7.210i (Beleg s. o.). PK/PL sind die signierten
     // Gesamtstrecken, PM/PN der Schenkel-Schnittpunkt: der
@@ -22165,11 +22205,8 @@ function genAbspanenEinfach(p, N, bump, lines, warnings){
     // Achse, die Schulter faellt mit (90-w2) vom Startradius auf K.
     // Bei 90/90 kollabiert der Schnittpunkt auf |PK|/|PL| — exakt
     // der Innen-Belegsatz (PM10 PN40).
-    const w1Ae=+(p.w1||90), w2Ae=+(p.w2||90);
-    const t1Ae=Math.tan((90-w1Ae)*Math.PI/180), t2Ae=Math.tan((90-w2Ae)*Math.PI/180);
-    const rDAe=((+p.x0)-(+p.x1))/2, zmAe2=(+p.z1)-(+p.z0);
-    const pnAe=Math.abs((zmAe2 + rDAe*t2Ae)/(t1Ae*t2Ae - 1));
-    const pmAe=Math.abs(rDAe - t1Ae*pnAe);
+    // t1Ae/t2Ae/rDAe/zmAe2/pmAe/pnAe stehen oben - sie werden schon fuer
+    // die Geometriepruefung gebraucht.
     let worteAe=[
       'G72','G90','X'+fmt(p.x0),'Z'+fmt(p.z0),'I'+fmt(p.x1),'K'+fmt(p.z1),
       'PE1','PF'+fmt(p.d),'PG'+fmt(p.ux||0),
@@ -22182,27 +22219,37 @@ function genAbspanenEinfach(p, N, bump, lines, warnings){
     ].filter(Boolean);
     lines.push('(=== NATIVER G72-ABSPANZYKLUS - Schnittaufteilung macht die Steuerung ===)');
     if(mtckAe){
-      // Anfahrpunkt wie in Daniels Programmen: ueber dem Rohteil (aussen)
-      // bzw. in der Vorbohrung (innen), um SC vor dem Bezugspunkt —
-      // daraus PA/PB. Der Anfahrsatz ist ECHT (kein SIM), damit die
-      // Position stimmt, auf die sich PA/PB beziehen.
-      const scAe=pkSC();
-      const xsAe = innen ? Math.max(0.5, (+p.x0)-2*scAe) : (+p.x0)+2*scAe;
-      const zsAe = (+p.z0)+scAe;
+      // REALFORM DER 1000er [Daniels Maskensaetze 16.09.2026, O112233
+      // N0150/N0160/N0180/N0200 mit den Masken IMG_3057-3060]:
+      //   G72 G90 X<X0> Z<Z0> I<X1> K<Z1>
+      //   PG = D Zustellung | PI = U Aufmass  (NICHT PF/PG wie an der
+      //     1500er - die Papierform 02.2004 ist die Form dieser Maschine)
+      //   PK/PL = signierte Strecken, PM/PN = Schenkel-Schnittpunkt
+      //     (dieselbe Formel wie an der 1500er - am 75/70-Satz
+      //     nachgerechnet: PM 3.40091 / PN 22.76216 gegen PM3.401 PN22.762)
+      //   KEINE Winkelwoerter: die 1000er liest die Winkel aus PM/PN
+      //     zurueck, waehrend die 1500er P236/P237 im Klartext fuehrt.
+      //   PQ2 PR1 stehen in allen vier Saetzen konstant - auch bei FS 0
+      //     und FS 1,4. Bedeutung offen, geschrieben wie die Maschine.
+      //   KEIN PA/PB/PC95/PD/PE: die entstehen beim TEACH-IN aus der
+      //     Werkzeugposition. Der Zyklus faehrt selbst an; vor Daniels
+      //     Saetzen steht nur der Werkzeugaufruf, kein Fahrsatz.
+      //   PF waere der SCHNEIDENRADIUS aus der WZ-KORR der Maschine
+      //     (sechsfach belegt am Foto der Korrekturtabelle) - die App
+      //     schreibt ihn nicht, sie kennt diese Tabelle nicht.
       const pblockAe=[
-        'PA'+fmt(-(xsAe-(+p.x0))/2), 'PB'+fmt(-(zsAe-(+p.z0))),
-        'PC95', 'PD'+fmt(p.fr), 'PE0.5', 'PF'+fmt(p.d), 'PG'+fmt(p.ux||0),
+        'PG'+fmt(p.d), 'PI'+fmt(p.ux||0),
         'PK'+fmt(((+p.x1)-(+p.x0))/2), 'PL'+fmt(zmAe2),
         'PM'+fmt(pmAe), 'PN'+fmt(pnAe),
-        (kantAuslaufAe>0?'PQ'+fmt(kantAuslaufAe):null), (kantAuslaufAe>0?'PR1':null),
-        (winkelModus?'P236:'+fmt(w1Ae):null), (winkelModus?'P237:'+fmt(w2Ae):null),
+        'PQ2', 'PR1',
         (doRough?'P240:1':null),(doFinish?'P241:1':null)
       ].filter(Boolean).join('');
-      worteAe=['G95','F'+fmt(p.fr),'G72','G90','X'+fmt(p.x0),'Z'+fmt(p.z0),'I'+fmt(p.x1),'K'+fmt(p.z1), pblockAe];
-      warnings.push('G72-Zyklussatz der 1000er ist HERGELEITET aus Daniels Bestandssaetzen und der 1500er-Realform (PA/PB = Anfahrpunkt, PE0.5 = Parameter 5205, PF = D, PG = U) — plausibel, an der Maschine ungeprueft: Maskensatz ziehen (Probenzettel 261-264) und mit der App-Ausgabe vergleichen, bevor er gefahren wird.');
-      lines.push('(HERGELEITET aus Daniels 1000er-Bestandssaetzen und der 1500er-Realform: PA/PB = Anfahrpunkt, PE0.5 = Parameter 5205, PF = D, PG = U)');
-      lines.push('(MASKENSATZ ZIEHEN vor dem ersten Lauf - Probenzettel 261-264; PQ1PR1 der Bestandssaetze als Auslauffase gelesen)');
-      lines.push(`${N()} (GERADE  ) G94 G00 G90 X${fmt(xsAe)} Z${fmt(zsAe)}`); bump();
+      worteAe=['G72','G90','X'+fmt(p.x0),'Z'+fmt(p.z0),'I'+fmt(p.x1),'K'+fmt(p.z1), pblockAe];
+      lines.push('(REALFORM vom Maskensatz 16.09.2026: PG=D, PI=U, PM/PN=Schenkel-Schnittpunkt, keine Winkelwoerter)');
+      lines.push('(Schneidenradius kommt aus der WZ-KORR der Maschine - die App schreibt kein PF)');
+      // KEIN Anfahrsatz mehr: vor Daniels Maskensaetzen steht nur der
+      // Werkzeugaufruf, kein Fahrsatz - der Zyklus faehrt selbst an. Der
+      // alte Satz gehoerte zu PA/PB, und die entstehen beim Teach-In.
     } else {
       lines.push('(REALFORM vom Maschinensatz 03.09.2026: P236/P237=Winkel, PM/PN=Schenkel-Schnittpunkt)');
       lines.push('(PE1 = Sicherheitsabstand Abspanen aus Parameter 5205 = 1,0 mm lt. IBN 2004; P235:6 stand konstant - Bedeutung offen. Ersten Lauf gegen die G-Einzelsaetze fahren.)');
@@ -25691,6 +25738,23 @@ function genEinstechen71(p, N, bump, lines, warnings){
   }
 }
 function genEinstechen(p, N, bump, lines, warnings){
+  // EIN ECKENRADIUS KANN NIE KLEINER SEIN ALS DIE SCHNEIDE, DIE IHN
+  // FAEHRT [belegt 16.09.2026: die 1000er verweigert die Uebernahme mit
+  // "Schneidenradius zu gross!", als T12 mit RS 1,2 auf Eckenradien von
+  // 0,3 bis 0,9 treffen sollte]. Das gilt fuer jede Ausgabeform - bei
+  // Einzelsaetzen faehrt die Bahn sonst eine groessere Rundung, als
+  // gezeichnet ist. Deshalb hier ganz vorn und fuer beide Maschinen.
+  if(p && !p.__exp){
+    const twEs = (typeof toolTable !== 'undefined') ? toolTable.find(x => String(x.t) === String(p.t)) : null;
+    const rsEs = twEs ? (+twEs.r || 0) : 0;
+    if(rsEs > 0){
+      const zuKlein = [['R1','r1'],['R2','r2'],['R3','r3'],['R4','r4']]
+        .filter(e => { const v = +p[e[1]] || 0; return v > 0 && v < rsEs - 1e-9; })
+        .map(e => e[0] + ' ' + fmt(+p[e[1]]));
+      if(zuKlein.length) warnings.push('Einstich: der Schneidenradius des Stechers T' + p.t + ' ist ' + fmt(rsEs) +
+        ' mm und damit groesser als ' + zuKlein.join(', ') + ' — diese Ecke kann die Platte nicht fahren. Die Steuerung weist den Zyklussatz mit "Schneidenradius zu gross" ab (belegt 16.09.2026); in Einzelsaetzen wird die Rundung groesser als gezeichnet.');
+    }
+  }
   // Drehzahlvariation [Daniel, 02.09.2026]: moduliert die vier
   // Schlicht-Kettenzuege (radial links/rechts, axial aussen/innen).
   // Der G71-Zyklussatz kennt keine S-Modulation — Ausschluss wie
@@ -26568,13 +26632,61 @@ function genGewindePlan(p, N, bump, lines, warnings){
     if(letzt < 0.3*vorl) tiefen.splice(tiefen.length-2, 1);
   }
   let zyklusModus = (p.ausg==='zyklus');
-  if(zyklusModus && MASCHINENPROFIL.id==='MONFORTS_1000_MTC_K_6624B'){
-    warnings.push('G77-Zyklussatz der 1000er: die Achswoerter des Plangewindes sind aus der G75-Realform nicht ableitbar (bewusst NICHT hergeleitet) — Ausgabe erfolgt als G33-Einzelsaetze, Maskensatz ziehen (Probenzettel 241). ACHTUNG: G33 mit I-Steigung ist am 1000er-Handbuch nicht belegt.');
-    zyklusModus=false;
+  const mtckPl = (MASCHINENPROFIL.id==='MONFORTS_1000_MTC_K_6624B');
+  const vrPl = (isFinite(p.vr) && p.vr>=0.2) ? p.vr : 1.5;
+  // DIE PLAUSIBILITAETSPRUEFUNG DER STEUERUNG gilt auch hier:
+  // E + D + U <= K, sonst verweigert die Maske die Uebernahme
+  // ('E+D+U ist grösser K', belegt 16.09.2026).
+  let ePl = (p.pe!==undefined && p.pe!=='' && isFinite(+p.pe)) ? +p.pe : 0.05;
+  if(zyklusModus){
+    const dPl = Math.max(0.02, p.dz1 || 0.3), uPl = +p.u || 0;
+    if(ePl + dPl + uPl > K + 1e-9){
+      const platz = Math.round((K - dPl - uPl) * 1000) / 1000;
+      if(platz >= 0.02){
+        warnings.push('Plangewinde: E+D+U ist groesser als die Gewindetiefe K ' + fmt(K) + ' — die Steuerung weist den Zyklussatz ab (belegt 16.09.2026). E ist auf ' + fmt(platz) + ' geklemmt.');
+        ePl = platz;
+      } else {
+        warnings.push('Plangewinde: Zustellung D und Aufmass U fuellen die Gewindetiefe K ' + fmt(K) + ' allein aus — die Steuerung weist den Zyklussatz ab (belegt 16.09.2026). Ausgabe als G33-Einzelsaetze.');
+        zyklusModus=false;
+      }
+    }
   }
   if(zyklusModus){
     const degr = (p.verf==='fest') ? 0 : 1;
-    const worte=[
+    let worte;
+    if(mtckPl){
+      // REALFORM DER 1000er [Maskensatz 16.09.2026, O112233 N0220,
+      // Maske IMG_3063]. Aufbau wie der G75, nur mit der Radialstrecke
+      // statt der Laenge: Steigung im F-Wort UND als PU, X/Z absolut,
+      // dann G91 fuer die inkrementale Radialstrecke I, zurueck auf G90
+      // und K0 (das Plangewinde hat keine Z-Laenge).
+      // PO ist hier POSITIV - die 1500er schreibt es negativ.
+      // PT = V (Rueckzugsweg), NICHT der Programmkopf-SC.
+      const iPl = Math.abs((+p.x1) - (+p.x0));
+      worte=[
+        'F'+fmt(p.p),'G77','X'+fmt(p.x0),'Z'+fmt(p.z0),
+        'G91','I'+fmt(iPl),'G90','K0',
+        ['PG'+fmt(p.u||0),
+         'PK'+fmt(iPl),
+         'PM'+fmt(p.lw||0),'PN'+fmt(p.lr||0),
+         'PO'+fmt(K),
+         // PP = das Masken-I (Flankenversatz). Wie beim G75 rechnet die
+         // Maske es gegen den Winkel um: PP = K * tan(alpha).
+         'PP'+fmt((+p.alpha>0) ? Math.tan(Math.max(0, Math.min(45, +p.alpha))*Math.PI/180)*K : 0),
+         'PQ'+fmt(p.dz1||0.3),
+         'PR'+fmt(ePl),
+         'PT'+fmt(vrPl),
+         'PU'+fmt(p.p),
+         (degr?'PW1':null),
+         'PZ'+fmt(p.dz1||0.3),
+         (p.bearbeitung==='beide'?'P240:1':null)
+        ].filter(Boolean).join('')
+      ];
+      lines.push('(=== NATIVER G77-PLANGEWINDEZYKLUS - Schnittaufteilung macht die Steuerung ===)');
+      lines.push('(REALFORM vom Maskensatz 16.09.2026: Steigung im F-Wort und als PU, I = Radialstrecke inkremental, PO positiv, PT = V)');
+      lines.push('(OFFEN: das Vorzeichen von I - Daniels Satz laeuft von aussen nach innen und schreibt +I)');
+    } else {
+    worte=[
       'G77','G90','X'+fmt(p.x0),'Z'+fmt(p.z0),'I'+fmt(p.x1),
       'F'+fmt(p.p),
       'PG'+fmt(p.u||0),
@@ -26588,6 +26700,7 @@ function genGewindePlan(p, N, bump, lines, warnings){
     ].filter(Boolean);
     lines.push('(=== NATIVER G77-PLANGEWINDEZYKLUS - Schnittaufteilung macht die Steuerung ===)');
     lines.push('(PO negativ nach Beispielsatz S. 3-59; PT aus dem Programmkopf-SC wie beim G75)');
+    }
     lines.push(`${N()} (GEWINDE ) ${worte.join(' ')}`); bump();
     lines.push('(--- SIM-EXPANSION: nur fuer die CAM-Simulation, Maschine ignoriert Kommentare ---)');
   }
@@ -26735,6 +26848,43 @@ function genGewinde(p, N, bump, lines, warnings){
     warnings.push('Mehrgaengiges Gewinde als G75-Zyklus an der 1000er: der Gangwinkel Q im Satz ist unbelegt — Ausgabe als G33-Einzelsaetze mit Q-Versatz.');
     zyklusModus=false;
   }
+  // =========================================================
+  // DIE ZWEI PLAUSIBILITAETSPRUEFUNGEN DER STEUERUNG
+  // [Maschinentermin 16.09.2026 an der 1000er, beide am Bildschirm
+  //  fotografiert: die Zyklusmaske verweigert die Uebernahme und
+  //  schreibt KEINEN Satz.]
+  //   (1) E + D + U <= K  ("E+D+U ist grösser K")
+  //   (2) Kegel: |X-Weg| <= |Z-Weg|  ("X ist grösser Z")
+  // Sie gelten nur fuer den ZYKLUSSATZ - bei G33-Einzelsaetzen teilt die
+  // App die Schnitte selbst auf, und E kommt dort gar nicht vor.
+  // E ist ein Vorgabewert (0,05), kein bewusst gewaehlter: bleibt Platz,
+  // wird er geklemmt. Fuellen D und U die Tiefe schon allein, ist die
+  // Eingabe selbst falsch - dann Einzelsaetze mit Ansage.
+  // =========================================================
+  let gwE = (p.pe!==undefined && p.pe!=='' && isFinite(+p.pe)) ? +p.pe : 0.05;
+  if(zyklusModus){
+    const gwK = +p.h1 || 0, gwU = +p.u || 0, gwD = Math.max(0.02, +p.dz1 || 0.3);
+    if(gwE + gwD + gwU > gwK + 1e-9){
+      const platz = Math.round((gwK - gwD - gwU) * 1000) / 1000;
+      if(platz >= 0.02){
+        warnings.push('Gewinde: E+D+U = ' + fmt(gwE) + '+' + fmt(gwD) + '+' + fmt(gwU) + ' = ' + fmt(gwE + gwD + gwU) +
+          ' ist groesser als die Gewindetiefe K ' + fmt(gwK) + ' — die Steuerung weist den Zyklussatz an der Maske mit "E+D+U ist grösser K" ab (belegt 16.09.2026). E ist auf ' + fmt(platz) + ' geklemmt.');
+        gwE = platz;
+      } else {
+        warnings.push('Gewinde: Zustellung D ' + fmt(gwD) + ' und Aufmass U ' + fmt(gwU) + ' fuellen die Gewindetiefe K ' + fmt(gwK) +
+          ' allein aus — die Steuerung weist den Zyklussatz mit "E+D+U ist grösser K" ab (belegt 16.09.2026). D oder U kleiner waehlen; Ausgabe als G33-Einzelsaetze.');
+        zyklusModus = false;
+      }
+    }
+  }
+  if(zyklusModus && kegel){
+    const wegX = Math.abs((+p.x1) - p.x0), wegZ = Math.abs(p.z1 - p.z0);
+    if(wegX > wegZ + 1e-9){
+      warnings.push('Kegelgewinde: der X-Weg ' + fmt(wegX) + ' (Durchmesserdifferenz) ist groesser als der Z-Weg ' + fmt(wegZ) +
+        ' — die Steuerung weist den Satz mit "X ist grösser Z" ab (belegt 16.09.2026); ueber 45 Grad ist es kein Kegelgewinde mehr. Ausgabe als G33-Einzelsaetze.');
+      zyklusModus = false;
+    }
+  }
   const alphaZ = Math.max(0, Math.min(45, +p.alpha||0));
   if(zyklusModus){
     // =========================================================
@@ -26765,7 +26915,15 @@ function genGewinde(p, N, bump, lines, warnings){
       //   PP axialer Flankenversatz = Tiefe*tan(alpha) | PQ D 1. Zustellung
       //   PR E = Band ueber dem Grund im Hilfebild; Lesart wie 1500er: kleinste
       //      Zustellung. AM TEIL OFFEN: geht der erste Schnitt D oder E tief?
-      //   PT V radialer Abstand (= Programmkopf-SC) | PU Steigung
+      //   PT = V, der RADIALE RUECKZUGSWEG aus der Maske - NICHT der
+      //     Programmkopf-SC [belegt 16.09.2026: Daniels Maske V 2.400,
+      //     der Satz traegt PT2.4]. Die alte Lesart kam aus dem
+      //     DV-610-Beispielsatz, wo PT2 bei SC 2 stand: beide Werte waren
+      //     dort zufaellig gleich, deshalb fiel der Irrtum nie auf.
+      //     Bei uns ist das das Maskenfeld VR. | PU Steigung
+      //   PS = Q Startwinkel, nur wenn ungleich 0 [16.09.2026: PS30 bei
+      //     Q 30 Grad]. Mehrgaengige Gewinde fallen auf G33 zurueck -
+      //     es gibt kein Feld, das PS fuellen koennte.
       //   PW1 nur bei degressiver Zustellung (linear: kein PW)
       //   PX alpha in Grad, 6 Stellen (die Maske rechnet I<->alpha um;
       //      atan(0.3/2) = 8.530766 stand exakt so im Satz) | PZ Kopie von D
@@ -26773,7 +26931,7 @@ function genGewinde(p, N, bump, lines, warnings){
       // G91 bleibt danach MODAL — der erste Satz nach dem Zyklus schreibt G90.
       const threadLength = p.z1 - p.z0;
       const fmt6 = v => String(Math.round(v*1e6)/1e6);
-      const eMin = (p.pe!==undefined && p.pe!=='' && isFinite(+p.pe)) ? +p.pe : 0.05;
+      const eMin = gwE;                       // oben gegen E+D+U <= K geklemmt
       const pblock = [
         'PG'+fmt(p.u||0),
         'PL'+fmt(threadLength),
@@ -26782,7 +26940,7 @@ function genGewinde(p, N, bump, lines, warnings){
         'PP'+fmt(flankeI),
         'PQ'+fmt(p.dz1||0.3),
         'PR'+fmt(eMin),
-        'PT'+fmt(pkSC()),
+        'PT'+fmt(vr),                            // V = VR, nicht SC
         'PU'+fmt(p.p),
         (degr?'PW1':null),
         'PX'+fmt6(alphaZ),

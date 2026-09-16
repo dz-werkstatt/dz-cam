@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="16.09.2026 01:18 (ae7313be)";</script>
+<script>window.__DZ_STAND="16.09.2026 18:38 (d5ffca8b)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -7329,6 +7329,9 @@ function fPlanFlaechen(prog, A, F){
   // (2) MODELL ABSPANEN. Nur wenn unter der Oberkante ueberhaupt etwas
   //     liegt: an einer reinen Platte (36 von 104 Teilen in Daniels
   //     Bestand) waere der Schritt eine Bahn ohne Schnitt.
+  // Der Stand gilt fuer DIESEN Lauf. Was von einem frueheren uebrig ist,
+  // gehoert weg, bevor ein Zweig ihn nicht neu setzt.
+  if(F){ F.standG = null; F.standTol = 0; }
   const wSchrupp = fPlanFraeser(prog, 'schrupp');
   if(!F) hinweise.push('Ohne Sollform kann das Modell nicht abgespant werden — im STEP-Fenster Sollform ans Programm geben.');
   else if(bef.spanne <= 0.5) hinweise.push('Unter der Oberflaeche liegt nichts (Hoehenspanne ' + bef.spanne + ' mm): eine reine Platte — abgespant wird nichts, es bleiben Bohrungen und Konturen.');
@@ -7359,6 +7362,7 @@ function fPlanFlaechen(prog, A, F){
     schritte.push({art:'modellSchruppen', t:wahl.nr, werte:grundWerte,
       text:'Modell abspanen bis ' + fRund(zTief) + ', Fraeser ' + wahl.nr + ' (⌀' + wahl.d + ')'});
     const wSchrupp2 = wahl;
+    let bahn2 = bahn;                       // die Bahn, deren Stand zaehlt
     // WAS BLEIBT STEHEN? Das sagt die Bahn selbst - ihr Bericht nennt die
     // Breite der Stelle. Das Restwerkzeug ist der groesste Fraeser, der da
     // noch hineinpasst.
@@ -7370,14 +7374,40 @@ function fPlanFlaechen(prog, A, F){
         hinweise.push('Nach dem Abspanen bleibt nur ein Saum von ' + bahn.restBreit +
           ' mm (Arbeitsraster ' + fRund(F ? F.raster : 0) + ' mm) — das ist Rechengenauigkeit, kein Nachsetzen noetig.');
       } else if(passt){
-        schritte.push({art:'modellSchruppen', t:passt.nr, werte:Object.assign({}, grundWerte, {dVor:fRund(+wSchrupp2.d || 0)}),
+        const werteR = Object.assign({}, grundWerte, {dVor:fRund(+wSchrupp2.d || 0)});
+        schritte.push({art:'modellSchruppen', t:passt.nr, werte:werteR,
           text:'Restmaterial nachsetzen (' + bahn.flaeche + ' mm2, bis ' + bahn.restBreit + ' mm breit), Fraeser ' + passt.nr + ' (⌀' + passt.d + ')'});
+        // Der Stand, den die Schlichtbahn braucht, ist der NACH dem
+        // Nachsetzer. Das kostet eine zweite Bahnprobe.
+        const bahnR = fPlanBahnProbe(prog, passt, werteR, F);
+        if(F && bahnR && bahnR.ok && bahnR.gitter) bahn2 = bahnR;
       } else {
         hinweise.push('Nach dem Abspanen bleiben ' + bahn.flaeche + ' mm2 stehen, bis ' + bahn.restMax +
           ' mm hoch und ' + bahn.restBreit + ' mm breit — der kleinste Fraeser mit Eintauchwinkel in der Tabelle ist ⌀' +
           (kand.length ? kand[kand.length - 1].d : fRund(+wSchrupp2.d || 0)) + ' und passt dort nicht hinein.' + holWeg);
       }
     }
+    // DER STAND NACH DEM SCHRUPPEN, fuer die Schlichtbahn. Ohne ihn rechnet
+    // sie ihre Ueberflug- und Anfahrhoehen aus der SOLLFORM und faehrt im
+    // Eilgang in alles hinein, was das Schruppen gelassen hat (gemessen an
+    // einem echten Teil: 37 Treffer, bis 53 mm ueber der Sollform).
+    if(F && bahn2 && bahn2.ok && bahn2.gitter){
+      F.standG = bahn2.gitter;
+      F.standTol = fRund((+grundWerte.zust || 0) + Math.max(+grundWerte.aufSeite || 0, +grundWerte.aufTiefe || 0));
+    }
+  }
+
+  // OHNE SCHRUPPSCHRITT steht das Teil nach dem Planfraesen auf der
+  // Modelloberkante (und ohne Planfraesen auf der Rohteiloberkante). Auch
+  // das ist ein Stand, und die Schlichtbahn braucht ihn: sonst schlichtet
+  // sie Schraegen, ueber denen noch das ganze Rohteil steht.
+  if(F && !F.standG){
+    try{
+      const GP = fModellGitter(F, k, 0);
+      const zNach = fRund(B ? B.z1 : (+k.z1 || 0));
+      for(let q = 0; q < GP.nx * GP.ny; q++) if(GP.imRoh[q] && GP.stand[q] > zNach) GP.stand[q] = zNach;
+      F.standG = GP; F.standTol = 0;          // 0 = die Bahn nimmt den Kugelradius
+    }catch(e){ /* kein Stand ist besser als ein falscher */ }
   }
 
   // (3) SCHRAEGEN SCHLICHTEN. Nur wenn im Winkelband ueberhaupt Flaeche
@@ -7956,6 +7986,12 @@ function fStandStempel(G, x0, y0, x1, y1, rt, z){
 // Rueckzug zwischen zwei Zuegen richtet sich danach — nicht pauschal ueber
 // das ganze Teil (zu viele Eilwege) und nicht pauschal auf Ebenenhoehe (das
 // fuehre durch stehenbleibende Waende).
+// Der Materialstand an einer Weltkoordinate. Das Stand-Gitter hat einen
+// Rand um das Rohteil und deshalb einen anderen Ursprung als die Sollform.
+function fStandAt(G, x, y){
+  const i = Math.floor((x - G.x0) / G.raster), j = Math.floor((y - G.y0) / G.raster);
+  return (i < 0 || j < 0 || i >= G.nx || j >= G.ny) ? null : G.stand[j * G.nx + i];
+}
 function fStandMax(G, x0, y0, x1, y1, rt){
   const r = G.raster, St = G.stand;
   const schritt = Math.max(r, rt / 3);
@@ -8367,6 +8403,16 @@ function fBahnSchlichten(s, tool, prog){
   const f = +s.f || 0; if(!(f > 0)) return nein('Vorschub fehlt');
   const quer = Math.round(+s.strategie || 0) === 1;        // 0 = Zeilen in X, 1 = in Y
 
+  // DER STAND NACH DEM SCHRUPPEN, wenn der Planer ihn beigelegt hat. Ohne
+  // ihn rechnet die Bahn wie bisher gegen die Sollform allein.
+  const SG = (F.standG && F.standG.stand && F.standG.nx > 0) ? F.standG : null;
+  // Wieviel darf ueber der Sollform stehen, ohne dass es ein Befund ist?
+  // Beim Z-konstanten Schruppen steht an einer Schraege die TREPPE zwischen
+  // zwei Ebenen - bis zur Zustellung hoch -, dazu das Aufmass. Genau das
+  // soll die Kugel wegnehmen. Alles darueber ist etwas anderes.
+  // Ohne Angabe des Planers gilt der KUGELRADIUS: mehr Zustellung traegt
+  // eine Kugel nicht - darueber schneidet ihr zylindrischer Teil.
+  const sTol = (+F.standTol > 0) ? +F.standTol : rk;
   const NF = fNeigFeld(F);
   const nx = F.nx, ny = F.ny, r = F.raster;
   // Welche Zellen gehoeren zu dieser Bahn? Eine Flaeche muss dort sein
@@ -8378,20 +8424,30 @@ function fBahnSchlichten(s, tool, prog){
   // liest das Gefaelle abwechselnd 45,000019 und 44,999973 Grad. Ohne
   // Toleranz faellt jede zweite Zelle einer solchen Flaeche heraus.
   const gut = new Uint8Array(nx * ny);
-  let nGut = 0, nSteil = 0, nFlach = 0, aMax = 0;
+  let nGut = 0, nSteil = 0, nFlach = 0, aMax = 0, nSteht = 0, stehtMax = 0;
   for(let q = 0; q < nx * ny; q++){
     if(!F.quelle[q]) continue;
     const h = F.h[q];
     if(h > zOben + 1e-6 || h < zTief - 1e-6) continue;
     if(NF[q] > grenz + F_WINKEL_TOL){ nSteil++; continue; }
     if(grenzU > 0 && NF[q] < grenzU - F_WINKEL_TOL){ nFlach++; continue; }
+    // WO NACH DEM SCHRUPPEN ZUVIEL STEHT, wird nicht geschlichtet. Die
+    // Kugel arbeitete dort im Vollschnitt, und der Eilgang dorthin ist ein
+    // Crash. Gemeldet wird es mit Flaeche und Hoehe.
+    if(SG){
+      const st = fStandAt(SG, F.x0 + ((q % nx) + 0.5) * r, F.y0 + (Math.floor(q / nx) + 0.5) * r);
+      if(st != null && st > h + sTol + 1e-6){ nSteht++; if(st - h > stehtMax) stehtMax = st - h; continue; }
+    }
     gut[q] = 1; nGut++;
     if(NF[q] > aMax) aMax = NF[q];
   }
-  if(!nGut) return nein(nSteil || nFlach
+  if(!nGut) return nein(nSteht
+    ? 'im Winkelband liegt Flaeche, aber an jeder Stelle steht nach dem Schruppen noch mehr Material, als Zustellung und Aufmass erklaeren (bis '
+      + fRund(stehtMax) + ' mm ueber der Sollform) — dort erst mit einem kleineren Werkzeug schruppen'
+    : (nSteil || nFlach
     ? 'in Z1..Z0 liegt keine Flaeche im Winkelband ' + fRund(grenzU) + ' bis ' + fRund(grenz) + ' Grad ('
       + nSteil + ' Rasterstellen sind steiler, ' + nFlach + ' flacher) — Band weiter stellen oder Z-konstant schlichten'
-    : 'in Z1..Z0 liegt keine Flaeche der Sollform');
+    : 'in Z1..Z0 liegt keine Flaeche der Sollform'));
   // Bahnabstand aus der Rautiefe: h = s²/(8r) beim Kugelfraeser, also
   // s = wurzel(8 r h) LAENGS der Flaeche. Waagerecht gemessen ist der
   // Abstand auf einer Schraege um cos alpha kleiner — gerechnet wird mit der
@@ -8413,7 +8469,11 @@ function fBahnSchlichten(s, tool, prog){
   const zelle = (a, b) => quer ? (b * nx + a) : (a * nx + b);
   const wx = (a, b) => F.x0 + ((quer ? a : b) + 0.5) * r;
   const wy = (a, b) => F.y0 + ((quer ? b : a) + 0.5) * r;
-  const B = [], sicher = fRund(zOben + sc2);
+  // Die sichere Hoehe gilt fuer Fahrten quer ueber das Teil. Z0 + SC2 ist
+  // die Vorgabe; steht irgendwo noch ungeschruppt das Rohteil, zaehlt das.
+  let standOben = -Infinity;
+  if(SG) for(let q = 0; q < SG.nx * SG.ny; q++) if(SG.imRoh[q] && SG.stand[q] > standOben) standOben = SG.stand[q];
+  const B = [], sicher = fRund(isFinite(standOben) ? Math.max(zOben + sc2, standOben + sc) : (zOben + sc2));
   const eil = (o) => B.push(Object.assign({a:'eil'}, o));
   const vor = (o) => B.push(Object.assign({a:'vor'}, o));
   let zuege = 0, punkte = 0, roh = 0, richtung = 1, letzt = null, spruenge = 0;
@@ -8443,10 +8503,20 @@ function fBahnSchlichten(s, tool, prog){
       // gelassen hat (UXY/UZ) — das steht UEBER der Sollform.
       if(!letzt){ eil({x:A0[0], y:A0[1], z:sicher}); }
       else if(Math.hypot(A0[0] - letzt[0], A0[1] - letzt[1]) <= 3 * istMm + 1e-9){
-        eil({z:fRund(Math.min(sicher, Math.max(fBallMax(BF, F, letzt[0], letzt[1], A0[0], A0[1]) - rk, letzt[2], A0[2]) + sc))});
-        eil({x:A0[0], y:A0[1]});
+        // Die Versatzflaeche ist nur gegen die SOLLFORM frei. Was das
+        // Schruppen stehen liess, steht darueber — deshalb zaehlt der Stand
+        // mit, und zwar OHNE die Klemme auf die sichere Hoehe: wenn dort
+        // wirklich etwas steht, muss der Eilgang darueber, auch wenn das
+        // ueber Z0 + SC2 liegt.
+        let zv = fRund(Math.min(sicher, Math.max(fBallMax(BF, F, letzt[0], letzt[1], A0[0], A0[1]) - rk, letzt[2], A0[2]) + sc));
+        if(SG){ const hs = fStandMax(SG, letzt[0], letzt[1], A0[0], A0[1], rt); if(isFinite(hs) && hs + sc > zv) zv = fRund(hs + sc); }
+        eil({z:zv}); eil({x:A0[0], y:A0[1]});
       } else { spruenge++; eil({z:sicher}); eil({x:A0[0], y:A0[1]}); }
-      eil({z:fRund(A0[2] + sc)});
+      // Abwaerts nur bis SC ueber das, was an der Anfahrstelle steht — den
+      // Rest faehrt der Eintauchvorschub. Dieselbe Regel wie beim Abspanen.
+      let zA = fRund(A0[2] + sc);
+      if(SG){ const ha = fStandMax(SG, A0[0], A0[1], A0[0], A0[1], rt); if(isFinite(ha) && ha + sc > zA) zA = fRund(ha + sc); }
+      eil({z:zA});
       vor({z:A0[2], f:(+s.fTief > 0) ? +s.fTief : f});
       for(let q = 1; q < D2.length; q++) vor({x:D2[q][0], y:D2[q][1], z:D2[q][2], f:f});
       punkte += D2.length; zuege++; letzt = D2[D2.length - 1];
@@ -8465,11 +8535,17 @@ function fBahnSchlichten(s, tool, prog){
     + ' Grad und bleiben hier UNBEARBEITET — sie gehoeren der Z-konstanten Bahn (noch nicht gebaut).');
   if(nFlach) warn.push(nFlach + ' Rasterstelle(n) sind flacher als ' + fRund(grenzU)
     + ' Grad und bleiben hier UNBEARBEITET — waagerechte Flaechen gehoeren dem Schaft- oder Messerkopf, nicht der Kugel.');
+  if(nSteht) warn.push(nSteht + ' Rasterstelle(n) (' + fRund(nSteht * r * r) + ' mm2) sind AUSGELASSEN: dort steht nach dem Schruppen noch bis '
+    + fRund(stehtMax) + ' mm ueber der Sollform — mehr, als Zustellung und Aufmass erklaeren. Die Kugel arbeitete dort im Vollschnitt; erst mit einem kleineren Werkzeug schruppen.');
+  warn.push(SG
+    ? 'Ueberflug und Anfahrt rechnen gegen den STAND nach dem Schruppen, nicht nur gegen die Sollform — ein Eilgang faehrt damit nicht in Material, das das Schruppen gelassen hat.'
+    : 'ACHTUNG: Ueberflug und Anfahrt rechnen gegen die SOLLFORM. Was das Schruppen stehen liess, kennt diese Bahn nicht — der Eilgang koennte dort hineinfahren. Den Stand legt der Planer bei (Programm vorschlagen); von Hand angelegte Schritte haben ihn nicht.');
   warn.push('Z ist die KUGELUNTERKANTE (die Spitze), so wie die Werkzeuglaenge L gemessen wird — nicht die Kugelmitte.');
   warn.push('Geprueft wird nur die KUGEL, nicht der Schaft und nicht der Halter: an einer hohen steilen Wand kann der Schaft anstehen, ohne dass die App es sagt. Vor dem ersten Lauf Programm-Test und Einzelsatz.');
   return {ok:true, bahn:B, warn:warn, zuege:zuege, punkte:punkte, roh:roh,
     schritt:fRund(istMm), soll:fRund(schrittMm), rz:fRund(istRz), spruenge:spruenge,
-    steil:nSteil, flach:nFlach, aMax:fRund(aMax), ball:BF, neig:NF, gut:gut};
+    steil:nSteil, flach:nFlach, steht:nSteht, stehtMax:fRund(stehtMax), mitStand:!!SG,
+    aMax:fRund(aMax), ball:BF, neig:NF, gut:gut};
 }
 
 // ---------------------------------------------------------------------
@@ -8834,6 +8910,11 @@ function fSimFahren(F, e, uA, uB){
   const pruef = (m.a === 'eil') || (m.pruefR > 0);
   if(!pruef && !m.unten && e.p1.z >= F.oben - 1e-9 && e.p0.z >= F.oben - 1e-9) return null;   // ueber dem Rohteil
   if(pruef && Math.min(e.p0.z, e.p1.z) >= F.oben - 1e-9) return null;
+  // Eine Bewegung OHNE WEG faehrt nirgends hin - da ist nichts zu pruefen.
+  // Ihr Startpunkt ist das Ziel der Bewegung davor, und die hat ihn schon
+  // beurteilt; ohne diese Zeile stand dieselbe Stelle zweimal im Bericht
+  // (gemessen: 17 von 54 Meldungen an einem Teil).
+  if(pruef && e.weg < 1e-9) return null;
   // Abtastung auf einem FESTEN Raster u = k/N je Bewegung: ein Stueck [uA,uB] stempelt
   // genau die Rasterpunkte darin — so ergibt die schrittweise Uhr (fSimBis) dasselbe Feld
   // wie der komplette Lauf (mit freier Teilung wichen 38 Randzellen ab).
