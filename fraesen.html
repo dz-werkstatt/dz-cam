@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 21:07 (3021186d)";</script>
+<script>window.__DZ_STAND="17.09.2026 21:20 (7b9c88d4)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3184,6 +3184,10 @@ kommt aus dem Modell.</li>
 <li><b>T Sehnentoleranz</b> d&uuml;nnt die Punktfolge aus (Douglas-Peucker im Raum). Ohne sie w&auml;re jede Rasterzelle ein Satz; gemessen bleiben
 5 bis 10&nbsp;% der Punkte &uuml;brig. Sie ist ein <b>zweiter Formfehler</b> und kommt zur Rautiefe dazu &mdash; deshalb deutlich kleiner w&auml;hlen
 (Vorgabe 0,005 gegen Rz 0,01).</li>
+<li><b>Fr&auml;sart</b> (bei Rechtslauf M3): <i>Gleich- und Gegenlauf</i> ist der Zickzack (Vorgabe). <i>Nur Gleichlauf</i> oder <i>nur Gegenlauf</i>
+f&auml;hrt in der Zeilenbahn jede Zeile in derselben Richtung (Material in Fahrtrichtung rechts bzw. links; zur&uuml;ck geht es im Eilgang &uuml;ber
+die Versatzfl&auml;che) und in der Z-konstanten Bahn jede H&ouml;henlinie so herum, dass die Wand rechts bzw. links liegt &mdash; Zapfen im
+Uhrzeigersinn, Tasche dagegen, wie RL.</li>
 <li><b>R2 des Werkzeugs ist Pflicht.</b> Die Rautiefenformel gilt f&uuml;r den Kugelfr&auml;ser; ein Schaftfr&auml;ser (R2&nbsp;=&nbsp;0) wird
 abgelehnt, ein Eckenradiusfr&auml;ser (R2 kleiner als der Radius) angemeckert.</li>
 <li><b>Zwischen zwei Zeilen</b> f&auml;hrt das Werkzeug kurz &uuml;ber die Versatzfl&auml;che hinweg statt jedes Mal auf die sichere H&ouml;he zu
@@ -4163,11 +4167,11 @@ var F_MASKE = {
   // Stufe 4: wie beim Abspanen traegt kein Feld ein Q-Wort. Der Bereich
   // Z0..Z1 waehlt aus, WELCHE Flaechen geschlichtet werden — nicht wie tief
   // gefahren wird; die Hoehe kommt aus dem Modell.
-  modellSchlichten:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','winkelMin','winkel','#Mass','rautiefe','tolBahn','strategie','#!Sicherheit','sc','sc2'],
+  modellSchlichten:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','winkelMin','winkel','#Mass','rautiefe','tolBahn','strategie','bahnSinn','#!Sicherheit','sc','sc2'],
                feldText:{f:'F Vorschub Schlichten', fTief:'FZ Vorschub Zustellen', tiefe:'Z1 unterste Höhe (Bereich)',
-                 q203:'Z0 oberste Höhe (Bereich)', strategie:'Zeilenrichtung', sc2:'SC2 Rückzug über Z0'},
+                 q203:'Z0 oberste Höhe (Bereich)', strategie:'Zeilenrichtung', bahnSinn:'Fräsart (bei Rechtslauf M3)', sc2:'SC2 Rückzug über Z0'},
                feldWahl:{strategie:[['2','automatisch (quer zum Gefälle)'],['0','Zeilen in X'],['1','Zeilen in Y']]},
-               ohneQ:['t','s','f','fTief','kuehl','q203','tiefe','winkelMin','winkel','rautiefe','tolBahn','strategie','sc','sc2']}
+               ohneQ:['t','s','f','fTief','kuehl','q203','tiefe','winkelMin','winkel','rautiefe','tolBahn','strategie','bahnSinn','sc','sc2']}
 };
 // Softkey-Gruppen wie an der TNC (CYCL DEF -> Bohren/Gewinde, Taschen/
 // Zapfen/Nuten, ...): ein Knopf je Zyklus, keine Auswahlreihe in der Maske.
@@ -4670,7 +4674,7 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
       // der Rautiefe. Grenzwinkel 45 Grad: steiler wird eine Zeilenbahn
       // ungenau, dort gehoert die Z-konstante Bahn hin (noch nicht gebaut).
       Object.assign(s, {q203:+k.z1 || 0, tiefe:-Math.max(1, fRund((+k.z1 || 0) - (+k.z0 || 0))),
-        rautiefe:0.01, tolBahn:0.005, winkelMin:5, winkel:45, strategie:2,
+        rautiefe:0.01, tolBahn:0.005, winkelMin:5, winkel:45, strategie:2, bahnSinn:0,
         f:t.f || 600, fTief:fRund((t.f || 600) * 0.3), ausgabe:'einzel'});
     }
     if(art === 'planfraesen'){
@@ -9270,6 +9274,13 @@ function fZugDuennen(P, tol){
 // Hoechster Wert der Kugel-Versatzflaeche laengs einer Strecke. Weil die
 // Versatzflaeche die Flaeche ist, auf der die Kugelmitte ueberall frei steht,
 // ist ihr Hoechstwert plus SC die sichere Hoehe fuer eine Verbindungsfahrt.
+// Der Wert der Versatzflaeche an einer Stelle; NaN ausserhalb oder ohne Wert.
+function fBFWert(BF, F, x, y){
+  const i = Math.floor((x - F.x0) / F.raster), j = Math.floor((y - F.y0) / F.raster);
+  if(i < 0 || j < 0 || i >= F.nx || j >= F.ny) return NaN;
+  const v = BF[j * F.nx + i];
+  return (v > -Infinity) ? v : NaN;
+}
 // STRENG SEIT DEM 17.09.2026: eine Stelle OHNE Wert ist kein Beweis,
 // sondern ein Loch. Die Versatzflaeche steht nur innerhalb der geweiteten
 // Maske; ausserhalb weiss die Bahn nichts. Frueher wurden solche Stellen
@@ -9398,6 +9409,9 @@ function fBahnSchlichten(s, tool, prog){
   // deshalb hier nur der Modus, der Rest unten hinter der Zellenauswahl.
   const stratW = Math.round(+s.strategie || 0);
   let quer = (stratW === 1), achse = null;
+  // FRAESART [17.09.2026 spaet abends]: 0 = Zickzack, 1 = nur Gleichlauf,
+  // -1 = nur Gegenlauf (siehe unten bei der Reihenfolge der Stuecke).
+  const sinn = Math.round(+s.bahnSinn || 0);
 
   // DER STAND NACH DEM SCHRUPPEN, wenn der Planer ihn beigelegt hat. Ohne
   // ihn rechnet die Bahn wie bisher gegen die Sollform allein.
@@ -9500,7 +9514,7 @@ function fBahnSchlichten(s, tool, prog){
     for(let b = 0; b < nIn; b++){
       const c = zelle(a, b);
       if(gut[c] && isFinite(BF[c])){
-        if(!P){ P = []; alle.push(P); }
+        if(!P){ P = []; P.zeile = a; alle.push(P); }
         // Z IST DIE KUGELUNTERKANTE (die Spitze), wie die Werkzeuglaenge L
         // gemessen wird. BF ist die Bahn der MITTE - ein Kugelradius tiefer.
         P.push([fRund(wx(a, b)), fRund(wy(a, b)), fRund(BF[c] - rk)]);
@@ -9509,9 +9523,29 @@ function fBahnSchlichten(s, tool, prog){
   }
   const offen = alle.filter(Z => Z.length >= 2);
   const folge = [];
+  // FRAESART [17.09.2026 spaet abends]: bei nur Gleichlauf / nur Gegenlauf
+  // faehrt jede Zeile in derselben Richtung. Die Zeilen ruecken in
+  // +Aus-Richtung vor, das frische Material (das Aufmass, das das Schruppen
+  // liess) liegt auf der +Seite; Gleichlauf bei Rechtslauf M3 heisst
+  // Material rechts: Zeilen in X (ruecken nach +Y) fahren nach -X, Zeilen
+  // in Y (ruecken nach +X) nach +Y. Dann gilt die Rasterreihenfolge - Zeile
+  // fuer Zeile, in der Zeile gegen die Fahrtrichtung sortiert -, und kein
+  // Stueck wird umgedreht. Die Verbindungen dazwischen fahren ohnehin im
+  // Eilgang ueber die Versatzflaeche.
+  const fest = sinn ? sinn * (quer ? 1 : -1) : 0;
+  if(fest){
+    let i = 0;
+    while(i < offen.length){
+      let j = i; while(j < offen.length && offen[j].zeile === offen[i].zeile) j++;
+      const zeile = offen.slice(i, j);
+      if(fest < 0){ zeile.reverse(); zeile.forEach(Z => Z.reverse()); }
+      zeile.forEach(Z => folge.push(Z));
+      i = j;
+    }
+  }
   // Die Suche ist quadratisch. Bei sehr vielen Stuecken waere das teurer
   // als der gesparte Weg - dann bleibt es bei der Rasterreihenfolge.
-  if(offen.length > 6000){ offen.forEach(Z => folge.push(Z)); }
+  else if(offen.length > 6000){ offen.forEach(Z => folge.push(Z)); }
   else {
     let vx = null, vy = null;
     while(offen.length){
@@ -9576,6 +9610,7 @@ function fBahnSchlichten(s, tool, prog){
     });
   }
   if(!zuege) return nein('aus den Flaechen in Z1..Z0 entsteht kein Zug — Grenzwinkel oder Bereich pruefen');
+  if(sinn) warn.push('Fraesart: NUR ' + (sinn > 0 ? 'GLEICHLAUF' : 'GEGENLAUF') + ' (bei Rechtslauf M3, Material in Fahrtrichtung ' + (sinn > 0 ? 'rechts' : 'links') + '): jede Zeile in derselben Richtung, kein Zickzack — zurueck geht es im Eilgang ueber die Versatzflaeche.');
   eil({z:sicher});
   warn.push('Schraegen schlichten: ' + zuege + ' Zug/Zuege, ' + punkte + ' Punkte (roh ' + roh
     + ', mit Sehnentoleranz ' + fRund(tol) + ' mm ausgeduennt). Bahnabstand ' + fRund(istMm)
@@ -9634,6 +9669,7 @@ function fBahnSchlichten(s, tool, prog){
 // spiegelbildlich mit der steilsten Stelle und cos.)
 // -------------------------------------------------------------------
 function fBahnSchlichtenZ(s, tool, prog, vorgabe){
+  const sinnZ = Math.round(+s.bahnSinn || 0);   // Fraesart, siehe die Hoehenlinien unten
   const warn = [];
   const nein = (g) => ({ok:false, grund:g, bahn:[], warn:warn});
   const F = F_SOLLFELD;
@@ -9729,7 +9765,26 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
       // hat. Sonst faehrt das Werkzeug nach jeder Ebene ueber das ganze Teil
       // zurueck und muss dafuer auf die sichere Hoehe - gemessen 49
       // Hochfahrten bei 46 Ebenen. hyperMILL nennt dieselbe Sache ZickZack.
-      if(letzt && L.length > 1){
+      if(sinnZ){
+        // FRAESART [17.09.2026 spaet abends]: die Wand liegt dort, wo die
+        // Versatzflaeche HOEHER ist. Gleichlauf bei Rechtslauf M3 heisst
+        // Wand rechts von der Fahrtrichtung (Zapfen im Uhrzeigersinn, Tasche
+        // dagegen - wie RL), Gegenlauf Wand links. Abgetastet an mehreren
+        // Stellen der Linie, anderthalb Rasterweiten neben ihr; die
+        // Mehrheit entscheidet, ob die Linie umgedreht wird.
+        let links = 0, rechts = 0;
+        const nS = Math.min(24, L.length - 1), st = Math.max(1, Math.floor((L.length - 1) / nS));
+        for(let q = 0; q + st < L.length; q += st){
+          const ax = L[q][0], ay = L[q][1], bx = L[q + st][0], by = L[q + st][1];
+          const dx = bx - ax, dy = by - ay, len = Math.hypot(dx, dy); if(len < 1e-9) continue;
+          const mx = (ax + bx) / 2, my = (ay + by) / 2, nxl = -dy / len * 1.5 * r, nyl = dx / len * 1.5 * r;
+          const hL = fBFWert(BF, F, mx + nxl, my + nyl), hR = fBFWert(BF, F, mx - nxl, my - nyl);
+          if(!isFinite(hL) || !isFinite(hR)) continue;
+          if(hL > hR + 1e-6) links++; else if(hR > hL + 1e-6) rechts++;
+        }
+        const wandLinks = links > rechts;
+        if((sinnZ > 0) === wandLinks) L.reverse();   // Gleichlauf will die Wand rechts
+      } else if(letzt && L.length > 1){
         const dA = Math.hypot(L[0][0] - letzt[0], L[0][1] - letzt[1]);
         const dE = Math.hypot(L[L.length - 1][0] - letzt[0], L[L.length - 1][1] - letzt[1]);
         if(dE < dA) L.reverse();
@@ -9827,6 +9882,7 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
     });
   }
   if(!zuege) return nein('aus den steilen Flaechen entsteht keine Hoehenlinie — Bereich oder Grenzwinkel pruefen');
+  if(sinnZ) warn.push('Fraesart: NUR ' + (sinnZ > 0 ? 'GLEICHLAUF' : 'GEGENLAUF') + ' (bei Rechtslauf M3): jede Hoehenlinie so herum, dass die Wand ' + (sinnZ > 0 ? 'rechts' : 'links') + ' liegt — Zapfen ' + (sinnZ > 0 ? 'im' : 'gegen den') + ' Uhrzeigersinn, Tasche ' + (sinnZ > 0 ? 'gegen den' : 'im') + ' Uhrzeigersinn.');
   eil({z:sicher});
   const istRz = (dz / Math.max(0.05, Math.sin(aMin * Math.PI / 180))) ** 2 / (8 * rk);
   warn.push('Z-konstant schlichten: ' + ebenen + ' Ebene(n), ' + zuege + ' Zug/Zuege, ' + punkte
@@ -12193,7 +12249,7 @@ function fFormText(s){
     case 'zapfenR': return 'Zapfen ' + s.l1 + '×' + s.l2 + ' R' + s.r + ' (Roh ' + s.roh1 + '×' + s.roh2 + ')';
     case 'zapfenK': return 'Kreiszapfen ⌀' + s.dm + ' (Roh ⌀' + s.dmRoh + ')';
     case 'planfraesen': return 'Fläche ' + s.l1 + '×' + s.l2 + ' ab X' + s.px + ' Y' + s.py + ' · Z' + s.pz + ' → Z' + s.zEnd + ' · Strategie ' + (s.strategie || 0);
-    case 'modellSchlichten': return 'Schrägen schlichten ' + fRund(+s.winkelMin || 0) + '–' + fRund(+s.winkel || 45) + '° · Rz ' + fRund(+s.rautiefe || 0) + ' · Zeilen in ' + (Math.round(+s.strategie || 0) === 1 ? 'Y' : 'X') + (fStepFeldHolen() ? '' : ' · KEINE SOLLFORM');
+    case 'modellSchlichten': return 'Schrägen schlichten ' + fRund(+s.winkelMin || 0) + '–' + fRund(+s.winkel || 45) + '° · Rz ' + fRund(+s.rautiefe || 0) + ' · Zeilen in ' + (Math.round(+s.strategie || 0) === 1 ? 'Y' : 'X') + (+s.bahnSinn > 0 ? ' · nur Gleichlauf' : (+s.bahnSinn < 0 ? ' · nur Gegenlauf' : '')) + (fStepFeldHolen() ? '' : ' · KEINE SOLLFORM');
     case 'modellSchruppen': return 'Modell abspanen Z' + fRund(+s.q203 || 0) + ' → Z' + fRund((+s.q203 || 0) + (+s.tiefe || 0)) + ' · D ' + s.zust + ' · UXY ' + s.aufSeite + ' / UZ ' + s.aufTiefe + ' · ae ' + hbWert(fAeMm(s, ((fWerkzeug(Math.round(+s.t)) || {}).d || 0) / 2)) + ' mm' + (+s.bahnSinn > 0 ? ' · nur Gleichlauf' : (+s.bahnSinn < 0 ? ' · nur Gegenlauf' : '')) + (fStepFeldHolen() ? '' : ' · KEINE SOLLFORM');
   }
   return '';
@@ -13427,6 +13483,10 @@ function hbFuehr(c, box, zx, zy, on, txt){
   c.beginPath(); c.moveTo(sx, sy); c.lineTo(zx, zy); c.stroke();
   c.beginPath(); c.arc(zx, zy, on ? 2.2 : 1.6, 0, Math.PI * 2); c.fill(); c.restore();
 }
+// PFEILSPITZE: die Spitze liegt auf (x,y), der Koerper zeigt in Richtung ang -
+// der Pfeil ZEIGT also GEGEN ang (Masspfeile: Spitze aussen, Koerper zur Mitte).
+// Gemessen am 17.09.2026 abends: das Koordinatensymbol rief ihn andersherum
+// und zeigte nach innen - das sah aus wie ein Konturweg mit Pfeilen.
 function hbArrow(c, x, y, ang, on){
   const ah = (on ? 6.2 : 5) * HB_SKAL;
   c.beginPath(); c.moveTo(x, y); c.lineTo(x + Math.cos(ang + 0.42) * ah, y + Math.sin(ang + 0.42) * ah); c.lineTo(x + Math.cos(ang - 0.42) * ah, y + Math.sin(ang - 0.42) * ah); c.closePath(); c.fill();
@@ -13485,7 +13545,7 @@ function hbKoord(c, x, y, k){
   c.beginPath(); c.moveTo(x, y); c.arc(x, y, r, Math.PI / 2, Math.PI); c.closePath(); c.fill();
   c.beginPath(); c.moveTo(x - r, y); c.lineTo(x + r, y); c.moveTo(x, y - r); c.lineTo(x, y + r); c.stroke();
   c.beginPath(); c.moveTo(x, y - r - 2); c.lineTo(x, y - r - 30 * k); c.stroke();
-  hbArrow(c, x, y - r - 30 * k, -Math.PI / 2, false);
+  hbArrow(c, x, y - r - 30 * k, Math.PI / 2, false);   // Spitze oben, Koerper nach unten: zeigt nach OBEN
   c.restore();
 }
 // Dasselbe Symbol in der Draufsicht: an der Ecke links unten, Y nach oben, X nach rechts.
@@ -13494,7 +13554,7 @@ function hbKoordXY(c, x, y, k){
   const r = 7.5 * k;
   c.save(); c.lineWidth = 1.1; c.strokeStyle = HB_EDGE; c.fillStyle = HB_EDGE;
   c.beginPath(); c.moveTo(x + r + 2, y); c.lineTo(x + r + 30 * k, y); c.stroke();
-  hbArrow(c, x + r + 30 * k, y, 0, false);
+  hbArrow(c, x + r + 30 * k, y, Math.PI, false);     // zeigt nach RECHTS
   c.restore();
 }
 // Vorschubsymbol (drei gruene Pfeile neben dem Werkzeug, wie im TNC-Dialog bei
@@ -13649,7 +13709,7 @@ function hbBildBohren(H, art, s){
   hbLabel(c, hbTxt(art, s, 'sc2'), x + b / 2 + 10 * k, ySC2 - 0.5, HB_FOKUS === 'sc2', 'left');
   if(hat('rzSpan') || hat('q257') || hat('abnahme')){
     const yS = y0 + (yT - y0) * 0.45;
-    c.save(); c.fillStyle = HB_ON; hbArrow(c, x + lochB / 2 + 9 * k, yS - 8 * k, -Math.PI / 2, true); c.restore(); hbLine(c, x + lochB / 2 + 9 * k, yS, x + lochB / 2 + 9 * k, yS - 8 * k, HB_ON, 1.4);
+    c.save(); c.fillStyle = HB_ON; hbArrow(c, x + lochB / 2 + 9 * k, yS - 8 * k, Math.PI / 2, true); c.restore();   // Rueckzug zum Spanbrechen: zeigt nach OBEN hbLine(c, x + lochB / 2 + 9 * k, yS, x + lochB / 2 + 9 * k, yS - 8 * k, HB_ON, 1.4);
     if(hat('rzSpan')) hbLabel(c, hbTxt(art, s, 'rzSpan'), x + lochB / 2 + 14 * k, yS + 3, HB_FOKUS === 'rzSpan', 'left');
     if(hat('q257')) hbDim(c, x - lochB / 2 - 26 * k, y0, x - lochB / 2 - 26 * k, yS, 0, hbTxt(art, s, 'q257'), 'q257');
     else if(hat('abnahme')) hbLabel(c, hbTxt(art, s, 'abnahme'), x - lochB / 2 - 10 * k, yS + 18 * k, HB_FOKUS === 'abnahme', 'right');
@@ -13855,7 +13915,7 @@ function hbBildModell(H, art, s){
       c.moveTo(xs, y1); c.lineTo(re ? a1 : a2, y1); c.moveTo(re ? a2 : a1, y1); c.lineTo(xe, y1);
     } else { c.moveTo(xs, y1); c.lineTo(xe, y1); }
     c.stroke();
-    c.save(); c.fillStyle = '#ffffff'; hbArrow(c, rx0 + fw * 0.24 + (re ? 4 : -4) * k, y1, re ? 0 : Math.PI, false); c.restore();
+    c.save(); c.fillStyle = '#ffffff'; hbArrow(c, rx0 + fw * 0.24 + (re ? 4 : -4) * k, y1, re ? Math.PI : 0, false); c.restore();
   }
   c.restore();
   c.save(); c.fillStyle = HB_GRAU; c.strokeStyle = HB_EDGE; c.lineWidth = 1.4;
@@ -13906,7 +13966,7 @@ function hbBildModell(H, art, s){
   if(tip > sy0 + 1){
     c.save(); c.strokeStyle = HB_STIL.marke; c.fillStyle = HB_STIL.marke; c.lineWidth = 1.2;
     c.beginPath(); c.moveTo(tx + tb / 2 + 2 * k, tip - 3 * k); c.lineTo(bx + 14 * k, tip - 3 * k); c.stroke();
-    hbArrow(c, bx + 14 * k, tip - 3 * k, 0, false); c.restore();
+    hbArrow(c, bx + 14 * k, tip - 3 * k, Math.PI, false); c.restore();
   }
 }
 // Stufe 4: die Schraege mit dem Kugelfraeser. Links die Draufsicht mit den
@@ -13921,22 +13981,33 @@ function hbBildSchlicht(H, art, s){
   const ah = Math.min(h * 0.60, fh + 2 * rand);
   const ay = Math.max(9 * k, (h - ah) / 2);
   const cx = ax + aw / 2, cy = ay + ah / 2;
-  hbMerk('platte', {x0:ax, y0:ay, x1:ax + aw, y1:ay + ah, b:aw, h:ah}, 'Rohteil');
-  c.save(); c.strokeStyle = HB_EDGE; c.lineWidth = HB_STIL.randStrich; c.beginPath(); c.rect(ax, ay, aw, ah); c.stroke(); c.restore();
+  // Kein Rahmen mit dem Koordinatensymbol in der Ecke mehr - das sah aus wie
+  // ein Konturweg mit Pfeilen (Daniels Bildbefund 17.09.2026 abends). Die
+  // Schraege ist das blaue Band, das Rohteil der helle Rand darum.
+  hbMerk('platte', {x0:cx - fw / 2, y0:cy - fh / 2, x1:cx + fw / 2, y1:cy + fh / 2, b:fw, h:fh}, 'Rohteil');
+  c.save(); c.fillStyle = '#f3f4f6'; c.strokeStyle = HB_EDGE; c.lineWidth = HB_STIL.randStrich; c.beginPath(); c.rect(cx - fw / 2, cy - fh / 2, fw, fh); c.fill(); c.stroke(); c.restore();
   // das bearbeitete Band ist die Schraege
   const bw = fw * 0.52;
   hbBlau(c, cc => { cc.rect(cx - bw / 2, cy - fh / 2, bw, fh); }, ay, ay + ah);
-  const quer = Math.round(+s.strategie || 0) === 1;
+  const quer = Math.round(+s.strategie || 0) === 1, sinn = Math.round(+s.bahnSinn || 0);
   const nz = 7;
-  c.save(); c.strokeStyle = 'rgba(255,255,255,0.9)'; c.lineWidth = 1.3 * k; c.beginPath();
+  c.save(); c.strokeStyle = 'rgba(255,255,255,0.9)'; c.fillStyle = '#ffffff'; c.lineWidth = 1.3 * k; c.lineCap = 'round';
   for(let i = 0; i < nz; i++){
     const t = (i + 0.5) / nz;
-    if(quer){ const xx = cx - bw / 2 + bw * t; c.moveTo(xx, cy - fh / 2 + 3); c.lineTo(xx, cy + fh / 2 - 3); }
-    else { const yy = cy - fh / 2 + fh * t; c.moveTo(cx - bw / 2 + 3, yy); c.lineTo(cx + bw / 2 - 3, yy); }
+    // Richtung: Zickzack wechselt, feste Fraesart nicht. Zeilen in Y ruecken
+    // nach +X: Gleichlauf faehrt nach +Y (oben); Zeilen in X ruecken nach +Y:
+    // Gleichlauf faehrt nach -X (links). Bei Rechtslauf M3.
+    const plus = sinn ? (quer ? sinn > 0 : sinn < 0) : (i % 2 === 0);
+    c.beginPath();
+    if(quer){ const xx = cx - bw / 2 + bw * t; c.moveTo(xx, cy - fh / 2 + 3); c.lineTo(xx, cy + fh / 2 - 3); c.stroke();
+      hbArrow(c, xx, cy + (plus ? -1 : 1) * fh * 0.12, plus ? Math.PI / 2 : -Math.PI / 2, false); }
+    else { const yy = cy - fh / 2 + fh * t; c.moveTo(cx - bw / 2 + 3, yy); c.lineTo(cx + bw / 2 - 3, yy); c.stroke();
+      hbArrow(c, cx + (plus ? 1 : -1) * bw * 0.12, yy, plus ? Math.PI : 0, false); }
   }
-  c.stroke(); c.restore();
-  hbLabel(c, hbTxt(art, s, 'strategie'), cx, ay + ah - 5 * k, HB_FOKUS === 'strategie');
-  hbKoordXY(c, ax, ay + ah, k);
+  c.restore();
+  hbLabel(c, hbTxt(art, s, 'strategie'), cx - fw / 4, cy + fh / 2 + 12 * k, HB_FOKUS === 'strategie');
+  hbLabel(c, hbTxt(art, s, 'bahnSinn'), cx + fw / 4, cy + fh / 2 + 12 * k, HB_FOKUS === 'bahnSinn');
+  hbKoordXY(c, ax + 8 * k, cy + fh / 2 + 2 * k, k);
   // --- Schnitt rechts: die Schraege mit der Kugel ---
   const sx = w * 0.55 + 4 * k, sw = w - sx - 14 * k;
   const sy0 = h * HB_STIL.teilOben, teilH = h * HB_STIL.teilHoehe, syB = sy0 + teilH;
