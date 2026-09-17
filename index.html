@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 21:41 (40530184)";</script>
+<script>window.__DZ_STAND="17.09.2026 23:13 (e13b8490)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21679,7 +21679,12 @@ function roughEnvelope(ux, uz, srcEls){
   };
 }
 
-function sampleContourForRough(srcContour){
+// sehnenTol (mm, optional): Boegen so fein abtasten, dass die Sehne hoechstens
+// so weit vom Bogen abweicht [17.09.2026 nachts]. Ohne Angabe wie bisher zwoelf
+// Schritte je Bogen (Schruppen: Baseline bitgenau). Das Stechdrehen
+// SCHLICHTET ueber diese Punkte - mit zwoelf Sehnen lag der Konturzug am
+// Ballen R30 bis 0,22 mm im Material (gemessen an Daniels Ballen).
+function sampleContourForRough(srcContour, sehnenTol){
   // flatten segs (incl. arcs approximated) into a dense monotonic list of {z,x} for roughing sweep
   const segs = expandContour(srcContour);
   const pts=[];
@@ -21687,17 +21692,18 @@ function sampleContourForRough(srcContour){
     if(s.type==='line'){
       pts.push({z:s.z1,x:s.x1});
     } else {
-      const steps=12;
-      const [ , ] = [0,0];
+      const a1=Math.atan2(s.x1-s.cx, s.z1-s.cz), a2=Math.atan2(s.x2-s.cx, s.z2-s.cz);
+      let da=a2-a1;
+      if(s.cw && da>0) da-=2*Math.PI;
+      if(!s.cw && da<0) da+=2*Math.PI;
+      const r=Math.hypot(s.z1-s.cz, s.x1-s.cx);
+      let steps=12;
+      if(sehnenTol>0 && r>sehnenTol){
+        const wSchritt=2*Math.acos(Math.max(-1, Math.min(1, 1-sehnenTol/r)));
+        steps=Math.max(12, Math.min(720, Math.ceil(Math.abs(da)/Math.max(wSchritt,1e-4))));
+      }
       for(let k=0;k<steps;k++){
-        const t=k/steps;
-        // interpolate angle around center
-        const a1=Math.atan2(s.x1-s.cx, s.z1-s.cz), a2=Math.atan2(s.x2-s.cx, s.z2-s.cz);
-        let da=a2-a1;
-        if(s.cw && da>0) da-=2*Math.PI;
-        if(!s.cw && da<0) da+=2*Math.PI;
-        const a=a1+da*t;
-        const r=Math.hypot(s.z1-s.cz, s.x1-s.cx);
+        const a=a1+da*(k/steps);
         pts.push({z:s.cz+r*Math.cos(a), x:s.cx+r*Math.sin(a)});
       }
     }
@@ -24678,6 +24684,60 @@ function genAbspanenKontur(p, N, bump, lines, warnings){
     const limX = (v)=> (xmin>0 ? Math.max(v, xmin) : v);
     // expandContour() liefert im RADIUSMASS — X und der Mittelpunkt gehen als ⌀ raus,
     const segs = expandContour();
+    // BOEGEN AN DER FLANKENGRENZE TEILEN [17.09.2026 nachts, Daniels Ballen]:
+    // ein Bogen ist EIN Segment, und elementOk (unten) misst seine SEHNE.
+    // Der Ballen R30 von ⌀96 auf ⌀104 hat eine Sehne von 8 Grad, seine
+    // fallende Flanke aber bis 87 Grad - die V-Platte (max. 50 Grad
+    // ablaufend) fuhr hinein: gemessen 9 bis 11 mm ⌀ zu tief bei Z-157
+    // (Daniels Massbericht 17.09.2026: 10,07 mm). Jetzt wird jeder Bogen
+    // Grad fuer Grad abgetastet und dort geteilt, wo die Tangente die
+    // Werkzeuggrenze ueber- oder unterschreitet; jedes Teilstueck traegt
+    // seinen steilsten Fall- und Steigwinkel, und elementOk fragt DIE.
+    // Was die Platte nicht kann, wird ausgespart wie bisher - dort hat
+    // das Stechdrehen mit Eckenwechsel schon geschlichtet.
+    const capT = toolFlankCapability(p.t2||p.t) || {maxFall:3, maxRise:93};
+    const lrT = p.schlRicht==='lr';
+    // bogenTeilen liefert die Teilstuecke EINES Segments (Geraden unveraendert);
+    // die Mundteilung weiter unten ruft es fuer Bogenhaelften noch einmal.
+    const bogenTeilen=(sg)=>{
+      const neu=[];
+      {
+        if(sg.type!=='arc' || !isFinite(sg.cz) || !isFinite(sg.cx)){ neu.push(sg); return neu; }
+        const a1=Math.atan2(sg.x1-sg.cx, sg.z1-sg.cz), a2=Math.atan2(sg.x2-sg.cx, sg.z2-sg.cz);
+        let da=a2-a1; if(sg.cw && da>0) da-=2*Math.PI; if(!sg.cw && da<0) da+=2*Math.PI;
+        const R=Math.hypot(sg.z1-sg.cz, sg.x1-sg.cx);
+        const n=Math.max(4, Math.ceil(Math.abs(da)/(Math.PI/180)));   // je Grad ein Abschnitt
+        const punkt=(t)=>{ const a=a1+da*t; return {z:sg.cz+R*Math.cos(a), x:sg.cx+R*Math.sin(a)}; };
+        const stat=[];
+        for(let k=0;k<n;k++){
+          const P=punkt(k/n), Q=punkt((k+1)/n);
+          const dz=Q.z-P.z, dx=Q.x-P.x;
+          const ang=Math.atan2(Math.abs(dx), Math.max(Math.abs(dz),1e-9))*180/Math.PI;
+          const dxM = innen ? -dx : dx;
+          const abstieg = lrT ? (dxM>1e-9) : (dxM<-1e-9);
+          const lim = abstieg ? (lrT?capT.maxRise:capT.maxFall) : (lrT?capT.maxFall:capT.maxRise);
+          stat.push({ok: ang <= lim+0.5, ang:ang, abstieg:abstieg});
+        }
+        let k0=0;
+        while(k0<n){
+          let k1=k0; while(k1+1<n && stat[k1+1].ok===stat[k0].ok) k1++;
+          const P=punkt(k0/n), Q=punkt((k1+1)/n);
+          let fallMax=0, riseMax=0;
+          for(let k=k0;k<=k1;k++){ if(stat[k].abstieg) fallMax=Math.max(fallMax, stat[k].ang); else riseMax=Math.max(riseMax, stat[k].ang); }
+          const teil=Object.assign({}, sg, {z1:P.z, x1:P.x, z2:Q.z, x2:Q.x, fallMax:fallMax, riseMax:riseMax, flankeOk:stat[k0].ok});
+          if(k0===0){ teil.z1=sg.z1; teil.x1=sg.x1; }          // die Enden exakt, kein Rundungsversatz
+          if(k1===n-1){ teil.z2=sg.z2; teil.x2=sg.x2; }
+          neu.push(teil);
+          k0=k1+1;
+        }
+      }
+      return neu;
+    };
+    {
+      const neu=[];
+      segs.forEach(sg=>{ bogenTeilen(sg).forEach(q=>neu.push(q)); });
+      if(neu.length!==segs.length){ segs.length=0; neu.forEach(q=>segs.push(q)); }
+    }
     // PLANFLAECHE BEREITS GESCHLICHTET [Daniel, 30.08.2026]: auf den
     // Monforts laesst sich kein Planschlichtzug von X0 nach X+ ziehen
     // (Fuehrungen/Achsen geben nach). Der Planer schlichtet die Stirn
@@ -24819,6 +24879,63 @@ function genAbspanenKontur(p, N, bump, lines, warnings){
       lines.push('(EINSTICH UEBERFAHREN: Z'+fmt(pk.zIn)+' bis Z'+fmt(pk.zOut)+' — Kanten gleichhoch, Nut schlichtet ihr Zyklus)');
       pocketsC.splice(pi2,1);
     }
+    // TASCHENMUND TEILT DAS SEGMENT [17.09.2026 nachts, Daniels Ballen,
+    // Konturende]: inPocket (unten) ordnet ein Segment nach seinem KLEINSTEN
+    // ⌀ zu. Der Kegel vom Taschengrund ⌀104 bis zum Konturende ⌀165 zaehlte
+    // damit KOMPLETT zur Tasche — auch sein Stueck OBERHALB der Mundhoehe
+    // (⌀156..165, Z-239.85..-245), das T3 mit 41 Grad Steigung fahren kann.
+    // Es blieb ausgespart und behielt den Stand des Stechdrehens. Jedes
+    // Segment, dessen Endpunkte beidseits der Mundhoehe einer Tasche liegen,
+    // wird am Kreuzungspunkt geteilt: das Stueck unter dem Mund gehoert der
+    // Tasche, das Stueck darueber der Hauptkontur. Bogenhaelften bekommen
+    // ihre Flankenwinkel ueber bogenTeilen neu.
+    if(pocketsC.length){
+      const neuS=[];
+      segs.forEach(sg=>{
+        let teile=[sg];
+        pocketsC.forEach(pk=>{
+          const mR=d2r(pk.mouthX);
+          const naechste=[];
+          teile.forEach(q=>{
+            const lo=Math.min(q.x1,q.x2), hi=Math.max(q.x1,q.x2);
+            if(!(lo < mR-1e-6 && hi > mR+1e-6)){ naechste.push(q); return; }
+            let P=null;
+            if(q.type==='line'){
+              const t=(mR-q.x1)/(q.x2-q.x1);
+              P={z:q.z1+(q.z2-q.z1)*t, x:mR};
+            } else if(isFinite(q.cz) && isFinite(q.cx)){
+              const R=Math.hypot(q.z1-q.cz, q.x1-q.cx);
+              const a1=Math.atan2(q.x1-q.cx, q.z1-q.cz), a2=Math.atan2(q.x2-q.cx, q.z2-q.cz);
+              let da=a2-a1; if(q.cw && da>0) da-=2*Math.PI; if(!q.cw && da<0) da+=2*Math.PI;
+              const v=(mR-q.cx)/R;
+              if(Math.abs(v)<=1){
+                const as=Math.asin(v);
+                [as, Math.PI-as].forEach(ac=>{
+                  let dp=ac-a1; if(q.cw && dp>0) dp-=2*Math.PI; if(!q.cw && dp<0) dp+=2*Math.PI;
+                  if(Math.abs(dp)>1e-6 && Math.abs(dp)<Math.abs(da)-1e-6 && (dp<0)===(da<0)){
+                    const a=a1+dp;
+                    if(!P || Math.abs(dp)<Math.abs(P.dp)) P={z:q.cz+R*Math.cos(a), x:mR, dp:dp};
+                  }
+                });
+              }
+            }
+            // Kreuzung im Z-Fenster der Tasche (mit Rand) — sonst geht sie eine
+            // andere Tasche oder gar keine an.
+            if(!P || P.z > pk.zIn+0.5 || P.z < pk.zOut-0.5){ naechste.push(q); return; }
+            const A=Object.assign({}, q, {z2:P.z, x2:P.x}), B=Object.assign({}, q, {z1:P.z, x1:P.x});
+            delete A.dp; delete B.dp;
+            if(q.type==='arc'){ bogenTeilen(A).forEach(u=>naechste.push(u)); bogenTeilen(B).forEach(u=>naechste.push(u)); }
+            else { naechste.push(A); naechste.push(B); }
+          });
+          teile=naechste;
+        });
+        teile.forEach(q=>neuS.push(q));
+      });
+      if(neuS.length!==segs.length){
+        segs.length=0; neuS.forEach(q=>segs.push(q));
+        lines.push('(TASCHENMUND: Konturelement am Mund geteilt - Mantelteil oberhalb gehoert dem Hauptzug)');
+      }
+    }
     const cap2 = p.t2 ? toolFlankCapability(p.t2) : null;
     const inPocket = (sg)=>{
       // Zugehörigkeit über den KLEINSTEN Segmentdurchmesser: die Flanken enden oben an
@@ -24851,6 +24968,7 @@ function genAbspanenKontur(p, N, bump, lines, warnings){
     // fuer die STIRN-Planflaeche (am rechten Konturende).
     const zTopK = segs.length? Math.max.apply(null, segs.map(sg=>Math.max(sg.z1,sg.z2))) : 0;
     const elementOk=(sg)=>{
+      if(sg.type==='arc' && sg.flankeOk!==undefined) return !!sg.flankeOk;   // Teilbogen: laengs abgetastet (s. oben)
       const dz=Math.abs(sg.z2-sg.z1), dx=sg.x2-sg.x1;
       if(dz<1e-6 && Math.abs(dx)<1e-6) return true;
       if(dz < 1e-3 && Math.max(sg.z1,sg.z2) > zTopK-0.5) return true;   // Planschnitt: nur Stirn
@@ -24894,8 +25012,9 @@ function genAbspanenKontur(p, N, bump, lines, warnings){
           } else {
             cur=null;
             const sg=segs[si];
-            const ang=Math.atan2(Math.abs(sg.x2-sg.x1), Math.max(Math.abs(sg.z2-sg.z1),1e-6))*180/Math.PI;
-            ausgespart.push('Z'+fmt(sg.z1)+' ('+fmt(ang)+'\u00b0)');
+            const ang=(sg.fallMax!=null) ? Math.max(sg.fallMax, sg.riseMax)
+                    : Math.atan2(Math.abs(sg.x2-sg.x1), Math.max(Math.abs(sg.z2-sg.z1),1e-6))*180/Math.PI;
+            ausgespart.push('Z'+fmt(sg.z1)+(sg.type==='arc'?'..Z'+fmt(sg.z2)+' (Bogen, ':' (')+fmt(ang)+'\u00b0)');
           }
         }
       });
@@ -25116,8 +25235,73 @@ function genAbspanenKontur(p, N, bump, lines, warnings){
         const sg0=segs[r.start];
         const sx=r2d(sg0.x1);
         lines.push(`(--- HAUPTKONTUR WEITER HINTER HINTERSCHNITT ---)`);
-        lines.push(`${N()} (GERADE  ) G94 G00 X${fmt(sx + clearSign2*anWeg)} Z${fmt(sg0.z1)}`); bump();
-        lines.push(`${N()} (GERADE  ) G95 F${fmt(p.ff)} G01 ${cc}X${fmt(sx)}`); bump();
+        // ANWAHL AUF DER VERLAENGERUNG NACH EINER TASCHE [17.09.2026 nachts,
+        // Daniels Ballen]: die radiale Anwahl GENAU am Laufbeginn setzt den
+        // Schneidenradius-Versatz (G42: die Nase liegt links der Bahn) in die
+        // steigende Flanke links davon — am 41-Grad-Kegel hinter dem Ballen
+        // 1,0 mm ⌀ tief ueber 1,3 mm (Feld). Jetzt faehrt die Anwahl auf der
+        // VERLAENGERUNG des ersten Elements in die Tasche hinein: erst Z, dann
+        // radial UNKORRIGIERT auf den Verlaengerungspunkt (die Nase liegt so
+        // rechts der Bahn, ueber dem tieferen Taschenteil), dann mit Korrektur
+        // tangential auf den Laufbeginn — Anwahlsatz und Element liegen auf
+        // EINER Geraden, der Versatz laeuft ohne Ecke ein (dieselbe Mechanik
+        // wie die Anwahl am Konturende im lr-Zweig). Bedingung: laengs der
+        // Verlaengerung steht kein Material ueber der Linie (die Tasche ist
+        // geraeumt, z.B. vom Stechdrehen). Sonst bleibt die radiale Anwahl —
+        // mit Ansage, denn dann schneidet der Versatz die Flanke an.
+        const tgA=(()=>{
+          // Richtung vom Laufbeginn ZURUECK (gegen die Laufrichtung), Einheitsvektor (z, r)
+          if(sg0.type==='arc' && isFinite(sg0.cz)){
+            const Rz=sg0.z1-sg0.cz, Rr=sg0.x1-sg0.cx;
+            let tz=-Rr, tr=Rz;
+            if(tz*(sg0.z2-sg0.z1)+tr*(sg0.x2-sg0.x1) > 0){ tz=-tz; tr=-tr; }
+            const L2=Math.hypot(tz,tr)||1; return {z:tz/L2, r:tr/L2};
+          }
+          const dz=sg0.z1-sg0.z2, dr=sg0.x1-sg0.x2, L2=Math.hypot(dz,dr)||1;
+          return {z:dz/L2, r:dr/L2};
+        })();
+        let tangentialA=false;
+        if(!innen && tgA.z > -1e-6){
+          const pV={z:sg0.z1 + tgA.z*anWeg, r:sg0.x1 + tgA.r*anWeg};
+          // Die Reststand-Fuehrung rechnet AUSSENHUELLEN und kennt keine
+          // Hinterschnitte — in der Tasche meldet sie immer den Mund. Ob die
+          // Tasche geraeumt ist, sagt deshalb ein VORANGEHENDES Stechdrehen
+          // (schlichten oder beide, aussen) auf derselben Kontur, dessen
+          // Fenster den Laufbeginn einschliesst. Ohne ein solches gilt die
+          // Reststand-Pruefung wie im lr-Zweig.
+          const idxHier = (typeof programSteps!=='undefined') ? programSteps.findIndex(s2=>s2 && s2.params===p) : -1;
+          const geraeumt = idxHier>0 && programSteps.slice(0, idxHier).some(s2=>{
+            if(!s2 || s2.type!=='stechdrehen' || !s2.params) return false;
+            const q2=s2.params;
+            if(q2.bearbeitung==='schruppen' || (q2.lage||'aussen')==='innen') return false;
+            const cA=(q2.contourId!==undefined)? q2.contourId : (contours[0]&&contours[0].id);
+            const cB=(p.contourId!==undefined)? p.contourId : (contours[0]&&contours[0].id);
+            if(cA!==cB) return false;
+            if(q2.eingrenz==='ja' && (isFinite(q2.za)||isFinite(q2.zb))){
+              const gz=[q2.za,q2.zb].filter(v=>isFinite(v));
+              if(gz.length===2){ const lo=Math.min.apply(null,gz), hi=Math.max.apply(null,gz); if(sg0.z1 < lo-0.6 || sg0.z1 > hi+0.6) return false; }
+            }
+            return true;
+          });
+          const frei = r2d(pV.r) > xmin+0.1 && (geraeumt || [0.25,0.5,0.75,1].every(t2=>{
+            const zq=sg0.z1 + tgA.z*anWeg*t2, rq=sg0.x1 + tgA.r*anWeg*t2;
+            return matAt(zq) <= r2d(rq) + 0.1;
+          }));
+          if(frei){
+            tangentialA=true;
+            lines.push(`(ANWAHL AUF DER VERLAENGERUNG - TASCHE `+(geraeumt?'VOM STECHDREHEN GERAEUMT':'FREI')+`)`);
+            lines.push(`${N()} (GERADE  ) G94 G00 Z${fmt(pV.z)}`); bump();
+            lines.push(`${N()} (GERADE  ) G00 X${fmt(limX(r2d(pV.r)) + clearSign2*anWeg)}`); bump();
+            lines.push(`${N()} (GERADE  ) G95 F${fmt(p.ff)} G01 X${fmt(limX(r2d(pV.r)))}`); bump();
+            lines.push(`${N()} (SCHRAEG ) G01 ${cc}X${fmt(limX(sx))} Z${fmt(sg0.z1)}`); bump();
+          } else {
+            warnings.push('Schlichten T'+(p.t2||p.t)+': Wiedereinstieg hinter dem Hinterschnitt bei Z'+fmt(sg0.z1)+' radial — auf der Verlaengerung des ersten Elements steht noch Material (kein Stechdrehen davor, das die Tasche schlichtet). Der Schneidenradius-Versatz kann die Flanke dort um bis zu '+fmt(noseR)+' mm anschneiden; Tasche vorher raeumen (Stechdrehen).');
+          }
+        }
+        if(!tangentialA){
+          lines.push(`${N()} (GERADE  ) G94 G00 X${fmt(sx + clearSign2*anWeg)} Z${fmt(sg0.z1)}`); bump();
+          lines.push(`${N()} (GERADE  ) G95 F${fmt(p.ff)} G01 ${cc}X${fmt(sx)}`); bump();
+        }
       }
       for(let si=r.start; si<=r.end; si++) emitSeg(segs[si]);
       fElement(null);
@@ -27151,12 +27335,91 @@ function genGewinde(p, N, bump, lines, warnings){
 // 3x Plattenecken-Radius), damit am Stoss der beiden Halbzuege wegen des
 // Schneidenradius kein Steg stehen bleibt. Genutzt vom Radialmodus und
 // vom Laengs-Modus mit Schlichtzug "beidseitig".
-function schlichteTaschenBeidseitig(pk, pts, bw, xSicher, p, N, bump, lines, warnings, wo){
-  const bandFreiX=(zP,xP)=>{
-    for(let zz=zP-bw+0.05; zz<=zP-0.05+1e-9; zz+=0.1){ if(contourXatZ(zz, pts) > xP + 0.02) return false; }
-    return true;
+// =================================================================
+// ECKENRADIUS DER STECHPLATTE IM SCHLICHTZUG [17.09.2026 nachts, Daniels
+// Ballen]. Die Schlichtzuege fuhren mit der SCHARFEN Ecke auf der Kontur.
+// Die Platte hat aber einen Eckenradius (T21: 0,4): an Schraegen und
+// Rundungen beruehrt nicht die Ecke, sondern ihr Bogen die Kontur, und
+// die scharfe Ecke steht um r(1-cos) daneben — im Feld gemessen +0,43 mm ⌀
+// am 41-Grad-Kegel, +0,9 mm an der 82-Grad-Ballenflanke. Der Massbericht
+// sah davon nichts (Band-Modell mit scharfer Ecke, jetzt mit Eckenkreis).
+// Gerechnet wird wie eine Schneidenradiuskorrektur: der Mittelpunkt des
+// Eckenkreises laeuft im Abstand r ueber der Kontur (Innenecken:
+// Schnittpunkt der versetzten Geraden, Aussenecken: Bogen um den
+// Eckpunkt), der programmierte Punkt ist die scharfe Ecke dieses Kreises:
+// rechte Ecke P = M + (r, -r), linke Ecke L = M + (-r, -r), Bezugsschneide
+// (rechts) = L + Plattenbreite. Auf ebenen Stuecken aendert das nur Z um
+// r (die Ecke liegt r neben dem Kreisfuss), auf Schraegen liegt der Punkt
+// tiefer und die Rundung kommt genau auf die Kontur. Ohne Eckenradius
+// (r=0) ist die Bahn bitgenau die alte.
+// punkte: Konturpunkte {z, x(⌀)} in Fahrfolge; ecke: 'rechts'|'links';
+// sinn: -1 = Fahrt Richtung Futter, +1 = Richtung Stirn (0: aus den Punkten).
+// =================================================================
+function stechEckenBahn(punkte, r, bw, ecke, sinn){
+  const zOff=(ecke==='links') ? (bw - r) : r;
+  if(!(r>1e-6) || punkte.length<1) return punkte.map(q=>({z:q.z+(ecke==='links'?bw:0), x:q.x}));
+  const P=punkte.map(q=>({z:q.z, r:d2r(q.x)}));
+  const Q=[P[0]];
+  for(let i=1;i<P.length;i++){ const a=Q[Q.length-1]; if(Math.hypot(P[i].z-a.z, P[i].r-a.r)>1e-6) Q.push(P[i]); }
+  if(!sinn){ const dz=Q[Q.length-1].z-Q[0].z; sinn = dz<-1e-9 ? -1 : (dz>1e-9 ? 1 : (ecke==='links' ? 1 : -1)); }
+  const aus=(m)=>({z:m.z+zOff, x:r2d(m.r-r)});
+  if(Q.length===1) return [aus({z:Q[0].z, r:Q[0].r+r})];
+  const n=[];   // Aussennormale je Segment (vom Material weg)
+  for(let i=0;i+1<Q.length;i++){
+    const dz=Q[i+1].z-Q[i].z, dr=Q[i+1].r-Q[i].r, L=Math.hypot(dz,dr)||1;
+    const d={z:dz/L, r:dr/L};
+    // Fahrt Richtung Futter: Material links der Fahrtrichtung, Aussennormale rechts
+    const nn = sinn<0 ? {z:d.r, r:-d.z} : {z:-d.r, r:d.z};
+    nn.d=d; n.push(nn);
+  }
+  const M=[{z:Q[0].z+r*n[0].z, r:Q[0].r+r*n[0].r}];
+  for(let i=1;i+1<Q.length;i++){
+    const nA=n[i-1], nB=n[i], V=Q[i];
+    const kreuz=nA.d.z*nB.d.r - nA.d.r*nB.d.z;
+    const cosW=nA.z*nB.z+nA.r*nB.r;
+    if(Math.abs(kreuz)<1e-6 || cosW>0.99985){                // unter 1 Grad Knick: durchlaufen
+      M.push({z:V.z+r*nB.z, r:V.r+r*nB.r});
+    } else if(kreuz*sinn > 0){                               // Innenecke: Schnittpunkt der versetzten Geraden
+      const A1={z:V.z+r*nA.z, r:V.r+r*nA.r}, A2={z:V.z+r*nB.z, r:V.r+r*nB.r};
+      const dA=nA.d, dB=nB.d;
+      const det=dA.z*(-dB.r) - dA.r*(-dB.z);
+      if(Math.abs(det)<1e-9){ M.push(A2); }
+      else { const wz=A2.z-A1.z, wr=A2.r-A1.r; const t=(wz*(-dB.r) - wr*(-dB.z))/det; M.push({z:A1.z+dA.z*t, r:A1.r+dA.r*t}); }
+    } else {                                                 // Aussenecke: Bogen um den Eckpunkt
+      const a0=Math.atan2(nA.r, nA.z), a1=Math.atan2(nB.r, nB.z);
+      let da=a1-a0; while(da>Math.PI) da-=2*Math.PI; while(da<-Math.PI) da+=2*Math.PI;
+      const k=Math.max(1, Math.ceil(Math.abs(da)/(Math.PI/12)));
+      for(let j=0;j<=k;j++){ const a=a0+da*j/k; M.push({z:V.z+r*Math.cos(a), r:V.r+r*Math.sin(a)}); }
+    }
+  }
+  const e=Q.length-2;
+  M.push({z:Q[Q.length-1].z+r*n[e].z, r:Q[Q.length-1].r+r*n[e].r});
+  return M.map(aus);
+}
+// Klingenband [zP-bw, zP] auf Hoehe xP (⌀) kollisionsfrei? Mit Eckenkreis:
+// an beiden Enden der Klinge liegt die Unterkante um den Kreis hoeher.
+// OFFENES Band: eine senkrechte Wand GENAU an einer Klingenkante ist kein
+// Verstoss; Verstoss ist nur Material strikt INNERHALB der Klinge.
+function stechBandFrei(zP, xP, pts, bw, rK){
+  const r=Math.min(Math.max(0, +rK||0), bw/2);
+  const cK=(u)=>{
+    if(r<=1e-9) return 0;
+    if(u<r){ const w=r-u; return r-Math.sqrt(Math.max(0, r*r-w*w)); }
+    if(u>bw-r){ const w=u-(bw-r); return r-Math.sqrt(Math.max(0, r*r-w*w)); }
+    return 0;
   };
+  // Unter der Drehachse steht nichts: der kompensierte Planzug an der Stirn
+  // beginnt bei ⌀-2r (die Ecke liegt r unter dem Kreisfuss), contourXatZ
+  // meldet vor der Stirn aber ⌀0 — das ist die Achse, kein Material.
+  for(let zz=zP-bw+0.05; zz<=zP-0.05+1e-9; zz+=0.1){
+    if(contourXatZ(zz, pts) > Math.max(xP + 2*cK(zP-zz), 0) + 0.02) return false;
+  }
+  return true;
+}
+function schlichteTaschenBeidseitig(pk, pts, bw, xSicher, p, N, bump, lines, warnings, wo){
   const stTool=toolTable.find(x=>String(x.t)===String(p.t));
+  const rK=Math.min(Math.max(0, +((stTool&&stTool.r)||0)), bw/2);
+  const bandFreiX=(zP,xP)=>stechBandFrei(zP, xP, pts, bw, rK);
   const rEck=(stTool && +stTool.rd>0) ? +stTool.rd : 0.2;
   const ueber=Math.max(0.6, 3*rEck);
   // DICHTE ABTASTUNG [Daniel, "Aufmass bleibt im Grund"]: die Zuege werden
@@ -27173,9 +27436,24 @@ function schlichteTaschenBeidseitig(pk, pts, bw, xSicher, p, N, bump, lines, war
     const roh=[];
     const abw = z2 < z1;
     for(let z=z1; abw ? z>=z2-1e-9 : z<=z2+1e-9; z += abw ? -0.05 : 0.05){
-      roh.push({z:z+off, x:contourXatZ(z, pts)});
+      roh.push({z:z, x:contourXatZ(z, pts)});
     }
-    roh.push({z:z2+off, x:contourXatZ(z2, pts)});
+    roh.push({z:z2, x:contourXatZ(z2, pts)});
+    // KONTURECKEN EXAKT MITNEHMEN [17.09.2026 nachts, Daniels Ballen]: das
+    // 0,05er-Raster trifft die Polygonecken der Kontur nicht — die
+    // Verschmelzung liess je Ecke ZWEI Rasterpunkte (0,05 auseinander)
+    // stehen, und der Zug schnitt jede Ecke um bis zu 0,05 ab. Mit den
+    // Ecken selbst als Stuetzpunkte bleibt je Ecke EIN Satz, und der Zug
+    // liegt exakt auf dem Polygon. Doppelte Z (senkrechte Wand: zwei Ecken
+    // auf einem Z) behalten den groesseren ⌀ — wie contourXatZ.
+    {
+      const lo=Math.min(z1,z2)+1e-6, hi=Math.max(z1,z2)-1e-6;
+      pts.forEach(pt=>{ if(pt.z>lo && pt.z<hi) roh.push({z:pt.z, x:pt.x}); });
+      roh.sort((a,b)=> abw ? (b.z-a.z) : (a.z-b.z));
+      for(let i=roh.length-1;i>0;i--){
+        if(Math.abs(roh[i].z-roh[i-1].z)<1e-6){ roh[i-1].x=Math.max(roh[i-1].x, roh[i].x); roh.splice(i,1); }
+      }
+    }
     const arr=[roh[0]];
     for(let i=1;i+1<roh.length;i++){
       const a=arr[arr.length-1], b=roh[i], c2=roh[i+1];
@@ -27183,7 +27461,9 @@ function schlichteTaschenBeidseitig(pk, pts, bw, xSicher, p, N, bump, lines, war
       if(Math.abs(s1-s2)>1e-3) arr.push(b);
     }
     if(roh.length>1) arr.push(roh[roh.length-1]);
-    return arr.filter(b=>bandFreiX(b.z, b.x));
+    // Bezugspunkte mit Eckenradius (s. stechEckenBahn); ohne Radius = Konturpunkt + Versatz wie bisher
+    const komp=stechEckenBahn(arr, rK, bw, off>0?'links':'rechts', abw?-1:1);
+    return komp.filter(b=>bandFreiX(b.z, b.x));
   };
   pk.forEach((tk,ti)=>{
     const zM=(tk.zIn+tk.zOut)/2;
@@ -27310,6 +27590,7 @@ function genStechdrehen(p, N, bump, lines, warnings){
     return;
   }
   const bw = Math.max(0.5, +stTool.len||3);
+  const rK = Math.min(Math.max(0, +stTool.r||0), bw/2);   // Eckenradius der Platte (wie toolCutPolygon)
   // D-Deckel aus der Plattenstabilitaet: Laengs-ap (Radius) <= 0,75 x bw
   const richtX = p.richtung==='x';
   // D ist ap [Daniel, 29.08.2026] - intern rechnet der Zyklus im
@@ -27320,7 +27601,12 @@ function genStechdrehen(p, N, bump, lines, warnings){
     warnings.push('Stechdrehen: D='+fmt(dEingabe)+' auf '+fmt(dMax)+' mm (DM) begrenzt — Laengsspantiefe max. 0,75 x Plattenbreite ('+fmt(bw)+' mm), sonst bricht die Klinge beim Laengsziehen.');
     dEingabe = dMax;
   }
-  const pts = sampleContourForRough();
+  // SEHNENFEHLER 0,005 statt 0,02 [17.09.2026 nachts, Daniels Ballen]: der
+  // Schlichtzug faehrt dieses Polygon ab. An der 82-Grad-Flanke des Ballens
+  // wird ein Sehnenfehler von 0,02 mm senkrecht zur Bahn im Massbericht
+  // (⌀ bei festem Z) zu -0,24 mm; mit 0,002 bleibt es unter -0,05. Die
+  // Satzzahl steigt nur an Rundungen (Sehnen an R30: 0,7 statt 2,2 mm).
+  const pts = sampleContourForRough(undefined, 0.002);
   if(pts.length<2){ warnings.push('STECHDREHEN: Kontur zu kurz.'); return; }
   let zRueck=null;
   for(let i=1;i<pts.length;i++){ if(pts[i].z>=pts[i-1].z+1e-6){ zRueck=pts[i-1].z; break; } }
@@ -27787,21 +28073,39 @@ function genStechdrehen(p, N, bump, lines, warnings){
     lines.push(`${N()} (M-BEFEHL) M03`); bump();
     // Bahnpunkte: rl ueber die Zielkontur; off=0 (rechte Ecke) auf fallenden/
     // ebenen Segmenten, off=bw (linke Ecke) auf steigenden.
-    const bahn=[]; // {z,x,move:'cut'|'lift'}
+    // NUR IM EINGEGRENZTEN FENSTER [17.09.2026 nachts, Daniels Ballen]: mit
+    // Eingrenzen (za/zb) sollte der Stecher "nur die Tasche raeumen, nicht die
+    // ganze Kontur nachfahren" (s. oben) — der Konturzug lief trotzdem ueber
+    // ALLE Konturpunkte, bei Daniels Ballen von der Stirn (G01 X0 bei Z6) ueber
+    // alle Absaetze bis zum Konturende: 40 Saetze umsonst, mit unkompensierter
+    // Ecke auf Flaechen, die T3 danach ohnehin schlichtet. Jetzt werden die
+    // Punkte auf [zEnd, zStart] beschnitten, an den Grenzen mit dem
+    // Schnittpunkt des Konturelements. Ohne Eingrenzen: alle Punkte wie bisher.
+    const ptsK=(()=>{
+      if(!(p.eingrenz==="ja" && (isFinite(p.za) || isFinite(p.zb)))) return pts;
+      const out=[];
+      for(let i=0;i<pts.length;i++){
+        const q=pts[i];
+        if(i>0){
+          const a=pts[i-1];
+          [zStart, zEnd].forEach(zg=>{
+            if((a.z-zg)*(q.z-zg) < -1e-12){ const t=(zg-a.z)/(q.z-a.z); out.push({z:zg, x:a.x+(q.x-a.x)*t}); }
+          });
+        }
+        if(q.z<=zStart+1e-9 && q.z>=zEnd-1e-9) out.push(q);
+      }
+      return out.length>1 ? out : pts;
+    })();
+    const bahn=[]; // {z,x,move:'cut'|'lift', cz,cx,off: Konturpunkt und Ecke (fuer den Eckenradius)}
     let off=0;
-    if(pts.length>1 && (pts[1].x - pts[0].x) > 0.005) off=bw;   // Start an steigender Wand: Klinge rechts davon
+    if(ptsK.length>1 && (ptsK[1].x - ptsK[0].x) > 0.005) off=bw;   // Start an steigender Wand: Klinge rechts davon
     let skipping=false;
-    const bandFrei=(zP,xP)=>{      // Klinge [zP-bw, zP] kollisionsfrei auf Hoehe xP?
-      // OFFENES Band: eine senkrechte Wand GENAU an einer Klingenkante ist
-      // kein Verstoss — die Kante faehrt an ihr entlang (Stirn, Schultern).
-      // Verstoss ist nur Material strikt INNERHALB der Klinge.
-      for(let zz=zP-bw+0.05; zz<=zP-0.05+1e-9; zz+=0.1){ if(contourXatZ(zz, pts) > xP + 0.02) return false; }
-      return true;
-    };
-    for(let i=0;i<pts.length;i++){
-      const q=pts[i];
+    // Klinge [zP-bw, zP] kollisionsfrei auf Hoehe xP? (mit Eckenkreis, s. stechBandFrei)
+    const bandFrei=(zP,xP)=>stechBandFrei(zP, xP, pts, bw, rK);
+    for(let i=0;i<ptsK.length;i++){
+      const q=ptsK[i];
       if(i>0){
-        const a=pts[i-1];
+        const a=ptsK[i-1];
         const dx=q.x-a.x;
         const nOff = (dx > 0.005) ? bw : ((dx < -0.005) ? 0 : off);
         if(nOff!==off){
@@ -27821,12 +28125,12 @@ function genStechdrehen(p, N, bump, lines, warnings){
               bahn.push({z:a.z, x:xSicher, move:'lift'});
               skipping=true;
             } else {
-              bahn.push({z:a.z+bw, x:a.x, move:'cut'});
+              bahn.push({z:a.z+bw, x:a.x, move:'cut', cz:a.z, cx:a.x, off:bw});
             }
           } else {
             // Kuppe steigend->fallend (konvex): Punkt zieht auf der Kuppe
             // um bw zurueck — oberhalb ist frei.
-            bahn.push({z:a.z, x:a.x, move:'cut'});
+            bahn.push({z:a.z, x:a.x, move:'cut', cz:a.z, cx:a.x, off:0});
           }
           off=nOff;
         }
@@ -27836,7 +28140,7 @@ function genStechdrehen(p, N, bump, lines, warnings){
         bahn.push({z:q.z+off, x:xSicher, move:'lift'}); // umsetzen und neu eintauchen
         skipping=false;
       }
-      bahn.push({z:q.z+off, x:q.x, move:'cut'});
+      bahn.push({z:q.z+off, x:q.x, move:'cut', cz:q.z, cx:q.x, off:off});
     }
     // SCHLICHTZUG BEIDSEITIG [Daniel]: Taschenbereiche aus dem Hauptzug
     // herausschneiden (Ueberflug im Eilgang auf Oeffnungs-Hoehe) — die
@@ -27848,7 +28152,8 @@ function genStechdrehen(p, N, bump, lines, warnings){
       taschenUeberhoehen(pkBeid);
       if(pkBeid.length){
         const inT=(z)=> pkBeid.find(t=> z<=t.zIn+bw+0.01 && z>=t.zOut-0.01);
-        const nb=[]; let drin=null;
+        const nb=[]; let drin=null, vorher=null;
+        const xU=(t)=> (t.xUeber!==undefined? t.xUeber : Math.min(t.mouthX+2, xSicher));
         for(const b of bahn){
           // NUR Punkte UNTER der Mundhoehe sind Taschenpunkte. Die
           // Bahn traegt an Steigflanken +Plattenbreite Versatz — der
@@ -27858,11 +28163,38 @@ function genStechdrehen(p, N, bump, lines, warnings){
           const t0=inT(b.z);
           const t=(t0 && b.x < t0.mouthX - 0.01) ? t0 : null;
           if(t){
-            if(!drin){ nb.push({z:b.z, x:(t.xUeber!==undefined? t.xUeber : Math.min(t.mouthX+2, xSicher)), move:'lift'}); drin=t; }
-            continue;
+            if(!drin){ nb.push({z:b.z, x:xU(t), move:'lift'}); drin=t; }
+            vorher=b; continue;
           }
-          if(drin){ nb.push({z:b.z, x:(drin.xUeber!==undefined? drin.xUeber : Math.min(drin.mouthX+2, xSicher)), move:'lift'}); drin=null; }
-          nb.push(b);
+          if(drin){
+            // TASCHENAUSGANG AM MUND, NICHT AM SEGMENTENDE [17.09.2026 nachts,
+            // Daniels Ballen]: der erste Punkt ueber Mundhoehe war das ENDE des
+            // steigenden Segments — beim Kegel ⌀104->⌀165 der Konturendpunkt
+            // (Z-245, Bahn Z-239). Der Ueberflug auf Mundhoehe+2 ging bis dorthin,
+            // und die 6-mm-Platte stand mit ihrem Band Z-245..-239 im Kegel:
+            // 5 mm ⌀ zu tief am Konturende (Daniels Massbericht: -6,00, hier
+            // -5,00). Der Ausgang liegt dort, wo das Segment die Mundhoehe
+            // kreuzt (Bahnkoordinaten, also schon um die Plattenbreite
+            // versetzt): Ueberflug bis zum Kreuzungspunkt, dort auf Mundhoehe
+            // eintauchen, das Segment ab dem Mund als Mantel fahren. Ohne
+            // Vorgaengerpunkt (Grund schmaler als die Platte, Bahn hebt selbst
+            // ab) gilt Taschenrand plus Plattenbreite, und zum eigenen
+            // Abhebepunkt geht es erst senkrecht auf dessen Hoehe.
+            const zRand = drin.zOut + bw;
+            if(vorher && vorher.move==='cut' && b.move==='cut' && b.x > drin.mouthX + 0.01 && vorher.x < drin.mouthX - 0.01 && Math.abs(b.x - vorher.x) > 1e-9){
+              const zX = vorher.z + (b.z - vorher.z) * (drin.mouthX - vorher.x) / (b.x - vorher.x);
+              nb.push({z:zX, x:xU(drin), move:'lift'});
+              nb.push({z:zX, x:drin.mouthX, move:'cut', cz:zX-(b.off||0), cx:drin.mouthX, off:(b.off||0)});
+            } else if(b.move==='lift'){
+              const zL = Math.max(b.z, zRand);
+              nb.push({z:zL, x:xU(drin), move:'lift'});
+              nb.push({z:zL, x:b.x, move:'lift'});
+            } else {
+              nb.push({z:Math.max(b.z, zRand), x:xU(drin), move:'lift'});
+            }
+            drin=null;
+          }
+          nb.push(b); vorher=b;
         }
         bahn.length=0; nb.forEach(b=>bahn.push(b));
       }
@@ -27875,6 +28207,24 @@ function genStechdrehen(p, N, bump, lines, warnings){
     // Grund-Endpunkt stehen.
     for(let i=bahn.length-1;i>=0;i--){
       if(bahn[i].move==='cut' && !bandFrei(bahn[i].z, bahn[i].x)) bahn.splice(i,1);
+    }
+    // ECKENRADIUS [17.09.2026 nachts]: zusammenhaengende Schnittpunkte mit
+    // derselben Ecke bilden einen Zug; jeder Zug wird wie in
+    // schlichteTaschenBeidseitig ueber stechEckenBahn kompensiert. Danach
+    // noch einmal die Bandpruefung (mit Eckenkreis) auf die neuen Punkte.
+    if(rK>1e-6){
+      const neu=[]; let i=0;
+      while(i<bahn.length){
+        if(bahn[i].move!=='cut' || bahn[i].cz===undefined){ neu.push(bahn[i]); i++; continue; }
+        let j=i;
+        while(j+1<bahn.length && bahn[j+1].move==='cut' && bahn[j+1].cz!==undefined && bahn[j+1].off===bahn[i].off) j++;
+        const lauf=bahn.slice(i,j+1).map(b=>({z:b.cz, x:b.cx}));
+        stechEckenBahn(lauf, rK, bw, bahn[i].off>0?'links':'rechts', -1).forEach(k=>{
+          if(bandFrei(k.z, k.x)) neu.push({z:k.z, x:k.x, move:'cut'});
+        });
+        i=j+1;
+      }
+      bahn.length=0; neu.forEach(b=>bahn.push(b));
     }
     if(!bahn.length){ warnings.push('Stechdrehen Schlichten: keine kollisionsfreie Bahn gefunden — Plattenbreite pruefen.'); return; }
     // Anfahrt an den ersten Bahnpunkt
@@ -30697,6 +31047,20 @@ function simEckenBestimmen(){
     const mv=simMoves[i];
     mv.__konkavA=undefined; mv.__konkavE=undefined;
     mv.__knickA=undefined; mv.__knickE=undefined;
+    // ABWAHLSATZ (G40 im Fahrsatz) [17.09.2026 nachts, Daniels Ballen]: die
+    // Steuerung faehrt vom letzten korrigierten Punkt GERADLINIG zum
+    // unkorrigierten Satzende — der Versatz laeuft ueber den Satz auf null.
+    // Das Modell setzte den Steuerpunkt am Satzanfang schlagartig auf die
+    // Bahn: am Ende des 50-Grad-Ballenbogens ruckte die V-Platte damit
+    // 0,7 mm nach rechts INS fertige Material, und das Feld zeigte -1,2 mm ⌀
+    // bei Z-152, wo die Maschine sauber abhebt (nachgerechnet: Nase und
+    // Nebenschneide bleiben 0,2 mm frei). Gemerkt wird der Vorgaengerzug;
+    // srkOffset blendet dessen Endversatz linear aus.
+    mv.__abwahlVon=undefined;
+    if(mv.type!=='rapid' && !mv.comp){
+      const p0=simMoves[i-1];
+      if(p0 && p0.type!=='rapid' && p0.comp && nah(p0.z2,mv.z1) && nah(p0.x2,mv.x1)) mv.__abwahlVon=p0;
+    }
     if(mv.type==='rapid' || !mv.comp) continue;
     // NACHBAR MUSS EIN KONTURZUG SEIN [Befund D1, Kantenwelle].
     // Ein Vorschubzug OHNE G41/G42 ist Anfahren oder Freifahren — er
@@ -30746,7 +31110,12 @@ function moveTangent(mv, t){
 // Restmaterial, das die Maschine in Wirklichkeit sauber abfährt.
 function srkOffset(tool, mv, t, mz, mx){
   const r=Math.max(0,+tool.r||0);
-  if(!r || !mv.comp) return {z:0,x:0};
+  if(!r) return {z:0,x:0};
+  if(!mv.comp){
+    // Abwahlsatz: Endversatz des Vorgaengers linear auf null (s. simEckenBestimmen).
+    if(mv.__abwahlVon){ const o=srkOffset(tool, mv.__abwahlVon, 1, mz, mx); return {z:o.z*(1-t), x:o.x*(1-t)}; }
+    return {z:0,x:0};
+  }
   const d=moveTangent(mv,t);
   // G42: Werkzeug rechts der Bahn (Blickrichtung Vorschub) -> Normale nach links drehen
   const sgn = (mv.comp==='G42') ? 1 : -1;
@@ -30799,7 +31168,16 @@ function srkOffset(tool, mv, t, mz, mx){
     // boegen schliessen tangential an das Vorsegment an — der Vorwaerts-
     // schub der Anfangsklemme liess das Modell dort ueber den Startpunkt
     // hinaus ins Nachbarmaterial ragen (Kehle wirkte zu tief gefraest).
-    else if(distA < klemmRA && mv.type!=='arc' && klemmeA) { const pull=klemmRA-distA; tz+=d.z*pull; tx+=d.x*pull; }
+    // ... AUSSER an einer ERKANNTEN Innenecke [17.09.2026 nachts, Daniels
+    // Ballen]: die Ausnahme stammt aus der Zeit vor __konkavA, als die Klemme
+    // an JEDEM Anfang zog. Tangentiale Boegen (K2-Hohlkehle) haben heute
+    // __konkavA=false und werden nicht geklemmt. Der Ballen beginnt aber mit
+    // senkrechter Tangente auf dem ⌀96-Zylinder — eine 90-Grad-Innenecke:
+    // ohne Klemme stand der Schneidenkreis am Bogenanfang 0,4 mm IM Zylinder
+    // (Feld: -0,8 mm ⌀ bei Z-99,6), wo die Steuerung die versetzten Bahnen
+    // verschneidet. Unbekannte Nachbarn (undefined) bleiben bei Boegen wie
+    // bisher ungeklemmt.
+    else if(distA < klemmRA && klemmeA && (mv.type!=='arc' || mv.__konkavA===true)) { const pull=klemmRA-distA; tz+=d.z*pull; tx+=d.x*pull; }
   }
   return { z: r*n.z - r*mz + tz, x: r*n.x - r*mx + tx };
 }
@@ -33130,10 +33508,15 @@ function bahn3dZeichnen(ctx, proj, sc, pEbene){
       if((art==='rapid') !== istEil){ offen=false; continue; }
       // d2r: die Bahn kommt im Durchmesser, projiziert wird im Radius.
       const a=projB(mv.z1, d2r(mv.x1));
-      const b=projB(mv.z2, d2r(mv.x2));
       if(!offen){ ctx.moveTo(a[0],a[1]); offen=true; }
       else ctx.lineTo(a[0],a[1]);
-      ctx.lineTo(b[0],b[1]);
+      // BOGEN ALS BOGEN [17.09.2026 nachts]: bis hierher zog die 3D-Ansicht
+      // jeden Satz als Gerade - ein G03 ueber den Ballen wurde zur Sehne
+      // DURCH den Ballen (Daniels 'Bahnbewegung durch den Radius'; das
+      // Materialfeld stempelte den Bogen richtig, nur die Linie log).
+      if(mv.type==='arc' && mv.cx!==undefined && typeof interpolateMove==='function'){
+        for(let k=1;k<=16;k++){ const qb=interpolateMove(mv, k/16); const c=projB(qb.z, d2r(qb.x)); ctx.lineTo(c[0],c[1]); }
+      } else { const b=projB(mv.z2, d2r(mv.x2)); ctx.lineTo(b[0],b[1]); }
     }
     ctx.stroke();
   });
@@ -34092,8 +34475,31 @@ function massBericht(){
             const z=zs[i2];
             const lo=Math.max(z, zA), hi=Math.min(z+bw, zB);
             if(lo>hi+1e-9) continue;
-            const xa=xAn(lo), xb=xAn(hi);
-            const xh=(seite==='innen')?Math.max(xa,xb):Math.min(xa,xb);
+            // ECKENKREIS DER PLATTE [17.09.2026 nachts, Daniels Ballen]: an den
+            // beiden Klingenenden liegt die Unterkante um den Eckenradius hoeher
+            // (u = Abstand der Stelle z von der Bezugsschneide: rechte Ecke
+            // u<r, linke Ecke u>bw-r). Ohne ihn meldete der Bericht -0,02 an der
+            // 82-Grad-Ballenflanke, wo das Feld +0,9 mm ⌀ stehen sah (die scharfe
+            // Ecke lag auf der Kontur, die Rundung nicht). Das Extremum von
+            // x(z')+2c(z'-z) liegt an den Intervallenden, den Zonengrenzen oder
+            // dort, wo die Kreistangente der Segmentsteigung entspricht.
+            const rK=Math.min(Math.max(0,+tw.r||0), bw/2);
+            const sgK=(seite==='innen')?-1:1;
+            const cK=(u)=>{
+              if(rK<=1e-9) return 0;
+              if(u<rK){ const w=rK-u; return rK-Math.sqrt(Math.max(0, rK*rK-w*w)); }
+              if(u>bw-rK){ const w=u-(bw-rK); return rK-Math.sqrt(Math.max(0, rK*rK-w*w)); }
+              return 0;
+            };
+            const kand=[lo, hi];
+            if(rK>1e-9){
+              [z+rK, z+bw-rK].forEach(v=>{ if(v>lo && v<hi) kand.push(v); });
+              const sN=(Math.abs(B.z-A.z)<1e-9)?0:(B.x-A.x)/(B.z-A.z);   // ⌀ je mm
+              const q1=sN*sgK/2;  if(q1>0){ const w=rK*q1/Math.sqrt(1+q1*q1); const v=z+(rK-w);    if(v>lo && v<hi) kand.push(v); }
+              const q2=-sN*sgK/2; if(q2>0){ const w=rK*q2/Math.sqrt(1+q2*q2); const v=z+(bw-rK)+w; if(v>lo && v<hi) kand.push(v); }
+            }
+            let xh=null;
+            kand.forEach(v=>{ const h=xAn(v)+sgK*2*cK(v-z); if(xh===null || (seite==='innen' ? h>xh : h<xh)) xh=h; });
             if(besser(xh, ist[i2])){ ist[i2]=xh; von[i2]=m.step; }
           }
         }
