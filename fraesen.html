@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 07:33 (a38ecab2)";</script>
+<script>window.__DZ_STAND="17.09.2026 08:26 (006f38dc)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -8043,7 +8043,7 @@ function fStandMax(G, x0, y0, x1, y1, rt){
 // Deshalb arbeitet die Bahn auf einer KOPIE des Standes und stempelt
 // ihre eigene Kugel hinein.
 function fStandKopie(G){
-  return {x0:G.x0, y0:G.y0, nx:G.nx, ny:G.ny, raster:G.raster,
+  return {x0:G.x0, y0:G.y0, nx:G.nx, ny:G.ny, raster:G.raster, tol:G.tol,
           stand:new Float32Array(G.stand), imRoh:G.imRoh, soll:G.soll};
 }
 // Die Kugel laengs einer Strecke aus dem Stand nehmen.
@@ -8460,7 +8460,15 @@ function fStandVorSchlicht(F, prog, s){
     const w = (prog.werkzeuge || []).filter(t => +t.nr === +letzt.t)[0];
     if(!w) return null;
     const b = fBahnModell(letzt, w, prog);
-    if(b && b.ok && b.gitter && b.gitter.nx > 0) return b.gitter;
+    if(b && b.ok && b.gitter && b.gitter.nx > 0){
+      // DIE SCHRANKE GEHOERT DAZU: wieviel darf nach dem Schruppen noch
+      // stehen, ohne dass die Kugel im Vollschnitt arbeitet? Genau eine
+      // Zustellung plus das groessere Aufmass - dieselbe Rechnung, die der
+      // Planer anstellt. Ohne sie nimmt die Bahn ersatzweise den
+      // Kugelradius, und der ist beim Schlichten meist zu gross.
+      b.gitter.tol = fRund((+letzt.zust || 0) + Math.max(+letzt.aufSeite || 0, +letzt.aufTiefe || 0));
+      return b.gitter;
+    }
   }catch(e){ /* kein Stand ist besser als ein falscher */ }
   return null;
 }
@@ -8802,7 +8810,9 @@ function fBahnSchlichten(s, tool, prog){
   // soll die Kugel wegnehmen. Alles darueber ist etwas anderes.
   // Ohne Angabe des Planers gilt der KUGELRADIUS: mehr Zustellung traegt
   // eine Kugel nicht - darueber schneidet ihr zylindrischer Teil.
-  const sTol = (+F.standTol > 0) ? +F.standTol : rk;
+  // Die Schranke kommt vom Planer (F.standTol) oder vom nachgerechneten
+  // Stand (SG.tol); ohne beides bleibt der Kugelradius als grobe Notloesung.
+  const sTol = (SG && +SG.tol > 0) ? +SG.tol : ((+F.standTol > 0) ? +F.standTol : rk);
   const NF = fNeigFeld(F);
   const nx = F.nx, ny = F.ny, r = F.raster;
   // Welche Zellen gehoeren zu dieser Bahn? Eine Flaeche muss dort sein
@@ -8999,7 +9009,9 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
   const f = +s.f || 0; if(!(f > 0)) return nein('Vorschub fehlt');
   const SG0 = fStandVorSchlicht(F, prog, s);
   const SG = SG0 ? fStandKopie(SG0) : null;
-  const sTol = (+F.standTol > 0) ? +F.standTol : rk;
+  // Die Schranke kommt vom Planer (F.standTol) oder vom nachgerechneten
+  // Stand (SG.tol); ohne beides bleibt der Kugelradius als grobe Notloesung.
+  const sTol = (SG && +SG.tol > 0) ? +SG.tol : ((+F.standTol > 0) ? +F.standTol : rk);
   const NF = (vorgabe && vorgabe.neig) ? vorgabe.neig : fNeigFeld(F);
   const nx = F.nx, ny = F.ny, r = F.raster;
   // Zellen dieser Bahn: STEILER als der Grenzwinkel, Sollhoehe im Bereich,
