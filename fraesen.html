@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 18:25 (416d589c)";</script>
+<script>window.__DZ_STAND="17.09.2026 19:41 (338b4d5e)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3118,14 +3118,21 @@ des Programmkopfs) Z-Ebene f&uuml;r Z-Ebene aus, bis nur noch das Modell samt Au
 <ul>
 <li><b>Z0</b> ist die Oberfl&auml;che, <b>Z1</b> die Tiefe (negativ, inkremental), <b>D</b> die Zustellung je Ebene. Die tiefste Ebene liegt um <b>UZ</b> &uuml;ber Z1.</li>
 <li><b>UXY</b> bleibt an jeder senkrechten Wand stehen, <b>UZ</b> auf jeder waagerechten Fl&auml;che &mdash; beides f&uuml;r das Schlichten.</li>
-<li>Gefahren wird <b>zeilenweise im Zickzack</b> mit einem Querdurchgang an den W&auml;nden; der Zeilenabstand ist die <b>Bahn&uuml;berlappung</b> mal Werkzeugradius.</li>
-<li><b>Anfahren &amp; Eintauchen</b> hat zwei Stellungen. <i>Im Schnitt</i> (Vorgabe): liegt der n&auml;chste Zug nah genug und darf die
-Werkzeugmitte die ganze Strecke &uuml;ber dort stehen, f&auml;hrt das Werkzeug <b>unten hin&uuml;ber</b> &mdash; kein R&uuml;ckzug, kein neues
-Eintauchen. Muss doch eingetaucht werden, <b>pendelt</b> die Bahn im eigenen Zug hin und her, mit dem <b>Eintauchwinkel ANGLE des
-Werkzeugs</b> aus der Tabelle &mdash; derselben Zahl, die die TNC f&uuml;r Q366 heranzieht. Ohne ANGLE wird gestochen und gesagt.
-<i>Senkrecht</i>: genau die Bahn von fr&uuml;her, auch der Zeilenwechsel &uuml;ber die Sicherheitsh&ouml;he &mdash; die Fahrt unten schneidet
-n&auml;mlich auf voller Tiefe, und bei schwacher Aufspannung will man das vielleicht nicht. (Gemessen an einem Testteil: 29 Z&uuml;ge,
-davon 23 unten verbunden, 3 pendelnd, 3 zu kurz &mdash; vorher stachen alle 29.)</li>
+<li>Gefahren wird <b>zeilenweise im Zickzack</b> mit einem Querdurchgang an den W&auml;nden; der Zeilenabstand ist die <b>Bahn&uuml;berlappung</b> mal Werkzeugradius.
+Die <b>Zeilenrichtung</b> (X oder Y) w&auml;hlt die App je Ebene: die Richtung mit den wenigsten Z&uuml;gen &mdash; an einer Rampe also l&auml;ngs, nicht quer
+(Rampenblock: 8 Z&uuml;ge statt 29). Eine Zeile liegt &uuml;berall dort, wo die <b>Schneide</b> Material erreicht, auch neben dem Rohteil; ein Streifen,
+der schmaler ist als der Werkzeugradius, bekommt eine Zeile dort, wo die Schneide am weitesten hineinreicht.</li>
+<li><b>Anfahren &amp; Eintauchen</b> hat zwei Stellungen. <i>Im Schnitt</i> (Vorgabe): endet ein Zug an der <b>Rohteilkante</b>, f&auml;ngt er
+drau&szlig;en an &mdash; das Werkzeug f&auml;hrt neben dem Rohteil im Eilgang auf Ebenentiefe und kommt waagerecht in den Schnitt; die Zustellung
+auf die n&auml;chste Ebene liegt dann ebenfalls in der Luft neben dem Teil (schr&auml;g, im Eilgang). Ist nur ein Ende offen, f&auml;ngt der
+erste Zug dort an. Steht eine Schraubstockbacke neben dem Rohteil, bleibt diese Kante zu, solange die Ebene unter der Backenoberkante liegt.
+Liegt der n&auml;chste Zug nah genug und darf die Werkzeugmitte die ganze Strecke &uuml;ber dort stehen, f&auml;hrt das Werkzeug <b>unten hin&uuml;ber</b> &mdash; kein R&uuml;ckzug, kein neues Eintauchen; zur n&auml;chsten Ebene aber nur durch die Luft, nie schr&auml;g durch Material.
+Muss doch eingetaucht werden, <b>pendelt</b> die Bahn im eigenen Zug hin und her, mit dem <b>Eintauchwinkel ANGLE des Werkzeugs</b> aus der
+Tabelle &mdash; derselben Zahl, die die TNC f&uuml;r Q366 heranzieht. Ohne ANGLE wird gestochen und gesagt.
+<i>Senkrecht</i>: Zeilenwechsel &uuml;ber die Sicherheitsh&ouml;he und senkrechtes Eintauchen, wo ein Zug im Material beginnt &mdash; die Fahrt
+unten schneidet n&auml;mlich auf voller Tiefe, und bei schwacher Aufspannung will man das vielleicht nicht; von au&szlig;en angefahren wird
+auch dann. (Gemessen am Rampenblock: 8 Z&uuml;ge in 4 Ebenen, 0 Stiche, 6 Eilg&auml;nge, 536&nbsp;mm Schnitt und 144&nbsp;mm Luft &mdash; vorher
+29 Z&uuml;ge quer &uuml;ber die Schr&auml;ge, 3 Stiche, 16 Eilg&auml;nge, 791/348&nbsp;mm.)</li>
 <li>Wo nur ein
 senkrechter <b>Stich ohne Fr&auml;sweg</b> entst&uuml;nde, l&auml;sst die App ihn weg: ein Schaftfr&auml;ser soll nicht bohren. Was dort stehen bleibt,
 steht im Restmaterial (gemessen &uuml;ber Daniels Modelle: ein Viertel aller Z&uuml;ge waren solche Stiche, ihr Wegfall kostet 4&nbsp;% mehr Restmaterial
@@ -8234,20 +8241,32 @@ function fStandKugelStempel(G, x0, y0, z0, x1, y1, z1, rk, tol){
 }
 // Wie hoch muss die KUGELSPITZE stehen, damit die Kugel laengs einer
 // Strecke nichts beruehrt? -Infinity heisst: dort steht nichts.
+// HALBE ZELLENDIAGONALE [17.09.2026 abends]: eine Zelle des Stands steht
+// bis an ihren RAND, nicht nur in ihrer Mitte. Gemessen wurde die Zelle
+// bis hierher an der Mitte - und am Rand der Schrupp-Treppe (Vorlage
+// steprampe, Stufe bei x = 8,95) lag die naechste stehende Zelle 5,004 mm
+// neben der Kugelachse: knapp ausserhalb des Kugelradius 5, also nicht
+// gezaehlt. Die Simulation mit ihrem eigenen Raster sah dieselbe Stufe
+// 4,95 mm neben der Achse und meldete die Kugel 0,2 mm zu tief. Deshalb
+// zaehlt jetzt der naechste Punkt der Zelle: Mittenabstand minus halbe
+// Zellendiagonale. Das ist dieselbe Zugabe wie bei der Ebenenmaske des
+// Schruppens.
 function fStandFreiHoehe(G, x0, y0, x1, y1, rk){
   const r = G.raster, St = G.stand;
+  const zu = r * Math.SQRT1_2, reich = rk + zu;
   const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / (r / 2)));
   let hoch = -Infinity;
   for(let q = 0; q <= n; q++){
     const t = q / n, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t;
-    const i0 = Math.max(0, Math.floor((x - rk - G.x0) / r)), i1 = Math.min(G.nx - 1, Math.ceil((x + rk - G.x0) / r));
-    const j0 = Math.max(0, Math.floor((y - rk - G.y0) / r)), j1 = Math.min(G.ny - 1, Math.ceil((y + rk - G.y0) / r));
+    const i0 = Math.max(0, Math.floor((x - reich - G.x0) / r)), i1 = Math.min(G.nx - 1, Math.ceil((x + reich - G.x0) / r));
+    const j0 = Math.max(0, Math.floor((y - reich - G.y0) / r)), j1 = Math.min(G.ny - 1, Math.ceil((y + reich - G.y0) / r));
     for(let j = j0; j <= j1; j++){
       const dy = G.y0 + (j + 0.5) * r - y, o = j * G.nx;
       for(let p = i0; p <= i1; p++){
-        const dx = G.x0 + (p + 0.5) * r - x, d2 = dx * dx + dy * dy;
-        if(d2 > rk * rk) continue;
-        const v = St[o + p] + Math.sqrt(rk * rk - d2);
+        const dx = G.x0 + (p + 0.5) * r - x, d = Math.hypot(dx, dy);
+        if(d > reich) continue;
+        const de = Math.max(0, d - zu);
+        const v = St[o + p] + Math.sqrt(rk * rk - de * de);
         if(v > hoch) hoch = v;
       }
     }
@@ -8286,7 +8305,18 @@ function fBahnModell(s, tool, prog){
   const f = +s.f || 0; if(!(f > 0)) return nein('Vorschub fehlt');
   const fZ = (+s.fTief > 0) ? +s.fTief : f;
   const dz = (+s.zust > 0) ? +s.zust : (zOben - zEnde);
-  const G = fModellGitter(F, k, rt + uXY + 2 * F.raster);
+  // LUFT NEBEN DEM ROHTEIL [17.09.2026]: das Gitter reicht so weit ueber
+  // das Rohteil hinaus, dass das Werkzeug daneben GANZ in der Luft stehen
+  // kann - Werkzeugradius plus luftAussen. Die Zugabe ist ein Vielfaches
+  // des Rasters, damit die Zellenmitten dieselben bleiben wie ohne sie;
+  // sonst verschoebe sich jede Bahn um einen Bruchteil einer Zelle.
+  const luftAussen = 2;
+  const G = fModellGitter(F, k, rt + uXY + 2 * F.raster + Math.ceil((rt + luftAussen) / F.raster) * F.raster);
+  // SPANNBACKEN: neben dem Rohteil darf das Werkzeug nur stehen, wo keine
+  // Backe ist - oder ueber ihr. Ohne Spannmittel im Kopf gibt es nichts zu
+  // pruefen (fSpannBacken liefert dann null).
+  const backen = fSpannBacken(prog);
+  const spannLuft = (+k.spannLuft >= 0) ? +k.spannLuft : F_SPANN_LUFT;
   const r = G.raster, nx = G.nx, ny = G.ny, n = nx * ny;
   if(G.grob) warn.push('Rohteil und Sollform ergeben zu viele Rasterstellen — das Arbeitsraster wurde auf ' + fRund(r) + ' mm vergroebert.');
   const ueberl = (+s.ueberl > 0) ? Math.min(+s.ueberl, 1.414) : 0.8;
@@ -8320,40 +8350,54 @@ function fBahnModell(s, tool, prog){
   for(let q = 0; q < n; q++){ if(G.imRoh[q] && G.stand[q] > Math.max(G.soll[q] + uZ, zEnde) + 0.001) wegZellen++; }
   if(!wegZellen) return nein('ueber der Sollform steht kein Material: Rohteil und Modell sind gleich hoch. Im Programmkopf ein groesseres Rohteil eintragen (oder Z0 hoeher setzen) — "Als Rohteil uebernehmen" nimmt genau den Huellquader des Modells, ohne Aufmass.');
   const B = [], sicher = fRund(zOben + sc2);
-  let x = null, y = null, ebenen = 0, zuege = 0, stiche = 0, rampen = 0, senkrecht = 0, unten = 0;
+  let x = null, y = null, zAkt = null, ebenen = 0, zuege = 0, stiche = 0, rampen = 0, senkrecht = 0, unten = 0, frei = 0, zustell = 0;
+  let haupt = 0, ebenenX = 0, ebenenY = 0;
   const eil = (o) => B.push(Object.assign({a:'eil'}, o));
   const vor = (o) => B.push(Object.assign({a:'vor'}, o));
 
   const standVor = new Float32Array(n), erlaubt = new Uint8Array(n), rest = new Uint8Array(n);
-  const hatAus = new Uint8Array(Math.max(nx, ny));
-  let d2R = null, richtung = 1;
+  const hatAus = new Uint8Array(Math.max(nx, ny)), hatWeit = new Uint8Array(Math.max(nx, ny));
+  let d2R = null, d2M = null, richtung = 1;
+  const mat = new Uint8Array(n);
+  // Der Abstand jeder Zelle zur naechsten ROHTEILZELLE - damit der Ueberlauf
+  // ab der Kante gemessen wird, nicht ab dem Zugende (das kann schon
+  // draussen liegen). Das Rohteil aendert sich nicht: einmal gerechnet.
+  const d2Roh = new Float64Array(n); fEdt(G.imRoh, nx, ny, d2Roh);
+  const reichAus = (rt + luftAussen) / r, reichAus2 = reichAus * reichAus;
+  // Kuerzer als das ist in der HAUPTBAHN kein Zug: die Maske hat an den
+  // Ecken des Rohteils Zipfel (neben dem Teil steht keine Sollform, dort
+  // darf die Mitte naeher an die verlaengerte Wand), und eine Zeile, die
+  // genau auf so einem Zipfel liegt, waere ein Stich mit 0,6 mm Fraesweg
+  // - und sie naehme der echten Zeile daneben den Platz weg (gemessen am
+  // Rampenblock: die dritte Zeile lag auf dem Zipfel, der Streifen
+  // dahinter blieb dem Querdurchgang). Was kuerzer ist, holt der
+  // Querdurchgang, der jeden Zug ab zwei Zellen faehrt.
+  // Der Zipfel wird mit dem Werkzeug groesser (bei ⌀20 und Zeilenabstand 8
+  // schon 3,5 mm), also waechst die Mindestlaenge mit: zwei Millimeter
+  // oder ein halber Zeilenabstand, was groesser ist.
+  const minHaupt = Math.max(2, Math.ceil(Math.max(2, schritt * r / 2) / r));
   const rr2 = (rt / r) * (rt / r);
-  // EIN Durchgang ueber das Gitter, entweder in Zeilen (quer = 0, X faehrt)
-  // oder in Spalten (quer = 1, Y faehrt). gut(zelle) sagt, wo die
-  // Werkzeugmitte stehen darf UND etwas zu tun ist.
-  const durchgang = (quer, z, zr, gut) => {
+  // Die Zeilen (Spuren) und Zuege eines Durchgangs finden, OHNE zu fahren:
+  // fuer die Wahl der Richtung und fuer den Durchgang selbst.
+  // gut  = wo eine Zeile hingehoert (Schneide mindestens einen halben
+  //        Zeilenabstand im Material),
+  // weit = wo die Schneide ueberhaupt Material erreicht (voller Radius);
+  //        null beim Querdurchgang, dort ist beides dasselbe.
+  // Die Zeilen kommen aus gut, die Zuege auf ihnen reichen so weit wie weit.
+  const laeufeFinden = (quer, gut, weit, minLauf) => {
     const nAus = quer ? nx : ny, nIn = quer ? ny : nx;
     const zelle = (a, b) => quer ? (b * nx + a) : (a * nx + b);
-    // Darf die Werkzeugmitte die ganze Strecke entlang stehen? Gefragt
-    // wird die Maske DIESER Ebene, nicht der Stand: zwischen zwei
-    // Nachbarzeilen steht immer noch Material - das ist der Sinn der
-    // Ueberlappung -, aber schneiden darf das Werkzeug dort.
-    const freiWeg = (x1, y1, x2, y2) => {
-      const w = Math.hypot(x2 - x1, y2 - y1);
-      const nS = Math.max(1, Math.ceil(w / (r / 2)));
-      for(let q = 0; q <= nS; q++){
-        const px = x1 + (x2 - x1) * q / nS, py = y1 + (y2 - y1) * q / nS;
-        const pi = Math.floor((px - G.x0) / r), pj = Math.floor((py - G.y0) / r);
-        if(pi < 0 || pj < 0 || pi >= nx || pj >= ny || !erlaubt[pj * nx + pi]) return false;
+    const zeilen = (maske, hat) => {
+      // Eine Zeile zaehlt, wenn sie einen Zug von mindestens minLauf Zellen hat.
+      for(let a = 0; a < nAus; a++){
+        hat[a] = 0; let lauf = 0;
+        for(let b = 0; b < nIn; b++){
+          if(maske(zelle(a, b))){ if(++lauf >= minLauf){ hat[a] = 1; break; } }
+          else lauf = 0;
+        }
       }
-      return true;
     };
-    const wx = (a, b) => G.x0 + ((quer ? a : b) + 0.5) * r;
-    const wy = (a, b) => G.y0 + ((quer ? b : a) + 0.5) * r;
-    for(let a = 0; a < nAus; a++){
-      hatAus[a] = 0;
-      for(let b = 0; b < nIn; b++){ if(gut(zelle(a, b))){ hatAus[a] = 1; break; } }
-    }
+    zeilen(gut, hatAus);
     // Zeilen, in denen etwas zu tun ist, zu zusammenhaengenden BAENDERN
     // zusammenfassen und in jedem Band gleichmaessig verteilen. Ein festes
     // Raster ueber das ganze Gitter traefe den Rand eines Bereichs nur
@@ -8369,16 +8413,114 @@ function fBahnModell(s, tool, prog){
         aa = -1;
       }
     }
-    let getan = 0;
+    // DUENNE STREIFEN [17.09.2026]. Am Fuss der Rampe steht auf der tiefsten
+    // Ebene ein Streifen von 1,6 mm; die Mitte darf erst 6,5 mm daneben
+    // stehen, also erreicht ihn die Schneide nur mit dem aeussersten
+    // Millimeter. Fuer 'gut' ist das zu wenig - keine Zeile -, und der
+    // Querdurchgang holte ihn mit zehn kurzen Zuegen quer. Deshalb: wo die
+    // Schneide Material ERREICHT (weit), aber keine Zeile liegt, kommt EINE
+    // Zeile hin - dorthin, wo sie am weitesten ins Material reicht. Mehr
+    // geht dort nicht: was sie nicht erreicht, erreicht keine erlaubte
+    // Mitte.
+    if(weit){
+      zeilen(weit, hatWeit);
+      let wa = -1;
+      for(let a = 0; a <= nAus; a++){
+        if(a < nAus && hatWeit[a]){ if(wa < 0) wa = a; continue; }
+        if(wa >= 0){
+          const wb = a - 1;
+          // Nur, wenn EINE Zeile das Band abdecken kann: hoechstens einen
+          // Durchmesser breit. Ein breites Band mit lauter zu kurzen Zuegen
+          // (die Rampe quer gesehen) ist kein duenner Streifen, sondern die
+          // falsche Richtung.
+          if((wb - wa) * r <= 2 * rt + 1e-9 && !spuren.some(t => t >= wa && t <= wb)){
+            let best = -1, bestD = Infinity;
+            for(let t = wa; t <= wb; t++){
+              let dmin = Infinity;
+              for(let b = 0; b < nIn; b++){ const c = zelle(t, b); if(weit(c) && d2M[c] < dmin) dmin = d2M[c]; }
+              if(dmin < bestD){ bestD = dmin; best = t; }
+            }
+            if(best >= 0) spuren.push(best);
+          }
+          wa = -1;
+        }
+      }
+      spuren.sort((p, q) => p - q);
+    }
+    const reicht = weit || gut;
+    const S = []; let zuege = 0, laenge = 0;
     spuren.forEach(a => {
       const laeufe = []; let s0 = -1;
       for(let b = 0; b < nIn; b++){
-        const ok = gut(zelle(a, b));
+        const ok = reicht(zelle(a, b));
         if(ok && s0 < 0) s0 = b;
         if(!ok && s0 >= 0){ laeufe.push([s0, b - 1]); s0 = -1; }
       }
       if(s0 >= 0) laeufe.push([s0, nIn - 1]);
       if(!laeufe.length) return;
+      laeufe.forEach(L => { if(L[1] - L[0] + 1 >= minLauf){ zuege++; laenge += (L[1] - L[0]) * r; } });
+      S.push({a:a, laeufe:laeufe});
+    });
+    return {spuren:S, zuege:zuege, laenge:laenge};
+  };
+  // EIN Durchgang ueber das Gitter, entweder in Zeilen (quer = 0, X faehrt)
+  // oder in Spalten (quer = 1, Y faehrt). gut(zelle) sagt, wo die
+  // Werkzeugmitte stehen darf UND etwas zu tun ist.
+  const durchgang = (quer, z, zr, gut, weit, minLauf) => {
+    const nAus = quer ? nx : ny, nIn = quer ? ny : nx;
+    const zelle = (a, b) => quer ? (b * nx + a) : (a * nx + b);
+    // Darf die Werkzeugmitte die ganze Strecke entlang stehen? Gefragt
+    // wird die Maske DIESER Ebene, nicht der Stand: zwischen zwei
+    // Nachbarzeilen steht immer noch Material - das ist der Sinn der
+    // Ueberlappung -, aber schneiden darf das Werkzeug dort.
+    // luft = true verlangt zusaetzlich, dass der ganze Weg AUSSERHALB des
+    // Rohteils liegt - fuer den Ebenenwechsel neben dem Teil.
+    const freiWeg = (x1, y1, x2, y2, luft) => {
+      const w = Math.hypot(x2 - x1, y2 - y1);
+      const nS = Math.max(1, Math.ceil(w / (r / 2)));
+      for(let q = 0; q <= nS; q++){
+        const px = x1 + (x2 - x1) * q / nS, py = y1 + (y2 - y1) * q / nS;
+        const pi = Math.floor((px - G.x0) / r), pj = Math.floor((py - G.y0) / r);
+        if(pi < 0 || pj < 0 || pi >= nx || pj >= ny) return false;
+        const c = pj * nx + pi;
+        // 'Luft' heisst: nicht nur die Mitte, die ganze SCHNEIDE bleibt vom
+        // Rohteil weg (Abstand zur naechsten Rohteilzelle mindestens ein
+        // Radius). Mit der Mitte allein tauchte die Bahn an DZ14 schraeg
+        // in die Stufenkante: Mitte draussen, Schneide drin.
+        if(!erlaubt[c] || (luft && d2Roh[c] < rr2 - 1e-9)) return false;
+      }
+      return true;
+    };
+    const wx = (a, b) => G.x0 + ((quer ? a : b) + 0.5) * r;
+    const wy = (a, b) => G.y0 + ((quer ? b : a) + 0.5) * r;
+    // Um wie viele Zellen laeuft ein Zug ueber sein Ende hinaus in die Luft
+    // (dir -1 davor, +1 dahinter)? Bis dorthin, wo die Werkzeugmitte
+    // Radius plus luftAussen von der naechsten ROHTEILZELLE entfernt ist -
+    // das Werkzeug steht dann ganz neben dem Teil. Auf dem Weg dorthin
+    // darf keine Rohteilzelle liegen, die Ebenenmaske muss gelten (kein
+    // Sollmodell ueber die Rohteilkante hinaus), nichts darf dort stehen -
+    // und keine SPANNBACKE, es sei denn, die Ebene liegt ueber ihrer
+    // Oberkante. 0 heisst: kein Ueberlauf, der Zug wird regulaer angefahren.
+    const maxAus = Math.ceil((2 * rt + luftAussen) / r) + 2;
+    const aussenFrei = (a, bEnde, dir) => {
+      for(let k2 = 1; k2 <= maxAus; k2++){
+        const bb = bEnde + dir * k2;
+        if(bb < 0 || bb >= nIn) return 0;
+        const c = zelle(a, bb);
+        if(G.imRoh[c] || !erlaubt[c] || standVor[c] > z + 1e-6) return 0;
+        if(d2Roh[c] < reichAus2 - 1e-9) continue;
+        if(backen && z < backen.zOben + spannLuft - 1e-3){
+          const xo = wx(a, bb), yo = wy(a, bb);
+          for(let j = 0; j < backen.backen.length; j++) if(fRechteckAbstand(xo, yo, backen.backen[j]) - rt < spannLuft) return 0;
+        }
+        return k2;
+      }
+      return 0;
+    };
+    const S = laeufeFinden(quer, gut, weit, minLauf);
+    let getan = 0;
+    S.spuren.forEach(sp => {
+      const a = sp.a, laeufe = sp.laeufe.slice();
       if(richtung < 0) laeufe.reverse();
       laeufe.forEach(L => {
         // Ein Lauf aus einer EINZIGEN Zelle hat keinen Fraesweg. Daraus
@@ -8388,15 +8530,44 @@ function fBahnModell(s, tool, prog){
         // Achse aendert; im Programm steht dann nur Eintauchen/Rueckzug.
         // Ausgelassen und GEZAEHLT; was dort stehen bleibt, nennt der
         // Restmaterialbericht.
-        if(L[0] === L[1]){ stiche++; return; }
+        // Zu kurz: eine einzelne Zelle ist immer ein Stich und wird gezaehlt;
+        // die Hauptbahn laesst ausserdem alles unter minHaupt liegen, das holt
+        // der Querdurchgang (oder es ist ein Zipfel der Maske, siehe oben).
+        if(L[1] - L[0] + 1 < minLauf){ if(L[0] === L[1]) stiche++; return; }
         let b0 = L[0], b1 = L[1];
-        if(richtung < 0){ const t = b0; b0 = b1; b1 = t; }
-        const xa = fRund(wx(a, b0)), ya = fRund(wy(a, b0)), xb = fRund(wx(a, b1)), yb = fRund(wy(a, b1));
+        // ANFAHREN AUSSERHALB DES ROHTEILS [17.09.2026]. Endet ein Zug an
+        // der Rohteilkante - dahinter ist Luft -, dann laeuft er DRAUSSEN
+        // an: das Werkzeug faehrt neben dem Rohteil auf Ebenentiefe und
+        // kommt waagerecht, auf voller Tiefe, in den Schnitt. Kein Stich,
+        // kein Pendeln, kein Verbinden im Material; der Zeilenwechsel
+        // liegt in der Luft. Das ist, was Daniel am Rampenblock sehen
+        // wollte: "genug Luft ausserhalb vom Bauteil, in die Tiefe
+        // zustellen und in einer Bahn die Schraege abzeilen". Bis hierher
+        // begann jeder Zug auf der ersten Rohteilzelle - mit Pendeln oder
+        // Stich an der Kante, obwohl daneben Luft war (gemessen am
+        // Rampenblock: 29 Zuege von 7 mm, 23 Verbindungen, 3 Pendel, 3
+        // Stiche).
+        const vorne = aussenFrei(a, b0, -1), hinten = aussenFrei(a, b1, +1);
+        if(vorne) b0 -= vorne;
+        if(hinten) b1 += hinten;
+        let startOffen = vorne > 0, endeOffen = hinten > 0;
+        if(richtung < 0){ const t = b0; b0 = b1; b1 = t; startOffen = hinten > 0; endeOffen = vorne > 0; }
+        let xa = fRund(wx(a, b0)), ya = fRund(wy(a, b0)), xb = fRund(wx(a, b1)), yb = fRund(wy(a, b1));
+        // VOM OFFENEN ENDE HER [17.09.2026]: ist nur EIN Ende eines Zuges
+        // offen und liegt es hinten, faengt der Zug dort an, sobald er nicht
+        // unten angebunden werden kann - sonst stuende am Wand-Ende ein
+        // Stich, obwohl am anderen Ende Luft ist (DZ14: der erste Zug jeder
+        // Ebene stach an der Stufenwand). Der Zickzack laeuft von dort weiter.
+        const umdrehen = () => {
+          let t = xa; xa = xb; xb = t; t = ya; ya = yb; yb = t;
+          const tb = b0; b0 = b1; b1 = tb;
+          const to = startOffen; startOffen = endeOffen; endeOffen = to;
+          richtung = -richtung;
+        };
         // Ueberflug: nur so hoch, wie auf dem Weg wirklich etwas steht.
         let ueber = sicher, verbunden = false;
-        if(x === null) eil({x:xa, y:ya, z:sicher});
+        if(x === null){ if(!startOffen && endeOffen) umdrehen(); eil({x:xa, y:ya, z:sicher}); }
         else {
-          const steht = fStandMax(G, x, y, xa, ya, rt);
           // ZEILENWECHSEL AUF TIEFE [17.09.2026]. Bis hierher zog die Bahn
           // nach JEDEM Zug auf Sicherheitshoehe, fuhr hinueber und tauchte
           // neu ein - auch dann, wenn die naechste Zeile unmittelbar
@@ -8425,17 +8596,35 @@ function fBahnModell(s, tool, prog){
           // erst quer dann laengs, erst laengs dann quer. Der gerade Weg
           // schneidet am Rand eines Bereichs oft die Ecke ab; ein
           // Zeilenwechsel geht ohnehin ueblicherweise ueber Eck.
-          const weit = Math.hypot(xa - x, ya - y);
-          let weg = null;
-          if(pendeln && weit <= rt + 2 * schritt * r + 2 * r){
-            if(freiWeg(x, y, xa, ya)) weg = [];
-            else if(freiWeg(x, y, x, ya) && freiWeg(x, ya, xa, ya)) weg = [[x, ya]];
-            else if(freiWeg(x, y, xa, y) && freiWeg(xa, y, xa, ya)) weg = [[xa, y]];
-          }
-          if(weg){
+          // EBENENWECHSEL [17.09.2026]: die Verbindung auf Tiefe fuehrte
+          // bisher auch vom Ende der einen Ebene zum Anfang der naechsten -
+          // SCHRAEG nach unten, durch Material, das auf der neuen Tiefe noch
+          // steht: ein Rampen mit beliebigem Winkel (Zustellung durch
+          // Wechselweg, am Rampenblock bis 4 mm auf 7 mm). Jetzt gilt:
+          // innerhalb der Ebene wie bisher; zur naechsten Ebene nur, wenn
+          // die Schneide den ganzen Weg ueber NEBEN dem Rohteil bleibt - dann
+          // ist es die Zustellung neben dem Teil, in der Luft, und faehrt im
+          // Eilgang. Sonst wird die neue Ebene regulaer angefahren (draussen,
+          // pendelnd oder gestochen).
+          const inLuft = (zAkt !== zr);
+          const sucheWeg = (px, py) => {
+            const weit = Math.hypot(px - x, py - y);
+            if(!(pendeln && weit <= rt + 2 * schritt * r + 2 * r)) return null;
+            if(freiWeg(x, y, px, py, inLuft)) return [];
+            if(freiWeg(x, y, x, py, inLuft) && freiWeg(x, py, px, py, inLuft)) return [[x, py]];
+            if(freiWeg(x, y, px, y, inLuft) && freiWeg(px, y, px, py, inLuft)) return [[px, y]];
+            return null;
+          };
+          let weg = sucheWeg(xa, ya);
+          if(!weg && !startOffen && endeOffen){ umdrehen(); weg = sucheWeg(xa, ya); }
+          if(weg && inLuft){
+            weg.forEach(p => eil({x:fRund(p[0]), y:fRund(p[1]), z:zr}));
+            eil({x:xa, y:ya, z:zr}); verbunden = true; zustell++;
+          } else if(weg){
             weg.forEach(p => vor({x:fRund(p[0]), y:fRund(p[1]), z:zr, f:f}));
             vor({x:xa, y:ya, z:zr, f:f}); verbunden = true; unten++;
           } else {
+            const steht = fStandMax(G, x, y, xa, ya, rt);
             ueber = fRund(Math.min(sicher, Math.max(steht, z) + sc));
             eil({z:ueber}); eil({x:xa, y:ya});
           }
@@ -8476,10 +8665,13 @@ function fBahnModell(s, tool, prog){
             imSchnitt = true; rampen++;
           }
         }
-        if(!verbunden && !imSchnitt){ vor({z:zr, f:fZ}); senkrecht++; }   // senkrecht eintauchen
+        if(!verbunden && !imSchnitt){
+          if(tief > 1e-6){ vor({z:zr, f:fZ}); senkrecht++; }   // senkrecht eintauchen
+          else frei++;                     // dort steht nichts: von aussen oder ueber Freiem angefahren
+        }
         vor({x:xb, y:yb, z:zr, f:f});
         fStandStempel(G, xa, ya, xb, yb, rt, z);
-        x = xb; y = yb; getan++; zuege++;
+        x = xb; y = yb; zAkt = zr; getan++; zuege++;
       });
       richtung = -richtung;
     });
@@ -8506,7 +8698,42 @@ function fBahnModell(s, tool, prog){
     }
     standVor.set(G.stand);
     for(let q = 0; q < n; q++) erlaubt[q] = (d2[q] > g2 + 1e-9) ? 1 : 0;
-    let inEbene = durchgang(0, z, zr, (q) => erlaubt[q] && standVor[q] > z + 1e-6);
+    // ZEILENRICHTUNG JE EBENE [17.09.2026]. Bis hierher fuhr die Bahn immer
+    // in X. Am Rampenblock heisst das: ueber die schmale Seite der Schraege,
+    // 29 Zuege von 7 mm, und zwischen ihnen lauter Zeilenwechsel auf engstem
+    // Raum. In Y waeren es wenige Zuege ueber die ganze Laenge. Gezaehlt
+    // wird deshalb je Ebene, wie viele Zuege jede Richtung braucht, und die
+    // mit den wenigsten faehrt; bei Gleichstand bleibt die bisherige.
+    // WO DARF DIE MITTE FAHREN? [17.09.2026] Bis hierher: wo unter der
+    // Werkzeugmitte Material steht (und die Maske es erlaubt). Das ist
+    // ein Behelf, und er versagt an einem Streifen, der schmaler ist als
+    // der Werkzeugradius: am Rampenblock liegt auf den tiefen Ebenen das
+    // Material auf x = 0 bis 5,7, die Maske erlaubt die Mitte erst ab
+    // x = -0,8 - also NEBEN dem Rohteil. Die Hauptbahn fand nichts, und
+    // der Querdurchgang holte den Streifen mit lauter kurzen Zuegen von
+    // aussen. Richtig ist die Frage, die auch der Querdurchgang stellt:
+    // erreicht die SCHNEIDE Material? Also alle Mitten, die hoechstens
+    // einen Radius vom Material entfernt liegen - um einen halben
+    // Zeilenabstand gekuerzt, damit die aeusserste Zeile noch einen halben
+    // Schritt im Schnitt ist statt nur zu streifen. Das ist der
+    // Werkzeugmittenbereich, mit dem ein CAM-System rechnet: das Material
+    // um den Radius geweitet, die Sollform um Radius und Aufmass
+    // ausgespart.
+    let material = 0;
+    for(let q = 0; q < n; q++){ const o = (G.imRoh[q] && standVor[q] > z + 1e-6) ? 1 : 0; mat[q] = o; material += o; }
+    if(!d2M) d2M = new Float64Array(n);
+    if(material) fEdt(mat, nx, ny, d2M); else d2M.fill(Infinity);
+    const reichM = Math.max(0, rt / r - schritt / 2), rM2 = reichM * reichM;
+    const gutEbene = (q) => erlaubt[q] && d2M[q] <= rM2 + 1e-9;
+    const weitEbene = (q) => erlaubt[q] && d2M[q] <= rr2 + 1e-9;
+    const wX = laeufeFinden(0, gutEbene, weitEbene, minHaupt), wY = laeufeFinden(1, gutEbene, weitEbene, minHaupt);
+    // Eine Richtung OHNE Zug ist kein Bewerber (am Rampenblock: in X sind
+    // die Zuege auf den tiefen Ebenen kuerzer als die Mindestlaenge, in Y
+    // gehen sie ueber die ganze Laenge - 0 gegen 2 darf nicht X gewinnen).
+    if(!wX.zuege){ if(wY.zuege) haupt = 1; }
+    else if(!wY.zuege) haupt = 0;
+    else if(wY.zuege < wX.zuege) haupt = 1; else if(wX.zuege < wY.zuege) haupt = 0;
+    let inEbene = durchgang(haupt, z, zr, gutEbene, weitEbene, minHaupt);
     // QUERDURCHGANG. Zwischen zwei Zeilen bleibt an einer senkrechten Wand
     // ein Kamm stehen: die Zeile endet einen Werkzeugradius vor der Wand, und
     // nur genau auf ihrer Hoehe reicht der Fraeser ganz heran (gemessen 1,15
@@ -8520,9 +8747,9 @@ function fBahnModell(s, tool, prog){
     if(offen){
       if(!d2R) d2R = new Float64Array(n);
       fEdt(rest, nx, ny, d2R);
-      inEbene += durchgang(1, z, zr, (q) => erlaubt[q] && d2R[q] <= rr2 + 1e-9);
+      inEbene += durchgang(1 - haupt, z, zr, (q) => erlaubt[q] && d2R[q] <= rr2 + 1e-9, null, 2);
     }
-    if(inEbene) ebenen++;
+    if(inEbene){ ebenen++; if(haupt) ebenenY++; else ebenenX++; }
     if(z <= zEnde + 1e-9) break;
   }
   if(!zuege) return nein(stiche
@@ -8576,8 +8803,12 @@ function fBahnModell(s, tool, prog){
   }
   const flaeche = fRund(restZellen * r * r);
   warn.push('Modell abspanen: ' + ebenen + ' Ebene(n) mit ' + zuege + ' Zuegen, Zeilenabstand ' + fRund(schritt * r)
-    + ' mm, Arbeitsraster ' + fRund(r) + ' mm. Zeilenweise im Zickzack mit Querdurchgang an den Waenden.'
+    + ' mm, Arbeitsraster ' + fRund(r) + ' mm. Zeilenweise im Zickzack mit Querdurchgang an den Waenden, Zeilen '
+    + (ebenenX && ebenenY ? ('in X (' + ebenenX + ' Ebenen) und in Y (' + ebenenY + ' Ebenen)') : (ebenenY ? 'in Y' : 'in X'))
+    + ' — je Ebene die Richtung mit den wenigsten Zuegen.'
     + (stiche ? ' ' + stiche + ' Stelle(n) waeren nur ein senkrechter Stich ohne Fraesweg gewesen und sind ausgelassen — ein Schaftfraeser soll nicht bohren; was dort steht, ist im Restmaterial enthalten.' : ''));
+  if(zustell) warn.push(zustell + ' Zustellung(en) auf die naechste Ebene in der LUFT neben dem Rohteil — schraeg im Eilgang, ohne Rueckzug auf Sicherheitshoehe und ohne Schnitt.');
+  if(frei) warn.push(frei + ' Zug/Zuege kommen von AUSSEN in den Schnitt: neben dem Rohteil (oder ueber schon ausgeraeumtem Material) auf Ebenentiefe gefahren und waagerecht hinein — kein Stich, kein Pendeln.');
   if(unten) warn.push(unten + ' Zeilenwechsel fahren UNTEN hinueber, im Vorschub und im Schnitt (kein Rueckzug, kein neues Eintauchen) — nur ueber eine Strecke, auf der die Werkzeugmitte laut Ebenenmaske ueberall stehen darf.');
   if(rampen) warn.push(rampen + ' Zug/Zuege tauchen PENDELND im eigenen Zug ein, mit ' + fRund(wAngle)
     + ' Grad (ANGLE des Werkzeugs), statt senkrecht auf Ebenentiefe zu stechen.'
@@ -8593,7 +8824,7 @@ function fBahnModell(s, tool, prog){
     + '. Ein Saum in der Groesse des Arbeitsrasters (' + fRund(r) + ' mm) ist die Rechengenauigkeit; breitere Stellen erreicht ⌀'
     + fRund(2 * rt) + ' nicht — dort mit einem kleineren Werkzeug nachsetzen.');
   else warn.push('Kein Restmaterial: das Werkzeug erreicht ueberall die Sollform samt Aufmass.');
-  return {ok:true, bahn:B, warn:warn, ebenen:ebenen, zuege:zuege, stiche:stiche, rampen:rampen, senkrecht:senkrecht, unten:unten, rest:restZellen,
+  return {ok:true, bahn:B, warn:warn, ebenen:ebenen, zuege:zuege, stiche:stiche, rampen:rampen, senkrecht:senkrecht, unten:unten, frei:frei, zustell:zustell, rest:restZellen,
     restMax:fRund(restMax), restBreit:fRund(breit), flaeche:flaeche, gitter:G};
 }
 
@@ -9821,12 +10052,22 @@ const F_SIM_EPS = 1e-4;
 function fSimStempel(F, x, y, z, r, nurPruefen, kegel){
   const i0 = Math.max(0, Math.floor((x - r - F.x0) / F.raster)), i1 = Math.min(F.nx - 1, Math.ceil((x + r - F.x0) / F.raster));
   const j0 = Math.max(0, Math.floor((y - r - F.y0) / F.raster)), j1 = Math.min(F.ny - 1, Math.ceil((y + r - F.y0) / F.raster));
-  const r2 = r * r, kg = +kegel || 0; let traf = false;
+  // STEMPEL WEITER ALS PRUEFUNG [17.09.2026 abends]: eine Zelle GENAU auf dem
+  // Werkzeugradius muss vom Stempel genommen werden, wenn die Pruefung sie
+  // spaeter fragt - sonst meldet die Simulation eine Kollision gegen sich
+  // selbst. Die Stelle wird beim Fahren aus p0 + (p1 - p0) * u gerechnet,
+  // beim Pruefen des naechsten Satzes aus dem Satz selbst; das sind zwei
+  // Gleitkommazahlen, und 64,00000000000001 gegen 64 entschied (gemessen an
+  // Aufnahme_Anschlagrollen: acht Rueckzuege als Kollision, Zelle 8,000 mm
+  // neben der Achse). Der Stempel bekommt deshalb ein Millionstel Zugabe.
+  // (Die Zugabe gilt nur fuer die FRAGE, welche Zelle dazugehoert - nicht fuer die
+  // Kugelhoehe, die aus r2 gerechnet wird.)
+  const r2 = r * r, zu = nurPruefen ? 0 : 1e-6, kg = +kegel || 0; let traf = false;
   for(let j = j0; j <= j1; j++){
     const cy = F.y0 + (j + 0.5) * F.raster;
     for(let i = i0; i <= i1; i++){
       const cx = F.x0 + (i + 0.5) * F.raster, d2 = (cx - x) * (cx - x) + (cy - y) * (cy - y);
-      if(d2 > r2) continue;
+      if(d2 > r2 + zu) continue;
       // kg < 0 = KUGEL mit Radius r (Spitze auf z), kg > 0 = Kegel,
       // 0 = flache Stirn.
       const zc = (kg < 0) ? z + r - Math.sqrt(Math.max(0, r2 - d2)) : (kg ? z + Math.sqrt(d2) * kg : z);
