@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 17:34 (88bcec07)";</script>
+<script>window.__DZ_STAND="17.09.2026 17:45 (c249fd80)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -9091,22 +9091,57 @@ function fBahnSchlichten(s, tool, prog){
   const eil = (o) => B.push(Object.assign({a:'eil'}, o));
   const vor = (o) => B.push(Object.assign({a:'vor'}, o));
   let zuege = 0, punkte = 0, roh = 0, richtung = 1, letzt = null, spruenge = 0;
+  // ERST SAMMELN, DANN FAHREN [17.09.2026]. Bis hierher wurde Zeile fuer
+  // Zeile ausgegeben, im Zickzack. Das ist richtig, solange jede Zeile ein
+  // durchgehendes Stueck ergibt. An Daniels echten Teilen faengt das
+  // Winkelband aber oft nur schmale Streifen, und eine Zeile zerfaellt in
+  // mehrere kurze Stuecke - gemessen 2,2 bis 3,9 Punkte je Zug. Dann
+  // entscheidet die Rasterreihenfolge ueber den Weg, und die kennt den Weg
+  // nicht: gemessen ueber acht Teile 114 Meter Leerweg gegen 10 Meter
+  // Schnitt, davon 34 Meter reines Anheben.
+  // Jetzt werden alle Stuecke gesammelt und danach immer das genommen,
+  // dessen naeheres Ende am dichtesten liegt (bei Bedarf umgedreht). Am
+  // SCHNITT aendert das nichts - es sind dieselben Stuecke, nur in anderer
+  // Folge und Richtung.
+  const alle = [];
   for(let a = 0; a < nAus; a += schritt){
-    const stuecke = []; let P = null;
+    let P = null;
     for(let b = 0; b < nIn; b++){
       const c = zelle(a, b);
       if(gut[c] && isFinite(BF[c])){
-        if(!P){ P = []; stuecke.push(P); }
+        if(!P){ P = []; alle.push(P); }
         // Z IST DIE KUGELUNTERKANTE (die Spitze), wie die Werkzeuglaenge L
         // gemessen wird. BF ist die Bahn der MITTE - ein Kugelradius tiefer.
         P.push([fRund(wx(a, b)), fRund(wy(a, b)), fRund(BF[c] - rk)]);
       } else P = null;
     }
-    if(!stuecke.length) continue;
-    if(richtung < 0) stuecke.reverse();
-    stuecke.forEach(Z => {
-      if(Z.length < 2) return;                  // ein einzelner Punkt ist kein Zug
-      if(richtung < 0) Z.reverse();
+  }
+  const offen = alle.filter(Z => Z.length >= 2);
+  const folge = [];
+  // Die Suche ist quadratisch. Bei sehr vielen Stuecken waere das teurer
+  // als der gesparte Weg - dann bleibt es bei der Rasterreihenfolge.
+  if(offen.length > 6000){ offen.forEach(Z => folge.push(Z)); }
+  else {
+    let vx = null, vy = null;
+    while(offen.length){
+      let bi = 0, bd = Infinity, umdrehen = false;
+      if(vx != null){
+        for(let q = 0; q < offen.length; q++){
+          const Z = offen[q], e = Z[Z.length - 1];
+          const dA = Math.hypot(Z[0][0] - vx, Z[0][1] - vy);
+          if(dA < bd){ bd = dA; bi = q; umdrehen = false; }
+          const dE = Math.hypot(e[0] - vx, e[1] - vy);
+          if(dE < bd){ bd = dE; bi = q; umdrehen = true; }
+        }
+      }
+      const Z = offen.splice(bi, 1)[0];
+      if(umdrehen) Z.reverse();
+      folge.push(Z);
+      const e = Z[Z.length - 1]; vx = e[0]; vy = e[1];
+    }
+  }
+  {
+    folge.forEach(Z => {
       roh += Z.length;
       const D2 = fZugDuennen(Z, tol);
       const A0 = D2[0];
@@ -9148,7 +9183,6 @@ function fBahnSchlichten(s, tool, prog){
         fStandKugelStempel(SG, D2[q-1][0], D2[q-1][1], D2[q-1][2], D2[q][0], D2[q][1], D2[q][2], rk, sTol);
       punkte += D2.length; zuege++; letzt = D2[D2.length - 1];
     });
-    richtung = -richtung;
   }
   if(!zuege) return nein('aus den Flaechen in Z1..Z0 entsteht kein Zug — Grenzwinkel oder Bereich pruefen');
   eil({z:sicher});
