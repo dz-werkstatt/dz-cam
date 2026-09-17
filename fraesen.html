@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 17:27 (dd65c7c5)";</script>
+<script>window.__DZ_STAND="17.09.2026 17:34 (88bcec07)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -8879,6 +8879,13 @@ function fZugDuennen(P, tol){
 // Hoechster Wert der Kugel-Versatzflaeche laengs einer Strecke. Weil die
 // Versatzflaeche die Flaeche ist, auf der die Kugelmitte ueberall frei steht,
 // ist ihr Hoechstwert plus SC die sichere Hoehe fuer eine Verbindungsfahrt.
+// STRENG SEIT DEM 17.09.2026: eine Stelle OHNE Wert ist kein Beweis,
+// sondern ein Loch. Die Versatzflaeche steht nur innerhalb der geweiteten
+// Maske; ausserhalb weiss die Bahn nichts. Frueher wurden solche Stellen
+// uebersprungen und der Hoechstwert aus dem Rest gebildet - das ging gut,
+// solange nur ueber drei Bahnabstaende gefragt wurde, waere fuer eine
+// lange Verbindung aber falsch. Jetzt kommt Infinity heraus, und die
+// aufrufende Stelle nimmt die sichere Hoehe.
 function fBallMax(BF, F, x0, y0, x1, y1){
   const r = F.raster, L = Math.hypot(x1 - x0, y1 - y0);
   const nS = Math.max(1, Math.ceil(L / (r * 0.5)));
@@ -8886,8 +8893,9 @@ function fBallMax(BF, F, x0, y0, x1, y1){
   for(let k = 0; k <= nS; k++){
     const t = k / nS, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t;
     const i = Math.floor((x - F.x0) / r), j = Math.floor((y - F.y0) / r);
-    if(i < 0 || j < 0 || i >= F.nx || j >= F.ny) continue;
+    if(i < 0 || j < 0 || i >= F.nx || j >= F.ny) return Infinity;
     const v = BF[j * F.nx + i];
+    if(!(v > -Infinity)) return Infinity;
     if(v > m) m = v;
   }
   return isFinite(m) ? m : Infinity;
@@ -9107,8 +9115,18 @@ function fBahnSchlichten(s, tool, prog){
       // ihr Hoechstwert plus SC ist beweisbar frei. WEIT: auf die sichere
       // Hoehe, denn dazwischen kann Material stehen, das das Schruppen
       // gelassen hat (UXY/UZ) — das steht UEBER der Sollform.
+      // JEDE VERBINDUNG WIRD GEFRAGT [17.09.2026]. Hier stand eine Schranke
+      // von drei Bahnabstaenden; alles darueber ging auf die sichere Hoehe.
+      // An Daniels echten Teilen zerfaellt die Schlichtbahn aber in sehr
+      // kurze Zuege - das Winkelband faengt oft nur schmale Streifen,
+      // gemessen 2,2 bis 3,9 Punkte je Zug -, und dann kostet jeder Zug
+      // drei Eilgaenge ueber das ganze Teil: 1071,7 Eilgaenge je 1000
+      // Vorschubsaetze, mehr Eilgaenge als Schnitte.
+      // Die Versatzflaeche beantwortet die Frage fuer JEDE Laenge, und seit
+      // fBallMax streng ist, fuehrt ein Loch in der Maske von selbst auf die
+      // sichere Hoehe. Die Schranke ist damit ueberfluessig.
       if(!letzt){ eil({x:A0[0], y:A0[1], z:sicher}); }
-      else if(Math.hypot(A0[0] - letzt[0], A0[1] - letzt[1]) <= 3 * istMm + 1e-9){
+      else {
         // Die Versatzflaeche ist nur gegen die SOLLFORM frei. Was das
         // Schruppen stehen liess, steht darueber — deshalb zaehlt der Stand
         // mit, und zwar OHNE die Klemme auf die sichere Hoehe: wenn dort
@@ -9116,8 +9134,9 @@ function fBahnSchlichten(s, tool, prog){
         // ueber Z0 + SC2 liegt.
         let zv = fRund(Math.min(sicher, Math.max(fBallMax(BF, F, letzt[0], letzt[1], A0[0], A0[1]) - rk, letzt[2], A0[2]) + sc));
         if(SG){ const hs = fStandFreiHoehe(SG, letzt[0], letzt[1], A0[0], A0[1], rk); if(isFinite(hs) && hs + sc > zv) zv = fRund(hs + sc); }
+        if(zv >= sicher - 1e-9) spruenge++;
         eil({z:zv}); eil({x:A0[0], y:A0[1]});
-      } else { spruenge++; eil({z:sicher}); eil({x:A0[0], y:A0[1]}); }
+      }
       // Abwaerts nur bis SC ueber das, was an der Anfahrstelle steht — den
       // Rest faehrt der Eintauchvorschub. Dieselbe Regel wie beim Abspanen.
       let zA = fRund(A0[2] + sc);
