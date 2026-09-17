@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 23:13 (e13b8490)";</script>
+<script>window.__DZ_STAND="17.09.2026 23:59 (21dfad03)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -5243,6 +5243,7 @@ erzeugt und ist damit immer vollst&auml;ndig.</p>
           <div class="mrow"><button class="gcbtn pmvk" id="btnDemo8"><canvas class="pm-sil" id="btnDemo8_sil" width="120" height="44"></canvas><span>Rotorwelle &#x2300;300&#xD7;500</span></button></div>
           <div class="mrow"><button class="gcbtn pmvk" id="btnDemo9"><canvas class="pm-sil" id="btnDemo9_sil" width="120" height="44"></canvas><span>Buchse (Innenbearbeitung)</span></button></div>
           <div class="mrow"><button class="gcbtn pmvk" id="btnDemo10"><canvas class="pm-sil" id="btnDemo10_sil" width="120" height="44"></canvas><span>Mastertestteil (alle Funktionen)</span></button></div>
+          <div class="mrow"><button class="gcbtn pmvk" id="btnDemo11"><canvas class="pm-sil" id="btnDemo11_sil" width="120" height="44"></canvas><span>Ballen (Kugel R30, Daniels Teil)</span></button></div>
           <div class="mrow"><button class="gcbtn" id="btnDemoPlaner" style="width:100%;padding:10px;">Planer-Test 1: Kontur ohne Programm (wie nach DXF)</button></div>
           <div class="mrow"><button class="gcbtn" id="btnDemoPlaner2" style="width:100%;padding:10px;">Planer-Test 2: au&szlig;en + innen ohne Programm</button></div>
           <div class="mrow"><button class="gcbtn" id="btnDemoPlaner3" style="width:100%;padding:10px;">Planer-Test 3: Welle mit Einstichnut</button></div>
@@ -6202,6 +6203,13 @@ function werkzeugPlatzAendern(idx, platz){
 // selbst (Lagerwerkzeuge — das Einrichteblatt kennzeichnet sie).
 // Die eine Aufloesestelle sitzt in tSatz, damit alle 13
 // Generatoren und die Sim-Rueckaufloesung dieselbe Antwort sehen.
+// Umkehrung fuer die Simulation: gerufene T-Nummer -> Werkzeug auf diesem
+// Platz (null, wenn dort nichts liegt — dann gilt die Nummer selbst).
+function wzVonPlatz(tnr){
+  if(typeof toolTable==='undefined' || !toolTable) return null;
+  const n=parseInt(tnr,10); if(!(n>0)) return null;
+  return toolTable.find(x=>x && +x.platz===n) || null;
+}
 function wzPlatzNr(tnum){
   const w=(typeof toolTable!=='undefined') && toolTable.find(x=>String(x.t)===String(tnum));
   return (w && w.platz) ? String(w.platz) : String(tnum);
@@ -8428,7 +8436,7 @@ function silhouetteMalen(cv, name){
     c2.beginPath(); c2.moveTo(0,H/2); c2.lineTo(W,H/2); c2.stroke(); c2.setLineDash([]);
   }catch(e){}
 }
-const DEMO_SIL={"Stufenbolzen":[[0,0],[-1.5,15],[-22,15],[-23,22.5],[-48.4,22.5],[-51,30],[-72.6,30.1],[-76,37.5],[-100,37.5]],"Hinterschnitt":[[0,0],[0,19],[-19.7,20.1],[-29,32],[-38.2,31.7],[-50,22.1],[-60.7,22],[-68,34],[-80,34]],"Schmiedeteil":[[0,0],[0,19],[-19.6,20.1],[-28,31],[-55.6,31],[-65.3,22.7],[-75,22]],"Stechdrehen":[[0,0],[-1,30],[-9.9,29.7],[-17.1,20],[-37.4,20.1],[-45,30],[-55,30]],"Abstechen":[[0,0],[0,13],[-1,14],[-13.1,14.1],[-14,20],[-42,20]],"Kantenwelle":[[0,0],[-1,27.5],[-28.8,27.5],[-31,35],[-58.4,35],[-61.5,41],[-70,41]],"Freistichwelle":[[0,0],[0,26.5],[-1,27.5],[-30,27.5],[-30,35],[-48,35]],"Rotorwelle":[[0,55],[-71.5,60.3],[-78.8,91.9],[-185,92],[-245,120],[-261,150],[-395,150],[-402.2,95.8],[-440,95],[-445.5,71.3],[-500,66]],"Buchse":[[0,0],[0,36],[-1.5,37.5],[-64,37.5]],"Master":[[0,0],[-1.5,18],[-30,18],[-31.6,27.5],[-70,27.5],[-95,37.5],[-140,37.5],[-142.4,47.4],[-175,47.5]]};
+const DEMO_SIL={"Ballen":[[0,0],[0,20],[-56.7,26.7],[-56.7,34],[-76.7,34],[-76.7,48],[-100,48],[-101.02,55.76],[-104.02,63],[-108.79,69.21],[-115,73.98],[-122.24,76.98],[-130,78],[-137.76,76.98],[-145,73.98],[-151.21,69.21],[-155.98,63],[-158.98,55.76],[-159.73,52],[-210,52],[-245,82.5]],"Stufenbolzen":[[0,0],[-1.5,15],[-22,15],[-23,22.5],[-48.4,22.5],[-51,30],[-72.6,30.1],[-76,37.5],[-100,37.5]],"Hinterschnitt":[[0,0],[0,19],[-19.7,20.1],[-29,32],[-38.2,31.7],[-50,22.1],[-60.7,22],[-68,34],[-80,34]],"Schmiedeteil":[[0,0],[0,19],[-19.6,20.1],[-28,31],[-55.6,31],[-65.3,22.7],[-75,22]],"Stechdrehen":[[0,0],[-1,30],[-9.9,29.7],[-17.1,20],[-37.4,20.1],[-45,30],[-55,30]],"Abstechen":[[0,0],[0,13],[-1,14],[-13.1,14.1],[-14,20],[-42,20]],"Kantenwelle":[[0,0],[-1,27.5],[-28.8,27.5],[-31,35],[-58.4,35],[-61.5,41],[-70,41]],"Freistichwelle":[[0,0],[0,26.5],[-1,27.5],[-30,27.5],[-30,35],[-48,35]],"Rotorwelle":[[0,55],[-71.5,60.3],[-78.8,91.9],[-185,92],[-245,120],[-261,150],[-395,150],[-402.2,95.8],[-440,95],[-445.5,71.3],[-500,66]],"Buchse":[[0,0],[0,36],[-1.5,37.5],[-64,37.5]],"Master":[[0,0],[-1.5,18],[-30,18],[-31.6,27.5],[-70,27.5],[-95,37.5],[-140,37.5],[-142.4,47.4],[-175,47.5]]};
 // Innen-Silhouetten (Bohrungen) der beiden Innen-Demos — schematisch
 // aus den Zyklusmassen (Buchse: ⌀48,4 mit Absatz ⌀40, Vorbohrung ⌀26;
 // Master: ⌀30,4 mit Absatz ⌀28). Ohne sie waere die Buchse ein
@@ -13563,6 +13571,7 @@ function refreshArbeitsplan(){
       ['apDemoBtn8',  '', 'Rotorwelle',     '\u2300300\u00D7500, Extremtest'],
       ['apDemoBtn9',  '', 'Buchse',         'Innenbearbeitung'],
       ['apDemoBtn10', '', 'Master',         'alle 12 Funktionen'],
+      ['apDemoBtn11', '', 'Ballen',         'Kugel R30 und Kegel, Daniels Teil'],
     ];
     // PRIMAERAKTIONEN ZUERST [Daniel, 02.09.2026]: der Startbildschirm
     // zeigte nur die neun Demos — als waeren sie der Inhalt der App.
@@ -13612,6 +13621,8 @@ function refreshArbeitsplan(){
     if(db9) db9.addEventListener('click', ()=>{ try{ loadDemoBuchse(); }catch(e){} });
     const db10=document.getElementById('apDemoBtn10');
     if(db10) db10.addEventListener('click', ()=>{ try{ loadDemoMaster(); }catch(e){} });
+    const db11=document.getElementById('apDemoBtn11');
+    if(db11) db11.addEventListener('click', ()=>{ try{ loadDemoBallen(); }catch(e){} });
   }
   // ---- Verkettungsklammer (ShopTurn) [Daniel]: zusammenhaengende
   // abspanen_kontur-Ketten auf derselben Fertigkontur + die zugehoerigen
@@ -16059,6 +16070,70 @@ function loadDemoBuchse(){
 }
 document.getElementById('btnDemo9').onclick=loadDemoBuchse;
 { const b10=document.getElementById('btnDemo10'); if(b10) b10.onclick=loadDemoMaster; }
+// =========================================================
+// DANIELS BALLEN [17.09.2026 nachts, Daniels Auftrag: "fuegt sein
+// nachgezeichnetes Teil mal als Testteil an"]: das Teil, an dem der
+// Massbericht 73 % und einen Einschnitt von 10 mm zeigte (s. CLAUDE.md
+// "Daniels Ballen", Pruefstand 194). Rohteil ⌀205, Kontur ⌀40 -> ⌀53,4
+// (Kegel) -> ⌀68 -> ⌀96, Kugel R30 auf ⌀156 (Mittelpunkt Z-130, ⌀96),
+// Hals ⌀104, Kegel auf ⌀165 bei Z-245. Die fuenf Schritte sind der
+// Vorschlag des Planers vom 17.09.2026 (Plan, Konturschruppen T11,
+// Stechdrehen T21 beide im Fenster Z-130,25..-240,35, Planschlichten
+// und Konturschlichten T3) — fest eingetragen, damit die NC-Baseline
+// den Generator prueft und nicht den Planer. Ausspannlaenge 248 liegt
+// HINTER dem Konturende (sonst Spannbacken-Treffer in der Simulation).
+// =========================================================
+function loadDemoBallen(){
+  snapshot();
+  const G=(z,x,type,val)=>({kind:'gerade', z, x, trans:{type:type||'none', val:val||0}});
+  contours=[]; activeContourIdx=-1; nextContourId=1;
+  setActiveContourEls([
+    {kind:'start', z:0, x:0, trans:{type:'none',val:0}},
+    G(0,    40),                // Stirn auf DM40
+    G(-56.7, 53.4),             // flacher Kegel
+    G(-56.7, 68),               // Absatz
+    G(-76.7, 68),
+    G(-76.7, 96),               // Absatz
+    G(-100, 96),                // Zylinder bis zum Kugelfuss
+    {kind:'kreis', z:-159.73, x:104, cz:-130, cx:96, cw:false, trans:{type:'none',val:0}},   // Kugel R30, Scheitel DM156 bei Z-130
+    G(-210, 104),               // Hals DM104
+    G(-245, 165),               // Kegel zum Konturende (Spannstueck DM205 dahinter)
+  ]);
+  contours[0].name='Ballen';
+  const set=(id,v)=>{ const el=document.getElementById(id); if(el) el.value=v; };
+  set('progNo','00009012'); document.getElementById('pmSaveName').value='Ballen (Kugel R30, Daniels Teil)'; set('pkForm','zylinder'); set('stockDia',205);
+  set('wwpX',300); set('wwpZ',20);   // Wechselpunkt je Vorlage fest — nichts verschleppt sich
+  set('pkZA',2); set('pkZI',-265); set('pkLA',248); set('pkZV',0); set('safeZ',2);
+  document.getElementById('pkXIRow').style.display='none';
+  const cid=contours[0].id;
+  programSteps=[
+    {id:stepCounter++, type:'abspanen_einfach', params:{
+      richtung:'plan', bearbeitung:'schruppen', z0:2, z1:0, x0:207, x1:0, d:1.5, ux:0.1, uz:0.1, safeZ:2,
+      t:'11', fr:0.25, ff:0.12, sr:600, sf:800
+    }},
+    {id:stepCounter++, type:'abspanen_kontur', params:{
+      contourId:cid, bearbeitung:'schruppen', richtung:'z-parallel', lage:'aussen', schlRicht:'rl',
+      stock:205, stockZ:0.1, d:1.5, ux:0.3, uz:0.1, safeZ:2, t:'11', fr:0.25, sr:600, ff:0.12, sf:800
+    }},
+    {id:stepCounter++, type:'stechdrehen', params:{
+      bearbeitung:'beide', lage:'aussen', contourId:cid, stock:158, stockZ:2, d:1.5, ux:0.2, uz:0.2, safeZ:2,
+      t:'21', t2:'21', fr:0.08, fl:0.12, ff:0.06, sr:400, sf:500, eingrenz:'ja', za:-130.25, zb:-240.35
+    }},
+    {id:stepCounter++, type:'abspanen_einfach', params:{
+      richtung:'plan', bearbeitung:'schlichten', z0:0.1, z1:0, x0:42.6, x1:0, planBis:0, d:1.5, ux:0, uz:0, safeZ:2,
+      t:'3', fr:0.25, ff:0.12, sr:600, sf:800
+    }},
+    {id:stepCounter++, type:'abspanen_kontur', params:{
+      contourId:cid, bearbeitung:'schlichten', richtung:'z-parallel', lage:'aussen', schlRicht:'rl',
+      stock:205, stockZ:0, d:1.5, ux:0.3, uz:0.1, planFertig:'ja', safeZ:2, t:'3', t2:'3', fr:0.25, sr:600, ff:0.12, sf:800
+    }},
+  ];
+  selectedIdx=-1; selStepIdx=-1; editStepIdx=-1;
+  userAdjustedView=false; fitPending=true;
+  document.getElementById('maskProgramme').classList.remove('show');
+  refreshAll();
+}
+{ const b11=document.getElementById('btnDemo11'); if(b11) b11.onclick=loadDemoBallen; }
 // =================================================================
 // DEMOS AUF Vc [Daniels Ansage 02.09.2026 abends, Screenshot der
 // Stufenbolzen-NC: "die Werkzeugaufrufe beim Schruppen und
@@ -16090,7 +16165,7 @@ function demoAufVc(steps){
 }
 ['loadDemoStufenbolzen','loadDemoHinterschnitt','loadDemoSchmiedeteil','loadDemoStechdrehen',
  'loadDemoAbstechen','loadDemoKantenwelle','loadDemoFreistichwelle','loadDemoRotorwelle',
- 'loadDemoBuchse','loadDemoMaster'].forEach(nm=>{
+ 'loadDemoBuchse','loadDemoMaster','loadDemoBallen'].forEach(nm=>{
   const orig=globalThis[nm];
   if(typeof orig!=='function') return;
   globalThis[nm]=function(){
@@ -20765,7 +20840,7 @@ document.getElementById('hskProgs').onclick=()=>{
     [['btnDemo','Stufenbolzen'],['btnDemo2','Hinterschnitt'],['btnDemo3','Schmiedeteil'],
      ['btnDemo4','Stechdrehen'],['btnDemo5','Abstechen'],['btnDemo6','Kantenwelle'],
      ['btnDemo7','Freistichwelle'],['btnDemo8','Rotorwelle'],['btnDemo9','Buchse'],
-     ['btnDemo10','Master']].forEach(v=>silhouetteMalen(document.getElementById(v[0]+'_sil'), v[1]));
+     ['btnDemo10','Master'],['btnDemo11','Ballen']].forEach(v=>silhouetteMalen(document.getElementById(v[0]+'_sil'), v[1]));
   }catch(e){}
   document.getElementById('maskProgramme').classList.add('show');
   // Nachsehen, ob sie wirklich im Bild steht. [Daniel]
@@ -21697,15 +21772,40 @@ function sampleContourForRough(srcContour, sehnenTol){
       if(s.cw && da>0) da-=2*Math.PI;
       if(!s.cw && da<0) da+=2*Math.PI;
       const r=Math.hypot(s.z1-s.cz, s.x1-s.cx);
-      let steps=12;
+      let steps=12, ab=0;
       if(sehnenTol>0 && r>sehnenTol){
         const wSchritt=2*Math.acos(Math.max(-1, Math.min(1, 1-sehnenTol/r)));
         steps=Math.max(12, Math.min(720, Math.ceil(Math.abs(da)/Math.max(wSchritt,1e-4))));
+        // TANGENTENPOLYGON [17.09.2026 nachts, Daniels Ballen]: die Sehnen eines
+        // KONVEXEN Bogens (Bogenmitte weiter aussen als der Mittelpunkt) liegen
+        // IM Material — der Schlichtzug schnitt bis zum Sehnenfehler zu tief, an
+        // der 82-Grad-Flanke im Bericht 0,04 mm ⌀ und in der Ampel "nicht mehr
+        // rettbar". Die INNEREN Stuetzpunkte ruecken um den Sehnenfehler nach
+        // aussen: die Sehnenmitten liegen auf dem Bogen, an den Ecken bleibt
+        // hoechstens der Fehler stehen — Rest statt Einschnitt. Die Endpunkte
+        // bleiben exakt (Anschluss an die Nachbarelemente). Konkave Boegen
+        // (Hohlkehlen) lassen ihre Sehnen ohnehin im Freien.
+        const xMitte=s.cx+r*Math.sin(a1+da/2);
+        if(xMitte > s.cx + 1e-9) ab=sehnenTol;
       }
-      for(let k=0;k<steps;k++){
-        const a=a1+da*(k/steps);
-        pts.push({z:s.cz+r*Math.cos(a), x:s.cx+r*Math.sin(a)});
-      }
+      // Die erste und die letzte Sehne halb so lang (Zwischenpunkt bei einem
+      // halben Schritt): vom exakten Endpunkt zum ersten versetzten Punkt sank
+      // die Sehnenmitte sonst noch um den halben Fehler unter den Bogen.
+      const winkel=[0];
+      if(ab>0) winkel.push(da*0.5/steps);
+      for(let k=1;k<steps;k++) winkel.push(da*(k/steps));
+      if(ab>0) winkel.push(da*(steps-0.5)/steps);
+      // Der Versatz darf Z nicht zuruecklaufen lassen (an senkrechter Tangente
+      // rueckt der erste Punkt sonst 0,002 nach +Z, und die Stechdreh-Wache
+      // 'Kontur laeuft in Z zurueck' bricht ab): Z bleibt monoton.
+      const zSinn=(s.z2 < s.z1)? -1 : 1; let zVor=null;
+      winkel.forEach((w,k)=>{
+        const a=a1+w, rk=(k===0)? r : r+ab;
+        let z=s.cz+rk*Math.cos(a);
+        if(zVor!==null && (z-zVor)*zSinn < 0) z=zVor;
+        zVor=z;
+        pts.push({z:z, x:s.cx+rk*Math.sin(a)});
+      });
     }
   });
   const last=segs[segs.length-1];
@@ -27373,18 +27473,35 @@ function stechEckenBahn(punkte, r, bw, ecke, sinn){
     nn.d=d; n.push(nn);
   }
   const M=[{z:Q[0].z+r*n[0].z, r:Q[0].r+r*n[0].r}];
+  const mark=[0];   // mark[v] = Index in M, ab dem die Punkte der Ecke v stehen
   for(let i=1;i+1<Q.length;i++){
     const nA=n[i-1], nB=n[i], V=Q[i];
+    mark[i]=M.length;
     const kreuz=nA.d.z*nB.d.r - nA.d.r*nB.d.z;
     const cosW=nA.z*nB.z+nA.r*nB.r;
     if(Math.abs(kreuz)<1e-6 || cosW>0.99985){                // unter 1 Grad Knick: durchlaufen
       M.push({z:V.z+r*nB.z, r:V.r+r*nB.r});
     } else if(kreuz*sinn > 0){                               // Innenecke: Schnittpunkt der versetzten Geraden
-      const A1={z:V.z+r*nA.z, r:V.r+r*nA.r}, A2={z:V.z+r*nB.z, r:V.r+r*nB.r};
-      const dA=nA.d, dB=nB.d;
-      const det=dA.z*(-dB.r) - dA.r*(-dB.z);
-      if(Math.abs(det)<1e-9){ M.push(A2); }
-      else { const wz=A2.z-A1.z, wr=A2.r-A1.r; const t=(wz*(-dB.r) - wr*(-dB.z))/det; M.push({z:A1.z+dA.z*t, r:A1.r+dA.r*t}); }
+      // Liegt der Schnittpunkt VOR dem Anfang der versetzten Vorgaengerstrecke
+      // (steile Flanke, deren letzte Sehne kuerzer ist als der Eckenradius
+      // hoch ist), faellt diese Strecke samt der Ecke davor weg, und es wird
+      // mit der noch aelteren Strecke geschnitten. Ohne das lagen die Punkte
+      // der weggefallenen Strecke unter dem Grund (Ballenfuss: 0,0075 mm).
+      const A2={z:V.z+r*nB.z, r:V.r+r*nB.r}, dB=nB.d;
+      let j=i-1, hit=null;
+      while(j>=0){
+        const nJ=n[j], dA=nJ.d;
+        const A1={z:Q[j+1].z+r*nJ.z, r:Q[j+1].r+r*nJ.r};        // Ende der versetzten Strecke j
+        const L=Math.hypot(Q[j+1].z-Q[j].z, Q[j+1].r-Q[j].r);
+        const det=dA.z*(-dB.r) - dA.r*(-dB.z);
+        if(Math.abs(det)<1e-9){ hit=A2; break; }
+        const wz=A2.z-A1.z, wr=A2.r-A1.r;
+        const t=(wz*(-dB.r) - wr*(-dB.z))/det;                   // t<0: vor dem Streckenende
+        if(t >= -L-1e-9 || j===0){ hit={z:A1.z+dA.z*t, r:A1.r+dA.r*t}; break; }
+        M.length=Math.max(1, mark[j]);                            // Strecke j samt ihrer Anfangsecke zuruecknehmen
+        j--;
+      }
+      M.push(hit);
     } else {                                                 // Aussenecke: Bogen um den Eckpunkt
       const a0=Math.atan2(nA.r, nA.z), a1=Math.atan2(nB.r, nB.z);
       let da=a1-a0; while(da>Math.PI) da-=2*Math.PI; while(da<-Math.PI) da+=2*Math.PI;
@@ -33828,6 +33945,13 @@ function parseGcodeForSim(code){
       // 6-stellige MTC-Struktur T SSWWVV (Kap. 5.1): Werkzeugnummer = Mittelteil.
       const tw = tMatch[1];
       curT = (/^\d{6}$/.test(tw)) ? String(parseInt(tw.slice(2,4),10)) : tw;
+      // SIM-RUECKAUFLOESUNG PLATZ -> WERKZEUG [17.09.2026 nachts]: die NC ruft
+      // den REVOLVERPLATZ (wzPlatzNr), Stempel und Massbericht suchen aber die
+      // Werkzeug-NUMMER. Liegt auf dem gerufenen Platz ein Werkzeug, gilt
+      // dieses — sonst die Nummer selbst (Lagerwerkzeug). Befund: Stecher T20
+      // auf Platz 12 wurde als Nr. 12 (VBMT-Platte) simuliert, 35 mm Phantom-
+      // Einschnitt im Einstich-Testprogramm der 1500er.
+      if(typeof wzVonPlatz==='function'){ const wp=wzVonPlatz(curT); if(wp) curT=String(wp.t); }
     }
     // Beide Dialekte lesen: MTC G40/41/42 und DIN G440/441/442 (Anhang B.3 —
     // die konventionelle CRC traegt im DIN-Dialekt die 44x-Nummern).
