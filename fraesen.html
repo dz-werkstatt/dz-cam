@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 14:23 (0f451a36)";</script>
+<script>window.__DZ_STAND="17.09.2026 17:22 (26486eb3)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2671,7 +2671,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <button class="gcbtn" id="btnStepRoh" title="Huellquader des Modells als BLK FORM in den Programmkopf">Als Rohteil übernehmen</button>
           <button class="gcbtn" id="btnStepFeld" title="Die Sollform an das Programm geben — danach rechnen die Zyklen Modell abspanen und Schrägen schlichten damit">Sollform ans Programm</button>
           <span style="font-size:11px;color:var(--text-dim);">Raster</span>
-          <input type="number" id="stepRaster" step="any" placeholder="auto" title="Rasterweite der Sollform in mm. Leer = automatisch nach Teilgröße (0,3 bis 2 mm). Feiner rechnen kostet Zeit und Speicher (die Zellzahl wächst quadratisch) und bringt zweierlei: den Bahnabstand, den die Rautiefe verlangt, UND die Schärfe einer konvexen Kante — die rundet die Bahn um rund die halbe Rasterweite ab (gemessen 0,142 mm bei Raster 0,30 und 0,057 mm bei 0,15)." style="width:62px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);">
+          <input type="number" id="stepRaster" step="any" placeholder="auto" title="Rasterweite der Sollform in mm. Leer = automatisch nach Teilgröße (0,3 bis 2 mm). Feiner rechnen kostet Zeit und Speicher (die Zellzahl wächst quadratisch) und bringt zweierlei: den Bahnabstand, den die Rautiefe verlangt, UND die Genauigkeit auf den Flächen. Die KANTEN des Modells gehen seit 17.09.2026 exakt ein; an einer scharfen konvexen Kante bleiben rund ein Vierzigstel der Rasterweite (gemessen 0,0174 mm bei 0,60, 0,0066 bei 0,30, 0,0024 bei 0,15)." style="width:62px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);">
           <span style="font-size:11px;color:var(--text-dim);">Z-Ebene</span>
           <select id="stepEbene" style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:210px;"></select>
           <button class="gcbtn" id="btnStepKonturen" title="Die Schleifen dieser Ebene als XY-Konturen in den Arbeitsplan legen">Konturen übernehmen</button>
@@ -2684,7 +2684,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <canvas id="stepCv" style="width:100%;flex:1 1 auto;min-height:260px;display:block;border:1px solid var(--line);border-radius:4px;background:#e9edf1;touch-action:none;cursor:grab;"></canvas>
           <div id="stepPlan"></div>
           <div class="small-hint" id="stepBericht" style="flex:0 0 auto;max-height:22vh;overflow-y:auto;"></div>
-          <div class="small-hint" style="flex:0 0 auto;">Ziehen = drehen, Rad oder zwei Finger = Zoom, Doppelklick = Ausgangslage. Farben: <b style="color:#2f6fb2;">waagerecht</b> (Boden oder Decke), <b style="color:#7a8593;">senkrecht</b> (Wand), <b style="color:#d08a2a;">Schräge</b>, <b style="color:#2f9e5a;">Bohrung längs der Achse</b>, <b style="color:#9b6fd0;">quer</b>, <b style="color:#c0392b;">Freiform</b>. Gestrichelt der Hüllquader, kräftig orange die gewählte Z-Ebene. Aus ihr werden mit <b>Konturen übernehmen</b> XY-Konturen für die Zyklen; Bahnen entstehen daraus erst über einen Zyklus. <b>Sollform</b> zeigt das Teil von oben mit der Höhe, auf die gefräst werden muss: hell ist oben, dunkel ist tief, blaugrau heißt "hier steht keine Fläche". Mit <b>Sollform ans Programm</b> bekommen die Schritte <b>Modell abspanen</b> (Z-konstant schruppen) und <b>Schrägen schlichten</b> (über die Rautiefe) dieses Höhenfeld. Das Feld <b>Raster</b> ist die Rasterweite in mm (leer = automatisch nach Teilgröße). Sie bestimmt ZWEI Dinge: der Bahnabstand des Schlichtens kann nur ein Vielfaches davon sein — verlangt die Rautiefe weniger, sagt die App es und hier stellt man feiner. Und sie ist die Genauigkeitsgrenze an einer <b>scharfen konvexen Kante</b>: die rundet die Bahn um rund die halbe Rasterweite ab (gemessen gegen die exakte Geometrie: 0,142 mm bei Raster 0,30, 0,057 mm bei 0,15). Auf Flächen und Rundungen gilt das nicht. Feiner rechnen kostet Zeit und Speicher quadratisch. Die Sollform hängt am geladenen Modell und wird NICHT mit dem Programm gespeichert.</div>
+          <div class="small-hint" style="flex:0 0 auto;">Ziehen = drehen, Rad oder zwei Finger = Zoom, Doppelklick = Ausgangslage. Farben: <b style="color:#2f6fb2;">waagerecht</b> (Boden oder Decke), <b style="color:#7a8593;">senkrecht</b> (Wand), <b style="color:#d08a2a;">Schräge</b>, <b style="color:#2f9e5a;">Bohrung längs der Achse</b>, <b style="color:#9b6fd0;">quer</b>, <b style="color:#c0392b;">Freiform</b>. Gestrichelt der Hüllquader, kräftig orange die gewählte Z-Ebene. Aus ihr werden mit <b>Konturen übernehmen</b> XY-Konturen für die Zyklen; Bahnen entstehen daraus erst über einen Zyklus. <b>Sollform</b> zeigt das Teil von oben mit der Höhe, auf die gefräst werden muss: hell ist oben, dunkel ist tief, blaugrau heißt "hier steht keine Fläche". Mit <b>Sollform ans Programm</b> bekommen die Schritte <b>Modell abspanen</b> (Z-konstant schruppen) und <b>Schrägen schlichten</b> (über die Rautiefe) dieses Höhenfeld. Das Feld <b>Raster</b> ist die Rasterweite in mm (leer = automatisch nach Teilgröße). Sie bestimmt ZWEI Dinge: der Bahnabstand des Schlichtens kann nur ein Vielfaches davon sein — verlangt die Rautiefe weniger, sagt die App es und hier stellt man feiner. Und sie ist die Genauigkeitsgrenze auf den <b>Flächen</b>: die Kanten des Modells gehen seit dem 17.09.2026 exakt in die Bahn ein, geblieben ist die Auflösung des Feldes — an einer scharfen konvexen Kante rund ein Vierzigstel der Rasterweite (gemessen gegen die exakte Geometrie: 0,0174 mm bei 0,60, 0,0066 bei 0,30, 0,0024 bei 0,15). Feiner rechnen kostet Zeit und Speicher quadratisch. Die Sollform hängt am geladenen Modell und wird NICHT mit dem Programm gespeichert.</div>
         </div>
       </div>
 
@@ -3152,13 +3152,14 @@ Kugelradius 4 und Rz 0,01&nbsp;mm sind das 0,57&nbsp;mm l&auml;ngs der Fl&auml;c
 Gefunden hat es die Restmaterialanzeige (Kap.&nbsp;6d), nachgerechnet am Programmierplatz-Beleg DZ15.</li>
 <li><b>Die H&ouml;he der Bahn ist die Kugel-Versatzfl&auml;che</b>: die Mitte des Fr&auml;sers l&auml;uft dort, wo die Kugel die Sollform gerade
 ber&uuml;hrt. Das ist exakt gerechnet (eine Dilatation des H&ouml;henfelds mit der Kugelkappe), nicht gen&auml;hert &mdash; deshalb kann die Bahn auch an
-einer <i>gerundeten</i> Kante nicht ins Teil schneiden.
-<b>An einer SCHARFEN konvexen Kante gilt das nicht</b>, und das ist die Grenze des Verfahrens: die Sollform steht als H&ouml;henfeld da,
-eine scharfe Kante liegt zwischen den Zellenmitten, und der Stempel trifft die schlimmste Richtung nicht. Gemessen gegen die
-<i>exakte</i> Geometrie eines Pyramidenstumpfs: <b>0,142&nbsp;mm bei Rasterweite 0,30 und 0,057&nbsp;mm bei 0,15</b> &mdash; also knapp
-die halbe Rasterweite. Weder die Sehnentoleranz noch die Ausd&uuml;nnung haben daran Anteil (beides nachgemessen). Die Bahn sagt die
-Rasterweite deines Teils nach jedem Lauf dazu. Wer die Kante scharf braucht, fertigt sie anders &mdash; eine Kugel bildet sie ohnehin
-nicht ab.</li>
+einer Kante nicht ins Teil schneiden.
+<b>Die KANTEN des Modells gehen dabei exakt ein</b>, nicht nur &uuml;ber das Raster: eine Kugel, die auf einer Kante liegt, hat ihre Mitte im
+Abstand r von der Kantengeraden, und genau das rechnet die App zus&auml;tzlich zum Stempel. <i>Bis zum 17.09.2026 tat sie das nicht</i> &mdash;
+eine scharfe konvexe Kante liegt zwischen den Zellenmitten, und die Bahn rundete sie um knapp die halbe Rasterweite ab
+(0,142&nbsp;mm bei Raster 0,30). Geblieben ist die Aufl&ouml;sung des Feldes auf den FL&Auml;CHEN; gemessen gegen die <i>exakte</i>
+Geometrie eines Pyramidenstumpfs: <b>0,0174&nbsp;mm bei Raster 0,60, 0,0066 bei 0,30 und 0,0024 bei 0,15</b> &mdash; rund ein Vierzigstel
+der Rasterweite. Die Bahn sagt die Rasterweite deines Teils nach jedem Lauf dazu. Eine scharfe Kante bildet eine Kugel ohnehin nicht
+ab &mdash; wer sie braucht, fertigt sie anders.</li>
 <li><b>&alpha;0 und &alpha;1</b> grenzen das Winkelband ein. Gearbeitet wird nur, was dazwischen liegt. Steileres bleibt stehen (es geh&ouml;rt der
 Z-konstanten Bahn), flacheres auch &mdash; eine waagerechte Fl&auml;che geh&ouml;rt dem Schaft- oder Messerkopf, nicht der Kugel. Beides wird
 <b>gez&auml;hlt und gemeldet</b>, nichts f&auml;llt stillschweigend aus. &alpha;0 = 0 schlichtet auch die Ebenen mit.</li>
@@ -7855,6 +7856,24 @@ function fStepSollfeld(A, raster){
   const h = new Float32Array(nx * ny); h.fill(B.z0);
   const quelle = new Uint8Array(nx * ny);          // 0 = leer, 1 = Ebene, 2 = geschaetzt
   const F = {x0:B.x0, y0:B.y0, nx:nx, ny:ny, raster:r, h:h, quelle:quelle, oben:B.z1, unten:B.z0};
+  // DIE KANTEN DES MODELLS kommen mit [17.09.2026]. Im Hoehenfeld gehen
+  // sie verloren - eine scharfe Kante liegt zwischen den Zellenmitten -,
+  // und genau das kostet die Schlichtbahn knapp die halbe Rasterweite
+  // (gemessen 0,142 mm bei Raster 0,30). Die Versatzflaeche der Kugel
+  // rechnet sie deshalb EXAKT dazu; hier werden sie nur eingesammelt.
+  // Jede Kante gehoert zu zwei Flaechen - doppelte werden weggelassen.
+  const kanten = [], gesehen = {};
+  (A.flaechen || []).forEach(fl => (fl.rand || []).forEach(lo => (lo.kanten || []).forEach(k => {
+    const P = k && k.p;
+    if(!P || P.length < 2) return;
+    const e = P[P.length - 1];
+    const s1 = fRund(P[0][0]) + ',' + fRund(P[0][1]) + ',' + fRund(P[0][2]);
+    const s2 = fRund(e[0]) + ',' + fRund(e[1]) + ',' + fRund(e[2]);
+    const kk = (s1 < s2) ? (s1 + '|' + s2 + '|' + P.length) : (s2 + '|' + s1 + '|' + P.length);
+    if(gesehen[kk]) return;
+    gesehen[kk] = 1; kanten.push(P);
+  })));
+  F.kanten = kanten;
   let exakt = 0, geschaetzt = 0;
   A.flaechen.forEach(f => {
     const G = fStepFlaechePoly(f);
@@ -8638,6 +8657,52 @@ function fBallFeld(F, r, nur){
       B[j * F.nx + q] = m;
     }
   }
+  // DIE KANTEN EXAKT DAZU [17.09.2026]. Der Stempel oben tastet das
+  // Hoehenfeld an seinen Zellenmitten ab. Eine scharfe konvexe Kante
+  // liegt dazwischen, und die schlimmste Richtung wird nicht getroffen -
+  // gemessen gegen die exakte Geometrie eines Pyramidenstumpfs: 0,142 mm
+  // bei Raster 0,30 und 0,057 bei 0,15, also knapp die halbe Rasterweite.
+  // Die Kanten des Modells sind aber exakt bekannt. Eine Kugel, die auf
+  // einer Kante liegt, hat ihre Mitte im Abstand r von der Kantengeraden;
+  // abgetastet wird die Kante fein genug, dass der Rest der Sehne
+  // verschwindet (Schritt 0,4 Raster: Pfeilhoehe unter einem Mikrometer).
+  // KONVEX ODER KONKAV muss dabei niemand unterscheiden: an einer
+  // konkaven Kante liegt die Kugel auf BEIDEN Flaechen und damit hoeher,
+  // als die Kante allein verlangt - der Hoechstwert aendert sich dort
+  // nicht. Deshalb ist das Maximum aus Stempel und Kanten immer richtig.
+  // Nur Zellen, die der Stempel ueberhaupt gerechnet hat, werden
+  // angehoben: ausserhalb der Maske steht -Infinity und das bleibt so.
+  if(F.kanten && F.kanten.length){
+    const schritt = Math.max(rr * 0.4, 0.02), r2 = r * r;
+    for(let e = 0; e < F.kanten.length; e++){
+      const P = F.kanten[e];
+      for(let q2 = 0; q2 + 1 < P.length; q2++){
+        const a0 = P[q2], b0 = P[q2 + 1];
+        const dx0 = b0[0] - a0[0], dy0 = b0[1] - a0[1], dz0 = b0[2] - a0[2];
+        const L = Math.sqrt(dx0 * dx0 + dy0 * dy0 + dz0 * dz0);
+        const m2 = Math.max(1, Math.ceil(L / schritt));
+        for(let t = 0; t <= m2; t++){
+          const u = t / m2;
+          const px = a0[0] + dx0 * u, py = a0[1] + dy0 * u, pz = a0[2] + dz0 * u;
+          const i0 = Math.max(0, Math.floor((px - r - F.x0) / rr));
+          const i1 = Math.min(F.nx - 1, Math.ceil((px + r - F.x0) / rr));
+          const j0 = Math.max(0, Math.floor((py - r - F.y0) / rr));
+          const j1 = Math.min(F.ny - 1, Math.ceil((py + r - F.y0) / rr));
+          for(let j = j0; j <= j1; j++){
+            const dy = F.y0 + (j + 0.5) * rr - py, o = j * F.nx;
+            for(let i = i0; i <= i1; i++){
+              const dx = F.x0 + (i + 0.5) * rr - px, d2 = dx * dx + dy * dy;
+              if(d2 > r2) continue;
+              const c = o + i;
+              if(!(B[c] > -Infinity)) continue;
+              const v = pz + Math.sqrt(r2 - d2);
+              if(v > B[c]) B[c] = v;
+            }
+          }
+        }
+      }
+    }
+  }
   return B;
 }
 // Toleranz auf den Grenzwinkel in Grad. Sie faengt das Rauschen der
@@ -9094,13 +9159,15 @@ function fBahnSchlichten(s, tool, prog){
   warn.push('Z ist die KUGELUNTERKANTE (die Spitze), so wie die Werkzeuglaenge L gemessen wird — nicht die Kugelmitte.');
   // DIE GRENZE DES VERFAHRENS, und sie gehoert gesagt [17.09.2026]. Die
   // Sollform steht als Hoehenfeld da, und eine SCHARFE konvexe Kante liegt
-  // zwischen den Zellenmitten. Der Stempel, der daraus die Versatzflaeche
-  // der Kugel macht, trifft die schlimmste Richtung nicht ganz - die Bahn
-  // rundet die Kante deshalb ab. Gemessen am Pyramidenstumpf gegen die
-  // EXAKTE Geometrie: 0,142 mm bei Raster 0,30 und 0,057 mm bei Raster
-  // 0,15, also knapp die halbe Rasterweite. Weder die Sehnentoleranz noch
-  // die Ausduennung haben daran Anteil (beide nachgemessen).
-  warn.push('Rasterweite der Sollform ' + fRund(F.raster) + ' mm — an einer SCHARFEN konvexen Kante rundet die Bahn deshalb um bis zu rund ' + fRund(F.raster / 2) + ' mm ab. Auf Flaechen und Rundungen gilt das nicht. Wer die Kante scharf braucht, fertigt sie anders.');
+  // zwischen den Zellenmitten - der Stempel allein rundete sie um knapp die
+  // halbe Rasterweite ab (gemessen 0,142 mm bei Raster 0,30).
+  // SEIT DEM 17.09.2026 nimmt die Versatzflaeche die KANTEN des Modells
+  // exakt mit; geblieben ist die Aufloesung des Feldes auf den FLAECHEN.
+  // Gemessen am Pyramidenstumpf gegen die exakte Geometrie: 0,0174 mm bei
+  // Raster 0,60, 0,0066 bei 0,30 und 0,0024 bei 0,15 - rund ein
+  // Vierzigstel der Rasterweite. Weder die Sehnentoleranz noch die
+  // Ausduennung haben daran Anteil (beide nachgemessen).
+  warn.push('Rasterweite der Sollform ' + fRund(F.raster) + ' mm. Die KANTEN des Modells gehen exakt in die Bahn ein, nicht nur ueber das Raster; was bleibt, ist die Aufloesung des Feldes auf den Flaechen — rund ' + fRund(F.raster / 40) + ' mm an einer scharfen konvexen Kante (gemessen 0,007 mm bei Raster 0,30). Eine scharfe Kante bildet eine Kugel ohnehin nicht ab.');
   warn.push('Geprueft wird nur die KUGEL, nicht der Schaft und nicht der Halter: an einer hohen steilen Wand kann der Schaft anstehen, ohne dass die App es sagt. Vor dem ersten Lauf Programm-Test und Einzelsatz.');
   return {ok:true, bahn:B, warn:warn, zuege:zuege, punkte:punkte, roh:roh,
     schritt:fRund(istMm), soll:fRund(schrittMm), rz:fRund(istRz), spruenge:spruenge,
@@ -9298,13 +9365,15 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
   warn.push('Z ist die KUGELUNTERKANTE (die Spitze), so wie die Werkzeuglaenge L gemessen wird — nicht die Kugelmitte.');
   // DIE GRENZE DES VERFAHRENS, und sie gehoert gesagt [17.09.2026]. Die
   // Sollform steht als Hoehenfeld da, und eine SCHARFE konvexe Kante liegt
-  // zwischen den Zellenmitten. Der Stempel, der daraus die Versatzflaeche
-  // der Kugel macht, trifft die schlimmste Richtung nicht ganz - die Bahn
-  // rundet die Kante deshalb ab. Gemessen am Pyramidenstumpf gegen die
-  // EXAKTE Geometrie: 0,142 mm bei Raster 0,30 und 0,057 mm bei Raster
-  // 0,15, also knapp die halbe Rasterweite. Weder die Sehnentoleranz noch
-  // die Ausduennung haben daran Anteil (beide nachgemessen).
-  warn.push('Rasterweite der Sollform ' + fRund(F.raster) + ' mm — an einer SCHARFEN konvexen Kante rundet die Bahn deshalb um bis zu rund ' + fRund(F.raster / 2) + ' mm ab. Auf Flaechen und Rundungen gilt das nicht. Wer die Kante scharf braucht, fertigt sie anders.');
+  // zwischen den Zellenmitten - der Stempel allein rundete sie um knapp die
+  // halbe Rasterweite ab (gemessen 0,142 mm bei Raster 0,30).
+  // SEIT DEM 17.09.2026 nimmt die Versatzflaeche die KANTEN des Modells
+  // exakt mit; geblieben ist die Aufloesung des Feldes auf den FLAECHEN.
+  // Gemessen am Pyramidenstumpf gegen die exakte Geometrie: 0,0174 mm bei
+  // Raster 0,60, 0,0066 bei 0,30 und 0,0024 bei 0,15 - rund ein
+  // Vierzigstel der Rasterweite. Weder die Sehnentoleranz noch die
+  // Ausduennung haben daran Anteil (beide nachgemessen).
+  warn.push('Rasterweite der Sollform ' + fRund(F.raster) + ' mm. Die KANTEN des Modells gehen exakt in die Bahn ein, nicht nur ueber das Raster; was bleibt, ist die Aufloesung des Feldes auf den Flaechen — rund ' + fRund(F.raster / 40) + ' mm an einer scharfen konvexen Kante (gemessen 0,007 mm bei Raster 0,30). Eine scharfe Kante bildet eine Kugel ohnehin nicht ab.');
   warn.push('Geprueft wird nur die KUGEL, nicht der Schaft und nicht der Halter: an einer hohen steilen Wand kann der Schaft anstehen, ohne dass die App es sagt. Vor dem ersten Lauf Programm-Test und Einzelsatz.');
   if(splitter) warn.push(splitter + ' kurze Reststueck(e) der Hoehenlinie wurden weggelassen (unter drei Rasterweiten lang) — sie kosten Anfahrt und Rueckzug und schneiden nichts.');
   if(nSteht) warn.push(nSteht + ' Rasterstelle(n) bleiben aus: dort steht nach dem Schruppen bis ' + fRund(stehtMax) + ' mm ueber der Sollform.');
