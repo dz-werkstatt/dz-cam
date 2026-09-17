@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 14:16 (9ca98217)";</script>
+<script>window.__DZ_STAND="17.09.2026 14:23 (0f451a36)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -8171,7 +8171,16 @@ function fStandKopie(G){
           stand:new Float32Array(G.stand), imRoh:G.imRoh, soll:G.soll};
 }
 // Die Kugel laengs einer Strecke aus dem Stand nehmen.
-function fStandKugelStempel(G, x0, y0, z0, x1, y1, z1, rk){
+// WAS DIE BAHN NICHT BEARBEITET, BLEIBT STEHEN [17.09.2026]. Die Kugel
+// ueberstreicht auf ihrem Weg auch Zellen, an denen die Bahn gar nicht
+// arbeitet - dort, wo nach dem Schruppen mehr steht, als Zustellung und
+// Aufmass erklaeren, laesst sie ausdruecklich aus (sie wuerde im
+// Vollschnitt fahren). Wer diese Zellen trotzdem aus dem Modell nimmt,
+// glaubt hinterher, dort sei Platz - und zieht seinen Eilgang hindurch.
+// GEMESSEN an Daniels "Bauteil fuer Schraubstock": ein Eilgang auf
+// Z -10,571, waehrend dort noch Material auf Z -4 stand.
+// tol ist dieselbe Schranke, mit der die Bahn oben aussortiert.
+function fStandKugelStempel(G, x0, y0, z0, x1, y1, z1, rk, tol){
   const r = G.raster, St = G.stand;
   const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / (r / 2)));
   for(let q = 0; q <= n; q++){
@@ -8185,7 +8194,9 @@ function fStandKugelStempel(G, x0, y0, z0, x1, y1, z1, rk){
         const dx = G.x0 + (p + 0.5) * r - x, d2 = dx * dx + dy * dy;
         if(d2 > rk * rk) continue;
         const h = zc - Math.sqrt(rk * rk - d2);
-        if(h < St[o + p]) St[o + p] = h;
+        const c = o + p;
+        if(tol > 0 && G.soll && St[c] > G.soll[c] + tol + 1e-6) continue;   // laesst die Bahn aus
+        if(h < St[c]) St[c] = h;
       }
     }
   }
@@ -9050,7 +9061,7 @@ function fBahnSchlichten(s, tool, prog){
       vor({z:A0[2], f:(+s.fTief > 0) ? +s.fTief : f});
       for(let q = 1; q < D2.length; q++) vor({x:D2[q][0], y:D2[q][1], z:D2[q][2], f:f});
       if(SG) for(let q = 1; q < D2.length; q++)
-        fStandKugelStempel(SG, D2[q-1][0], D2[q-1][1], D2[q-1][2], D2[q][0], D2[q][1], D2[q][2], rk);
+        fStandKugelStempel(SG, D2[q-1][0], D2[q-1][1], D2[q-1][2], D2[q][0], D2[q][1], D2[q][2], rk, sTol);
       punkte += D2.length; zuege++; letzt = D2[D2.length - 1];
     });
     richtung = -richtung;
@@ -9273,7 +9284,7 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
       vor({z:A0[2], f:(+s.fTief > 0) ? +s.fTief : f});
       for(let q = 1; q < D2.length; q++) vor({x:D2[q][0], y:D2[q][1], z:D2[q][2], f:f});
       if(SG) for(let q = 1; q < D2.length; q++)
-        fStandKugelStempel(SG, D2[q-1][0], D2[q-1][1], D2[q-1][2], D2[q][0], D2[q][1], D2[q][2], rk);
+        fStandKugelStempel(SG, D2[q-1][0], D2[q-1][1], D2[q-1][2], D2[q][0], D2[q][1], D2[q][2], rk, sTol);
       punkte += D2.length; zuege++; letzt = D2[D2.length - 1];
     });
   }
