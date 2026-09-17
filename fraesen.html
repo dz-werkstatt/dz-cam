@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 17:22 (26486eb3)";</script>
+<script>window.__DZ_STAND="17.09.2026 17:27 (dd65c7c5)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -9319,10 +9319,37 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
       // Bei einer offenen Linie bliebe dort Material stehen - deshalb
       // behaelt die offene Linie das Anfahren und Eintauchen.
       const zu = Math.hypot(A0[0] - D2[D2.length - 1][0], A0[1] - D2[D2.length - 1][1]) < r;
-      if(zu && letzt && Math.hypot(A0[0]-letzt[0],A0[1]-letzt[1]) > 3*dz) nWeit++;
+      // WIE WEIT DARF DIE RAMPE ANFAHREN? [17.09.2026 nachgeschaerft]
+      // Zuerst stand hier eine Schranke von drei Z-Abstaenden - eine
+      // Vorsichtszahl, weil die Fahrt von der letzten Stelle zum
+      // Rampenanfang auf der HOEHE DER LETZTEN EBENE laeuft und dort
+      // etwas stehen koennte. Vorsichtszahlen sind aber nur so lange
+      // richtig, wie man nichts Besseres hat: die Versatzflaeche BEWEIST,
+      // ob die Strecke auf dieser Hoehe frei ist (fBallMax ist ihr
+      // Hoechstwert laengs der Strecke, und die Kugelmitte muss darueber
+      // bleiben). Dazu kommt der Stand nach dem Schruppen, wo er bekannt
+      // ist. Gemessen am Pyramidenstumpf, Eilgaenge je 1000
+      // Vorschubsaetze: 26,4 mit der Schranke allein, 21,0 mit beidem.
+      // Eine Obergrenze bleibt trotzdem stehen: die Anfahrt laeuft im
+      // VORSCHUB, und quer ueber das ganze Teil zu kriechen waere
+      // langsamer als hochzuziehen.
+      const weitA = letzt ? Math.hypot(A0[0] - letzt[0], A0[1] - letzt[1]) : Infinity;
+      // KURZ ODER BEWIESEN. Die kurze Anfahrt (bis drei Z-Abstaende) bleibt
+      // erlaubt wie bisher: sie kann gar nicht weit ueber fremdes Gebiet
+      // fuehren. Daruber hinaus zaehlt der Beweis. Beides zusammen, denn
+      // der Beweis ALLEIN war strenger als noetig: die gerade Verbindung
+      // zwischen zwei Hoehenlinien schneidet nach INNEN ab, und dort liegt
+      // die Versatzflaeche hoeher - gemessen 33,1 statt 26,4 Eilgaenge je
+      // 1000 Vorschubsaetze, also schlechter.
+      const rampeFrei = !letzt ? false
+        : (weitA <= 3 * dz + 1e-9) ? true
+        : (weitA <= 12 * dz + 4 * r)
+          ? ((fBallMax(BF, F, letzt[0], letzt[1], A0[0], A0[1]) - rk) <= letzt[2] + 1e-9
+             && (!SG || !(fStandFreiHoehe(SG, letzt[0], letzt[1], A0[0], A0[1], rk) > letzt[2] + 1e-9)))
+          : false;
+      if(zu && letzt && !rampeFrei) nWeit++;
       let rampe = null;
-      if(zu && letzt && letzt[2] > zTip + 1e-6
-         && Math.hypot(A0[0] - letzt[0], A0[1] - letzt[1]) <= 3 * dz + 1e-9){
+      if(zu && letzt && letzt[2] > zTip + 1e-6 && rampeFrei){
         const rlen = Math.min((letzt[2] - zTip) / Math.tan(F_RAMPE_GRAD * Math.PI / 180),
                               fZugLaenge(D2) * 0.25);
         if(rlen > r) rampe = fZugRampe(D2, rlen, letzt[2], zTip);
