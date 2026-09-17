@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 17:45 (c249fd80)";</script>
+<script>window.__DZ_STAND="17.09.2026 18:25 (416d589c)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -7535,7 +7535,19 @@ function fPlanFlaechen(prog, A, F){
     // einem echten Teil: 37 Treffer, bis 53 mm ueber der Sollform).
     if(F && bahn2 && bahn2.ok && bahn2.gitter){
       F.standG = bahn2.gitter;
-      F.standTol = fRund((+grundWerte.zust || 0) + Math.max(+grundWerte.aufSeite || 0, +grundWerte.aufTiefe || 0));
+      // DIE SCHRANKE MUSS DIE TREPPE DURCHLASSEN [17.09.2026 abends, Daniels
+      // Befund am Rampenblock]. Ein Z-Ebenen-Schruppen laesst an einer
+      // Schraege BY DESIGN eine Treppe stehen: eine Zustellung hoch, dazu
+      // beide Aufmasse (auf 45 Grad addieren sie sich) und das Raster.
+      // Gemessen am Rampenblock: 5,75 mm bei D 4, UXY 0,5, UZ 0,3. Die alte
+      // Schranke 'Zustellung plus groesseres Aufmass' (4,5) lag DARUNTER -
+      // der Schlichter liess 2090 Stellen aus, seine Zeilen zerbrachen in
+      // 665 Stuecke, jedes mit eigenem Eintauchen: der Kamm im Bild.
+      // Die Treppe ist genau das, was der Schlichter mit der Rautiefe
+      // wegnehmen SOLL. Verweigert wird nur, was das Schruppen nie erreicht
+      // hat - und das ist eine andere Groessenordnung (12, 37, 55 mm an
+      // echten Teilen). Zwei Zustellungen plus beide Aufmasse trennen das.
+      F.standTol = fRund(2 * (+grundWerte.zust || 0) + (+grundWerte.aufSeite || 0) + (+grundWerte.aufTiefe || 0));
     }
   }
 
@@ -8620,7 +8632,8 @@ function fStandVorSchlicht(F, prog, s){
       // Zustellung plus das groessere Aufmass - dieselbe Rechnung, die der
       // Planer anstellt. Ohne sie nimmt die Bahn ersatzweise den
       // Kugelradius, und der ist beim Schlichten meist zu gross.
-      b.gitter.tol = fRund((+letzt.zust || 0) + Math.max(+letzt.aufSeite || 0, +letzt.aufTiefe || 0));
+      // Dieselbe Rechnung wie beim Planer: die Treppe darf durch (siehe dort).
+      b.gitter.tol = fRund(2 * (+letzt.zust || 0) + (+letzt.aufSeite || 0) + (+letzt.aufTiefe || 0));
       return b.gitter;
     }
   }catch(e){ /* kein Stand ist besser als ein falscher */ }
@@ -11180,7 +11193,7 @@ function fDemoStepRampe(){
   // reicht fuer 18 mm Tiefe nicht - die App sagt das auch.
   const b = fSchrittNeu(p, 'modellSchlichten', 18);
   Object.assign(b, {q203:0, tiefe:-18, winkelMin:5, winkel:45, rautiefe:0.01, tolBahn:0.005,
-                    strategie:0, sc:2, sc2:50, s:3800, f:600, fTief:240});
+                    strategie:2, sc:2, sc2:50, s:3800, f:600, fTief:240});   // 2 = Zeilenrichtung automatisch, quer zum Gefaelle (17.09.2026: von Hand auf X gepinnt ergab 167 Zuege statt 61)
   p.schritte = [a, b];
   return p;
 }
