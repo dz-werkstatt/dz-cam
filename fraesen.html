@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="16.09.2026 22:07 (4c13fd5b)";</script>
+<script>window.__DZ_STAND="17.09.2026 07:12 (61f59ad9)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4110,11 +4110,13 @@ var F_MASKE = {
                feldText:{f:'F Vorschub Fräsen', l1:'LX Länge in X (± = Richtung)', l2:'LY Länge in Y (± = Richtung)', zust:'DZ max. Zustellung', ueberl:'max. Überlappung'}},
   // Modell abspanen: kein einziges Feld traegt ein Q-Wort — die Familie hat
   // keinen Steuerungszyklus. Deshalb steht die ganze Feldliste in ohneQ.
-  modellSchruppen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','aufSeite','aufTiefe','#Bahn','ueberl','dVor','#!Sicherheit','sc','sc2'],
+  modellSchruppen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','aufSeite','aufTiefe','#Bahn','ueberl','dVor','eintauch','#!Sicherheit','sc','sc2'],
+               feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd (ANGLE)'],['0','über Sicherheitshöhe anfahren, senkrecht eintauchen']]},
                feldText:{f:'F Vorschub Fräsen', fTief:'FZ Vorschub Eintauchen', zust:'D Zustellung in Z',
+                 eintauch:'Anfahren & Eintauchen',
                  aufSeite:'UXY Aufmaß an der Wand', aufTiefe:'UZ Aufmaß nach unten', ueberl:'Bahnüberlappung (× Werkzeugradius)',
                  sc2:'SC2 Rückzug über Z0'},
-               ohneQ:['t','s','f','fTief','kuehl','q203','tiefe','zust','aufSeite','aufTiefe','ueberl','sc','sc2']},
+               ohneQ:['t','s','f','fTief','kuehl','q203','tiefe','zust','aufSeite','aufTiefe','ueberl','eintauch','sc','sc2']},
   // Stufe 4: wie beim Abspanen traegt kein Feld ein Q-Wort. Der Bereich
   // Z0..Z1 waehlt aus, WELCHE Flaechen geschlichtet werden — nicht wie tief
   // gefahren wird; die Hoehe kommt aus dem Modell.
@@ -4609,6 +4611,7 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
     if(art === 'nut'){ s.l1 = 40; s.l2 = 12; }
     if(art === 'nutR'){ s.l2 = 10; }
     if(art === 'modellSchruppen'){
+      s.eintauch = 2;                      // pendelnd, wenn das Werkzeug einen ANGLE hat
       // Stufe 3 Teil B: Vorgaben fuer Schruppen — 2 mm Zustellung, 0,5 mm an
       // der Wand und 0,2 mm nach unten stehen lassen, Zeilen um 0,8 des
       // Werkzeugradius versetzt, Oberflaeche und Tiefe aus dem Rohteil.
@@ -7226,8 +7229,9 @@ function fPlanFraeser(prog, zweck){
   // nicht ein, muss er beim Planfraesen auch nicht - der Zyklus faehrt
   // seitlich an.
   else if(zweck === 'plan') f = wz.filter(w => !fPlanIstKugel(w));
-  // Abspanen: muss SENKRECHT eintauchen koennen (die Bahn taucht in der
-  // Flaeche ein, nicht von aussen). Ohne ANGLE ist das geraten.
+  // Abspanen: die Bahn taucht IN der Flaeche ein, nicht von aussen. Mit
+  // ANGLE pendelt sie sich im eigenen Zug hinunter; ohne ANGLE bliebe nur
+  // der senkrechte Stich, und ob das Werkzeug das darf, ist dann geraten.
   else f = wz.filter(w => !fPlanIstKugel(w) && (+w.angle || 0) > 0);
   return f.sort((a, b) => (+b.d || 0) - (+a.d || 0))[0] || null;
 }
@@ -8015,6 +8019,15 @@ function fBahnModell(s, tool, prog){
   const rt = (tool && +tool.d > 0) ? +tool.d / 2 : 0;
   if(!(rt > 0)) return nein('Werkzeug-Durchmesser fehlt (Werkzeugtabelle)');
   const k = prog.kopf || {};
+  // EINTAUCHEN IM SCHNITT [17.09.2026]. Der Winkel kommt aus der
+  // WERKZEUGTABELLE, nicht aus einer Annahme: ANGLE ist in der TOOL.T der
+  // groesste Winkel, unter dem dieses Werkzeug schraeg eintauchen darf -
+  // dieselbe Zahl, die die TNC fuer Q366 pendelnd heranzieht. Hat das
+  // Werkzeug keinen ANGLE, wird nicht gerampt, sondern gestochen und
+  // gesagt. (Zum Vergleich: hyperMILLs gerechnete Schruppbahnen rampen mit
+  // 2,6 Grad. Wer das will, traegt 2,6 als ANGLE ein.)
+  const pendeln = Math.round(+s.eintauch || 0) === 2;
+  const wAngle = (tool && +tool.angle > 0) ? Math.min(+tool.angle, 89) : 0;
   const uXY = Math.max(0, +s.aufSeite || 0), uZ = Math.max(0, +s.aufTiefe || 0);
   const zOben = +s.q203 || 0;
   const tiefe = +s.tiefe || 0; if(!(tiefe < 0)) return nein('Tiefe fehlt');
@@ -8063,7 +8076,7 @@ function fBahnModell(s, tool, prog){
   for(let q = 0; q < n; q++){ if(G.imRoh[q] && G.stand[q] > Math.max(G.soll[q] + uZ, zEnde) + 0.001) wegZellen++; }
   if(!wegZellen) return nein('ueber der Sollform steht kein Material: Rohteil und Modell sind gleich hoch. Im Programmkopf ein groesseres Rohteil eintragen (oder Z0 hoeher setzen) — "Als Rohteil uebernehmen" nimmt genau den Huellquader des Modells, ohne Aufmass.');
   const B = [], sicher = fRund(zOben + sc2);
-  let x = null, y = null, ebenen = 0, zuege = 0, stiche = 0;
+  let x = null, y = null, ebenen = 0, zuege = 0, stiche = 0, rampen = 0, senkrecht = 0, unten = 0;
   const eil = (o) => B.push(Object.assign({a:'eil'}, o));
   const vor = (o) => B.push(Object.assign({a:'vor'}, o));
 
@@ -8077,6 +8090,20 @@ function fBahnModell(s, tool, prog){
   const durchgang = (quer, z, zr, gut) => {
     const nAus = quer ? nx : ny, nIn = quer ? ny : nx;
     const zelle = (a, b) => quer ? (b * nx + a) : (a * nx + b);
+    // Darf die Werkzeugmitte die ganze Strecke entlang stehen? Gefragt
+    // wird die Maske DIESER Ebene, nicht der Stand: zwischen zwei
+    // Nachbarzeilen steht immer noch Material - das ist der Sinn der
+    // Ueberlappung -, aber schneiden darf das Werkzeug dort.
+    const freiWeg = (x1, y1, x2, y2) => {
+      const w = Math.hypot(x2 - x1, y2 - y1);
+      const nS = Math.max(1, Math.ceil(w / (r / 2)));
+      for(let q = 0; q <= nS; q++){
+        const px = x1 + (x2 - x1) * q / nS, py = y1 + (y2 - y1) * q / nS;
+        const pi = Math.floor((px - G.x0) / r), pj = Math.floor((py - G.y0) / r);
+        if(pi < 0 || pj < 0 || pi >= nx || pj >= ny || !erlaubt[pj * nx + pi]) return false;
+      }
+      return true;
+    };
     const wx = (a, b) => G.x0 + ((quer ? a : b) + 0.5) * r;
     const wy = (a, b) => G.y0 + ((quer ? b : a) + 0.5) * r;
     for(let a = 0; a < nAus; a++){
@@ -8122,19 +8149,90 @@ function fBahnModell(s, tool, prog){
         if(richtung < 0){ const t = b0; b0 = b1; b1 = t; }
         const xa = fRund(wx(a, b0)), ya = fRund(wy(a, b0)), xb = fRund(wx(a, b1)), yb = fRund(wy(a, b1));
         // Ueberflug: nur so hoch, wie auf dem Weg wirklich etwas steht.
-        let ueber = sicher;
+        let ueber = sicher, verbunden = false;
         if(x === null) eil({x:xa, y:ya, z:sicher});
         else {
-          ueber = fRund(Math.min(sicher, Math.max(fStandMax(G, x, y, xa, ya, rt), z) + sc));
-          eil({z:ueber}); eil({x:xa, y:ya});
+          const steht = fStandMax(G, x, y, xa, ya, rt);
+          // ZEILENWECHSEL AUF TIEFE [17.09.2026]. Bis hierher zog die Bahn
+          // nach JEDEM Zug auf Sicherheitshoehe, fuhr hinueber und tauchte
+          // neu ein - auch dann, wenn die naechste Zeile unmittelbar
+          // daneben lag. Gemessen an einer Vorlage: 215 Eintauchstiche bei
+          // ebenso vielen Zuegen. Das ist der Zeilenwechsel einer
+          // Maeanderbahn, und er gehoert nach unten.
+          // GEFRAGT IST NICHT, ob dort noch etwas STEHT - zwischen zwei
+          // Nachbarzeilen steht immer noch Material, das ist ja der Sinn
+          // der Ueberlappung -, sondern ob die Werkzeugmitte dort STEHEN
+          // DARF. Das sagt erlaubt[], die Maske dieser Ebene: sie haelt
+          // Werkzeugradius und Seitenaufmass von der Sollform fern. Wo
+          // sie durchgehend gilt, ist die Fahrt unten kein Anschnitt der
+          // Form, sondern ein Schnitt im Rohteil - genau das, wofuer der
+          // Fraeser da ist.
+          // Die Strecke bleibt kurz - hoechstens ein Zeilenabstand samt
+          // Werkzeugradius. Weiter im Vorschub zu fahren waere langsamer
+          // als hochzuziehen, und der Eingriff waere groesser als der
+          // des Zuges selbst.
+          // Das Feld "Anfahren & Eintauchen" entscheidet beides: wer
+          // SENKRECHT waehlt, faehrt auch zwischen den Zuegen ueber die
+          // Sicherheitshoehe - so, wie es die Bahn bis zum 17.09.2026
+          // immer gemacht hat. Das ist kein Zugestaendnis an alte
+          // Gewohnheit: die Fahrt unten SCHNEIDET auf voller Tiefe, und
+          // wer eine schwache Aufspannung hat, will das vielleicht nicht.
+          // Drei Wege werden versucht, in dieser Reihenfolge: gerade,
+          // erst quer dann laengs, erst laengs dann quer. Der gerade Weg
+          // schneidet am Rand eines Bereichs oft die Ecke ab; ein
+          // Zeilenwechsel geht ohnehin ueblicherweise ueber Eck.
+          const weit = Math.hypot(xa - x, ya - y);
+          let weg = null;
+          if(pendeln && weit <= rt + 2 * schritt * r + 2 * r){
+            if(freiWeg(x, y, xa, ya)) weg = [];
+            else if(freiWeg(x, y, x, ya) && freiWeg(x, ya, xa, ya)) weg = [[x, ya]];
+            else if(freiWeg(x, y, xa, y) && freiWeg(xa, y, xa, ya)) weg = [[xa, y]];
+          }
+          if(weg){
+            weg.forEach(p => vor({x:fRund(p[0]), y:fRund(p[1]), z:zr, f:f}));
+            vor({x:xa, y:ya, z:zr, f:f}); verbunden = true; unten++;
+          } else {
+            ueber = fRund(Math.min(sicher, Math.max(steht, z) + sc));
+            eil({z:ueber}); eil({x:xa, y:ya});
+          }
         }
         // Eilgang nach unten nur bis SC ueber das Material, das an der
         // Anfahrstelle wirklich steht — den Rest faehrt der Eintauchvorschub.
         // Die erste Fassung eilte stur auf "Ebene + 1 mm" und tauchte damit
         // ins volle Rohteil; die eigene Simulation meldete das als Kollision.
-        const zEil = fRund(Math.max(z, Math.min(ueber, fStandMax(G, xa, ya, xa, ya, rt) + sc)));
-        if(zEil < ueber - 1e-6) eil({z:zEil});
-        vor({z:zr, f:fZ});                                 // senkrecht eintauchen
+        const zEil = verbunden ? zr
+          : fRund(Math.max(z, Math.min(ueber, fStandMax(G, xa, ya, xa, ya, rt) + sc)));
+        if(!verbunden && zEil < ueber - 1e-6) eil({z:zEil});
+        // Bis hierher stach das Werkzeug an JEDEM Zeilenanfang senkrecht
+        // auf volle Ebenentiefe ins volle Material - ein Schaftfraeser,
+        // der bohrt. Gerampt wird IM EIGENEN ZUG hin und her: diese
+        // Strecke gehoert schon zum Zug, dort darf das Werkzeug also
+        // stehen - es braucht keine neue Freiheitspruefung. Eine GERADE
+        // Zahl von Gaengen endet wieder am Zuganfang, und der Zug selbst
+        // raeumt den Saegezahn danach auf voller Tiefe aus. Genau so
+        // nennt die TNC es bei Q366: pendelnd.
+        const tief = zEil - zr;
+        let imSchnitt = false;
+        if(!verbunden && pendeln && wAngle > 0 && tief > 1e-6){
+          const Lz = Math.hypot(xb - xa, yb - ya);
+          const tanA = Math.tan(wAngle * Math.PI / 180);
+          // So wenig Gaenge wie moeglich, aber mindestens zwei (sonst
+          // endet das Pendeln am falschen Ende), und immer geradzahlig.
+          let nGang = Math.ceil(tief / Math.max(1e-9, Lz * tanA));
+          if(nGang < 2) nGang = 2;
+          if(nGang % 2) nGang++;
+          const L0 = tief / (nGang * tanA);
+          if(nGang <= 20 && L0 > 1e-6 && L0 <= Lz + 1e-9){
+            const ux = (xb - xa) / Lz * L0, uy = (yb - ya) / Lz * L0;
+            for(let q = 1; q <= nGang; q++){
+              const zq = (q === nGang) ? zr : fRund(zEil - tief * q / nGang);
+              if(q % 2) vor({x:fRund(xa + ux), y:fRund(ya + uy), z:zq, f:f});
+              else      vor({x:xa, y:ya, z:zq, f:f});
+            }
+            imSchnitt = true; rampen++;
+          }
+        }
+        if(!verbunden && !imSchnitt){ vor({z:zr, f:fZ}); senkrecht++; }   // senkrecht eintauchen
         vor({x:xb, y:yb, z:zr, f:f});
         fStandStempel(G, xa, ya, xb, yb, rt, z);
         x = xb; y = yb; getan++; zuege++;
@@ -8234,8 +8332,15 @@ function fBahnModell(s, tool, prog){
   }
   const flaeche = fRund(restZellen * r * r);
   warn.push('Modell abspanen: ' + ebenen + ' Ebene(n) mit ' + zuege + ' Zuegen, Zeilenabstand ' + fRund(schritt * r)
-    + ' mm, Arbeitsraster ' + fRund(r) + ' mm. Zeilenweise im Zickzack mit Querdurchgang an den Waenden, SENKRECHT eingetaucht — das Werkzeug muss ueber Mitte schneiden.'
+    + ' mm, Arbeitsraster ' + fRund(r) + ' mm. Zeilenweise im Zickzack mit Querdurchgang an den Waenden.'
     + (stiche ? ' ' + stiche + ' Stelle(n) waeren nur ein senkrechter Stich ohne Fraesweg gewesen und sind ausgelassen — ein Schaftfraeser soll nicht bohren; was dort steht, ist im Restmaterial enthalten.' : ''));
+  if(unten) warn.push(unten + ' Zeilenwechsel fahren UNTEN hinueber, im Vorschub und im Schnitt (kein Rueckzug, kein neues Eintauchen) — nur ueber eine Strecke, auf der die Werkzeugmitte laut Ebenenmaske ueberall stehen darf.');
+  if(rampen) warn.push(rampen + ' Zug/Zuege tauchen PENDELND im eigenen Zug ein, mit ' + fRund(wAngle)
+    + ' Grad (ANGLE des Werkzeugs), statt senkrecht auf Ebenentiefe zu stechen.'
+    + (senkrecht ? ' ' + senkrecht + ' Zug/Zuege sind dafuer zu kurz und stechen senkrecht.' : ''));
+  else if(senkrecht) warn.push('Alle ' + senkrecht + ' Zuege stechen SENKRECHT auf Ebenentiefe ein'
+    + (pendeln ? (wAngle > 0 ? ' (kein Zug ist lang genug zum Pendeln)' : ' — T' + s.t + ' hat keinen Eintauchwinkel ANGLE in der Werkzeugtabelle; mit ANGLE taucht die Bahn im Schnitt ein') : ' (Feld Eintauchen steht auf senkrecht)')
+    + ' — dort muss das Werkzeug ueber Mitte schneiden koennen.');
   if(restZellen && !fertigN) warn.push('Stehen geblieben: ' + flaeche + ' mm2 (' + restZellen
     + ' Rasterstellen), bis ' + fRund(restMax) + ' mm hoch — NIRGENDS ist die Sollform samt Aufmass erreicht. ⌀'
     + fRund(2 * rt) + ' ist fuer dieses Teil zu gross, oder die Tiefe Z1 reicht nicht bis an die Sollform heran.');
@@ -8244,7 +8349,7 @@ function fBahnModell(s, tool, prog){
     + '. Ein Saum in der Groesse des Arbeitsrasters (' + fRund(r) + ' mm) ist die Rechengenauigkeit; breitere Stellen erreicht ⌀'
     + fRund(2 * rt) + ' nicht — dort mit einem kleineren Werkzeug nachsetzen.');
   else warn.push('Kein Restmaterial: das Werkzeug erreicht ueberall die Sollform samt Aufmass.');
-  return {ok:true, bahn:B, warn:warn, ebenen:ebenen, zuege:zuege, stiche:stiche, rest:restZellen,
+  return {ok:true, bahn:B, warn:warn, ebenen:ebenen, zuege:zuege, stiche:stiche, rampen:rampen, senkrecht:senkrecht, unten:unten, rest:restZellen,
     restMax:fRund(restMax), restBreit:fRund(breit), flaeche:flaeche, gitter:G};
 }
 
@@ -8374,6 +8479,63 @@ function fMaskeWeiten(M, nx, ny, k){
 // gemessen 13400 Punkte je Zeilenbahn, mit 0,005 mm Sehnentoleranz noch 804.
 // Die Toleranz ist ein FORMFEHLER und kommt zur Rautiefe dazu — deshalb
 // steht sie als eigenes Feld in der Maske und nicht fest im Code.
+// DER RAMPENWINKEL, gemessen an hyperMILLs gerechneten Bahnen (52 Jobs des
+// Z-Ebenenschlichtens): 2,50 mm Abstieg ueber 12,0 mm Seitweg, also 16,2
+// Grad. Beim Z-Ebenen-Schruppen sind es 2,6 Grad. 16 ist damit die obere,
+// nicht die mittlere Kante - beim Schlichten ist der Span duenn.
+var F_RAMPE_GRAD = 16;
+// Eine GESCHLOSSENE Linie so drehen, dass sie bei dem Punkt beginnt, der
+// dem letzten Bahnpunkt am naechsten liegt. Bei einem Ring ist der
+// Startpunkt beliebig - unserer lag bisher dort, wo die Hoehenlinie
+// zufaellig anfing. Liegt er dort, wo das Werkzeug schon steht, kann die
+// naechste Ebene ohne Eilgang angerampt werden. [17.09.2026: ohne diese
+// Drehung griff die Rampe fast nie, und es blieben 56 Eilgaenge je 1000
+// Vorschubsaetzen gegen hyperMILLs 1,0.]
+function fZugDrehen(Z, px, py){
+  const n = Z.length - 1;                       // letzter Punkt = erster
+  if(n < 3) return Z;
+  let bi = 0, bd = Infinity;
+  for(let i = 0; i < n; i++){
+    const d = (Z[i][0] - px) * (Z[i][0] - px) + (Z[i][1] - py) * (Z[i][1] - py);
+    if(d < bd){ bd = d; bi = i; }
+  }
+  if(bi === 0) return Z;
+  const aus = [];
+  for(let k = 0; k < n; k++) aus.push(Z[(bi + k) % n]);
+  aus.push(Z[bi]);                              // Ring wieder schliessen
+  return aus;
+}
+// Laenge eines Zuges in der XY-Ebene.
+function fZugLaenge(Z){
+  let s = 0;
+  for(let i = 1; i < Z.length; i++) s += Math.hypot(Z[i][0] - Z[i-1][0], Z[i][1] - Z[i-1][1]);
+  return s;
+}
+// Aus einer GESCHLOSSENEN Linie eine Bahn mit EINLAUFRAMPE machen: die
+// ersten rlen Millimeter fallen von zVon auf zBis, der Rest laeuft auf
+// zBis - und die angerampte Strecke wird am Schluss auf voller Tiefe
+// NACHGEFAHREN. Ohne dieses Nachfahren bliebe genau dort ein Keil stehen,
+// wo die Rampe hineinlaeuft; das waere ein Massfehler, den niemand sieht,
+// weil er nur an einer Stelle des Umlaufs sitzt.
+function fZugRampe(Z, rlen, zVon, zBis){
+  const aus = [[Z[0][0], Z[0][1], fRund(zVon)]];
+  let s = 0, ramp = null;
+  for(let i = 1; i < Z.length; i++){
+    const d = Math.hypot(Z[i][0] - Z[i-1][0], Z[i][1] - Z[i-1][1]);
+    if(!ramp && s + d > rlen && d > 1e-9){
+      // Punkt GENAU am Rampenende einschieben, damit die Tiefe dort stimmt
+      // und nicht erst am naechsten Stuetzpunkt erreicht wird.
+      const u = (rlen - s) / d;
+      aus.push([fRund(Z[i-1][0] + (Z[i][0] - Z[i-1][0]) * u),
+                fRund(Z[i-1][1] + (Z[i][1] - Z[i-1][1]) * u), fRund(zBis)]);
+      ramp = aus.slice(0);
+    }
+    s += d;
+    aus.push([Z[i][0], Z[i][1], fRund(zVon + (zBis - zVon) * Math.min(1, s / rlen))]);
+  }
+  if(ramp) for(let i = 1; i < ramp.length; i++) aus.push([ramp[i][0], ramp[i][1], fRund(zBis)]);
+  return aus;
+}
 function fZugDuennen(P, tol){
   if(P.length < 3) return P.slice();
   const halt = new Uint8Array(P.length); halt[0] = halt[P.length - 1] = 1;
@@ -8674,6 +8836,15 @@ function fBahnSchlichten(s, tool, prog){
     ? 'Ueberflug und Anfahrt rechnen gegen den STAND nach dem Schruppen, nicht nur gegen die Sollform — ein Eilgang faehrt damit nicht in Material, das das Schruppen gelassen hat.'
     : 'ACHTUNG: Ueberflug und Anfahrt rechnen gegen die SOLLFORM. Was das Schruppen stehen liess, kennt diese Bahn nicht — der Eilgang koennte dort hineinfahren. Den Stand legt der Planer bei (Programm vorschlagen); von Hand angelegte Schritte haben ihn nicht.');
   warn.push('Z ist die KUGELUNTERKANTE (die Spitze), so wie die Werkzeuglaenge L gemessen wird — nicht die Kugelmitte.');
+  // DIE GRENZE DES VERFAHRENS, und sie gehoert gesagt [17.09.2026]. Die
+  // Sollform steht als Hoehenfeld da, und eine SCHARFE konvexe Kante liegt
+  // zwischen den Zellenmitten. Der Stempel, der daraus die Versatzflaeche
+  // der Kugel macht, trifft die schlimmste Richtung nicht ganz - die Bahn
+  // rundet die Kante deshalb ab. Gemessen am Pyramidenstumpf gegen die
+  // EXAKTE Geometrie: 0,142 mm bei Raster 0,30 und 0,057 mm bei Raster
+  // 0,15, also knapp die halbe Rasterweite. Weder die Sehnentoleranz noch
+  // die Ausduennung haben daran Anteil (beide nachgemessen).
+  warn.push('Rasterweite der Sollform ' + fRund(F.raster) + ' mm — an einer SCHARFEN konvexen Kante rundet die Bahn deshalb um bis zu rund ' + fRund(F.raster / 2) + ' mm ab. Auf Flaechen und Rundungen gilt das nicht. Wer die Kante scharf braucht, fertigt sie anders.');
   warn.push('Geprueft wird nur die KUGEL, nicht der Schaft und nicht der Halter: an einer hohen steilen Wand kann der Schaft anstehen, ohne dass die App es sagt. Vor dem ersten Lauf Programm-Test und Einzelsatz.');
   return {ok:true, bahn:B, warn:warn, zuege:zuege, punkte:punkte, roh:roh,
     schritt:fRund(istMm), soll:fRund(schrittMm), rz:fRund(istRz), spruenge:spruenge,
@@ -8764,7 +8935,7 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
   const B = [], sicher = fRund(zOben + sc2);
   const eil = (o) => B.push(Object.assign({a:'eil'}, o));
   const vor = (o) => B.push(Object.assign({a:'vor'}, o));
-  let zuege = 0, punkte = 0, roh = 0, letzt = null, ebenen = 0;
+  let zuege = 0, punkte = 0, roh = 0, letzt = null, ebenen = 0, splitter = 0, nRampe = 0, nWeit = 0;
   // DIE HOEHENLINIE LIEGT EINEN HAUCH ZU TIEF, und das ist keine Schlamperei,
   // sondern die Natur der Sache: zwischen zwei Zellenmitten wird LINEAR
   // interpoliert, die Versatzflaeche der Kugel ist dort aber gewoelbt und
@@ -8795,9 +8966,48 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
       }
       roh += L.length;
       const Z3 = L.map(p => [fRund(p[0]), fRund(p[1]), zTip]);
-      const D2 = fZugDuennen(Z3, tol);
+      let D2 = fZugDuennen(Z3, tol);
       if(D2.length < 2) return;
+      // SPLITTER WEGLASSEN [17.09.2026]. Die Hoehenlinie wirft an
+      // Zellenecken kurze Reststuecke ab — gemessen an der Pyramide: neben
+      // dem Ring von 350 Punkten je Ebene noch drei Stuecke aus ZWEI
+      // Punkten mit 0,001 mm Laenge. Jedes davon kostete Anfahren,
+      // Eintauchen und Rueckzug und schneidet nichts: die Kugel hat 8 mm
+      // Durchmesser, ein Stueck unter drei Rasterweiten liegt vollstaendig
+      // in dem, was die Nachbarebene ohnehin nimmt. hyperMILL macht
+      // dasselbe und nennt es SKIP_SMALL_POCKETS.
+      if(fZugLaenge(D2) < 3 * r){ splitter++; return; }
+      // Geschlossene Ringe beim naechstgelegenen Punkt beginnen lassen —
+      // sonst faengt jede Ebene dort an, wo die Hoehenlinie zufaellig
+      // begann, und die Rampe kommt nie zustande.
+      if(letzt && Math.hypot(D2[0][0] - D2[D2.length - 1][0], D2[0][1] - D2[D2.length - 1][1]) < r)
+        D2 = fZugDrehen(D2, letzt[0], letzt[1]);
       const A0 = D2[0];
+      // ===== DIE RAMPE ZWISCHEN DEN EBENEN [17.09.2026] =====
+      // GEMESSEN an hyperMILLs gerechneten Bahnen (52 Jobs): um 2,5 mm
+      // tiefer zu kommen, faehrt das Werkzeug 12 mm seitlich mit, ueber
+      // acht Saetze - rund 16 Grad. Es wird NICHT hochgezogen und neu
+      // eingetaucht; ein ganzer Job kam mit vier Eilgaengen aus.
+      // Das geht nur bei einer GESCHLOSSENEN Linie: dort faehrt die Bahn
+      // die angerampte Strecke am Ende noch einmal auf voller Tiefe nach.
+      // Bei einer offenen Linie bliebe dort Material stehen - deshalb
+      // behaelt die offene Linie das Anfahren und Eintauchen.
+      const zu = Math.hypot(A0[0] - D2[D2.length - 1][0], A0[1] - D2[D2.length - 1][1]) < r;
+      if(zu && letzt && Math.hypot(A0[0]-letzt[0],A0[1]-letzt[1]) > 3*dz) nWeit++;
+      let rampe = null;
+      if(zu && letzt && letzt[2] > zTip + 1e-6
+         && Math.hypot(A0[0] - letzt[0], A0[1] - letzt[1]) <= 3 * dz + 1e-9){
+        const rlen = Math.min((letzt[2] - zTip) / Math.tan(F_RAMPE_GRAD * Math.PI / 180),
+                              fZugLaenge(D2) * 0.25);
+        if(rlen > r) rampe = fZugRampe(D2, rlen, letzt[2], zTip);
+      }
+      if(rampe){
+        // Kein Eilgang, kein Eintauchen: aus der letzten Ebene heraus
+        // direkt in die Rampe hinein.
+        rampe.forEach(q => vor({x:q[0], y:q[1], z:q[2], f:f}));
+        punkte += rampe.length; zuege++; nRampe++; letzt = rampe[rampe.length - 1];
+        return;
+      }
       // Anfahrt: ueber die Versatzflaeche hinweg ist nur der Weg zwischen
       // zwei Bahnpunkten DERSELBEN Ebene beweisbar frei. Zwischen Ebenen
       // wird auf die sichere Hoehe zurueckgezogen - eine Z-konstante Bahn
@@ -8825,9 +9035,20 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
     + fRund(dz) + ' mm aus Rautiefe ' + fRund(rz) + ' und Kugelradius ' + fRund(rk)
     + ' (flachste bearbeitete Stelle ' + fRund(aMin) + ' Grad; gefahrene Rautiefe ' + fRund(istRz) + ' mm).');
   warn.push('Z ist die KUGELUNTERKANTE (die Spitze), so wie die Werkzeuglaenge L gemessen wird — nicht die Kugelmitte.');
+  // DIE GRENZE DES VERFAHRENS, und sie gehoert gesagt [17.09.2026]. Die
+  // Sollform steht als Hoehenfeld da, und eine SCHARFE konvexe Kante liegt
+  // zwischen den Zellenmitten. Der Stempel, der daraus die Versatzflaeche
+  // der Kugel macht, trifft die schlimmste Richtung nicht ganz - die Bahn
+  // rundet die Kante deshalb ab. Gemessen am Pyramidenstumpf gegen die
+  // EXAKTE Geometrie: 0,142 mm bei Raster 0,30 und 0,057 mm bei Raster
+  // 0,15, also knapp die halbe Rasterweite. Weder die Sehnentoleranz noch
+  // die Ausduennung haben daran Anteil (beide nachgemessen).
+  warn.push('Rasterweite der Sollform ' + fRund(F.raster) + ' mm — an einer SCHARFEN konvexen Kante rundet die Bahn deshalb um bis zu rund ' + fRund(F.raster / 2) + ' mm ab. Auf Flaechen und Rundungen gilt das nicht. Wer die Kante scharf braucht, fertigt sie anders.');
   warn.push('Geprueft wird nur die KUGEL, nicht der Schaft und nicht der Halter: an einer hohen steilen Wand kann der Schaft anstehen, ohne dass die App es sagt. Vor dem ersten Lauf Programm-Test und Einzelsatz.');
+  if(splitter) warn.push(splitter + ' kurze Reststueck(e) der Hoehenlinie wurden weggelassen (unter drei Rasterweiten lang) — sie kosten Anfahrt und Rueckzug und schneiden nichts.');
   if(nSteht) warn.push(nSteht + ' Rasterstelle(n) bleiben aus: dort steht nach dem Schruppen bis ' + fRund(stehtMax) + ' mm ueber der Sollform.');
   return {ok:true, bahn:B, warn:warn, zuege:zuege, punkte:punkte, roh:roh,
+    rampen:nRampe, weit:nWeit, splitter:splitter,
     ebenen:ebenen, dz:fRund(dz), rz:fRund(istRz), aMin:fRund(aMin),
     steht:nSteht, mitStand:!!SG, ball:BF, neig:NF, gut:gut};
 }
