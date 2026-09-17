@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 08:26 (006f38dc)";</script>
+<script>window.__DZ_STAND="17.09.2026 14:16 (9ca98217)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -7050,14 +7050,78 @@ function fPlanBohrWerkzeug(prog, d){
           grund:(rampe && d > (+rampe.d || 0) * 3) ? 'tasche' : 'kein werkzeug'};
 }
 
+// WIEVIEL PLATZ HAT DAS WERKZEUG AN DIESER STELLE? [17.09.2026]
+// Eine Bohrung in einer tieferliegenden Flaeche ist nur durch das
+// erreichbar, was darueber geoeffnet ist. Das Sollfeld sagt genau das:
+// eine Zelle, deren Sollhoehe UEBER der Bezugsflaeche liegt, traegt dort
+// Material und versperrt den Weg nach unten. Der freie Radius ist der
+// Abstand zur naechsten solchen Zelle.
+// GEFUNDEN an Daniels Teil 489703 230-035-15008-02-0000: vier
+// ⌀13-Bohrungen auf der Flaeche Z -79, erreichbar nur durch die
+// ⌀20-Bohrung darueber. Der Planer waehlte den ⌀20,5-Kegelsenker (den
+// kleinsten, der die kleinste Bohrung noch ansenkt) und benutzte ihn fuer
+// ALLE Zentrierschritte - auch fuer den da unten. Die eigene Simulation
+// meldete vierzehn Kollisionen, die erste schon bei Z -1.
+// Die oberste Flaeche hat immer Platz; dort aendert sich nichts.
+function fFreiRadius(F, x, y, z, rMax){
+  if(!F || !(rMax > 0)) return rMax;
+  const r = F.raster, k = Math.ceil(rMax / r) + 1;
+  const i0 = Math.floor((x - F.x0) / r), j0 = Math.floor((y - F.y0) / r);
+  let frei = rMax;
+  for(let j = j0 - k; j <= j0 + k; j++){
+    if(j < 0 || j >= F.ny) continue;
+    const o = j * F.nx, dy = F.y0 + (j + 0.5) * r - y;
+    for(let i = i0 - k; i <= i0 + k; i++){
+      if(i < 0 || i >= F.nx) continue;
+      const c = o + i;
+      if(!F.quelle[c] || !(F.h[c] > z + 0.01)) continue;
+      const dx = F.x0 + (i + 0.5) * r - x, d = Math.sqrt(dx * dx + dy * dy);
+      if(d < frei) frei = d;
+    }
+  }
+  return frei;
+}
+// WIE HOCH MUSS DER UEBERFLUG ZWISCHEN DEN STELLEN SEIN? [17.09.2026]
+// Ein Bohrzyklus zieht zwischen zwei Stellen auf Q204 zurueck, und das
+// ist die zweite Sicherheitshoehe UEBER DER BEZUGSFLAECHE - nicht ueber
+// dem Teil. Liegt die Bezugsflaeche tief und stehen zwischen den Stellen
+// Stege, faehrt das Werkzeug quer hindurch. Die Steuerung macht es
+// genauso; das ist kein Fehler der App, aber einer des Programms.
+// GEMESSEN an Daniels Teil 489703 230-035-15008-02-0000: Bezugsflaeche
+// Z -79, SC2 50, also Ueberflug auf Z -29 - und fuenf Millimeter neben
+// der Bahn steht das Teil auf Z 0. Die eigene Simulation meldete sechs
+// Treffer.
+// Gefragt wird das SOLLFELD im Umkreis der Stellen: hoeher als sein
+// Hoechstwert kann dort nichts stehen, wenn geschruppt ist.
+function fPlanUeberflug(F, punkte, z, rand){
+  if(!F || !punkte || !punkte.length) return z;
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  punkte.forEach(p => {
+    if(p.x < x0) x0 = p.x; if(p.x > x1) x1 = p.x;
+    if(p.y < y0) y0 = p.y; if(p.y > y1) y1 = p.y; });
+  const rr = (rand > 0) ? rand : 0;
+  const i0 = Math.max(0, Math.floor((x0 - rr - F.x0) / F.raster));
+  const i1 = Math.min(F.nx - 1, Math.ceil((x1 + rr - F.x0) / F.raster));
+  const j0 = Math.max(0, Math.floor((y0 - rr - F.y0) / F.raster));
+  const j1 = Math.min(F.ny - 1, Math.ceil((y1 + rr - F.y0) / F.raster));
+  let h = z;
+  for(let j = j0; j <= j1; j++){
+    const o = j * F.nx;
+    for(let i = i0; i <= i1; i++){ const c = o + i; if(F.quelle[c] && F.h[c] > h) h = F.h[c]; }
+  }
+  return h;
+}
 // DAS SENKWERKZEUG zu einem Senkdurchmesser: ein Kegel mit passendem
 // Spitzenwinkel, der GROSS GENUG ist - ein ⌀10-Anbohrer senkt keine
 // ⌀10,6 an. Genommen wird der kleinste, der reicht (weniger Luftweg),
 // und ein Zentrierer vor einem Fasenfraeser.
-function fPlanSenkWerkzeug(prog, dSenk, winkel){
-  const w0 = (winkel || 90);
+// dMax ist die Obergrenze aus dem freien Platz - ein Kegel, der nicht in
+// die Vertiefung hineinkommt, taugt dort nichts, so gross er auch waere.
+function fPlanSenkWerkzeug(prog, dSenk, winkel, dMax){
+  const w0 = (winkel || 90), oben = (dMax > 0) ? dMax : Infinity;
   const wz = (prog && prog.werkzeuge) || [];
   const passt = wz.filter(w => Math.abs((+w.spitze || 0) - w0) < 1 && (+w.d || 0) >= dSenk - 0.001
+                               && (+w.d || 0) <= oben + 1e-9
                                && (w.art === 'zentrierer' || w.art === 'fraeser'));
   passt.sort((a, b) => (a.art === b.art ? ((+a.d || 0) - (+b.d || 0)) : (a.art === 'zentrierer' ? -1 : 1)));
   return passt[0] || null;
@@ -7127,21 +7191,50 @@ function fPlanBohrSchritte(prog, A, F){
     ' verschiedenen Bezugsflaechen (Z ' + ebenen.map(e => e.z).join(', ') + '). Gearbeitet wird von OBEN nach unten, und jede Flaeche wird eigens zentriert — sonst faehrt das Werkzeug im Eilgang durch noch stehendes Material.');
 
   ebenen.forEach((e, ei) => {
-   if(zentrierer && e.punkte.length){
+   // WIEVIEL PLATZ IST AUF DIESER FLAECHE? [17.09.2026] Der Zentrierer war
+   // bis hierher EINER fuer alle Flaechen - der kleinste Kegel, der die
+   // kleinste Bohrung des ganzen Teils noch ansenkt. Ob er in eine
+   // Vertiefung ueberhaupt hineinkommt, fragte niemand. Jetzt bestimmt der
+   // engste Punkt DIESER Flaeche die Obergrenze.
+   const platz = e.punkte.length
+     ? Math.min.apply(null, e.punkte.map(p => fFreiRadius(F, p.x, p.y, e.z, 60)))
+     : 60;
+   const dPlatz = fRund(2 * platz);
+   // Der Ueberflug zwischen den Stellen dieser Flaeche. Nur ERHOEHEN,
+   // nie senken: was der Anwender im Kopf eingestellt hat, bleibt die
+   // Untergrenze.
+   const hUeber = fPlanUeberflug(F, e.punkte, e.z, 12);
+   const sc2Vor = +((prog && prog.kopf && prog.kopf.sc2) || 0);
+   const sc2Neu = fRund((hUeber - e.z) + 2);
+   const sc2E = (sc2Neu > sc2Vor + 0.001) ? sc2Neu : 0;
+   const mitSC2 = (w) => { if(sc2E) w.sc2 = sc2E; return w; };
+   if(sc2E) hinweise.push('Flaeche Z' + e.z + ': zwischen den Stellen steht das Teil bis Z' + fRund(hUeber)
+     + ' — der Rueckzug zwischen den Bohrungen geht deshalb auf SC2 ' + sc2E + ' (Z' + fRund(e.z + sc2E)
+     + ') statt auf ' + sc2Vor + '. Sonst faehrt der Zyklus quer durch die Stege.');
+   const dMinE = e.gruppen.length ? Math.min.apply(null, e.gruppen.map(g => g.d)) : 0;
+   const zentE = fPlanSenkWerkzeug(prog, dMinE, 90, dPlatz)
+     || ((prog && prog.werkzeuge) || []).filter(w => w.art === 'zentrierer' && (+w.d || 0) > 0
+                                                     && (+w.d || 0) <= dPlatz + 1e-9)
+          .sort((a, b) => (+b.d || 0) - (+a.d || 0))[0] || null;
+   if(zentrierer && e.punkte.length && (!zentE || +zentE.nr !== +zentrierer.nr))
+     hinweise.push('Flaeche Z' + e.z + ': dort ist nur ⌀' + dPlatz + ' frei (das Werkzeug muss durch das, was darueber geoeffnet ist). '
+       + (zentE ? ('Statt T' + zentrierer.nr + ' ⌀' + fRund(zentrierer.d) + ' zentriert dort T' + zentE.nr + ' ⌀' + fRund(zentE.d) + '.')
+                : ('Kein Zentrierbohrer passt dort hinein — diese Flaeche wird NICHT zentriert.')));
+   if(zentE && e.punkte.length){
     const mz = muster.length;
     muster.push({name:(ebenen.length > 1) ? ('Bohrungen Z' + e.z) : 'Alle Bohrungen', typ:'punkte', punkte:e.punkte.slice()});
     // Auf DURCHMESSER zentrieren gibt zugleich die Anfasung der Bohrung -
     // aber nur, wenn der Zentrierer gross genug ist. Sonst auf Tiefe.
-    const dMin = Math.min.apply(null, e.gruppen.map(g => g.d));
-    const aufD = (+zentrierer.d || 0) >= dMin * 1.1;
-    schritte.push({art:'zentrieren', t:zentrierer.nr, muster:mz,
-      werte:aufD ? {zAuswahl:1, zDurchm:fRund(dMin), tiefe:-2, q203:e.z}
-                 : {zAuswahl:0, tiefe:-1.5, q203:e.z},
+    const dMin = dMinE;
+    const aufD = (+zentE.d || 0) >= dMin * 1.1;
+    schritte.push({art:'zentrieren', t:zentE.nr, muster:mz,
+      werte:mitSC2(aufD ? {zAuswahl:1, zDurchm:fRund(dMin), tiefe:-2, q203:e.z}
+                        : {zAuswahl:0, tiefe:-1.5, q203:e.z}),
       text:'Zentrieren, ' + e.punkte.length + ' Stellen' + (aufD ? ', auf ⌀' + fRund(dMin) : ', 1,5 mm tief')
            + ((ebenen.length > 1) ? (' (Flaeche Z' + e.z + ')') : '')});
-    if(!aufD && ei === 0) hinweise.push('Zentriert wird 1,5 mm tief: der Zentrierbohrer ⌀' + fRund(zentrierer.d) +
+    if(!aufD && ei === 0) hinweise.push('Zentriert wird 1,5 mm tief: der Zentrierbohrer ⌀' + fRund(zentE.d) +
       ' ist zu klein, um auf den Bohrungsdurchmesser anzusenken.');
-   } else if(e.punkte.length && ei === 0) hinweise.push('Kein Zentrierbohrer in der Werkzeugtabelle — es wird ohne Zentrieren gebohrt.');
+   } else if(e.punkte.length && ei === 0 && !zentrierer) hinweise.push('Kein Zentrierbohrer in der Werkzeugtabelle — es wird ohne Zentrieren gebohrt.');
 
    e.gruppen.forEach(g => {
     const W = fPlanBohrWerkzeug(prog, g.d);
@@ -7156,9 +7249,9 @@ function fPlanBohrSchritte(prog, A, F){
     if(W.wz && +W.wz.lcuts && Math.abs(tiefe) > +W.wz.lcuts)
       hinweise.push('⌀' + g.d + ': ' + Math.abs(tiefe) + ' mm sind tiefer als die Schneidenlaenge ' + W.wz.lcuts + ' mm des Werkzeugs.');
     schritte.push({art:W.art, t:W.t, muster:mi,
-      werte:(W.art === 'bohren')
+      werte:mitSC2((W.art === 'bohren')
         ? {tiefe:tiefe, zust:0, q203:fRund(g.zOben)}
-        : {tiefe:tiefe, q335:g.d, q342:0, q334:fRund(Math.min(2, g.d / 6)), q203:fRund(g.zOben)},
+        : {tiefe:tiefe, q335:g.d, q342:0, q334:fRund(Math.min(2, g.d / 6)), q203:fRund(g.zOben)}),
       text:(W.art === 'bohren' ? 'Bohren ⌀' : 'Bohrfraesen ⌀') + g.d + ', ' + g.punkte.length + ' Stellen, ' +
            (g.durch ? 'durch (' + Math.abs(tiefe) + ' mm mit Spitze und Ueberlauf)' : fRund(g.tiefe) + ' mm tief')});
     if(W.art === 'bohrfraesen') hinweise.push('⌀' + g.d + ': kein Bohrer dieses Durchmessers — die Bohrung wird mit dem Fraeser ⌀' + fRund(W.wz.d) + ' wendelnd ausgefraest (Zyklus 208).');
@@ -7322,8 +7415,23 @@ function fPlanFlaechen(prog, A, F){
   const wMin = 5, wMax = 45;
   // Die Bohrungen sind bekannt - was in ihnen liegt, gehoert dem
   // Bohrplan und nicht der Fraesbahn.
+  // ABER NUR, WAS DER BOHRPLAN AUCH NIMMT [17.09.2026]. Bis hierher galt
+  // JEDE erkannte Bohrung als "dem Bohrplan gehoerend" - auch die, fuer die
+  // es gar kein Werkzeug gibt. An Daniels Teil 489703 230-035-15008-02-0000
+  // fiel eine ⌀90-Tasche damit zwischen beide Plaene: der Bohrplan lehnte
+  // sie ab ("zu gross zum Bohren und zum Wendeln - das ist eine runde
+  // TASCHE und gehoert zu den Fraesbahnen"), und der Fraesplan sagte im
+  // selben Atemzug "unter der Oberflaeche liegen nur BOHRUNGEN - gefraest
+  // wird dort nichts". Niemand raeumte sie aus, und die vier ⌀13-Bohrungen
+  // an ihrem Grund gingen durch volles Material. Die eigene Simulation
+  // meldete es als Kollision - vierzehn Treffer, der erste bei Z -1.
   let loecher = [];
-  try{ loecher = (fPlanBohrungen(A, F).loecher) || []; }catch(e){ loecher = []; }
+  try{
+    const BOH = fPlanBohrungen(A, F);
+    loecher = (BOH.loecher || []).filter(L => {
+      try{ return !!fPlanBohrWerkzeug(prog, +L.d).art; }catch(e){ return true; }
+    });
+  }catch(e){ loecher = []; }
   const bef = fPlanFlaechenBefund(A, F, wMin, wMax, loecher);
   // Die tiefste Stelle der Sollform ist eine ZELLENMITTE. Liegt sie
   // innerhalb einer Rasterweite ueber dem Boden des Huellquaders, ist der
@@ -7383,25 +7491,41 @@ function fPlanFlaechen(prog, A, F){
     // WAS BLEIBT STEHEN? Das sagt die Bahn selbst - ihr Bericht nennt die
     // Breite der Stelle. Das Restwerkzeug ist der groesste Fraeser, der da
     // noch hineinpasst.
+    // NACHGESETZT WIRD, SOLANGE ES ETWAS BRINGT [17.09.2026]. Bis hierher
+    // gab es genau EINEN Nachsetzer. An Daniels Aufspannkoerper
+    // AUFSPANNKOERPER_70X70X70_11 reichte das nicht: nach ⌀20 und ⌀16 blieb
+    // eine Vertiefung mit nur ⌀14,3 Zugang stehen, in die keiner der beiden
+    // hineinkommt. Der Bohrplan setzte trotzdem seine Bezugsflaeche auf
+    // deren Grund (Z -20) - und der Zyklus fuhr im Eilgang durch das volle
+    // Material darueber. Die eigene Simulation meldete vier Treffer.
+    // Ein ⌀10 mit Eintauchwinkel lag die ganze Zeit in der Tabelle.
+    // Hoechstens drei Runden: jede kostet eine volle Bahnprobe, und wer mit
+    // dem vierten Werkzeug noch nicht hinkommt, hat ein anderes Problem.
     if(bahn && bahn.ok && bahn.rest > 0){
       const saum = F ? F.raster * 1.5 : 0;
-      const kand = fr.filter(w => (+w.d || 0) < (+wSchrupp2.d || 0));
-      const passt = kand.filter(w => (+w.d || 0) <= bahn.restBreit + 0.001)[0];
-      if(bahn.restBreit <= saum){
-        hinweise.push('Nach dem Abspanen bleibt nur ein Saum von ' + bahn.restBreit +
-          ' mm (Arbeitsraster ' + fRund(F ? F.raster : 0) + ' mm) — das ist Rechengenauigkeit, kein Nachsetzen noetig.');
-      } else if(passt){
-        const werteR = Object.assign({}, grundWerte, {dVor:fRund(+wSchrupp2.d || 0)});
+      let vorher = wSchrupp2, bAkt = bahn, runden = 0;
+      while(bAkt && bAkt.ok && bAkt.rest > 0 && runden < 3){
+        if(bAkt.restBreit <= saum){
+          hinweise.push('Nach dem Abspanen bleibt nur ein Saum von ' + bAkt.restBreit +
+            ' mm (Arbeitsraster ' + fRund(F ? F.raster : 0) + ' mm) — das ist Rechengenauigkeit, kein Nachsetzen noetig.');
+          break;
+        }
+        const kand = fr.filter(w => (+w.d || 0) < (+vorher.d || 0));
+        const passt = kand.filter(w => (+w.d || 0) <= bAkt.restBreit + 0.001)[0];
+        if(!passt){
+          hinweise.push('Nach dem Abspanen bleiben ' + bAkt.flaeche + ' mm2 stehen, bis ' + bAkt.restMax +
+            ' mm hoch und ' + bAkt.restBreit + ' mm breit — der kleinste Fraeser mit Eintauchwinkel in der Tabelle ist ⌀' +
+            (kand.length ? kand[kand.length - 1].d : fRund(+vorher.d || 0)) + ' und passt dort nicht hinein.' + holWeg);
+          break;
+        }
+        const werteR = Object.assign({}, grundWerte, {dVor:fRund(+vorher.d || 0)});
         schritte.push({art:'modellSchruppen', t:passt.nr, werte:werteR,
-          text:'Restmaterial nachsetzen (' + bahn.flaeche + ' mm2, bis ' + bahn.restBreit + ' mm breit), Fraeser ' + passt.nr + ' (⌀' + passt.d + ')'});
-        // Der Stand, den die Schlichtbahn braucht, ist der NACH dem
-        // Nachsetzer. Das kostet eine zweite Bahnprobe.
+          text:'Restmaterial nachsetzen (' + bAkt.flaeche + ' mm2, bis ' + bAkt.restBreit + ' mm breit), Fraeser ' + passt.nr + ' (⌀' + passt.d + ')'});
+        // Der Stand, den die Schlichtbahn braucht, ist der NACH dem letzten
+        // Nachsetzer. Das kostet je Runde eine Bahnprobe.
         const bahnR = fPlanBahnProbe(prog, passt, werteR, F);
         if(F && bahnR && bahnR.ok && bahnR.gitter) bahn2 = bahnR;
-      } else {
-        hinweise.push('Nach dem Abspanen bleiben ' + bahn.flaeche + ' mm2 stehen, bis ' + bahn.restMax +
-          ' mm hoch und ' + bahn.restBreit + ' mm breit — der kleinste Fraeser mit Eintauchwinkel in der Tabelle ist ⌀' +
-          (kand.length ? kand[kand.length - 1].d : fRund(+wSchrupp2.d || 0)) + ' und passt dort nicht hinein.' + holWeg);
+        vorher = passt; bAkt = bahnR; runden++;
       }
     }
     // DER STAND NACH DEM SCHRUPPEN, fuer die Schlichtbahn. Ohne ihn rechnet
