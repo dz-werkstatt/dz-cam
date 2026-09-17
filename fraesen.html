@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 21:20 (7b9c88d4)";</script>
+<script>window.__DZ_STAND="17.09.2026 21:41 (40530184)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2647,13 +2647,14 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <label style="display:inline-flex;align-items:center;gap:4px;font-size:12px;white-space:nowrap;"><input type="checkbox" id="simKanten"> Rohteilkanten</label>
           <label style="display:inline-flex;align-items:center;gap:4px;font-size:12px;white-space:nowrap;" title="Zeigt rot, wo noch Material ueber der Sollform des Modells steht"><input type="checkbox" id="simRest" checked> Restmaterial</label>
           <input type="range" id="simPos" min="0" max="1000" value="0" style="flex:1 1 120px;min-width:80px;" title="Zeitachse">
+          <span style="display:inline-flex;gap:2px;flex-wrap:wrap;" title="Ansicht: vergrößern, verkleinern, einpassen, verschieben — oder Rad / zwei Finger und Ziehen auf dem Bild"><button class="gcbtn" id="btnSimZoomIn" style="min-width:34px;width:34px;padding:6px 0;flex:0 0 auto;overflow:visible;text-overflow:clip;" title="Vergrößern">⊕</button><button class="gcbtn" id="btnSimZoomOut" style="min-width:34px;width:34px;padding:6px 0;flex:0 0 auto;overflow:visible;text-overflow:clip;" title="Verkleinern">⊖</button><button class="gcbtn" id="btnSimFit" style="min-width:34px;width:34px;padding:6px 0;flex:0 0 auto;overflow:visible;text-overflow:clip;" title="Einpassen (auch Doppelklick aufs Bild)">⤢</button><button class="gcbtn" id="btnSimL" style="min-width:34px;width:34px;padding:6px 0;flex:0 0 auto;overflow:visible;text-overflow:clip;" title="nach links">◀</button><button class="gcbtn" id="btnSimR" style="min-width:34px;width:34px;padding:6px 0;flex:0 0 auto;overflow:visible;text-overflow:clip;" title="nach rechts">▶</button><button class="gcbtn" id="btnSimU" style="min-width:34px;width:34px;padding:6px 0;flex:0 0 auto;overflow:visible;text-overflow:clip;" title="nach oben">▲</button><button class="gcbtn" id="btnSimD" style="min-width:34px;width:34px;padding:6px 0;flex:0 0 auto;overflow:visible;text-overflow:clip;" title="nach unten">▼</button></span>
         </div>
         <div class="mask-body" style="display:flex;flex-direction:column;gap:6px;min-height:0;">
-          <canvas id="simCv" style="width:100%;flex:1 1 auto;min-height:260px;display:block;border:1px solid var(--line);border-radius:4px;background:#e9edf1;"></canvas>
-          <canvas id="simGl" style="width:100%;flex:1 1 auto;min-height:260px;display:none;border:1px solid var(--line);border-radius:4px;background:#e9edf1;touch-action:none;cursor:grab;"></canvas>
+          <canvas id="simCv" style="touch-action:none;width:100%;flex:1 1 auto;min-height:260px;display:block;border:1px solid var(--line);border-radius:4px;background:#e9edf1;"></canvas>
+          <canvas id="simGl" style="touch-action:none;width:100%;flex:1 1 auto;min-height:260px;display:none;border:1px solid var(--line);border-radius:4px;background:#e9edf1;touch-action:none;cursor:grab;"></canvas>
           <div id="simRestZeile" style="flex:0 0 auto;font-size:12px;padding:4px 2px 0;"></div>
           <div class="small-hint" id="simHinweise" style="flex:0 0 auto;max-height:18vh;overflow-y:auto;"></div>
-          <div class="small-hint" style="flex:0 0 auto;">3D: ziehen = drehen, Rad oder zwei Finger = Zoom, Doppelklick = Ausgangslage; das Rohteil ist undurchsichtig, seine Kanten zeichnet nur der Haken Rohteilkanten; von unten gesehen zeigt sich die Senkung des Rückwärts-Senkens. 2D-Draufsicht: unberührt blaugrau, Abtrag je tiefer je dunkler, Senkung von unten violett. Werkzeug orange mit Bohrerspitze, Vorschub grün, Eilgang rot gestrichelt, Kollision = rotes Kreuz (Eilgang durch stehendes Material). Zeit aus Vorschubweg / F, Eilgang mit 6 m/min.</div>
+          <div class="small-hint" style="flex:0 0 auto;">Ansicht: Rad oder zwei Finger = Zoom, Ziehen = verschieben (3D: ein Finger dreht, zwei Finger oder Umschalt+Ziehen verschieben), Doppelklick oder ⤢ = einpassen; das Rohteil ist undurchsichtig, seine Kanten zeichnet nur der Haken Rohteilkanten; von unten gesehen zeigt sich die Senkung des Rückwärts-Senkens. 2D-Draufsicht: unberührt blaugrau, Abtrag je tiefer je dunkler, Senkung von unten violett. Werkzeug orange mit Bohrerspitze, Vorschub grün, Eilgang rot gestrichelt, Kollision = rotes Kreuz (Eilgang durch stehendes Material). Zeit aus Vorschubweg / F, Eilgang mit 6 m/min.</div>
         </div>
       </div>
 
@@ -9274,6 +9275,44 @@ function fZugDuennen(P, tol){
 // Hoechster Wert der Kugel-Versatzflaeche laengs einer Strecke. Weil die
 // Versatzflaeche die Flaeche ist, auf der die Kugelmitte ueberall frei steht,
 // ist ihr Hoechstwert plus SC die sichere Hoehe fuer eine Verbindungsfahrt.
+// Bleibt die GERADE von (x0,y0,z0) nach (x1,y1,z1) - Kugelunterkante - ueberall
+// auf oder ueber der Versatzflaeche? Abgetastet in halben Rasterweiten, wie
+// fBallMax; ein Loch in der Flaeche ist kein Beweis. Zwei Mikrometer Toleranz
+// sind das Runden der Bahnpunkte auf drei Stellen.
+// Die Versatzflaeche ZWISCHEN den Zellenmitten: bilinear aus den vier
+// Nachbarn. Die Zeilenpunkte sind Zellenmitten, und zwischen zwei Mitten
+// ist die Flaeche (auf einer Ebene) genau linear - der Zellenwert allein
+// waere eine Treppe, an einer 45-Grad-Rampe 0,15 mm hoch (gemessen: nur 2
+// von 61 Zeilenwechseln bestanden damit). Fehlt ein Nachbar (Rand, Loch),
+// gilt die naechste Mitte allein; fehlt auch die, NaN.
+function fBFInterp(BF, F, x, y){
+  const r = F.raster, u = (x - F.x0) / r - 0.5, v = (y - F.y0) / r - 0.5;
+  const i0 = Math.floor(u), j0 = Math.floor(v), fu = u - i0, fv = v - j0;
+  const w = (i, j) => { if(i < 0 || j < 0 || i >= F.nx || j >= F.ny) return NaN; const q = BF[j * F.nx + i]; return (q > -Infinity) ? q : NaN; };
+  // Ein Nachbar mit Gewicht null (der Punkt liegt genau auf einer Reihe von
+  // Zellenmitten, etwa am Feldrand) wird nicht gebraucht - sonst scheiterte
+  // jeder zweite Zeilenwechsel an der letzten Zellenreihe (gemessen: 30 von 60).
+  const P = [[w(i0, j0), (1 - fu) * (1 - fv)], [w(i0 + 1, j0), fu * (1 - fv)], [w(i0, j0 + 1), (1 - fu) * fv], [w(i0 + 1, j0 + 1), fu * fv]];
+  let sum = 0, g = 0;
+  for(let k = 0; k < 4; k++){ if(P[k][1] < 1e-9) continue; if(!isFinite(P[k][0])) return NaN; sum += P[k][0] * P[k][1]; g += P[k][1]; }
+  return g > 0 ? sum / g : NaN;
+}
+// Bleibt die GERADE von (x0,y0,z0) nach (x1,y1,z1) - Kugelunterkante - ueberall
+// auf oder ueber der Versatzflaeche? Abgetastet in halben Rasterweiten gegen
+// die bilineare Flaeche; ein Loch ist kein Beweis. Toleranz: das Runden der
+// Bahnpunkte (2 um) plus die Pfeilhoehe der Kugel ueber einer Zellenweite.
+function fBallLinieFrei(BF, F, x0, y0, z0, x1, y1, z1, rk){
+  const r = F.raster, L = Math.hypot(x1 - x0, y1 - y0);
+  const nS = Math.max(1, Math.ceil(L / (r * 0.5)));
+  const tol = 0.002 + r * r / (8 * Math.max(rk, 1e-6));
+  for(let k = 0; k <= nS; k++){
+    const t = k / nS, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t, z = z0 + (z1 - z0) * t;
+    const v = fBFInterp(BF, F, x, y);
+    if(!isFinite(v)) return false;
+    if(v - rk > z + tol) return false;
+  }
+  return true;
+}
 // Der Wert der Versatzflaeche an einer Stelle; NaN ausserhalb oder ohne Wert.
 function fBFWert(BF, F, x, y){
   const i = Math.floor((x - F.x0) / F.raster), j = Math.floor((y - F.y0) / F.raster);
@@ -9495,7 +9534,7 @@ function fBahnSchlichten(s, tool, prog){
   const B = [], sicher = fRund(isFinite(standOben) ? Math.max(zOben + sc2, standOben + sc) : (zOben + sc2));
   const eil = (o) => B.push(Object.assign({a:'eil'}, o));
   const vor = (o) => B.push(Object.assign({a:'vor'}, o));
-  let zuege = 0, punkte = 0, roh = 0, richtung = 1, letzt = null, spruenge = 0;
+  let zuege = 0, punkte = 0, roh = 0, richtung = 1, letzt = null, spruenge = 0, flaechig = 0;
   // ERST SAMMELN, DANN FAHREN [17.09.2026]. Bis hierher wurde Zeile fuer
   // Zeile ausgegeben, im Zickzack. Das ist richtig, solange jede Zeile ein
   // durchgehendes Stueck ergibt. An Daniels echten Teilen faengt das
@@ -9585,6 +9624,24 @@ function fBahnSchlichten(s, tool, prog){
       // Die Versatzflaeche beantwortet die Frage fuer JEDE Laenge, und seit
       // fBallMax streng ist, fuehrt ein Loch in der Maske von selbst auf die
       // sichere Hoehe. Die Schranke ist damit ueberfluessig.
+      // AUF DER FLAECHE WEITER [17.09.2026 nachts]. Bis hierher hob die Bahn
+      // nach JEDER Zeile um SC ab, fuhr im Eilgang die paar Zehntel zur
+      // naechsten Zeile und tauchte wieder ein - Daniels 'Huepfer' in der
+      // Simulation: 61 Zeilen, 61 Stiche, 183 Eilgaenge am Rampenblock.
+      // Liegt die naechste Zeile nah (hoechstens drei Bahnabstaende) und
+      // bleibt die GERADE vom Zugende zu ihrem Anfang nachweislich auf oder
+      // ueber der Versatzflaeche, faehrt das Werkzeug im Vorschub direkt
+      // hinueber - auf der Flaeche, wie eine Zeile. Was vom Schruppen
+      // darueber steht, ist das Aufmass, und das schneidet es ohnehin.
+      // Weite Wege (nur Gleichlauf: zurueck zum Anfang) heben ab wie bisher.
+      let direkt = false;
+      if(letzt){
+        const dxy = Math.hypot(A0[0] - letzt[0], A0[1] - letzt[1]);
+        if(dxy <= Math.max(3 * istMm, 1.5) + 1e-9 && fBallLinieFrei(BF, F, letzt[0], letzt[1], letzt[2], A0[0], A0[1], A0[2], rk)){
+          vor({x:A0[0], y:A0[1], z:A0[2], f:f, verb:true}); direkt = true; flaechig++;   // verb: ein Zeilenwechsel, kein Schnittsatz der Zeile
+        }
+      }
+      if(!direkt){
       if(!letzt){ eil({x:A0[0], y:A0[1], z:sicher}); }
       else {
         // Die Versatzflaeche ist nur gegen die SOLLFORM frei. Was das
@@ -9603,6 +9660,7 @@ function fBahnSchlichten(s, tool, prog){
       if(SG){ const ha = fStandFreiHoehe(SG, A0[0], A0[1], A0[0], A0[1], rk); if(isFinite(ha) && ha + sc > zA) zA = fRund(ha + sc); }
       eil({z:zA});
       vor({z:A0[2], f:(+s.fTief > 0) ? +s.fTief : f});
+      }
       for(let q = 1; q < D2.length; q++) vor({x:D2[q][0], y:D2[q][1], z:D2[q][2], f:f});
       if(SG) for(let q = 1; q < D2.length; q++)
         fStandKugelStempel(SG, D2[q-1][0], D2[q-1][1], D2[q-1][2], D2[q][0], D2[q][1], D2[q][2], rk, sTol);
@@ -9610,6 +9668,7 @@ function fBahnSchlichten(s, tool, prog){
     });
   }
   if(!zuege) return nein('aus den Flaechen in Z1..Z0 entsteht kein Zug — Grenzwinkel oder Bereich pruefen');
+  if(flaechig) warn.push(flaechig + ' Zeilenwechsel laufen auf der FLAECHE weiter, im Vorschub, ohne Abheben — die Gerade vom Zugende zum naechsten Zuganfang bleibt nachweislich ueber der Versatzflaeche.');
   if(sinn) warn.push('Fraesart: NUR ' + (sinn > 0 ? 'GLEICHLAUF' : 'GEGENLAUF') + ' (bei Rechtslauf M3, Material in Fahrtrichtung ' + (sinn > 0 ? 'rechts' : 'links') + '): jede Zeile in derselben Richtung, kein Zickzack — zurueck geht es im Eilgang ueber die Versatzflaeche.');
   eil({z:sicher});
   warn.push('Schraegen schlichten: ' + zuege + ' Zug/Zuege, ' + punkte + ' Punkte (roh ' + roh
@@ -14184,8 +14243,12 @@ function fSimZeichnen2D(){
   const dunkel = document.body.classList.contains('dunkel');
   ctx.fillStyle = dunkel ? '#1a2027' : '#e9edf1'; ctx.fillRect(0, 0, W, H);
   const rand = 22, bw = F.nx * F.raster, bh = F.ny * F.raster;
-  const sc = Math.min((W - 2 * rand) / bw, (H - 2 * rand) / bh);
-  const ox = (W - bw * sc) / 2, oy = (H + bh * sc) / 2;
+  // ZOOM UND VERSCHIEBEN [17.09.2026 nachts]: die Abbildung passt das Feld
+  // ein und legt Zoom und Versatz der Ansicht (SIM.v2) darueber - wie in
+  // der Dreh-App (Daniels Wunsch: Rad, zwei Finger, Ziehen, Knoepfe).
+  const v2 = SIM.v2 || (SIM.v2 = {zoom:1, px:0, py:0});
+  const sc = Math.min((W - 2 * rand) / bw, (H - 2 * rand) / bh) * (v2.zoom || 1);
+  const ox = (W - bw * sc) / 2 + (v2.px || 0), oy = (H + bh * sc) / 2 + (v2.py || 0);
   const X = (x) => ox + (x - F.x0) * sc, Y = (y) => oy - (y - F.y0) * sc;
   // Feld als Bild: Hoehe -> Grauwert (Oberkante hell, Grund dunkel), unberuehrt
   // blaugrau, Senkung von unten (nur hu angehoben) violett
@@ -14260,7 +14323,7 @@ function fSimZeichnen2D(){
 // Wunsch da ("ich moechte eigentlich nicht durchschauen koennen durch das
 // Bauteil, das verfaelscht mir die Konturen von den Elementen")  Vorgabe aus,
 // Haken simKanten, Slot dzf_simkanten, und auch eingeschaltet mit Tiefentest.
-const SIM3D = {gl:null, cv:null, ok:false, versucht:false, pT:null, pS:null, az:-0.62, el:0.55, dist:0.8, drag:null, kanten:false, feldKey:'', gen:-1, netzN:0, idxTyp:0, randN:0, spurN:-1, spurV:0, spurE:0, wz:null, wzKey:'', wzN:0, restKey:'', backKey:'', backN:0, b:{}};
+const SIM3D = {gl:null, cv:null, ok:false, versucht:false, pT:null, pS:null, az:-0.62, el:0.55, dist:0.8, panX:0, panY:0, drag:null, kanten:false, feldKey:'', gen:-1, netzN:0, idxTyp:0, randN:0, spurN:-1, spurV:0, spurE:0, wz:null, wzKey:'', wzN:0, restKey:'', backKey:'', backN:0, b:{}};
 function fSim3dShader(gl, typ, src){ const sh = gl.createShader(typ); gl.shaderSource(sh, src); gl.compileShader(sh); if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error('Shader: ' + gl.getShaderInfoLog(sh)); return sh; }
 function fSim3dProgramm(gl, vs, fs, attr){
   const p = gl.createProgram(); gl.attachShader(p, fSim3dShader(gl, gl.VERTEX_SHADER, vs)); gl.attachShader(p, fSim3dShader(gl, gl.FRAGMENT_SHADER, fs)); gl.linkProgram(p);
@@ -14305,27 +14368,107 @@ function fSim3dInit(cv){
   return SIM3D.ok;
 }
 // Maus und Finger: ziehen dreht, Rad zoomt, zwei Finger zoomen, Doppelklick stellt zurueck.
+// 3D-BEDIENUNG [17.09.2026 nachts, nach Daniels Befund 'keine Zoom- und
+// Verschiebefunktion']: ein Zeiger dreht, zwei Zeiger zoomen (Abstand) UND
+// verschieben (Mitte), Umschalt oder rechte Taste verschiebt, das Rad zoomt,
+// Doppelklick passt ein. touch-action:none auf der Leinwand, sonst nimmt
+// Safari den Pinch fuer die Seite.
 function fSim3dBedienung(cv){
   if(!cv.addEventListener) return;
   const zeiger = {};
   const neu = () => { if(SIM.ansicht === '3d') fSim3dZeichnen(); };
+  const mass = () => { const r = cv.getBoundingClientRect ? cv.getBoundingClientRect() : {width:800, height:500}; return {W:Math.max(50, r.width || 800), H:Math.max(50, r.height || 500)}; };
+  cv.addEventListener('pointerdown', (ev) => { zeiger[ev.pointerId] = {x:ev.clientX, y:ev.clientY, taste:ev.buttons, shift:ev.shiftKey}; try{ cv.setPointerCapture(ev.pointerId); }catch(e){} ev.preventDefault(); });
+  cv.addEventListener('pointermove', (ev) => {
+    const z = zeiger[ev.pointerId]; if(!z) return;
+    const ids = Object.keys(zeiger), m = mass();
+    if(ids.length >= 2){
+      const a = zeiger[ids[0]], b = zeiger[ids[1]];
+      const d0 = Math.hypot(a.x - b.x, a.y - b.y), mx0 = (a.x + b.x) / 2, my0 = (a.y + b.y) / 2;
+      z.x = ev.clientX; z.y = ev.clientY;
+      const d1 = Math.hypot(a.x - b.x, a.y - b.y), mx1 = (a.x + b.x) / 2, my1 = (a.y + b.y) / 2;
+      if(d0 > 0 && d1 > 0) SIM3D.dist = Math.max(0.2, Math.min(6, SIM3D.dist * d0 / d1));
+      SIM3D.panX += 2 * (mx1 - mx0) / m.W; SIM3D.panY -= 2 * (my1 - my0) / m.H;
+      neu(); return;
+    }
+    const dx = ev.clientX - z.x, dy = ev.clientY - z.y; z.x = ev.clientX; z.y = ev.clientY;
+    if(z.shift || ev.shiftKey || (z.taste & 2) || (ev.buttons & 2)){ SIM3D.panX += 2 * dx / m.W; SIM3D.panY -= 2 * dy / m.H; neu(); return; }
+    SIM3D.az -= dx * 0.008; SIM3D.el = Math.max(-1.35, Math.min(1.5, SIM3D.el + dy * 0.008)); neu();
+  });
+  const los = (ev) => { delete zeiger[ev.pointerId]; };
+  cv.addEventListener('pointerup', los); cv.addEventListener('pointercancel', los); cv.addEventListener('pointerleave', los);
+  cv.addEventListener('contextmenu', (ev) => ev.preventDefault());
+  cv.addEventListener('wheel', (ev) => { SIM3D.dist = Math.max(0.2, Math.min(6, SIM3D.dist * (ev.deltaY > 0 ? 1.12 : 1 / 1.12))); neu(); ev.preventDefault(); }, {passive:false});
+  cv.addEventListener('dblclick', () => { fSimAnsichtEinpassen(); });
+}
+// 2D-BEDIENUNG: ein Zeiger verschiebt, zwei Zeiger zoomen um ihre Mitte und
+// verschieben, das Rad zoomt um den Zeiger, Doppelklick passt ein.
+function fSim2dMass(){
+  const cv = document.getElementById('simCv'), F = SIM.feld; if(!cv || !F) return null;
+  const r = cv.getBoundingClientRect ? cv.getBoundingClientRect() : {width:800, height:500, left:0, top:0};
+  const W = Math.max(50, Math.round(r.width || 800)), H = Math.max(50, Math.round(r.height || 500));
+  const bw = F.nx * F.raster, bh = F.ny * F.raster, rand = 22;
+  return {cv:cv, F:F, W:W, H:H, bw:bw, bh:bh, left:r.left || 0, top:r.top || 0, fit:Math.min((W - 2 * rand) / bw, (H - 2 * rand) / bh)};
+}
+// Zoom um den Bildpunkt (cx, cy) in CSS-Pixeln der Leinwand.
+function fSim2dZoom(faktor, cx, cy){
+  const m = fSim2dMass(); if(!m) return;
+  const v2 = SIM.v2 || (SIM.v2 = {zoom:1, px:0, py:0});
+  if(cx == null){ cx = m.W / 2; cy = m.H / 2; }
+  const sc = m.fit * v2.zoom, ox = (m.W - m.bw * sc) / 2 + v2.px, oy = (m.H + m.bh * sc) / 2 + v2.py;
+  const wx = m.F.x0 + (cx - ox) / sc, wy = m.F.y0 + (oy - cy) / sc;    // Weltpunkt unter dem Zeiger
+  v2.zoom = Math.max(0.5, Math.min(40, v2.zoom * faktor));
+  const sc2 = m.fit * v2.zoom;
+  v2.px = cx - (wx - m.F.x0) * sc2 - (m.W - m.bw * sc2) / 2;
+  v2.py = cy + (wy - m.F.y0) * sc2 - (m.H + m.bh * sc2) / 2;
+  if(SIM.ansicht !== '3d') fSimZeichnen();
+}
+function fSim2dBedienung(cv){
+  if(!cv || !cv.addEventListener) return;
+  const zeiger = {};
+  const neu = () => { if(SIM.ansicht !== '3d') fSimZeichnen(); };
+  const v2 = () => (SIM.v2 || (SIM.v2 = {zoom:1, px:0, py:0}));
   cv.addEventListener('pointerdown', (ev) => { zeiger[ev.pointerId] = {x:ev.clientX, y:ev.clientY}; try{ cv.setPointerCapture(ev.pointerId); }catch(e){} ev.preventDefault(); });
   cv.addEventListener('pointermove', (ev) => {
     const z = zeiger[ev.pointerId]; if(!z) return;
     const ids = Object.keys(zeiger);
     if(ids.length >= 2){
-      const a = zeiger[ids[0]], b = zeiger[ids[1]]; const d0 = Math.hypot(a.x - b.x, a.y - b.y);
-      z.x = ev.clientX; z.y = ev.clientY; const d1 = Math.hypot(zeiger[ids[0]].x - zeiger[ids[1]].x, zeiger[ids[0]].y - zeiger[ids[1]].y);
-      if(d0 > 0 && d1 > 0){ SIM3D.dist = Math.max(0.35, Math.min(6, SIM3D.dist * d0 / d1)); neu(); }
+      const a = zeiger[ids[0]], b = zeiger[ids[1]];
+      const d0 = Math.hypot(a.x - b.x, a.y - b.y), mx0 = (a.x + b.x) / 2, my0 = (a.y + b.y) / 2;
+      z.x = ev.clientX; z.y = ev.clientY;
+      const d1 = Math.hypot(a.x - b.x, a.y - b.y), mx1 = (a.x + b.x) / 2, my1 = (a.y + b.y) / 2;
+      const r = cv.getBoundingClientRect();
+      v2().px += mx1 - mx0; v2().py += my1 - my0;
+      if(d0 > 0 && d1 > 0) fSim2dZoom(d1 / d0, mx1 - r.left, my1 - r.top); else neu();
       return;
     }
     const dx = ev.clientX - z.x, dy = ev.clientY - z.y; z.x = ev.clientX; z.y = ev.clientY;
-    SIM3D.az -= dx * 0.008; SIM3D.el = Math.max(-1.35, Math.min(1.5, SIM3D.el + dy * 0.008)); neu();
+    v2().px += dx; v2().py += dy; neu();
   });
   const los = (ev) => { delete zeiger[ev.pointerId]; };
   cv.addEventListener('pointerup', los); cv.addEventListener('pointercancel', los); cv.addEventListener('pointerleave', los);
-  cv.addEventListener('wheel', (ev) => { SIM3D.dist = Math.max(0.35, Math.min(6, SIM3D.dist * (ev.deltaY > 0 ? 1.12 : 1 / 1.12))); neu(); ev.preventDefault(); }, {passive:false});
-  cv.addEventListener('dblclick', () => { SIM3D.az = -0.62; SIM3D.el = 0.55; SIM3D.dist = 0.8; neu(); });
+  cv.addEventListener('wheel', (ev) => { const r = cv.getBoundingClientRect(); fSim2dZoom(ev.deltaY > 0 ? 1 / 1.15 : 1.15, ev.clientX - r.left, ev.clientY - r.top); ev.preventDefault(); }, {passive:false});
+  cv.addEventListener('dblclick', () => { fSimAnsichtEinpassen(); });
+}
+// Einpassen: Zoom, Drehung und Versatz zurueck - in beiden Ansichten.
+function fSimAnsichtEinpassen(){
+  SIM.v2 = {zoom:1, px:0, py:0};
+  SIM3D.az = -0.62; SIM3D.el = 0.55; SIM3D.dist = 0.8; SIM3D.panX = 0; SIM3D.panY = 0;
+  fSimZeichnen();
+}
+// Die Knoepfe: Vergroessern, Verkleinern, Einpassen, Verschieben.
+function fSimAnsichtKnopf(was){
+  if(was === 'fit'){ fSimAnsichtEinpassen(); return; }
+  if(SIM.ansicht === '3d'){
+    if(was === 'in' || was === 'out') SIM3D.dist = Math.max(0.2, Math.min(6, SIM3D.dist * (was === 'in' ? 0.8 : 1.25)));
+    else if(was === 'l') SIM3D.panX -= 0.15; else if(was === 'r') SIM3D.panX += 0.15;
+    else if(was === 'u') SIM3D.panY += 0.15; else if(was === 'd') SIM3D.panY -= 0.15;
+    fSimZeichnen(); return;
+  }
+  const m = fSim2dMass(); if(!m) return;
+  const v2 = SIM.v2 || (SIM.v2 = {zoom:1, px:0, py:0});
+  if(was === 'in') fSim2dZoom(1.25); else if(was === 'out') fSim2dZoom(0.8);
+  else { if(was === 'l') v2.px -= m.W * 0.15; else if(was === 'r') v2.px += m.W * 0.15; else if(was === 'u') v2.py -= m.H * 0.15; else if(was === 'd') v2.py += m.H * 0.15; fSimZeichnen(); }
 }
 // Spur als Linien (Vorschub / Eilgang getrennt), Boegen abgetastet.
 function fSim3dSpur(){
@@ -14373,6 +14516,8 @@ function fSim3dZeichnen(){
   }
   // Kamera
   const K = fSim3dKamera(F, SIM3D.az, SIM3D.el, SIM3D.dist, W / H);
+  // Verschieben: ein Versatz im Bild (NDC), nach der Projektion angebracht.
+  if(SIM3D.panX || SIM3D.panY) K.mvp = fMat4Mul([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, SIM3D.panX || 0, SIM3D.panY || 0, 0, 1], K.mvp);
   const licht = [0.35, -0.45, 0.82]; { const l = Math.hypot(licht[0], licht[1], licht[2]); licht[0] /= l; licht[1] /= l; licht[2] /= l; }
   // Feld: Oberseite, Unterseite
   gl.useProgram(T.p); gl.uniformMatrix4fv(T.u.u_mvp, false, K.mvp); gl.uniform3fv(T.u.u_licht, licht); gl.uniform1f(T.u.u_oben, F.oben); gl.uniform1f(T.u.u_unten, F.unten);
@@ -14517,6 +14662,11 @@ function fSimOeffnen(){
   on('btnSimZu', ()=>{ fSimPause(); maskZu('maskSim'); });
   on('btnSimAnsicht2D', ()=>fSimAnsicht('2d'));
   on('btnSimAnsicht3D', ()=>fSimAnsicht('3d'));
+  on('btnSimZoomIn', ()=>fSimAnsichtKnopf('in')); on('btnSimZoomOut', ()=>fSimAnsichtKnopf('out')); on('btnSimFit', ()=>fSimAnsichtKnopf('fit'));
+  on('btnSimL', ()=>fSimAnsichtKnopf('l')); on('btnSimR', ()=>fSimAnsichtKnopf('r')); on('btnSimU', ()=>fSimAnsichtKnopf('u')); on('btnSimD', ()=>fSimAnsichtKnopf('d'));
+  fSim2dBedienung(document.getElementById('simCv'));
+  // iOS: der System-Pinch auf der Simulation zoomt sonst die SEITE, nicht das Bild.
+  if(document.addEventListener) ['gesturestart', 'gesturechange'].forEach(ev => document.addEventListener(ev, (e) => { if(e.target && e.target.closest && e.target.closest('#maskSim')) e.preventDefault(); }, {passive:false}));
   try{ SIM3D.kanten = localStorage.getItem('dzf_simkanten') === 'an'; }catch(e){}
   const kb = document.getElementById('simKanten');
   if(kb){ kb.checked = SIM3D.kanten; if(kb.addEventListener) kb.addEventListener('change', ()=>{ SIM3D.kanten = !!kb.checked; try{ localStorage.setItem('dzf_simkanten', SIM3D.kanten ? 'an' : 'aus'); }catch(e){} fSimZeichnen(); }); }
