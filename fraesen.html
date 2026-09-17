@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 07:12 (61f59ad9)";</script>
+<script>window.__DZ_STAND="17.09.2026 07:23 (441aa806)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -8010,6 +8010,71 @@ function fStandMax(G, x0, y0, x1, y1, rt){
   return hoch;
 }
 
+// DER STAND, WAEHREND GESCHLICHTET WIRD [17.09.2026].
+// Die Schlichtbahn braucht den Stand nach dem Schruppen, sonst zieht sie
+// ihre Eilgaenge durch die Treppe, die das Z-Ebenen-Schruppen stehen
+// laesst. Zwei Dinge waren daran falsch gerechnet, beide an der Vorlage
+// steprampe gemessen:
+//   (1) DER VERGLEICH. Genommen wurde das Hoechste im Werkzeugkreis und
+//       mit der KUGELSPITZE verglichen. Zu streng: was einen Kugelradius
+//       seitlich steht, beruehrt die Kugel erst auf ihrem AEQUATOR, einen
+//       Radius hoeher. Richtig ist die Versatzflaeche der Kugel, also
+//       stand + wurzel(rk^2 - d^2), und davon der Hoechstwert minus rk.
+//       Der Schaft ist damit mitgenommen: bei einem Vollradiusfraeser
+//       sitzt er ueber dem Aequator, und dieser Wert liegt nie unter dem
+//       blossen Hoechstwert im Kreis.
+//   (2) DIE MOMENTAUFNAHME. Der Stand nach dem Schruppen ist ein
+//       Standbild - die Schlichtbahn nimmt die Treppe aber SELBST weg.
+//       Wer das nicht mitschreibt, zieht vor jedem Zeilenwechsel ueber
+//       Material hoch, das drei Zuege vorher schon abgefraest war.
+// Deshalb arbeitet die Bahn auf einer KOPIE des Standes und stempelt
+// ihre eigene Kugel hinein.
+function fStandKopie(G){
+  return {x0:G.x0, y0:G.y0, nx:G.nx, ny:G.ny, raster:G.raster,
+          stand:new Float32Array(G.stand), imRoh:G.imRoh, soll:G.soll};
+}
+// Die Kugel laengs einer Strecke aus dem Stand nehmen.
+function fStandKugelStempel(G, x0, y0, z0, x1, y1, z1, rk){
+  const r = G.raster, St = G.stand;
+  const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / (r / 2)));
+  for(let q = 0; q <= n; q++){
+    const t = q / n, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t;
+    const zc = z0 + (z1 - z0) * t + rk;                 // Hoehe der Kugelmitte
+    const i0 = Math.max(0, Math.floor((x - rk - G.x0) / r)), i1 = Math.min(G.nx - 1, Math.ceil((x + rk - G.x0) / r));
+    const j0 = Math.max(0, Math.floor((y - rk - G.y0) / r)), j1 = Math.min(G.ny - 1, Math.ceil((y + rk - G.y0) / r));
+    for(let j = j0; j <= j1; j++){
+      const dy = G.y0 + (j + 0.5) * r - y, o = j * G.nx;
+      for(let p = i0; p <= i1; p++){
+        const dx = G.x0 + (p + 0.5) * r - x, d2 = dx * dx + dy * dy;
+        if(d2 > rk * rk) continue;
+        const h = zc - Math.sqrt(rk * rk - d2);
+        if(h < St[o + p]) St[o + p] = h;
+      }
+    }
+  }
+}
+// Wie hoch muss die KUGELSPITZE stehen, damit die Kugel laengs einer
+// Strecke nichts beruehrt? -Infinity heisst: dort steht nichts.
+function fStandFreiHoehe(G, x0, y0, x1, y1, rk){
+  const r = G.raster, St = G.stand;
+  const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / (r / 2)));
+  let hoch = -Infinity;
+  for(let q = 0; q <= n; q++){
+    const t = q / n, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t;
+    const i0 = Math.max(0, Math.floor((x - rk - G.x0) / r)), i1 = Math.min(G.nx - 1, Math.ceil((x + rk - G.x0) / r));
+    const j0 = Math.max(0, Math.floor((y - rk - G.y0) / r)), j1 = Math.min(G.ny - 1, Math.ceil((y + rk - G.y0) / r));
+    for(let j = j0; j <= j1; j++){
+      const dy = G.y0 + (j + 0.5) * r - y, o = j * G.nx;
+      for(let p = i0; p <= i1; p++){
+        const dx = G.x0 + (p + 0.5) * r - x, d2 = dx * dx + dy * dy;
+        if(d2 > rk * rk) continue;
+        const v = St[o + p] + Math.sqrt(rk * rk - d2);
+        if(v > hoch) hoch = v;
+      }
+    }
+  }
+  return isFinite(hoch) ? hoch - rk : hoch;
+}
 // Die Bahn: Ebene fuer Ebene, in jeder Ebene zeilenweise im Zickzack.
 function fBahnModell(s, tool, prog){
   const warn = [];
@@ -8356,6 +8421,36 @@ function fBahnModell(s, tool, prog){
 // ---------------------------------------------------------------------
 // STUFE 4: DIE SCHRAEGEN UEBER DIE RAUTIEFE SCHLICHTEN
 // ---------------------------------------------------------------------
+// DER STAND NACH DEM SCHRUPPEN - auch OHNE Planer [17.09.2026].
+// Der Planer legt ihn der Sollform bei (F.standG), und die Schlichtbahn
+// rechnet ihre Ueberflug- und Anfahrhoehen damit. Eine GELADENE Vorlage
+// geht aber nicht durch den Planer: dort lag nichts bei, und die Bahn
+// rechnete gegen die Sollform allein - also gegen das, was NACHHER da
+// sein soll, nicht gegen das, was JETZT steht.
+// GEMESSEN an der Vorlage steprampe: der Rueckzug nach einem Zug an der
+// Teilkante blieb 5 mm UNTER dem, was das Schruppen in der Ecke
+// stehen gelassen hatte. Die eigene Simulation meldete es als
+// Kollision - seit dem 16.09. in jedem Bauzustand, ungesehen.
+// Hier wird der Stand aus den VORHERGEHENDEN Schruppschritten desselben
+// Programms nachgerechnet, genau wie der Planer es tut. Kostet einen
+// zweiten Lauf der Schruppbahn; das ist der Preis dafuer, dass eine
+// Vorlage so sicher ist wie ein geplantes Programm.
+function fStandVorSchlicht(F, prog, s){
+  if(F && F.standG && F.standG.stand && F.standG.nx > 0) return F.standG;
+  if(!prog || !prog.schritte) return null;
+  const i = prog.schritte.indexOf(s);
+  const vorher = (i < 0 ? prog.schritte : prog.schritte.slice(0, i))
+    .filter(q => q && q.aktiv !== false && q.art === 'modellSchruppen');
+  if(!vorher.length) return null;
+  const letzt = vorher[vorher.length - 1];
+  try{
+    const w = (prog.werkzeuge || []).filter(t => +t.nr === +letzt.t)[0];
+    if(!w) return null;
+    const b = fBahnModell(letzt, w, prog);
+    if(b && b.ok && b.gitter && b.gitter.nx > 0) return b.gitter;
+  }catch(e){ /* kein Stand ist besser als ein falscher */ }
+  return null;
+}
 // Die Flaeche, auf der die MITTE des Kugelfraesers laeuft. Der Kugelkopf
 // beruehrt die Sollform; seine Mitte liegt um den Kugelradius versetzt. Im
 // Hoehenfeld ist das eine Dilatation mit der Kugelkappe — exakt, keine
@@ -8686,7 +8781,8 @@ function fBahnSchlichten(s, tool, prog){
 
   // DER STAND NACH DEM SCHRUPPEN, wenn der Planer ihn beigelegt hat. Ohne
   // ihn rechnet die Bahn wie bisher gegen die Sollform allein.
-  const SG = (F.standG && F.standG.stand && F.standG.nx > 0) ? F.standG : null;
+  const SG0 = fStandVorSchlicht(F, prog, s);
+  const SG = SG0 ? fStandKopie(SG0) : null;
   // Wieviel darf ueber der Sollform stehen, ohne dass es ein Befund ist?
   // Beim Z-konstanten Schruppen steht an einer Schraege die TREPPE zwischen
   // zwei Ebenen - bis zur Zustellung hoch -, dazu das Aufmass. Genau das
@@ -8796,16 +8892,18 @@ function fBahnSchlichten(s, tool, prog){
         // wirklich etwas steht, muss der Eilgang darueber, auch wenn das
         // ueber Z0 + SC2 liegt.
         let zv = fRund(Math.min(sicher, Math.max(fBallMax(BF, F, letzt[0], letzt[1], A0[0], A0[1]) - rk, letzt[2], A0[2]) + sc));
-        if(SG){ const hs = fStandMax(SG, letzt[0], letzt[1], A0[0], A0[1], rt); if(isFinite(hs) && hs + sc > zv) zv = fRund(hs + sc); }
+        if(SG){ const hs = fStandFreiHoehe(SG, letzt[0], letzt[1], A0[0], A0[1], rk); if(isFinite(hs) && hs + sc > zv) zv = fRund(hs + sc); }
         eil({z:zv}); eil({x:A0[0], y:A0[1]});
       } else { spruenge++; eil({z:sicher}); eil({x:A0[0], y:A0[1]}); }
       // Abwaerts nur bis SC ueber das, was an der Anfahrstelle steht — den
       // Rest faehrt der Eintauchvorschub. Dieselbe Regel wie beim Abspanen.
       let zA = fRund(A0[2] + sc);
-      if(SG){ const ha = fStandMax(SG, A0[0], A0[1], A0[0], A0[1], rt); if(isFinite(ha) && ha + sc > zA) zA = fRund(ha + sc); }
+      if(SG){ const ha = fStandFreiHoehe(SG, A0[0], A0[1], A0[0], A0[1], rk); if(isFinite(ha) && ha + sc > zA) zA = fRund(ha + sc); }
       eil({z:zA});
       vor({z:A0[2], f:(+s.fTief > 0) ? +s.fTief : f});
       for(let q = 1; q < D2.length; q++) vor({x:D2[q][0], y:D2[q][1], z:D2[q][2], f:f});
+      if(SG) for(let q = 1; q < D2.length; q++)
+        fStandKugelStempel(SG, D2[q-1][0], D2[q-1][1], D2[q-1][2], D2[q][0], D2[q][1], D2[q][2], rk);
       punkte += D2.length; zuege++; letzt = D2[D2.length - 1];
     });
     richtung = -richtung;
@@ -8886,7 +8984,8 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
   const sc = +s.sc || 0; if(!(sc > 0)) return nein('Sicherheitsabstand fehlt');
   const sc2 = Math.max(+s.sc2 || 0, sc);
   const f = +s.f || 0; if(!(f > 0)) return nein('Vorschub fehlt');
-  const SG = (F.standG && F.standG.stand && F.standG.nx > 0) ? F.standG : null;
+  const SG0 = fStandVorSchlicht(F, prog, s);
+  const SG = SG0 ? fStandKopie(SG0) : null;
   const sTol = (+F.standTol > 0) ? +F.standTol : rk;
   const NF = (vorgabe && vorgabe.neig) ? vorgabe.neig : fNeigFeld(F);
   const nx = F.nx, ny = F.ny, r = F.raster;
@@ -9016,14 +9115,16 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
         eil({z:sicher}); eil({x:A0[0], y:A0[1]});
       } else {
         let zv = fRund(Math.min(sicher, Math.max(fBallMax(BF, F, letzt[0], letzt[1], A0[0], A0[1]) - rk, letzt[2], A0[2]) + sc));
-        if(SG){ const hs = fStandMax(SG, letzt[0], letzt[1], A0[0], A0[1], rt); if(isFinite(hs) && hs + sc > zv) zv = fRund(hs + sc); }
+        if(SG){ const hs = fStandFreiHoehe(SG, letzt[0], letzt[1], A0[0], A0[1], rk); if(isFinite(hs) && hs + sc > zv) zv = fRund(hs + sc); }
         eil({z:zv}); eil({x:A0[0], y:A0[1]});
       }
       let zA = fRund(A0[2] + sc);
-      if(SG){ const ha = fStandMax(SG, A0[0], A0[1], A0[0], A0[1], rt); if(isFinite(ha) && ha + sc > zA) zA = fRund(ha + sc); }
+      if(SG){ const ha = fStandFreiHoehe(SG, A0[0], A0[1], A0[0], A0[1], rk); if(isFinite(ha) && ha + sc > zA) zA = fRund(ha + sc); }
       eil({z:zA});
       vor({z:A0[2], f:(+s.fTief > 0) ? +s.fTief : f});
       for(let q = 1; q < D2.length; q++) vor({x:D2[q][0], y:D2[q][1], z:D2[q][2], f:f});
+      if(SG) for(let q = 1; q < D2.length; q++)
+        fStandKugelStempel(SG, D2[q-1][0], D2[q-1][1], D2[q-1][2], D2[q][0], D2[q][1], D2[q][2], rk);
       punkte += D2.length; zuege++; letzt = D2[D2.length - 1];
     });
   }
