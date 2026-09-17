@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 07:23 (441aa806)";</script>
+<script>window.__DZ_STAND="17.09.2026 07:31 (d4028656)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3119,7 +3119,14 @@ des Programmkopfs) Z-Ebene f&uuml;r Z-Ebene aus, bis nur noch das Modell samt Au
 <li><b>Z0</b> ist die Oberfl&auml;che, <b>Z1</b> die Tiefe (negativ, inkremental), <b>D</b> die Zustellung je Ebene. Die tiefste Ebene liegt um <b>UZ</b> &uuml;ber Z1.</li>
 <li><b>UXY</b> bleibt an jeder senkrechten Wand stehen, <b>UZ</b> auf jeder waagerechten Fl&auml;che &mdash; beides f&uuml;r das Schlichten.</li>
 <li>Gefahren wird <b>zeilenweise im Zickzack</b> mit einem Querdurchgang an den W&auml;nden; der Zeilenabstand ist die <b>Bahn&uuml;berlappung</b> mal Werkzeugradius.</li>
-<li>Eingetaucht wird <b>senkrecht</b> im Eintauchvorschub FZ &mdash; das Werkzeug muss &uuml;ber Mitte schneiden. Wo nur ein
+<li><b>Anfahren &amp; Eintauchen</b> hat zwei Stellungen. <i>Im Schnitt</i> (Vorgabe): liegt der n&auml;chste Zug nah genug und darf die
+Werkzeugmitte die ganze Strecke &uuml;ber dort stehen, f&auml;hrt das Werkzeug <b>unten hin&uuml;ber</b> &mdash; kein R&uuml;ckzug, kein neues
+Eintauchen. Muss doch eingetaucht werden, <b>pendelt</b> die Bahn im eigenen Zug hin und her, mit dem <b>Eintauchwinkel ANGLE des
+Werkzeugs</b> aus der Tabelle &mdash; derselben Zahl, die die TNC f&uuml;r Q366 heranzieht. Ohne ANGLE wird gestochen und gesagt.
+<i>Senkrecht</i>: genau die Bahn von fr&uuml;her, auch der Zeilenwechsel &uuml;ber die Sicherheitsh&ouml;he &mdash; die Fahrt unten schneidet
+n&auml;mlich auf voller Tiefe, und bei schwacher Aufspannung will man das vielleicht nicht. (Gemessen an einem Testteil: 29 Z&uuml;ge,
+davon 23 unten verbunden, 3 pendelnd, 3 zu kurz &mdash; vorher stachen alle 29.)</li>
+<li>Wo nur ein
 senkrechter <b>Stich ohne Fr&auml;sweg</b> entst&uuml;nde, l&auml;sst die App ihn weg: ein Schaftfr&auml;ser soll nicht bohren. Was dort stehen bleibt,
 steht im Restmaterial (gemessen &uuml;ber Daniels Modelle: ein Viertel aller Z&uuml;ge waren solche Stiche, ihr Wegfall kostet 4&nbsp;% mehr Restmaterial
 und spart 24&nbsp;% der S&auml;tze).</li>
@@ -3145,7 +3152,13 @@ Kugelradius 4 und Rz 0,01&nbsp;mm sind das 0,57&nbsp;mm l&auml;ngs der Fl&auml;c
 Gefunden hat es die Restmaterialanzeige (Kap.&nbsp;6d), nachgerechnet am Programmierplatz-Beleg DZ15.</li>
 <li><b>Die H&ouml;he der Bahn ist die Kugel-Versatzfl&auml;che</b>: die Mitte des Fr&auml;sers l&auml;uft dort, wo die Kugel die Sollform gerade
 ber&uuml;hrt. Das ist exakt gerechnet (eine Dilatation des H&ouml;henfelds mit der Kugelkappe), nicht gen&auml;hert &mdash; deshalb kann die Bahn auch an
-einer Kante nicht ins Teil schneiden.</li>
+einer <i>gerundeten</i> Kante nicht ins Teil schneiden.
+<b>An einer SCHARFEN konvexen Kante gilt das nicht</b>, und das ist die Grenze des Verfahrens: die Sollform steht als H&ouml;henfeld da,
+eine scharfe Kante liegt zwischen den Zellenmitten, und der Stempel trifft die schlimmste Richtung nicht. Gemessen gegen die
+<i>exakte</i> Geometrie eines Pyramidenstumpfs: <b>0,142&nbsp;mm bei Rasterweite 0,30 und 0,057&nbsp;mm bei 0,15</b> &mdash; also knapp
+die halbe Rasterweite. Weder die Sehnentoleranz noch die Ausd&uuml;nnung haben daran Anteil (beides nachgemessen). Die Bahn sagt die
+Rasterweite deines Teils nach jedem Lauf dazu. Wer die Kante scharf braucht, fertigt sie anders &mdash; eine Kugel bildet sie ohnehin
+nicht ab.</li>
 <li><b>&alpha;0 und &alpha;1</b> grenzen das Winkelband ein. Gearbeitet wird nur, was dazwischen liegt. Steileres bleibt stehen (es geh&ouml;rt der
 Z-konstanten Bahn), flacheres auch &mdash; eine waagerechte Fl&auml;che geh&ouml;rt dem Schaft- oder Messerkopf, nicht der Kugel. Beides wird
 <b>gez&auml;hlt und gemeldet</b>, nichts f&auml;llt stillschweigend aus. &alpha;0 = 0 schlichtet auch die Ebenen mit.</li>
