@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 20:51 (882eba3f)";</script>
+<script>window.__DZ_STAND="17.09.2026 21:07 (3021186d)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2283,6 +2283,9 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .arbeitsplan{order:1;}
   .mask.kachelpilot .mrow .radiobtns.fwrap{flex-wrap:wrap !important;}
+  /* Ein langer Wahltext bricht IM Knopf um, statt ueber die Spalte hinauszuragen - auf jeder Breite
+     (Daniels Bildbefund 17.09.2026 abends: die Knoepfe von Anfahren & Eintauchen ragten aus ihrem Kasten). */
+  .mask .mrow .radiobtns.fwrap button{white-space:normal !important;text-align:left;max-width:100%;line-height:1.25;}
   /* Zeilenansicht am Laptop: die Desktop-Regel des Drehteils stellt jede
      Knopfgruppe einreihig (02-stil, "Knopfgruppen einreihig") — die zwoelf
      Bearbeitungen der Bohrmaske liefen damit rechts aus der Maske (Paket 3,
@@ -4028,8 +4031,10 @@ var F_FELDER = {
   // (bahnSinn), nicht 'fraesart': das steht in jedem alten Schritt schon auf
   // 1 (Vorgabe fuer die Zyklen) und hiesse dann ploetzlich 'nur Gleichlauf'.
   ae:         {name:'ae seitliche Zustellung', einheit:'', ba:'ba-fk05c-flaechen'},
-  aeArt:      {name:'ae bezogen auf', typ:'wahl', wahl:[['%','% vom Werkzeug-⌀'],['mm','mm']], ba:'ba-fk05c-flaechen'},
-  bahnSinn:   {name:'Fräsart', typ:'wahl', zahlWahl:true, wahl:[['0','Gleich- und Gegenlauf (Zickzack)'],['1','nur Gleichlauf'],['-1','nur Gegenlauf']], ba:'ba-fk05c-flaechen'},
+  // Kurze Wahltexte: die Felder stehen zu zweit in einer Zeile, ein langer
+  // Knopf ragte ueber seine Spalte hinaus (Daniels Bildbefund).
+  aeArt:      {name:'ae bezogen auf', typ:'wahl', wahl:[['%','% vom ⌀'],['mm','mm']], ba:'ba-fk05c-flaechen'},
+  bahnSinn:   {name:'Fräsart', typ:'wahl', zahlWahl:true, wahl:[['0','beides (Zickzack)'],['1','nur Gleichlauf'],['-1','nur Gegenlauf']], ba:'ba-fk05c-flaechen'},
   // Restmaterial: was das Vorwerkzeug erreicht hat, gilt als weggenommen.
   // 0 = kein Vorwerkzeug, also der erste Durchgang.
   dVor:       {name:'⌀ Vorwerkzeug (Restmaterial)', einheit:'mm', ba:'ba-fk05c-flaechen'},
@@ -4148,8 +4153,7 @@ var F_MASKE = {
   // Modell abspanen: kein einziges Feld traegt ein Q-Wort — die Familie hat
   // keinen Steuerungszyklus. Deshalb steht die ganze Feldliste in ohneQ.
   modellSchruppen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','aufSeite','aufTiefe','#Bahn','ae','aeArt','bahnSinn','dVor','eintauch','#!Sicherheit','sc','sc2'],
-               feldWahl:{bahnSinn:[['0','Gleich- und Gegenlauf: Zickzack, kein Rückzug'],['1','nur Gleichlauf'],['-1','nur Gegenlauf']],
-                         eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd (ANGLE)'],['0','über Sicherheitshöhe anfahren, senkrecht eintauchen']]},
+               feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd'],['0','über SC anfahren, senkrecht eintauchen']]},
                feldText:{f:'F Vorschub Fräsen', fTief:'FZ Vorschub Eintauchen', zust:'D Zustellung in Z',
                  eintauch:'Anfahren & Eintauchen',
                  aufSeite:'UXY Aufmaß an der Wand', aufTiefe:'UZ Aufmaß nach unten',
@@ -12980,7 +12984,11 @@ function fZyklusUebernehmen(){
   if(z.kontur && (s.kontur < 0 || !(fProg.konturen || [])[s.kontur])){ melde('FEHLER: erst eine Kontur (Softkey Kontur) anlegen und im Schritt waehlen.'); return; }
   if(!z.eigenePosition && !z.kontur && (s.muster < 0 || !fProg.muster[s.muster])){ melde('FEHLER: erst Positionen (Bohrbild) anlegen und im Schritt waehlen.'); return; }
   if(!z.ohneTiefe && !z.eigenePosition && !(s.tiefe < 0) && !(s.art === 'zentrieren' && s.zAuswahl === 'durchmesser')){ melde('FEHLER: Tiefe Z1 muss NEGATIV sein (nach unten).'); return; }
-  if(z.eigenePosition && !(s.zEnd < s.pz)){ melde('FEHLER: Endpunkt Z1 muss unter dem Startpunkt Z0 liegen.'); return; }
+  // Z1 unter Z0 gilt fuer das PLANFRAESEN (Start- und Endpunkt). Die
+  // Modell-Schritte haben zwar eine eigene Position, aber kein pz/zEnd -
+  // mit der Pruefung war 'Modell abspanen' nicht zu bestaetigen (Daniels
+  // Befund 17.09.2026 abends: 'Der Bestaetigen-Button funktioniert nicht').
+  if(z.eigenePosition && !z.modell && !(s.zEnd < s.pz)){ melde('FEHLER: Endpunkt Z1 muss unter dem Startpunkt Z0 liegen.'); return; }
   if(fEditSchritt >= 0) fProg.schritte[fEditSchritt] = s; else { fProg.schritte.push(s); fSel = {typ:'schritt', idx:fProg.schritte.length - 1}; }
   maskZu('maskZyklus'); fRender();
 }
