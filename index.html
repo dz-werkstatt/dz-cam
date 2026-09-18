@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="18.09.2026 11:45 (6939e1de)";</script>
+<script>window.__DZ_STAND="18.09.2026 12:20 (2d136431)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3556,6 +3556,17 @@ Basis ist Baustahl. Er &auml;ndert keine bestehenden Zyklen.</dd>
 <dt id="ba-pk-rapid">Eilgang (rapidF)</dt>
 <dd>Geht in Hauptzeitrechnung UND Simulationstempo. Leer = Maschinenprofil,
 R&uuml;ckfall 5000 mm/min.</dd>
+<dt id="ba-pk-reitstock">Reitstock: Art und kleinster &empty;</dt>
+<dd>Was dem Teil am n&auml;chsten kommt, ist die <b>mitlaufende Spitze</b>, die
+<b>St&uuml;tzrolle</b> oder die <b>L&uuml;nette</b> &mdash; und die wechseln mit der
+Aufspannung, nicht mit der Maschine. Deshalb steht beides hier im Kopf und nicht in
+der Maschinenbeschreibung. Der <b>kleinste &empty;</b> ist eine harte Grenze: kein
+Zyklus f&auml;hrt darunter, und der Planschnitt endet dort statt auf Mitte. Das Feld
+&bdquo;kleinster &empty;&ldquo; im Konturabspanen bleibt daneben bestehen &mdash; es kann
+die Grenze nur <i>versch&auml;rfen</i>, nie lockern. <b>0 bedeutet: ohne Reitstock</b>,
+dann gilt keine Grenze. Beim Abstechen sagt die Ampel es an, solange eine Spitze
+eingetragen ist &mdash; abgestochen wird erst, wenn der Reitstock zur&uuml;ck ist.
+Auf dem Einrichteblatt steht die Zeile mit.</dd>
 <dt id="ba-pk-nmax">NMAX Drehzahlgrenze</dt>
 <dd>Leer = aus. Mit Wert klemmt das PROGRAMM die Drehzahl selbst: wo die
 G96-Drehzahl am kleinen &empty; die Grenze risse (Grenz-&empty; =
@@ -5131,6 +5142,18 @@ erzeugt und ist damit immer vollst&auml;ndig.</p>
       
 
       <div class="mrow"><label>Eilgang-Vorschubwert (G94)</label><input type="number" step="any" id="rapidF" value="5000"><span class="unit unit2"><i>mm/min</i></span></div>
+      <!-- REITSTOCK [Daniel, 18.09.2026]: was dem Teil am naechsten kommt,
+           sind Spitze oder Stuetzrolle, und die wechseln mit der Aufspannung.
+           Deshalb kein Maschinenwert, sondern zwei Felder je Programm: die Art
+           fuers Einrichteblatt und der kleinste Durchmesser als harte Grenze
+           fuer jeden Zyklus. 0 = ohne Reitstock. -->
+      <div class="mrow"><label>Reitstock</label><select id="pkRsArt">
+        <option value="kein" selected>ohne</option>
+        <option value="spitze">mitlaufende Spitze</option>
+        <option value="rolle">St&uuml;tzrolle</option>
+        <option value="luenette">L&uuml;nette</option>
+      </select></div>
+      <div class="mrow"><label>kleinster &empty; am Reitstock (0 = ohne)</label><input type="number" step="any" id="pkRsXmin" value="0"><span class="unit">mm</span></div>
       <div class="mrow"><label>NMAX Drehzahlgrenze (leer = aus)</label><input type="number" step="any" id="pkNmax" value=""><span class="unit unit2"><i>U/min</i></span></div>
       <div class="mrow"><label>Bettkompensation (Tabelle: Knopf Bett)</label><select id="pkBett"><option value="aus" selected>aus</option><option value="an">an</option></select><span class="unit"></span></div>
       <div class="mrow"><button class="gcbtn primary ok-gruen" id="btnCloseParams" style="flex:1 1 auto;min-width:0;padding:9px;">✓ Übernehmen</button></div>
@@ -6300,7 +6323,7 @@ function toolRadius(tnum){
 // haengt am BAUTEIL — also gehoert er zum Programm und wandert mit in
 // die Ablage. Alte Ablagen ohne die Felder lassen beim Laden den
 // aktuellen Wert stehen (ablageLaden setzt nur definierte ids).
-const SETTINGS_IDS = ['progNo','pkForm','stockDia','pkXI','pkZA','pkZI','pkZV','pkLA','safeZ','rapidF','pkTw','pkWerkstoff','wwpX','wwpZ','pkNmax','pkBett'];
+const SETTINGS_IDS = ['progNo','pkForm','stockDia','pkXI','pkZA','pkZI','pkZV','pkLA','pkRsArt','pkRsXmin','safeZ','rapidF','pkTw','pkWerkstoff','wwpX','wwpZ','pkNmax','pkBett'];
 
 const cv=document.getElementById('cv'), ctx=cv.getContext('2d'), wrap=document.getElementById('canvasWrap');
 
@@ -9225,6 +9248,20 @@ function pkSC(){
   const e=document.getElementById("safeZ");
   const v=e? parseFloat(e.value) : NaN;
   return isFinite(v)? Math.abs(v) : 2;
+}
+// Kleinster Durchmesser, den ein Zyklus anfahren darf, solange Spitze,
+// Stuetzrolle oder Luenette am Teil stehen [Daniel 18.09.2026]. 0 = ohne.
+function pkReitstockXmin(){
+  const e=document.getElementById("pkRsXmin");
+  const v=e? parseFloat(e.value) : NaN;
+  return (isFinite(v) && v>0)? v : 0;
+}
+function pkReitstockArt(){
+  const e=document.getElementById("pkRsArt");
+  return e? (e.value||"kein") : "kein";
+}
+function pkReitstockWort(){
+  return {spitze:"mitlaufende Spitze", rolle:"Stuetzrolle", luenette:"Luenette"}[pkReitstockArt()] || "Reitstock";
 }
 function pkZA(){
   const e=document.getElementById("pkZA");
@@ -21442,7 +21479,7 @@ function ppMerkmale(){
     M.push({t:'Bohrzyklen G81 ff', s:'disabled',
       w:'gesperrt — in R&D 95.05 nicht dokumentiert; Ausgabe als G74'});
     M.push({t:'Einstechzyklus G71', s:'machine_syntax_1000',
-      w:'Realform an sechs Maschinensaetzen belegt: Z = LINKE Nutkante, PM/PN = B/T, PO-PR = R1-R4, PG = U, PK/PL = alpha1/alpha2, P228 = D, PW und P230 = BS, PY = Anzahl und PZ = ABSTAND der Stiche; alle vier Lagen am Satz (kein PJ aussen, PJ1 innen, PJ2/PJ3 die Stirnlagen); PS1 = Fase an Ecke 1 (O411, 18.09.2026). Nativ geschrieben, danach ein explizites G90. PF = Schneidenradius des Werkzeugs, NUR radial (die Stirnnut traegt keins)',
+      w:'Realform an acht Maschinensaetzen belegt: Z = LINKE Nutkante, PM/PN = B/T, PO-PR = MASS der vier Ecken, PS/PT/PU/PV = Flag "Ecke ist eine FASE" (O416/O411, 18.09.2026), PG = U, PK/PL = alpha1/alpha2, P228 = D, PW und P230 = BS, PY = Anzahl, PZ = ABSTAND; alle vier Lagen (kein PJ aussen, PJ1 innen, PJ2/PJ3 Stirn). Nativ, danach ein explizites G90. PF = Schneidenradius, NUR radial',
       offen:'Lauf am Teil (O9169); Stirnnut in der BOHRUNG auf Einzelsaetzen; PX1 ungedeutet; die Werkzeugtabelle muss zur WZ-KORR passen (PF kommt aus UNSERER Tabelle). Kegelwinkel W: die Maske hat KEIN Feld (18.09.2026), kegelige Nuten bleiben G-Einzelsaetze'});
     // HERGELEITETE FORMEN [Daniels "go" 11.09.2026 spaet]: die App schreibt
     // sie nativ mit stehender Warnung; Status "hergeleitet" (Gruppe offen),
@@ -21455,7 +21492,7 @@ function ppMerkmale(){
       offen:'Lauf am Teil; Lage Schulter rechts auf Einzelsaetzen'});
     M.push({t:'Freistich Gewind G80 (vierte Form)', s:'machine_syntax_1000',
       w:'Die vierte Maskenform der 1000er ("Gewind", frei statt nach Norm) ist ein eigener Zyklus. Satz O414 und Maskenfoto vom 18.09.2026, Wort fuer Wort: X=X0, Z=Z0 (die SCHULTER), I=X1 (Grund, absoluter ⌀), K=Z1 (Beginn am Gewindeende), PF=Schneidenradius, PG=D, PH=V/2, PI=U, PK=Auslaufwinkel, PL=R1, PM=R2, PN=Laenge, PO=Tiefe radial. Kein G90/G91, keine Normzeile',
-      offen:'noch nicht GEFAHREN — ersten Lauf im Einzelsatz; belegt ist nur die Lage aussen/Schulter links, andere Lagen und die 1500er laufen als Einzelsaetze; dass der Auslaufwinkel gegen Z zaehlt, ist ANNAHME (haengt nur an der Sim-Bahn)'});
+      offen:'Mass am Teil — O9172 lief am 18.09.2026 sauber durch, aber ohne Material; belegt ist nur die Lage aussen/Schulter links, andere Lagen und die 1500er laufen als Einzelsaetze; der Auslaufwinkel gegen Z ist ANNAHME (nur die Sim-Bahn haengt daran)'});
     M.push({t:'Kegelgewinde G76', s:'machine_syntax_1000',
       w:'Realform aus der Zyklen-Maske, gezogen 16.09.2026 (O112244 N0140/N0170 gegen das Maskenbild, Wert fuer Wert): I UND PK tragen die Gewindeschraege als RADIUSmass, PL Z1 inkremental, PM=W PN=R PO=K PP=I PQ=D PR=E PT=V PU=Steigung PZ=D, PX = atan(I/K) wie beim G75. PW1 heisst DEGRESSIV — belegt durch das Satzpaar mit und ohne das Wort',
       offen:'Lauf am Teil — gefahren wurde der Zyklus noch nicht'});
@@ -22136,7 +22173,7 @@ function genAbspanenEinfach(p, N, bump, lines, warnings){
   if(trifftMitte && xminSetE){
     warnings.push('XMIN GRENZE: Der Planschnitt endet bei ⌀'+fmt(p.xmin)+
       ' statt ueber Mitte. Aus dem Schneidenradius bleibt ein Zapfen von rund ⌀'+
-      fmt(2*noseR)+' stehen — das ist beabsichtigt, solange mit Zentrierspitze gearbeitet wird.');
+      fmt(2*noseR)+' stehen — das ist beabsichtigt, solange mit Zentrierspitze gearbeitet wird.'+(p.xminKopf? ' Diese Grenze steht im PROGRAMMKOPF (Reitstock), nicht im Zyklus.' : ''));
   }
   // Zielwert eines PLANzuges, der die Mitte erreicht.
   const ueberMitte = (ziel)=> (planRichtung && ziel <= noseR + 1e-9) ? xOverPlanE : ziel;
@@ -23740,7 +23777,7 @@ function genAbspanenKontur(p, N, bump, lines, warnings){
   const xminSet = (p.xmin||0) > 0;
   if(xminSet && doRough && r2d(Math.min(...pts.map(q=>d2r(q.x)))) < p.xmin-1e-6){
     warnings.push('XMIN GRENZE: Der Schruppbereich endet bei ⌀'+fmt(p.xmin)+
-      '. Material unterhalb bleibt stehen — das ist beabsichtigt, solange mit Zentrierspitze gearbeitet wird.');
+      '. Material unterhalb bleibt stehen — das ist beabsichtigt, solange mit Zentrierspitze gearbeitet wird.'+(p.xminKopf? ' Diese Grenze steht im PROGRAMMKOPF (Reitstock), nicht im Zyklus.' : ''));
   }
   const xFloorLaengs = xminSet ? p.xmin : 0;
   const xOverPlan = xminSet ? p.xmin : -(2*noseR + 0.4);
@@ -24999,7 +25036,7 @@ function genAbspanenKontur(p, N, bump, lines, warnings){
         const von = Math.min(...unter.map(sg=>Math.min(sg.z1,sg.z2)));
         const bis = Math.max(...unter.map(sg=>Math.max(sg.z1,sg.z2)));
         const kleinster = Math.min(...unter.map(sg=>r2d(Math.min(sg.x1,sg.x2))));
-        warnings.push('XMIN VERLETZT: '+unter.length+' Konturelement(e) zwischen Z'+fmt(bis)+
+        warnings.push((p.xminKopf? 'XMIN VERLETZT (Grenze aus dem PROGRAMMKOPF, Reitstock): ' : 'XMIN VERLETZT: ')+unter.length+' Konturelement(e) zwischen Z'+fmt(bis)+
           ' und Z'+fmt(von)+' liegen unter dem Sicherheitsdurchmesser ⌀'+fmt(xmin)+
           ' (kleinster ⌀'+fmt(kleinster)+'). Die Bahn wird NICHT stillschweigend auf ⌀'+fmt(xmin)+
           ' geklemmt — das würde die Konturform verfälschen. Entweder Xmin auf 0 setzen '+
@@ -26241,12 +26278,10 @@ function genEinstechen71(p, N, bump, lines, warnings){
     warnings.push('G71-Zyklussatz: der Kegelwinkel W hat kein belegtes Satzwort — Ausgabe erfolgt als G-Einzelsaetze.');
     zyk=false;
   }
-  // 1000er: alle drei Proben trugen RADIEN an den vier Ecken (PO..PR) —
-  // wie die Steuerung eine FASE kodiert, steht in keinem Satz.
-  if(zyk && mtck && [['f1','r1'],['f2','r2'],['f3','r3'],['f4','r4']].some(([f,r])=>(+p[f]||0)>0.005 && (+p[f]||0)>(+p[r]||0))){
-    warnings.push('G71-Zyklussatz der 1000er: Fasen an den Nutecken sind im Satz unbelegt (alle Proben 07.-11.09.2026 hatten Radien R1-R4) — Ausgabe erfolgt als G-Einzelsaetze.');
-    zyk=false;
-  }
+  // FASEN AN NUTECKEN SIND BELEGT [O416 vom 18.09.2026]: die vier Fasen
+  // stehen als Mass in PO..PR und als Flag in PS/PT/PU/PV. Die Gegenprobe
+  // (O411 N0060, nur Ecke 1 auf Fase) trug nur PS1. Der fruehere Rueckfall
+  // auf Einzelsaetze ist damit gegenstandslos.
   if(!zyk){ tmp.forEach(z=>lines.push(z)); return; }
   if(herg71)
     warnings.push('G71-Zyklussatz der 1500er: '+(p.lage==='innen'?'Lage innen (PJ1)':'Flankenwinkel (PK/PL)')+' ist HERGELEITET aus DV 610 und der 1000er-Realform — plausibel, an der 1500er ungeprueft: Maskensatz ziehen (Probenzettel 351) und mit der App-Ausgabe vergleichen, bevor er gefahren wird.');
@@ -26265,6 +26300,10 @@ function genEinstechen71(p, N, bump, lines, warnings){
     const m=Math.max(+(p[aM]||0), +(p[aF]||0));
     return m>0.005 ? [mass+fmt(m)] : [];
   };
+  // Fuer den 1000er-Satz: dort stehen PO..PR IMMER (auch mit 0), deshalb
+  // eigene Helfer statt der Listenform oben.
+  const eckMass=(aM,aF)=>Math.max(+(p[aM]||0), +(p[aF]||0));
+  const istFase=(aM,aF)=>((+(p[aF]||0))>0.005 && (+(p[aF]||0))>(+(p[aM]||0)));
   const eckF=(flag,aM,aF)=>{
     const r=+(p[aM]||0), f=+(p[aF]||0);
     return (f>0.005 && f>r) ? [flag+'1'] : [];
@@ -26328,9 +26367,18 @@ function genEinstechen71(p, N, bump, lines, warnings){
       (!axialM && rsSt>0 ? 'PF'+fmt(rsSt) : null), 'PG'+fmt(p.ux||0), (p.lage==='innen'?'PJ1':(axialM?'PJ2':null)),
       ((+p.a1||0)>0?'PK'+fmt(+p.a1):null), ((+p.a2||0)>0?'PL'+fmt(+p.a2):null),
       'PM'+fmt(p.b1), 'PN'+fmt(axialM? +p.t1 : tiefeMm),
-      'PO'+fmt(+p.r1||0), 'PP'+fmt(+p.r2||0), 'PQ'+fmt(+p.r3||0), 'PR'+fmt(+p.r4||0),
+      // Mass der Ecke: Fase ODER Rundung, je nachdem was gesetzt ist
+      // [O416, 18.09.2026: vier Fasen -> PO..PR tragen die Fasenmasse].
+      'PO'+fmt(eckMass('r1','f1')), 'PP'+fmt(eckMass('r2','f2')),
+      'PQ'+fmt(eckMass('r3','f3')), 'PR'+fmt(eckMass('r4','f4')),
+      // Flag je Ecke, NUR bei einer Fase (O416: alle vier -> PS1PT1PU1PV1;
+      // O411 N0060: nur Ecke 1 -> nur PS1). Dieselbe Kodierung wie 1500er.
+      (istFase('r1','f1')?'PS1':null), (istFase('r2','f2')?'PT1':null),
+      (istFase('r3','f3')?'PU1':null), (istFase('r4','f4')?'PV1':null),
       'PW'+fmt(bw), 'PX1', 'PY'+(+p.n||1),
-      ((+p.n||1)>1?'PZ'+fmt(+p.dp||0):null),
+      // PZ ist der ABSTAND P der Stiche. O416 trug PZ1 bei N=1 und P=1 —
+      // die Maschine schreibt das Wort also auch beim Einzelstich.
+      ((+p.dp||0)>0?'PZ'+fmt(+p.dp):null),
       ((+p.tv||0)>0?'P227:'+fmt(+p.tv):null), ((+p.d||0)>0?'P228:'+fmt(+p.d):null),
       'P230:'+fmt(bw), (doRough?'P240:1':null), (doFinish?'P241:1':null)
     ].filter(Boolean).join('');
@@ -28998,6 +29046,20 @@ function bezugsschneideVersetzen(lines, von, tNr, warnings, wo){
   warnings.push(wo+' mit T'+tNr+': Bezugsschneide ist die LINKE Klingenkante — alle Z-Werte des Zyklus liegen um die Stechbreite ('+fmt(bw)+' mm) niedriger als bei rechter Bezugskante. Die Bearbeitung selbst sitzt unveraendert; Werkzeug entsprechend eingemessen haben.');
   return bw;
 }
+// REITSTOCKGRENZE AUS DEM PROGRAMMKOPF [Daniel, 18.09.2026]: Spitze,
+// Stuetzrolle oder Luenette wechseln mit der Aufspannung, nicht mit der
+// Maschine — der Wert steht deshalb einmal im Kopf und wird hier in jeden
+// Zyklus gezogen. Das Zyklusfeld "kleinster ⌀" bleibt: es kann die Grenze
+// verschaerfen (groesserer Wert), nie lockern.
+function mitReitstock(par, idx, warnings){
+  const rs=(typeof pkReitstockXmin==='function')? pkReitstockXmin() : 0;
+  if(!(rs>0)) return par;
+  const eigen=+par.xmin||0;
+  if(eigen >= rs) return par;
+  if(warnings && eigen>0)
+    warnings.push('Schritt '+(idx+1)+': der kleinste ⌀ des Zyklus ('+fmt(eigen)+') liegt unter der Reitstockgrenze des Programmkopfs ('+fmt(rs)+') — es gilt die groessere, also ⌀'+fmt(rs)+'.');
+  return Object.assign({}, par, {xmin: rs, xminKopf: true});
+}
 function buildProgram(){
   const warnBox=document.getElementById('warnBox');
   warnBox.style.display='none';
@@ -29320,7 +29382,7 @@ function buildProgram(){
         warnings.push('Schritt '+(idx+1)+': Werkzeug '+tw+' liegt im LAGER ohne Revolverplatz — erst auf einen Platz (1-16) legen.');
     });
     if(st.type==='abspanen_einfach'){
-      genAbspanenEinfach(st.params, N, bump, lines, warnings);
+      genAbspanenEinfach(mitReitstock(st.params, idx, warnings), N, bump, lines, warnings);
       // Reststand: Außen-Längszyklus senkt das Profil im Fenster auf X1 (+Aufmaß)
       if(st.params.lage==='aussen' && st.params.richtung==='laengs'){
         const x1=+st.params.x1 + (st.params.bearbeitung==='schruppen' ? 2*(+st.params.ux||0) : 0);
@@ -29346,7 +29408,7 @@ function buildProgram(){
         const saved = contour;
         contour = cRef.els;
         st.params._rest = restAt;                 // Reststand hinein …
-        genAbspanenKontur(st.params, N, bump, lines, warnings);
+        genAbspanenKontur(mitReitstock(st.params, idx, warnings), N, bump, lines, warnings);
         delete st.params._rest;                   // … und transient halten (nicht speichern)
         contour = saved;
         // … und den Stand NACH diesem Zyklus fortschreiben (nur Außenbearbeitung
@@ -29428,6 +29490,9 @@ function buildProgram(){
       bezugsschneideVersetzen(lines, esVon, st.params.t, warnings, 'Einstechen');
     }
     else if(st.type==='abstechen'){
+      const rsAb=(typeof pkReitstockXmin==='function')? pkReitstockXmin() : 0;
+      if(rsAb>0)
+        warnings.push('ABSTECHEN AM REITSTOCK: im Programmkopf steht '+pkReitstockWort()+' mit kleinstem ⌀'+fmt(rsAb)+', der Abstich laeuft aber auf ⌀'+fmt(st.params.x1)+'. Solange die Spitze im Zentrum steht, darf hier nicht abgestochen werden — erst zurueckfahren.');
       const abVon = lines.length;
       genAbstechen(st.params, N, bump, lines, warnings);
       bezugsschneideVersetzen(lines, abVon, st.params.t, warnings, 'Abstechen');
@@ -30929,6 +30994,13 @@ function einrichteBlattText(){
         if(F.zS!==undefined) L.push('  Backenfront     Z'+(+F.zS).toFixed(1)+' mm');
       }
     }catch(e){}
+  }
+  // REITSTOCK [Daniel, 18.09.2026]: was am Teil steht, wechselt mit der
+  // Aufspannung — deshalb steht es auf dem Einrichteblatt, nicht in der
+  // Maschinenbeschreibung. Ohne Reitstock bleibt die Zeile weg.
+  if(typeof pkReitstockXmin==='function' && (pkReitstockXmin()>0 || pkReitstockArt()!=='kein')){
+    const rsX=pkReitstockXmin();
+    L.push('  Reitstock       '+pkReitstockWort()+(rsX>0? ('   kleinster ⌀'+z(rsX)+' mm (harte Grenze fuer jeden Zyklus)') : '   (kein ⌀ gesetzt — KEINE Grenze!)'));
   }
   L.push('  Wechselpunkt    X⌀'+z(g('wwpX'))+'   Z'+z(g('wwpZ')));
   L.push('  Eilgang         '+z(g('rapidF'))+' mm/min');
