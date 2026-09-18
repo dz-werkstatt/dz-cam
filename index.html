@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="18.09.2026 13:39 (613dc15b)";</script>
+<script>window.__DZ_STAND="18.09.2026 14:14 (ffd25ea1)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21239,8 +21239,8 @@ const MASCHINEN_PROFILE = {
     // (uebertragung steht weiter oben im Profil — am Geraet bewiesen
     // 03.09.2026; hier nur der Fahrtest-Ertrag des Termins.)
     fahrtests:'gefahren 03.09.2026: Wiedereinstieg per Satzvorlauf (G96-Drehzahl exakt, CRC aktiv), Drehzahlvariation SSV fliegend, Spanbrechen G04 F2; Uebertragung in beide Richtungen',
-    fahrtestsOffen:'G71/G72/G74/G75-Zyklussaetze am Teil; Maskensaetze G74/G75/G76/G77/G73/G78/G79 aus der Zyklen-Maske ziehen (Probenzettel 1500er); T61_1500_KOMPAKT (O9161)',
-    termine:'03.09.2026 — Uebertragung 9600/7/N/1 bewiesen, 42 Bestandsprogramme gesichert, G72 innen und mit Winkeln sowie G71 aus der Zyklen-Maske gezogen, Futter gemessen (Bauhoehe 95, Backen 32) · 18.09.2026 — App-Weg hin belegt (MINI O9903, BALLEN 645 Zeilen), O-Zeile muss zuerst stehen, T33 gibt 152 unzulaessiges Zahlenformat wie an der 1000er',
+    fahrtestsOffen:'G72/G74/G75-Zyklussaetze am Teil; Maskensaetze G74/G75/G76/G77/G73/G78/G79 aus der Zyklen-Maske ziehen (Probenzettel 1500er)',
+    termine:'03.09.2026 — Uebertragung 9600/7/N/1 bewiesen, 42 Bestandsprogramme gesichert, G72 innen und mit Winkeln sowie G71 aus der Zyklen-Maske gezogen, Futter gemessen (Bauhoehe 95, Backen 32) · 18.09.2026 — App-Weg hin belegt (MINI O9903, BALLEN 645 Zeilen), O-Zeile muss zuerst stehen, T33 gibt 152 unzulaessiges Zahlenformat, G71-Einstich mit T4 GEFAHREN, Spanbrechen G04 und Drehzahlvariation GEFAHREN (T62 O9173)',
     statusZeilen:[
       '(PROFIL: Monforts 1500 - EuroTurn | Zyklussyntax aus DV 610-0C belegt,)',
       '(  Maschinenkonfiguration aus Daniels IBN-Sicherung - Stand 22.01.2004.)',
@@ -22151,7 +22151,15 @@ function genAbspanenEinfach(p, N, bump, lines, warnings){
   // kollidierte mit einer Rohstirn bei Z+2 (null Abstand) — die sichere
   // Ebene liegt immer mindestens 1 mm VOR der Rohteilstirn.
   const zBlankG=(typeof document!=='undefined'&&document.getElementById('pkZA'))?(+document.getElementById('pkZA').value||0):zOuter;
-  const zAnf=Math.max(zOuter+2, zBlankG+1);
+  // LUFTZUG [Daniel am T61-Lauf, 18.09.2026: "das zieht er dann irgendwie
+  //  wieder zum Schluss von Z ganz vorne bis ganz hinten, da ist ja
+  //  eigentlich nichts mehr"]: die Klemme auf die Rohstirn gilt NUR fuer
+  //  Zyklen, die an der Stirn anfangen. Faengt das Schnittfenster weiter
+  //  hinten an (Ecke am Reststueck: Z0 -58), liefe der Vorschubzug sonst
+  //  61 mm durch Luft. Dann faehrt der Zyklus ueber dem Material an und
+  //  sticht am Fensteranfang radial ein (s. tiefStart weiter unten).
+  const tiefStart = (zOuter + 2) < (zBlankG - 1e-9);
+  const zAnf = tiefStart ? (zOuter + 2) : Math.max(zOuter+2, zBlankG+1);
   // UX radial -> am Durchmesser x2 [Daniel, 29.08.2026]
   const finishX = innen ? (xOuter - (doRough?2*p.ux:0)) : (xInner + (doRough?2*p.ux:0));
   // ============================================================
@@ -22694,7 +22702,14 @@ function genAbspanenEinfach(p, N, bump, lines, warnings){
           lines.push(`${N()} (GERADE  ) G95 F${fmt(p.fr)} G01 Z${fmt(zo)}`); bump();
           lines.push(`${N()} (SCHRAEG ) G01 X${fmt(xv)} Z${fmt(zGrenzW(xv))}`); bump();
         } else {
-          lines.push(`${N()} (SCHRAEG ) G94 G00 G90 X${fmt(xv)} Z${fmt(zAnf)}`); bump();
+          if(tiefStart){
+            // Fensteranfang liegt im Vollen: ueber dem Material anfahren und
+            // radial einstechen, statt im Eilgang hineinzufahren.
+            lines.push(`${N()} (SCHRAEG ) G94 G00 G90 X${fmt(Math.max(xOuter, +p.x0)+4)} Z${fmt(zAnf)}`); bump();
+            lines.push(`${N()} (GERADE  ) G95 F${fmt(p.fr)} G01 X${fmt(xv)}`); bump();
+          } else {
+            lines.push(`${N()} (SCHRAEG ) G94 G00 G90 X${fmt(xv)} Z${fmt(zAnf)}`); bump();
+          }
           if(sbAe){
             sbZug(lines, N, bump, 'Z', zAnf, zGrenzW(xv), sbAe, p.fr);
           } else {
@@ -22813,7 +22828,14 @@ function genAbspanenEinfach(p, N, bump, lines, warnings){
           lines.push(`${N()} (GERADE  ) G95 F${fmt(p.fr)} G01 Z${fmt(zOuter)}`); bump();
           lines.push(`${N()} (SCHRAEG ) G01 X${fmt(xv)} Z${fmt(zOuter-kant1)}`); bump();
         } else {
-          lines.push(`${N()} (SCHRAEG ) G94 G00 G90 X${fmt(xv)} Z${fmt(zAnf)}`); bump();
+          if(tiefStart){
+            // Fensteranfang liegt im Vollen: ueber dem Material anfahren und
+            // radial einstechen, statt im Eilgang hineinzufahren.
+            lines.push(`${N()} (SCHRAEG ) G94 G00 G90 X${fmt(Math.max(xOuter, +p.x0)+4)} Z${fmt(zAnf)}`); bump();
+            lines.push(`${N()} (GERADE  ) G95 F${fmt(p.fr)} G01 X${fmt(xv)}`); bump();
+          } else {
+            lines.push(`${N()} (SCHRAEG ) G94 G00 G90 X${fmt(xv)} Z${fmt(zAnf)}`); bump();
+          }
           if(sbAe){
             sbZug(lines, N, bump, 'Z', zAnf, konturGrenzZ(xv), sbAe, p.fr);
           } else {
@@ -28941,7 +28963,7 @@ function nmaxWache(lines, warnings){
   if(!(nmax>0)) return;
   // wunsch: das Programm will G96 mit Vc=sVc; clamp: wir halten G97
   // S<NMAX>; cx: letztes programmiertes X (null = unbekannt).
-  let wunsch=false, sVc=0, cx=null, clamp=false, anz=0, anwahl=0, sWeg=0;
+  let wunsch=false, sVc=0, cx=null, clamp=false, anz=0, anwahl=0, sWeg=0, sBleibt=0;
   const out=[];
   const nrVor=(L)=>'N'+String(Math.max(1,(+L.slice(1,5))-5)).padStart(4,'0');
   // Ersetzen NUR im Satzteil hinter dem Satzart-Tag, nie im Kommentar.
@@ -28986,11 +29008,22 @@ function nmaxWache(lines, warnings){
         }
         // (2) unter der Klemme kein S-Wort
         if(clamp && mS){ L=imSatz(L, s=>s.replace(/\s*\bS\d+\.?\d*/,'')); sWeg++; }
+        else if(mS && fahrsatz) sBleibt++;
       }
     }
     if(mX && fahrsatz) cx=Math.abs(+mX[1]);
     out.push(L);
   }
+  // [Daniel am T61-Lauf, 18.09.2026: "Drehzahlvariation habe ich keine
+  //  gesehen"] Unter der Klemme faellt JEDES S-Wort weg, auch die Stufen der
+  //  Drehzahlvariation. Das ist richtig (die Spindel steht dort fest auf
+  //  NMAX), aber es gehoert gesagt.
+  const willSSV=(typeof programSteps!=="undefined" && Array.isArray(programSteps))
+    ? programSteps.some(s2=>s2 && s2.params && s2.params.svArt==="an") : false;
+  // Nur melden, wenn KEINE einzige Stufe uebrig bleibt — an der Anwahlfalle
+  // faellt sonst auch bei sichtbarer Variation immer ein S-Wort weg.
+  if(sWeg>0 && sBleibt===0 && willSSV)
+    warnings.push("Drehzahlvariation ohne Wirkung: der Zug laeuft unter dem Grenz-Durchmesser, dort haelt die NMAX-Wache die Spindel fest auf "+fmt(nmax)+" U/min und entfernt jedes S-Wort ("+sWeg+" Stueck). Wer die Variation sehen will: NMAX anheben oder Vc senken.");
   if(anz>0 || sWeg>0){
     warnings.push('NMAX-Wache: '+anwahl+' G96-Anwahl/en als G97 S'+fmt(nmax)+' geschrieben (Anwahlfalle: am Programmstart und beim Wiedereinstieg ist X unbekannt - 10.09.2026 lief die 1000er so in Alarm 007), '+(anz-anwahl)+' Umschaltsaetze eingefuegt (G97 unter dem Grenz-Durchmesser, G96 erst wenn Start UND Ziel drueber liegen)'+(sWeg? '; '+sWeg+' S-Woerter unter der Klemme entfernt (Vorschubsatz/SSV - dort laeuft n konstant auf NMAX)':'')+'. Drehzahlwaechter der Maschine bleibt die zweite Sicherung.');
     lines.length=0;
