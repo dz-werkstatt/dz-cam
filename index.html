@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="18.09.2026 10:07 (a422ac38)";</script>
+<script>window.__DZ_STAND="18.09.2026 11:31 (37a64f09)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2981,7 +2981,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
              das iPhone direkt fotografieren oder aus Fotos waehlen. -->
         <input type="file" id="unterlageFile" accept="image/*,.pdf,application/pdf" style="display:none;">
         <div class="mask" id="maskFreistich">
-          <div class="mask-head"><span class="mtitel" title="Freistich DIN 509 (E/F) und DIN 76 (Gewinde)">Freistich DIN 509 / 76</span><button id="fsAnsichtBtn" class="ansichtBtn" style="font-size:11px;padding:3px 7px;white-space:nowrap;" title="Kachel- oder Zeilenansicht">☰</button><span class="radiobtns kopfschalter" id="fsEingabeBtns"><button data-v="einfach" class="sel">einfach</button><button data-v="komplett">komplett</button></span></div>
+          <div class="mask-head"><span class="mtitel" title="Freistich DIN 509 (E/F), DIN 76 (Gewinde) und die freie Form der 1000er (G80)">Freistich 509 / 76 / frei</span><button id="fsAnsichtBtn" class="ansichtBtn" style="font-size:11px;padding:3px 7px;white-space:nowrap;" title="Kachel- oder Zeilenansicht">☰</button><span class="radiobtns kopfschalter" id="fsEingabeBtns"><button data-v="einfach" class="sel">einfach</button><button data-v="komplett">komplett</button></span></div>
           <div class="mask-body">
             <div class="msec">Werkzeug &amp; Schnittwerte</div>
             <div class="mrow"><label>T Werkzeug (Stechplatte)</label><select id="fsT" class="tool-select"></select></div>
@@ -2995,6 +2995,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
               <button data-v="E" class="sel">Form E (G79)</button>
               <button data-v="F">Form F (G78)</button>
               <button data-v="D76">DIN 76 (G73)</button>
+              <button data-v="GW">Gewinde frei (G80)</button>
             </div></div>
             <!-- DIN-76-Zeilen [01.09.2026]: Felder wie an der EuroTurn
                  selbst (DV 594 S. 4.4-5). X0 ist der NENN-Durchmesser
@@ -3012,6 +3013,16 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
             <div class="mrow" id="fsG76Row" style="display:none;"><label>Ausführung</label><div class="radiobtns" id="fsG76Btns">
               <button data-v="A" class="sel">normal (A)</button><button data-v="B">kurz (B)</button>
             </div></div>
+            <!-- VIERTE MASKENFORM "Gewind" (G80) [Maskenfoto 19 und
+                 Satz O414 N0040, 18.09.2026]: freie Masse statt Normzeile.
+                 Z0 ist die SCHULTER, Z1 der BEGINN des Freistichs am
+                 Gewindeende — die Maske zaehlt von der Schulter zum
+                 Gewinde hin. X1 ist ein absoluter DURCHMESSER, keine Tiefe
+                 (beide Verwechslungen hat die Steuerung abgewiesen). -->
+            <div class="mrow" id="fsX1GRow" style="display:none;"><label>X1 &#8960; Freistichgrund / Z1 Beginn (abs)</label><input step="any" style="width:51px;" type="number" id="fsX1G" value="25.4"><input step="any" style="width:51px;" type="number" id="fsZ1G" value="-30"><span class="unit">mm</span></div>
+            <div class="mrow" id="fsRGRow" style="display:none;"><label>R1 Grund-Ecke / R2 Schulter-Ecke</label><input step="any" style="width:51px;" type="number" id="fsR1G" value="0.6"><input step="any" style="width:51px;" type="number" id="fsR2G" value="0.45"><span class="unit">mm</span></div>
+            <div class="mrow" id="fsAlGRow" style="display:none;"><label>&#945; Auslaufwinkel</label><input type="number" step="any" id="fsAlG" value="15"><span class="unit">&#176;</span></div>
+            <div class="mrow" id="fsDUGRow" style="display:none;"><label>D Zustellung / U Aufma&#223;</label><input step="any" style="width:51px;" type="number" id="fsDG" value="0.5"><input step="any" style="width:51px;" type="number" id="fsUG" value="0.1"><span class="unit">mm</span></div>
             <div class="mrow" id="fsA76Row" style="display:none;"><label>α Einstiegswinkel</label><input type="number" step="any" id="fsA76" value="60"><span class="unit">°</span></div>
             <div class="mrow" id="fsD76Row" style="display:none;"><label>D Zustellung (Zyklus)</label><input type="number" step="any" id="fsD76" value="2"><span class="unit">mm</span></div>
             <div class="mrow" id="fsU76Row" style="display:none;"><label>U Schlichtaufmaß (Zyklus)</label><input type="number" step="any" id="fsU76" value="0.2"><span class="unit">mm</span></div>
@@ -3053,7 +3064,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
             <div class="mgroup" id="fsGrpAufmass">
               <div class="mgroup-head"><span class="pfeil">▶︎</span><span class="titel">Aufmaß und Planzug</span><span class="zus" id="fsZusAufmass">—</span></div>
               <div class="mgroup-body">
-                <div class="mrow"><label>I Aufmaß X</label><input type="number" id="fsI" value="0" step="any"><span class="unit">mm</span></div>
+                <div class="mrow" id="fsIRow"><label>I Aufmaß X</label><input type="number" id="fsI" value="0" step="any"><span class="unit">mm</span></div>
                 <div class="mrow" id="fsKRow" style="display:none;"><label>K Aufmaß Z (Form F)</label><input type="number" id="fsK" value="0" step="any"><span class="unit">mm</span></div>
                 <div class="mrow" id="fsVRow"><label>V Endpunkt Planzug ⌀ (abs)</label><input type="number" step="any" id="fsV" value="70"><span class="unit">mm</span></div>
               </div>
@@ -4074,9 +4085,23 @@ gespeicherte Schlichtwahl schlichten seit dem 29.08.2026 beidseitig &mdash; Dani
 <p>Der Normfreistich vor einer Schulter, Form E oder F, aus der Baugr&ouml;&szlig;e
 abgeleitet (r1, t1, f nach Norm).</p>
 <dl>
-<dt id="ba-fs-form">Form E / F und Gr&ouml;&szlig;e</dt>
+<dt id="ba-fs-form">Form: E, F, DIN 76 oder Gewinde frei</dt>
 <dd>E f&uuml;r normale Wellenabs&auml;tze, F wenn auch die Planfl&auml;che
-geschliffen wird. Die Gr&ouml;&szlig;enstufe w&auml;hlt die Normma&szlig;e.</dd>
+geschliffen wird &mdash; bei beiden w&auml;hlt die Gr&ouml;&szlig;enstufe die
+Normma&szlig;e. <b>DIN 76</b> ist der Gewindefreistich nach Norm (die Steigung
+bestimmt die Form), <b>Gewinde frei</b> derselbe Freistich ohne Norm: dort
+stehen alle Ma&szlig;e einzeln in der Maske. Die vier Formen sind genau die
+vier der Steuerungsmaske (Form F, Form E, Gewind DIN, Gewind).</dd>
+<dt id="ba-fs-gw">Gewinde frei: X1 / Z1, R1 / R2, &alpha;, V, D / U</dt>
+<dd>Diese Form ist frei bema&szlig;t. <b>Z0 ist die Schulter</b>, <b>Z1 der
+Beginn des Freistichs</b> am Gewindeende &mdash; die Maske z&auml;hlt von der
+Schulter zum Gewinde hin. <b>X1 ist ein Durchmesser</b> (der Freistichgrund),
+keine Tiefe. R1 rundet die Ecke am Grund, R2 die Ecke an der Schulter,
+&alpha; ist der Auslaufwinkel, V der Schulterdurchmesser. Steht ein Wert
+verkehrt, sagt es die Ampel vorher an: die Steuerung weist genau diese beiden
+Verwechslungen ab (&bdquo;Unzul&auml;ssige Geometriewerte&ldquo; und
+&bdquo;Wert nicht im Wertebereich&ldquo;). An die Maschine geht der Zyklus
+<b>G80</b>; er ist nur an der 1000er belegt, sonst laufen G-Einzels&auml;tze.</dd>
 <dt id="ba-fs-x0z0">X0 &empty; / Z0</dt>
 <dd>Durchmesser der Welle am Freistich und Z-Lage der Schulter (der Ort der Kerbe,
 nicht die Werkst&uuml;ckstirn).</dd>
@@ -4699,8 +4724,11 @@ bleibt jeder Kommentar ohne Scrollen lesbar &mdash; und entfernt innere Klammern
 Kommentaren (10.09.2026: &bdquo;153 Adressbuchstabe nicht vorhanden&ldquo; an
 <code>( (Bahn um Stechbreite 3 versetzt) --)</code> &mdash; die Steuerung schlie&szlig;t den
 Kommentar an der ersten Klammer und liest den Rest als Satz; der Generator schreibt
-solche Kommentare seitdem nicht mehr). Zyklen an der 1000er: der Generator schreibt das
-1000er-Format noch nicht, die App schickt Einzels&auml;tze.
+solche Kommentare seitdem nicht mehr). Zyklen an der 1000er: der Generator schreibt das 1000er-Format seit dem
+16./18.09.2026 selbst &mdash; G71, G72, G73, G74, G75, G76, G78, G79 und G80, jeder
+aus einem gezogenen Maskensatz belegt. Was dort nicht belegt ist (Stirn- und
+Auslaufkante im Abspanen, Rundung am Eck&uuml;bergang, Sonderlagen), geht weiter als
+G-Einzels&auml;tze &mdash; die Ampel nennt jedes Mal den Grund.
 Fortsetzungszeilen setzt die Steuerung NIE zusammen &mdash; weder an der
 Wortgrenze (07.09.: &bdquo;zu viele Interpolationsadressen&ldquo;) noch mitten
 im Wort mit Ziffer-Anfang (09.09.2026: &bdquo;152 Fehlerhafte
@@ -4821,10 +4849,12 @@ P5105=1 Durchmesser, P9170/P9220/P9230 Freigaben, N5206 maximales Schlichtaufma&
 17 Bestandsprogramme als Klartext. Einstich-Bezugskante: Vorgabe links (Daniels Standard).</dd>
 <dt id="ba-ma-offen">Ehrlich offen</dt>
 <dd>Offen ist, was in den Merkmalen je Maschine unter &bdquo;noch zu testen&ldquo; und in den
-Offen-Zeilen steht. <b>1000er:</b> die Testl&auml;ufe O9167&ndash;O9169 (kl&auml;ren E beim
-Gewinde, die kurze Zentrierform und die Nutkante), die Programme O102&ndash;O105 (G73, Form E)
-aus der Steuerung ziehen, die fehlenden Grundformen Form F, G72 und Gewinde Kegel/Plan aus der
-Zyklen-Maske, PF/PX1/PW90/PY1/PZ1 ungedeutet, Abfahrt X-zuerst au&szlig;en. <b>1500er:</b> die
+Offen-Zeilen steht. <b>1000er:</b> die Satzformen aller neun Zyklen sind an gezogenen Maskens&auml;tzen
+belegt (Stand 18.09.2026). Offen sind zwei ungedeutete W&ouml;rter: <code>PR</code> im
+Abspanen (Fase oder Rundung im Feld FS) und der Eckentyp im Einstich (nur
+<code>PS1</code> gesehen) &mdash; solange fallen Rundungen und Nutecken auf
+Einzels&auml;tze zur&uuml;ck. Dazu: der erste Lauf des G80 am Teil, die Ma&szlig;probe
+der Nut aus O9169, PX1/PW90/PY1/PZ1 ungedeutet, Abfahrt X-zuerst au&szlig;en. <b>1500er:</b> die
 Handbuch-S&auml;tze G74/G75/G76/G77/G73/G78/G79 sind nie gefahren und noch nicht an der
 Zyklen-Maske gegengepr&uuml;ft (Probenzettel 1500er), G71/G72 Lauf am Teil, T-Grenze
 (MINI_T33), Backen&uuml;berstand messen. <b>Beide:</b> Reitstock und Backen-Stufentiefen,
@@ -5037,7 +5067,7 @@ vorschruppen.</dd>
      TT.MM.JJJJ" ergaenzt, MUSS dieses Datum mitziehen — sonst schlaegt
      der Pruefstand an. [Daniels Befund 06.09.2026: die Anleitung war
      inhaltlich nachgezogen, das Standdatum stand noch auf 31.08.] -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 16.09.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 18.09.2026. Sie
 w&auml;chst mit der App &mdash; das Inhaltsverzeichnis wird aus den Kapiteln
 erzeugt und ist damit immer vollst&auml;ndig.</p>
 
@@ -11112,6 +11142,9 @@ function editStep(i){
   } else if(st.type==='freistich'){
     setRadio('fsKuehlBtns', p.kuehl||'an');
     setRadio('fsFormBtns', p.form||'E'); setVal('fsPM',p.pm||2); setVal('fsPJ',p.pj||0);
+    setVal('fsX1G', p.x1g!==undefined?p.x1g:25.4); setVal('fsZ1G', p.z1g!==undefined?p.z1g:-30);
+    setVal('fsR1G', p.r1g!==undefined?p.r1g:0.6); setVal('fsR2G', p.r2g!==undefined?p.r2g:0.45);
+    setVal('fsAlG', p.alg||15); setVal('fsDG', p.dg||0.5); setVal('fsUG', p.ug!==undefined?p.ug:0.1);
     setVal('fsP76',p.p76||1.5); setRadio('fsG76Btns',p.g76||'A');
     setVal('fsA76',p.al76||60); setVal('fsD76',p.d76||2); setVal('fsU76',p.u76||0.2);
     setRadio('fsAusgBtns', p.ausg||'zyklus');
@@ -12515,16 +12548,21 @@ const D76_PM={0.2:1,0.25:2,0.3:3,0.35:4,0.4:5,0.45:6,0.5:7,0.6:8,0.7:9,
   4:20,4.5:21,5:22,5.5:23,6:24};
 function syncFsForm(){
   const form = selBtnVal('fsFormBtns');
-  const f = form==='F', d76 = form==='D76';
+  // GW = die vierte Maskenform der 1000er (Zyklus G80, frei bemasst).
+  const f = form==='F', d76 = form==='D76', gw = form==='GW';
   const z=(id,an)=>{ const e=document.getElementById(id); if(e) e.style.display=an?'':'none'; };
-  z('fsKRow', f && !d76); z('fsVRow', !f);
-  const vh=document.getElementById('fsVHint'); if(vh) vh.style.display=(f||d76)?'none':'';
+  z('fsKRow', f && !d76 && !gw); z('fsVRow', !f);
+  z('fsIRow', !gw);
+  ['fsX1GRow','fsRGRow','fsAlGRow','fsDUGRow'].forEach(id=>z(id,gw));
+  const vh=document.getElementById('fsVHint'); if(vh) vh.style.display=(f||d76||gw)?'none':'';
   // DIN 76: Steigung statt 509er-Groesse; Aufmass I/K gibt es im G73
   // nicht (nur U). Das Hilfebild zeigt die 509er-Form — bei DIN 76
   // wird es ausgeblendet statt falsch zu zeigen.
   ['fsP76Row','fsG76Row','fsA76Row','fsD76Row','fsU76Row'].forEach(id=>z(id,d76));
   const pm=document.getElementById('fsPM'); if(pm && pm.closest){ /* Zeile ueber Label finden geht im domstub nicht */ }
-  z('fsPMRow', !d76);
+  z('fsPMRow', !d76 && !gw);
+  // Die Gruppe bleibt bei GW sichtbar: V (Schulter-⌀) steht darin und
+  // wird als PH = V/2 gebraucht; I und K sind oben ausgeblendet.
   const gr=document.getElementById('fsGrpAufmass'); if(gr) gr.style.display=d76?'none':'';
   // Hilfebild bleibt AN: seit dem 01.09.2026 hat DIN 76 ein eigenes
   // Erklaerschema in helpKonturFreistich — die alte Ausblendung war
@@ -12565,6 +12603,16 @@ document.getElementById('btnFsOk').onclick=()=>{
   params.al76=+document.getElementById('fsA76').value||60;
   params.d76=+document.getElementById('fsD76').value||2;
   params.u76=+document.getElementById('fsU76').value||0.2;
+  // Vierte Form (G80): eigene Felder, damit die Vorgabewerte der
+  // DIN-76-Maske (D 2 / U 0,2 / alpha 60) nicht in einen 1,3 mm tiefen
+  // Gewindefreistich geraten.
+  params.x1g=+document.getElementById('fsX1G').value;
+  params.z1g=+document.getElementById('fsZ1G').value;
+  params.r1g=+document.getElementById('fsR1G').value||0;
+  params.r2g=+document.getElementById('fsR2G').value||0;
+  params.alg=+document.getElementById('fsAlG').value||15;
+  params.dg=+document.getElementById('fsDG').value||0.5;
+  params.ug=+document.getElementById('fsUG').value||0;
   commitStep('freistich', params);
   document.getElementById('maskFreistich').classList.remove('show');
   refreshAll();
@@ -13422,7 +13470,14 @@ function refreshArbeitsplan(){
       detail=`${cN}${rN} · ${p.richtung==='x'?'radial':'längs'} · ${bearbWort}D${p.d}${p.richtung==='x'&&p.ds!==undefined?' · DS'+p.ds:''} · T${p.t}`;
     } else if(st.type==='freistich'){
       const nrm=FS_NORM[p.pm]||FS_NORM[2];
+      if(p.form==='GW'){
+        // Die vierte Form hat keine Normgroesse - ihre Masse stehen frei
+        // in der Maske. Die Zeile nennt deshalb Grund, Laenge und Winkel.
+        icon='⌐'; name='Freistich Gewind (frei)';
+        detail=`⌀${p.x0}→⌀${p.x1g} · Z${p.z0}→Z${p.z1g} · α${p.alg||15}° · R${p.r1g}/${p.r2g} · T${p.t}`;
+      } else {
       icon='⌐'; name='Freistich DIN 509'; detail=`Form ${p.form} · r${nrm.r}×t${nrm.t} · X${p.x0}/Z${p.z0}${p.form==='E'?' · V⌀'+p.v:''} · T${p.t}`;
+      }
     } else if(st.type==='abstechen'){
       icon='✂'; name='Abstechen'; detail=`Z${p.z0} · ⌀${p.x0}→${p.x1}${p.kaTyp!=='keine'?' · '+(p.kaTyp==='fase'?'FS':'R')+p.ka:''} · red. ab ⌀${p.xd} · T${p.t}`;
     } else if(st.type==='einstechen'){
@@ -15313,6 +15368,8 @@ const BA_ANKER={
   stTZ:'ba-st-tz', stRaeumBtns:'ba-st-raeumen', stRK:'ba-st-raeumen',
   stSchlStratBtns:'ba-st-schlicht', stUX:'ba-zk-radial', stUZ:'ba-zk-radial',
   fsFormBtns:'ba-fs-form', fsX0:'ba-fs-x0z0', fsZ0:'ba-fs-x0z0',
+  fsX1G:'ba-fs-gw', fsZ1G:'ba-fs-gw', fsR1G:'ba-fs-gw', fsR2G:'ba-fs-gw',
+  fsAlG:'ba-fs-gw', fsDG:'ba-fs-gw', fsUG:'ba-fs-gw',
   fsAusgBtns:'ba-fs-ausgabe',
   abX0:'ba-ab-x0z0', abZ0:'ba-ab-x0z0', abKa:'ba-ab-kante',
   abKaBtns:'ba-ab-kante', abX1:'ba-ab-x1',
@@ -16739,7 +16796,10 @@ function helpKonturFreistich(){
   // kurze steile Schraege im Einstiegswinkel zum Mantel, Radius r an
   // der Schulterflanke. Festes Erklaerschema wie die anderen Formen;
   // die Bahnkette (Kante -> Auslauf) laeuft mechanisch identisch.
-  if(formSel==='D76'){
+  // Die vierte Form (G80) hat dieselbe TOPOLOGIE wie der DIN-76-
+  // Freistich - Schulter, gerader Grund, Auslaufschraege -, nur mit
+  // freien Massen. Das Erklaerschema gilt deshalb fuer beide.
+  if(formSel==='D76' || formSel==='GW'){
     const rV=30, rM=19, t=3, r=4, g=22, dz=5, zK=24, L=78;
     const rG=rM-t;
     const pkte=[[0,rV],[zK,rV],[zK,rG],[zK+g-dz,rG],[zK+g,rM],[L,rM]];
@@ -17781,7 +17841,7 @@ const MASK_HELP = {
     // fsFormBtns, nicht fsPJBtns: die alte Abfrage las eine Gruppe,
     // die es nicht gibt — der Form-Schalter aenderte das Bild nie.
     const formSel=(typeof selBtnVal==='function' && selBtnVal('fsFormBtns'))||'E';
-    const formF=formSel==='F', formD76=formSel==='D76';
+    const formF=formSel==='F', formD76=formSel==='D76', formGW=formSel==='GW';
     // AUS DEN FELDWERTEN (s. Einstich): X0, V, Groesse, Form E/F/DIN 76.
     const M=helpSchnitt(H, helpKonturFreistich());
     if(!M) return;
@@ -17800,6 +17860,11 @@ const MASK_HELP = {
       kopfText = (n76
         ? ('DIN 76 P'+p76+': dd '+n76.dd+' · r '+n76.r+' · g '+(gAB?n76.gB:n76.gA))
         : ('DIN 76: Steigung '+p76+' nicht in der Normtabelle'))
+        + (pjR? ' · '+lagenName : '');
+    }
+    if(formGW){
+      const zw=(id)=>{ const e=document.getElementById(id); return (e&&e.value!=='')? String(+parseFloat(e.value)) : '?'; };
+      kopfText = 'Gewind (G80), frei: Grund ⌀'+zw('fsX1G')+' · Beginn Z'+zw('fsZ1G')+' · R'+zw('fsR1G')+'/'+zw('fsR2G')+' · α'+zw('fsAlG')+'°'
         + (pjR? ' · '+lagenName : '');
     }
     helpLabel(c, kopfText, 12, 15, false, 'left');
@@ -21383,17 +21448,20 @@ function ppMerkmale(){
     // sie nativ mit stehender Warnung; Status "hergeleitet" (Gruppe offen),
     // der Maskensatz vom Probenzettel entscheidet.
     M.push({t:'Abspanzyklus G72 (Ecke)', s:'machine_syntax_1000',
-      w:'Realform aus der Zyklen-Maske, gezogen 16.09.2026: PG=D, PI=U, PK=(X1-X0)/2 und PL=Z1-Z0 inkremental, PM/PN Schenkel-Schnittpunkt (Formel wie an der 1500er), PO=FS, PQ = RICHTUNG (2 parallel Z, 1 parallel X, belegt am Satzpaar O112244 N0160/N0180 und an den Bestandssaetzen). Keine Winkelwoerter, kein PA/PB/PC/PD/PE — die entstehen beim Teach-In. Aussen, innen, Schenkelwinkel UND plan nativ; die Kanten bleiben Einzelsaetze',
-      offen:'Lauf am Teil; an WELCHER Kante FS sitzt (die Maske kennt nur EIN Feld); PR1 ungedeutet (steht in jedem Satz); MINI_G72 ohne PA/PB'});
+      w:'Realform aus der Zyklen-Maske, gezogen 16.09.2026: PG=D, PI=U, PK=(X1-X0)/2 und PL=Z1-Z0 inkremental, PM/PN Schenkel-Schnittpunkt, PO=FS — und diese Fase sitzt am SCHENKEL-SCHNITTPUNKT (unser Eckuebergang K2, belegt 18.09.2026 an der Grafiksimulation; Stirn- und Auslaufkante hat die Maske nicht), PQ = RICHTUNG (2 laengs, 1 plan). Keine Winkelwoerter, kein PA/PB/PC/PD/PE (Teach-In). Aussen, innen, Winkel, plan und die Eckfase nativ',
+      offen:'Lauf am Teil; Fase/Radius-Flag des Feldes FS (Softkey toggelt, PR1 steht in jedem Satz) — Rundungen bleiben deshalb auf Einzelsaetzen; MINI_G72 ohne PA/PB'});
     M.push({t:'Freistich G73 / Form E G79', s:'machine_syntax_1000',
-      w:'Realform aus den Maskenfotos P102-P105 (11.09.2026), nativ geschrieben: G73 mit PH = V/2 absolut, PN1 innen, P227:90; G79 mit X = Freistichgrund, I = Welle, G91 K0, PH = V/2, PK = Tiefe mit Vorzeichen, PJ1 innen; PF = Schneidenradius des Werkzeugs aus UNSERER Werkzeugtabelle (P105 lief mit T12, RS 1,2 -> PF1.2)',
-      offen:'G73 gezogen (O411, 18.09.2026): PG=D, PI=U, PK=Einstiegswinkel, PH=V/2, PM=Normzeile der DIN-76-Tabelle. Offen: PF beim G73 (die Probe lief mit einem RS-0-Werkzeug); Lauf am Teil; Lage Schulter rechts auf Einzelsaetzen'});
+      w:'Realform am SATZ belegt (O411/O412, 18.09.2026, Wort fuer Wort): G73 mit PG=D, PH=V/2 absolut, PI=U, PK=Einstiegswinkel, PM=Normzeile, PN1 innen, P227:90; G79 mit X = Freistichgrund, I = Welle, G91 K0, PH = V/2, PK = Tiefe mit Vorzeichen, PJ1 innen; PF = Schneidenradius des Werkzeugs aus UNSERER Werkzeugtabelle (P105 lief mit T12, RS 1,2 -> PF1.2)',
+      offen:'Lauf am Teil; Lage Schulter rechts auf Einzelsaetzen'});
+    M.push({t:'Freistich Gewind G80 (vierte Form)', s:'machine_syntax_1000',
+      w:'Die vierte Maskenform der 1000er ("Gewind", frei statt nach Norm) ist ein eigener Zyklus. Satz O414 und Maskenfoto vom 18.09.2026, Wort fuer Wort: X=X0, Z=Z0 (die SCHULTER), I=X1 (Grund, absoluter ⌀), K=Z1 (Beginn am Gewindeende), PF=Schneidenradius, PG=D, PH=V/2, PI=U, PK=Auslaufwinkel, PL=R1, PM=R2, PN=Laenge, PO=Tiefe radial. Kein G90/G91, keine Normzeile',
+      offen:'noch nicht GEFAHREN — ersten Lauf im Einzelsatz; belegt ist nur die Lage aussen/Schulter links, andere Lagen und die 1500er laufen als Einzelsaetze; dass der Auslaufwinkel gegen Z zaehlt, ist ANNAHME (haengt nur an der Sim-Bahn)'});
     M.push({t:'Kegelgewinde G76', s:'machine_syntax_1000',
       w:'Realform aus der Zyklen-Maske, gezogen 16.09.2026 (O112244 N0140/N0170 gegen das Maskenbild, Wert fuer Wert): I UND PK tragen die Gewindeschraege als RADIUSmass, PL Z1 inkremental, PM=W PN=R PO=K PP=I PQ=D PR=E PT=V PU=Steigung PZ=D, PX = atan(I/K) wie beim G75. PW1 heisst DEGRESSIV — belegt durch das Satzpaar mit und ohne das Wort',
       offen:'Lauf am Teil — gefahren wurde der Zyklus noch nicht'});
-    M.push({t:'Form F G78', s:'derived',
-      w:'Der Generator schreibt weiter die HERGELEITETE Form (G91 K0, t2 ueber PM). Der ECHTE Satz liegt seit O411 (18.09.2026) vor: G78 G90 X<X0> Z<Z0> I<X1> G91 K<Z1> PK2 PL<Z1> PM<Normzeile> — die Maske hat nur Form, X0, Z0, X1, Z1, kein D und kein U',
-      offen:'Generator auf die Realform umstellen (I traegt X1, K unter G91 traegt Z1, PM die Normzeile, PK2 ungedeutet); PF unbelegt, die Probe lief mit einem RS-0-Werkzeug'});
+    M.push({t:'Form F G78', s:'machine_syntax_1000',
+      w:'Realform an ZWEI Maskensaetzen belegt (O412/O413, 18.09.2026, verschiedene Normgroessen — dadurch ist jedes Wort eindeutig): X = Wellen-⌀ (nicht der Freistichgrund wie beim G79), I = Schulter-⌀, K unter G91 = Z-Mass der Maske, PL dasselbe noch einmal, PK = RADIALE Stufe (X1-X0)/2, PM = Normzeile, PF = Schneidenradius. Kein PH, kein P227',
+      offen:'an der Maschine noch nicht GEFAHREN — ersten Lauf im Einzelsatz'});
     M.push({t:'Plangewinde G77', s:'machine_syntax_1000',
       w:'Realform aus der Zyklen-Maske, gezogen 16.09.2026 (O112233 N0220): Steigung im F-Wort und als PU, X/Z absolut, G91 I = Radialstrecke inkremental, G90 K0, PG=U PK=I PM=W PN=R PO=K POSITIV PP=I PQ=D PR=E PT=V PZ=D. Offen: das Vorzeichen von I (Daniels Satz laeuft nach innen und schreibt +I)',
       offen:'Maskensatz ziehen (Probenzettel 241)'});
@@ -22254,13 +22322,39 @@ function genAbspanenEinfach(p, N, bump, lines, warnings){
     warnings.push('G72 bis X0 (ueber Mitte): am Maschinensatz nicht belegt — Ausgabe erfolgt als G-Einzelsaetze.');
     zyklusModusAe=false;
   }
+  // === DIE KANTE SITZT AM SCHENKEL-SCHNITTPUNKT ======================
+  // [Daniel am Geraet, 18.09.2026, nachdem er die GRAFIKSIMULATION der
+  //  Steuerung ueber den Satz mit PO1.4 hat laufen lassen: "So wie das
+  //  fuer mich aussieht, sitzt Fase oder Radius bei diesem Zyklus immer
+  //  im Schnittpunkt der beiden Schenkel." Bild 18.09.2026/bilder/
+  //  20-G72-grafik-fase-am-eckuebergang.jpg: die gezeichnete Kontur
+  //  bricht genau dort, wo die steile Schulter in die flache Flanke
+  //  laeuft — nicht an der Stirn und nicht am Auslauf. Das deckt sich
+  //  mit dem Maskenbild vom 16.09.2026.]
+  // Damit ist das EINE Maskenfeld FS zugeordnet: es ist UNSER K2. Fuer
+  // Stirn- (K1) und Auslaufkante (K3) hat die Maske kein Feld.
   const eckUebergangAe = innen ? kant2Inn : kant2;
-  if(zyklusModusAe && eckUebergangAe>0){
-    // Daniels Winkel-Testsatz BEWEIST die Luecke: er tippte Fase 2 /
-    // Radius 3 / Fase 2 — der gezogene Satz traegt nur PO2 und PQ2,
-    // der ECKUEBERGANG (Radius 3) fehlt. Ein Zyklussatz ohne ihn
-    // fertigte eine scharfe Ecke: Massfehler. Deshalb Einzelsaetze.
-    warnings.push('G72: der Maschinensatz kennt nur die beiden Schenkel-Endkanten (PO/PQ) — fuer den Eckuebergang K2 gibt es kein belegtes Wort. Ausgabe erfolgt als G-Einzelsaetze.');
+  if(zyklusModusAe && eckUebergangAe>0 && !mtckAe){
+    // 1500er: dort liegt nur der Innen-/Winkelsatz vom 03.09.2026 vor,
+    // und in dem fehlt der Eckuebergang. Ob ihre Maske dasselbe eine
+    // Feld hat, ist ungeprueft — steht auf der Probenliste der 7.210i.
+    warnings.push('G72 an der 1500er: fuer den Eckuebergang K2 ist kein Wort belegt (an der 1000er ist es PO, belegt 18.09.2026 an der Grafiksimulation) — Ausgabe erfolgt als G-Einzelsaetze.');
+    zyklusModusAe=false;
+  }
+  if(zyklusModusAe && eckUebergangAe>0 && mtckAe && innen){
+    // Die Maske erkennt innen/aussen selbst am Verhaeltnis X0 zu X1 und
+    // spiegelt ihre Grafik; das Feld FS ist dasselbe. Belegt ist die Fase
+    // aber nur am AUSSEN-Satz (16./18.09.2026) - deshalb eine Ansage,
+    // kein Rueckfall.
+    warnings.push('G72 innen mit Fase am Eckuebergang: das Maskenfeld FS ist dasselbe wie aussen (die Steuerung erkennt innen/aussen an X0 gegen X1), belegt ist die Fase aber nur am AUSSEN-Satz. Ersten Lauf im Einzelsatz.');
+  }
+  if(zyklusModusAe && eckUebergangAe>0 && mtckAe && p.k2Typ!=='fase'){
+    // Die Maske toggelt das Feld FS ueber den Softkey "Fase Radius"
+    // zwischen beiden Formen [Maskenbilder 16.09.2026]. WELCHES Wort den
+    // Zustand traegt, ist offen: PR1 stand in jedem belegten Satz, auch
+    // bei FS 0. Eine Rundung als Fase zu fertigen waere ein stiller
+    // Konturfehler (bis 0,29*r), deshalb Einzelsaetze.
+    warnings.push('G72: der Eckuebergang ist eine RUNDUNG. Die Maske hat dafuer denselben Platz (der Softkey "Fase Radius" toggelt das Feld FS), aber welches Wort den Zustand traegt, ist unbelegt — PR1 steht in jedem Satz, auch ohne Kante. Bis zur Probe Ausgabe als G-Einzelsaetze.');
     zyklusModusAe=false;
   }
   // Innen leben die Kantenmasse in kant1Inn/kant3Inn (kant1/kant3
@@ -22278,10 +22372,11 @@ function genAbspanenEinfach(p, N, bump, lines, warnings){
     zyklusModusAe=false;
   }
   if(zyklusModusAe && mtckAe && (kantStirnAe>0 || kantAuslaufAe>0)){
-    // Daniels Bestandssaetze tragen nur PQ1PR1 (Auslaufkante) — fuer die
-    // Stirnkante K1 gibt es dort kein Wortpaar; die 1500er-Form (PO) ohne
-    // Flag koennte die Maschine als Rundung lesen. Einzelsaetze, mit Ansage.
-    warnings.push('G72 der 1000er: die Maske kennt nur EIN Kantenfeld FS (= PO, belegt 16.09.2026 mit FS 1,4 -> PO1.4); an WELCHER der drei Kanten es sitzt, ist nicht belegt (das Maskenbild zeigt die Rundung am Eckuebergang). Bis zur Probe Ausgabe als G-Einzelsaetze.');
+    // Die Frage vom 16.09. ist beantwortet, aber gegen uns: das eine Feld
+    // FS sitzt am Eckuebergang (s. o.). Fuer die Stirnkante K1 und die
+    // Auslaufkante K3 hat diese Maske schlicht kein Feld — sie koennen im
+    // Zyklussatz nicht stehen und bleiben auf G-Einzelsaetzen.
+    warnings.push('G72 der 1000er: die Maske hat genau EIN Kantenfeld FS, und das sitzt am Schenkel-Schnittpunkt (Eckuebergang K2, belegt 18.09.2026 an der Grafiksimulation). Fuer die Stirnkante K1 und die Auslaufkante K3 gibt es kein Wort — diese beiden Kanten werden als G-Einzelsaetze gefahren.');
     zyklusModusAe=false;
   }
   if(zyklusModusAe && sbAe){
@@ -22378,6 +22473,11 @@ function genAbspanenEinfach(p, N, bump, lines, warnings){
         'PG'+fmt(p.d), 'PI'+fmt(p.ux||0),
         'PK'+fmt(((+p.x1)-(+p.x0))/2), 'PL'+fmt(zmAe2),
         'PM'+fmt(pmAe), 'PN'+fmt(pnAe),
+        // PO = das Maskenfeld FS am Schenkel-Schnittpunkt [16.09.2026 der
+        //   Wert (FS 1,4 -> PO1.4 / FS 2,5 -> PO2.5), 18.09.2026 der ORT
+        //   (Grafiksimulation)]. Nur als FASE — der Rundungs-Zustand des
+        //   Feldes haengt an einem unbelegten Wort, s. Sperre oben.
+        (eckUebergangAe>0?'PO'+fmt(eckUebergangAe):null),
         (p.richtung==='plan'?'PQ1':'PQ2'), 'PR1',
         (doRough?'P240:1':null),(doFinish?'P241:1':null)
       ].filter(Boolean).join('');
@@ -25505,6 +25605,7 @@ function fsLageWandeln(s, sp, inn, x0, z0){
 // =================================================================
 function genFreistich(p, N, bump, lines, warnings){
   if(p.form==='D76') return genFreistich76(p, N, bump, lines, warnings);
+  if(p.form==='GW') return genFreistichGW(p, N, bump, lines, warnings);
   const t=toolTable.find(x=>String(x.t)===String(p.t));
   // WERKZEUGWAHL [Daniel, IMG_2620]: DIN-509-Freistiche werden bevorzugt
   // mit spitzer 35-Grad-Drehplatte (VBMT/VNMG) gestochen — ein normaler
@@ -25546,7 +25647,7 @@ function genFreistich(p, N, bump, lines, warnings){
     gcodeAus=true;
   }
   if(mtckFs && !gcodeAus){
-    if(formF) warnings.push('Freistich Form F (G78) der 1000er ist HERGELEITET aus dem Form-E-Satz (P104/P105) — plausibel, an der Maschine ungeprueft: Maskensatz ziehen (Probenzettel 251/252) und mit der App-Ausgabe vergleichen, bevor er gefahren wird.');
+    if(formF) warnings.push('Freistich Form F (G78) der 1000er: Satzform an ZWEI gezogenen Maskensaetzen belegt (O412/O413, 18.09.2026) — an der Maschine noch nicht GEFAHREN: ersten Lauf im Einzelsatz. (frueher:  mit der App-Ausgabe vergleichen, bevor er gefahren wird.');
     // GEZOGEN am 16.09.2026 (O112255 N0030/N0050/N0080/N0100, beide Lagen
     // mit passendem Werkzeug): PH = V/2 bestaetigt (13 bei V 26, 18 bei
     // V 36), PJ1 = innen bestaetigt, und PK traegt das VORZEICHEN DER
@@ -25592,11 +25693,36 @@ function genFreistich(p, N, bump, lines, warnings){
     // Werkzeug nicht. Aus UNSERER Werkzeugtabelle, mit Ansage.
     const rsFs=+((t&&t.r)||0);
     if(rsFs>0) warnings.push('PF'+fmt(rsFs)+' im Freistichsatz ist der Schneidenradius von T'+p.t+' aus UNSERER Werkzeugtabelle. Die Maschine schreibt dort den RS aus IHRER WZ-KORR — beide muessen uebereinstimmen.');
+    if(formF){
+      // ================= FORM F (G78), REALFORM =================
+      // [Maskensaetze O412/O413 vom 18.09.2026, ZWEI Proben mit
+      // verschiedenen Normgroessen und Massen — daran ist jedes Wort
+      // eindeutig]:
+      //   F 1,6x0,3 | X0 34 Z0 -42 X1 38 Z1 0,18 ->
+      //     G78 G90 X34 Z-42 I38 G91 K0.18 PF0.2PK2PL0.18PM4
+      //   F 2,5x0,4 | X0 40 Z0 -50 X1 46 Z1 0,25 ->
+      //     G78 G90 X40 Z-50 I46 G91 K0.25 PF0.2PK3PL0.25PM5
+      // Daraus: X = X0 (der WELLEN-⌀, NICHT der Freistichgrund wie beim
+      // G79), I = X1 = Schulter-⌀, K unter G91 = Z1, PL = dasselbe Z1
+      // noch einmal (wie PQ/PZ beim Gewinde), PM = Normzeile (4 bzw. 5,
+      // unsere FS_NORM-Nummern), PF = Schneidenradius.
+      // PK = (X1-X0)/2, also die RADIALE Stufe: 2 bei 38/34 und 3 bei
+      // 46/40. Beim G79 ist PK dagegen die Freistichtiefe mit Vorzeichen —
+      // gleicher Buchstabe, anderer Zyklus, andere Bedeutung.
+      // PH und P227 stehen im G78 NICHT.
+      // Unsere Maske: X0 = Wellen-⌀, V = Endpunkt Planzug ⌀ (= X1),
+      // K = Aufmass Z (= Z1).
+      const x1Fs = (+p.v>0) ? +p.v : (+p.x0) + 4;
+      const z1Fs = +(p.k||0);
+      const pblockF=[ (rsFs>0?'PF'+fmt(rsFs):null), 'PK'+fmt((x1Fs-(+p.x0))/2),
+                      'PL'+fmt(z1Fs), 'PM'+p.pm ].filter(Boolean).join('');
+      lines.push('(1000er-REALFORM 18.09.2026 aus O412/O413: X = Wellen-DM, I = Schulter-DM, K/PL = Z-Mass, PK = radiale Stufe, PM = Normzeile)');
+      lines.push(`${N()} (FREISTI ) G78 G90 X${fmt(p.x0)} Z${fmt(p.z0)} I${fmt(x1Fs)} G91 K${fmt(z1Fs)} ${pblockF}`); bump();
+    } else {
     const pblockFs=[ (rsFs>0?'PF'+fmt(rsFs):null), 'PH'+fmt(vFs/2), (innW?'PJ1':null), 'PK'+fmt(innW? -tFs : tFs), 'PM'+p.pm, 'P227:90' ].filter(Boolean).join('');
-    lines.push(formF
-      ? '(HERGELEITET aus dem Form-E-Satz P104/P105: G78 mit G91 K0 - Maskensatz ziehen vor dem ersten Lauf)'
-      : '(1000er-REALFORM 11.09.2026 aus Maskenfotos P104/P105: X = Freistichgrund, I = Welle, PH = V/2, PK = Tiefe mit Vorzeichen)');
-    lines.push(`${N()} (FREISTI ) ${formF?'G78':'G79'} G90 X${fmt(grundFs)} Z${fmt(p.z0)} I${fmt(p.x0)} G91 K0 ${pblockFs}`); bump();
+    lines.push('(1000er-REALFORM 11.09.2026 aus Maskenfotos P104/P105: X = Freistichgrund, I = Welle, PH = V/2, PK = Tiefe mit Vorzeichen)');
+    lines.push(`${N()} (FREISTI ) G79 G90 X${fmt(grundFs)} Z${fmt(p.z0)} I${fmt(p.x0)} G91 K0 ${pblockFs}`); bump();
+    }
   } else if(!gcodeAus){
     if(formF){
       lines.push(`${N()} (FREISTI ) G78 G90 X${fmt(p.x0)} Z${fmt(p.z0)} I${fmt(p.i||0)} K${fmt(p.k||0)} PJ${p.pj||0} PM${p.pm}`); bump();
@@ -25743,13 +25869,13 @@ function genFreistich76(p, N, bump, lines, warnings){
       // Realform 1000er (s. o.): PH = V/2 ABSOLUT (P227:90), P-Block ohne
       // Leerzeichen hinter "G91 I0 K0", PN1 nur innen, keine Lagewahl PJ.
       const vFs76 = (+p.v>0) ? +p.v : (innW ? Math.max(0.5,(+p.x0)-10) : (+p.x0)+10);
-      // PF AUS DER ANALOGIE [16.09.2026 spaet]: die beiden G73-Saetze der
-      // Sicherung liefen mit einem RS-0-Werkzeug, tragen also kein PF -
-      // fuer den G73 selbst gibt es damit KEINEN Beleg. Die beiden anderen
-      // Formen derselben Freistich-Maske (G78/G79) schreiben ihn, deshalb
-      // hier ebenso; steht auf der Probenliste.
+      // PF AM SATZ BELEGT [18.09.2026, O412 mit T7 (RS 0,2)]: die frueheren
+      // G73-Saetze liefen mit RS-0-Werkzeugen und trugen deshalb kein PF; die
+      // Wiederholung derselben Maskeneingabe mit einem Werkzeug mit Radius
+      // schreibt PF0.2. Unsere Ausgabe ist damit Wort fuer Wort der
+      // Maschinensatz (Pruefstand 197).
       const rs76=+((t&&t.r)||0);
-      if(rs76>0) warnings.push('PF'+fmt(rs76)+' im Gewindefreistich ist aus der ANALOGIE zu G78/G79 gesetzt (fuer den G73 selbst gibt es keinen Maschinensatz mit Schneidenradius) — und es ist der Wert aus UNSERER Werkzeugtabelle, nicht aus der WZ-KORR der Maschine.');
+      // (die alte ANALOGIE-Warnung ist entfallen: PF ist seit O412 am Satz belegt)
       const pblock76=[ (rs76>0?'PF'+fmt(rs76):null), 'PG'+fmt(p.d76||2), 'PH'+fmt(vFs76/2), 'PI'+fmt(p.u76||0), 'PK'+fmt(p.al76||60), 'PM'+(pmIdx||14), (innW?'PN1':null), 'P227:90', 'P240:1', 'P241:1' ].filter(Boolean).join('');
       lines.push('(1000er-REALFORM 11.09.2026 aus Maskenfotos P102/P103: PH = V/2 absolut, PN1 innen, kein PJ)');
       lines.push(`${N()} (FREISTI ) G73 G90 X${fmt(p.x0)} Z${fmt(p.z0)} G91 I0 K0 ${pblock76}`); bump();
@@ -25793,6 +25919,139 @@ function genFreistich76(p, N, bump, lines, warnings){
   lines.push(`${N()} (M-BEFEHL) M05`); bump();
   // Lagen-Nachlauf wie beim 509er: PJ0 laesst jede Zeile unberuehrt.
   if(pjW) for(let i=fsLi0;i<lines.length;i++) lines[i]=fsLageWandeln(lines[i], spW, innW, p.x0, p.z0);
+}
+// =================================================================
+// FREISTICH "GEWIND" — DIE VIERTE MASKENFORM, ZYKLUS G80
+// -----------------------------------------------------------------
+// [Maskenfoto 19 und gezogener Satz O414 N0040 vom 18.09.2026, 1000er]
+// Die Maske der 1000er hat VIER Freistichformen; drei kannten wir
+// (Form E = G79, Form F = G78, Gewind DIN = G73). Die vierte heisst
+// "Gewind", ist NICHT nach Norm und laeuft als eigener Zyklus G80.
+//
+//   Maske: X0 28 | Z0 -38 | X1 25,4 | Z1 -30 | R1 0,6 | R2 0,45 |
+//          alpha 15 | V 32 | D 0,5 | U 0,1 | T3 (RS 0,4)
+//   Satz:  G80 X28 Z-38 I25.4 K-30 PF0.4PG0.5PH16PI0.1PK15PL0.6
+//          PM0.45PN8PO1.3P227:90P240:1P241:1
+//
+// Wort fuer Wort: X=X0, Z=Z0, I=X1, K=Z1, PF=Schneidenradius,
+// PG=D, PH=V/2, PI=U, PK=alpha, PL=R1, PM=R2, PN=|Z1-Z0| (Laenge),
+// PO=(X0-X1)/2 (Tiefe radial), P227:90 = V absolut, P240/P241 =
+// Schruppen/Schlichten. PN und PO sind aus den anderen Feldern
+// ableitbar, stehen aber im Satz - wir schreiben sie mit.
+// Kein G90/G91, keine Normzeile: die Form ist frei bemasst.
+//
+// DIE Z-RICHTUNG DER MASKE [Daniel am Geraet, nach zwei abgewiesenen
+// Eingaben: "Z0 ist hier quasi die Schulter, und Z1 ist der Beginn
+// des Freistiches. Der geht von der Schulter aus."]: Z0 sitzt am
+// SCHULTERENDE, Z1 am Gewindeende - anders als beim G73, wo Z0 am
+// Gewindeende steht. X1 ist ein absoluter DURCHMESSER, keine Tiefe.
+//
+// ANNAHME (als solche im Satzkommentar): alpha ist gegen die
+// Z-ACHSE gemessen, wie der Einstiegswinkel des G73. Nur die
+// SIM-Bahn haengt daran - der Satz traegt den Winkel unveraendert.
+// =================================================================
+function genFreistichGW(p, N, bump, lines, warnings){
+  const t=toolTable.find(x=>String(x.t)===String(p.t));
+  if(!t || (t.art!=='aussen' && t.art!=='innen'))
+    warnings.push('Freistich Gewind (G80): T'+p.t+' — bevorzugt eine 35°-Drehplatte (VBMT/VNMG); ein Stechmeissel ist fuer die Auslaufschraege meist zu breit.');
+  const x0=+p.x0, z0=+p.z0;
+  const x1=(p.x1g!==undefined)? +p.x1g : x0-2.6;
+  const z1=(p.z1g!==undefined)? +p.z1g : z0+8;
+  const r1=Math.max(0,+p.r1g||0), r2=Math.max(0,+p.r2g||0);
+  const al=+p.alg||15;
+  const dZu=+p.dg||0.5, uAuf=(p.ug!==undefined)? +p.ug : 0;
+  const vG=(+p.v>0)? +p.v : x0+4;
+  const mtckG = MASCHINENPROFIL.id==='MONFORTS_1000_MTC_K_6624B';
+  const pjW=+p.pj||0;
+  let ausg=(p.ausg==='gcode')? 'gcode' : 'zyklus';
+  // --- Plausibilitaet: die Steuerung weist genau das ab ------------
+  if(!(x1 < x0)){
+    warnings.push('Freistich Gewind: der Freistichgrund X1⌀'+fmt(x1)+' muss KLEINER sein als der Gewinde-⌀ X0⌀'+fmt(x0)+' — die Steuerung meldet sonst "Unzulaessige Geometriewerte". X1 ist ein absoluter Durchmesser, keine Tiefe.');
+  }
+  if(!(z1 > z0)){
+    warnings.push('Freistich Gewind: Z0 ist die SCHULTER und Z1 der BEGINN des Freistichs am Gewindeende — Z1 muss also groesser als Z0 sein (belegt am Geraet 18.09.2026, die Steuerung meldet sonst "Wert nicht im Wertebereich").');
+  }
+  if(vG <= x0)
+    warnings.push('Freistich Gewind: V⌀'+fmt(vG)+' ist nicht groesser als der Gewinde-⌀ X0⌀'+fmt(x0)+' — V ist der SCHULTER-Durchmesser.');
+  const laengeG=Math.abs(z1-z0), tiefeG=(x0-x1)/2;
+  const dzRampe=(al>0 && al<90)? tiefeG/Math.tan(al*Math.PI/180) : 0;
+  if(dzRampe + r2 > laengeG + 1e-9)
+    warnings.push('Freistich Gewind: die Auslaufschraege unter '+fmt(al)+'° braucht '+fmt(dzRampe)+' mm, mit der Kehle R2 sind es '+fmt(dzRampe+r2)+' mm — der Freistich ist aber nur '+fmt(laengeG)+' mm lang — die Steuerung weist das mit "Unzulaessige Geometriewerte" ab (belegt 18.09.2026, als X1 als TIEFE statt als Durchmesser eingetippt war). Steilerer Winkel, kuerzere Tiefe oder laengerer Freistich.');
+  if(r1+r2 > laengeG)
+    warnings.push('Freistich Gewind: R1 '+fmt(r1)+' und R2 '+fmt(r2)+' zusammen sind breiter als der Freistich ('+fmt(laengeG)+' mm).');
+  if(t && +t.r > 0 && +t.r > Math.min(r1,r2) + 1e-9 && Math.min(r1,r2) > 0)
+    warnings.push('Freistich Gewind: Schneidenradius '+fmt(+t.r)+' ist groesser als die kleinere Ecke (R'+(r1<r2?'1 ':'2 ')+fmt(Math.min(r1,r2))+') — die Ecke wird runder als gezeichnet.');
+  if(ausg==='zyklus' && !mtckG){
+    warnings.push('Freistich Gewind (G80): der Zyklus ist nur an der 1000er belegt (Satz O414 vom 18.09.2026); fuer die 1500er liegt keine Satzform vor — Ausgabe erfolgt als G-Einzelsaetze.');
+    ausg='gcode';
+  }
+  if(ausg==='zyklus' && pjW!==0){
+    warnings.push('Freistich Gewind (G80): belegt ist nur die Lage AUSSEN, Schulter links (P227:90). Fuer PJ'+pjW+' gibt es kein Vorbild — Ausgabe erfolgt als G-Einzelsaetze.');
+    ausg='gcode';
+  }
+  if(ausg==='zyklus')
+    warnings.push('Freistich Gewind (G80): Satzform am gezogenen Maskensatz O414 belegt (18.09.2026), an der Maschine aber noch nicht GEFAHREN — ersten Lauf im Einzelsatz.');
+  const fsLi0=lines.length;
+  lines.push(`${N()} (WERKZEUG) ${MASCHINENPROFIL.tSatz(p.t)}`); bump();
+  lines.push(`${N()} (EILGANG ) G94 F${fmt(eilgangMmMin())}`); bump();
+  lines.push(`${N()} (DREHZAHL) ${p.sMode==='vc'?'G96':'G97'} S${p.sr}`); bump();
+  lines.push(`${N()} (M-BEFEHL) M03`); bump();
+  lines.push(`${N()} (M-BEFEHL) ${kuehlWort(p)}`); bump();
+  lines.push(`${N()} (VORSCHUB) G95 F${fmt(p.fr)}`); bump();
+  lines.push(`${N()} (GERADE  ) G94 G00 G90 X${fmt(x0+4)} Z${fmt(z1+4)}`); bump();
+  if(ausg==='zyklus'){
+    const rsG=+((t&&t.r)||0);
+    if(rsG>0) warnings.push('PF'+fmt(rsG)+' im G80-Satz ist der Schneidenradius von T'+p.t+' aus UNSERER Werkzeugtabelle. Die Maschine schreibt dort den RS aus IHRER WZ-KORR — beide muessen uebereinstimmen.');
+    const pblockG=[ (rsG>0?'PF'+fmt(rsG):null), 'PG'+fmt(dZu), 'PH'+fmt(vG/2),
+      'PI'+fmt(uAuf), 'PK'+fmt(al), 'PL'+fmt(r1), 'PM'+fmt(r2),
+      'PN'+fmt(laengeG), 'PO'+fmt(tiefeG), 'P227:90', 'P240:1', 'P241:1' ].filter(Boolean).join('');
+    lines.push('(1000er-REALFORM 18.09.2026 aus O414: X=X0, Z=Z0 SCHULTER, I=X1 Grund-DM, K=Z1 Beginn, PH=V/2, PK=Winkel, PL/PM=R1/R2, PN=Laenge, PO=Tiefe radial)');
+    lines.push(`${N()} (FREISTI ) G80 X${fmt(x0)} Z${fmt(z0)} I${fmt(x1)} K${fmt(z1)} ${pblockG}`); bump();
+  }
+  // --- Bahn: Auslaufschraege, Grund, Kehle in die Schulter ---------
+  // Dieselbe Topologie wie der DIN-76-Freistich, nur mit freien
+  // Massen. R1 an der Grund-Ecke ist in der Bahn nicht ausgerundet:
+  // bei 15° betraegt die Tangentenlaenge 0,13*R1 (0,08 mm bei R1 0,6),
+  // das liegt unter der Aufloesung der Simulation. Der ZYKLUS faehrt
+  // die Ecke rund - der Satz traegt PL.
+  {
+    const bw=(t && t.art==='stechen' && +t.len>0)? +t.len : 0;
+    // Die Rampe endet nie HINTER der Schulter: bei zu flachem Winkel
+    //  (Ansage steht oben) liefe die Bahn sonst in den Bund und die
+    //  Simulation zeigte einen Einschnitt, den die Maschine nie faehrt.
+    const zRampeRoh=z1-dzRampe;
+    const zRampe=(z1>z0)? Math.max(z0, Math.min(z1, zRampeRoh)) : zRampeRoh;
+    // Der Grund laeuft vom Rampenfuss nach -Z bis an den TANGENTENPUNKT
+    // der Schulterkehle (z0+R2); dort setzt der Viertelkreis an und endet
+    // senkrecht in der Schulter. Passt die Rampe nicht in die Laenge
+    // (Ansage steht oben), faellt die Kehle weg statt einen unmoeglichen
+    // Bogen zu schreiben.
+    const zTang=z0+r2;
+    const kehlePasst=(r2>0 && zRampe >= zTang-1e-9);
+    const zGrundEnde=kehlePasst? zTang : Math.min(zRampe, z0);
+    const Zg=[
+      `G94 G00 G90 X${fmt(x0+4)} Z${fmt(z1+bw+2)}`,
+      `G01 G95 F${fmt(p.fr)} G42 X${fmt(x0)} Z${fmt(z1+bw)}`,
+      `G01 X${fmt(x1)} Z${fmt(Math.min(zRampe,z1)+bw)}`,
+      `G01 Z${fmt(zGrundEnde+bw)}`,
+      (kehlePasst? `G02 X${fmt(x1+2*r2)} Z${fmt(z0+bw)} R${fmt(r2)}` : `G01 Z${fmt(z0+bw)}`),
+      `G01 G40 X${fmt(Math.max(vG, x0+2))}`
+    ];
+    if(ausg==='gcode'){
+      const art=['GERADE  ','GERADE  ','SCHRAEG ','GERADE  ',(kehlePasst?'RADIUS  ':'GERADE  '),'GERADE  '];
+      Zg.forEach((z,i)=>{ lines.push(`${N()} (${art[i]}) ${z}`); bump(); });
+    } else {
+      Zg.forEach(z=>lines.push(`(SIM: ${z})`));
+      lines.push(`(SIM: G94 G00 Z${fmt(z1+bw+4)})`);
+    }
+  }
+  lines.push(`${N()} (GERADE  ) G94 G00 G90 X${fmt(Math.max(vG, x0+pkSC()))}`); bump();
+  lines.push(`${N()} (GERADE  ) G00 Z${fmt(z1+4+pkSC())}`); bump();
+  lines.push(`${N()} (M-BEFEHL) M09`); bump();
+  lines.push(`${N()} (M-BEFEHL) M05`); bump();
+  // Lagen-Nachlauf wie bei den anderen Formen: PJ0 laesst alles stehen.
+  const spW=(pjW===2||pjW===3), innW=(pjW===1||pjW===3);
+  if(pjW) for(let i=fsLi0;i<lines.length;i++) lines[i]=fsLageWandeln(lines[i], spW, innW, x0, z0);
 }
 function genAbstechen(p, N, bump, lines, warnings){
   const t=toolTable.find(x=>String(x.t)===String(p.t));
@@ -25944,7 +26203,7 @@ function genEinstechen71(p, N, bump, lines, warnings){
   const rsSt = +((stTool&&stTool.r) || 0);
   if(zyk && p.ausr==='axial' && (!mtck || p.lage==='innen')){
     warnings.push(mtck
-      ? 'G71-Zyklussatz der 1000er: die Stirnnut in der BOHRUNG ist unbelegt (Daniels Probe P101 vom 11.09.2026 war die freie Stirnnut, PJ2) — Ausgabe erfolgt als G-Einzelsaetze.'
+      ? 'G71-Zyklussatz der 1000er: die Stirnnut in der BOHRUNG faellt auf G-Einzelsaetze zurueck. Grund seit dem 18.09.2026 GEKLAERT statt unbelegt: die Maske kennt VIER Lagen (aussen, innen, Stirn rechts, Stirn links) — eine eigene Lage fuer die Bohrung gibt es NICHT. Unsere Kodierung (Ausrichtung axial + Lage innen) bildet das nicht ab: an der Maschine ist das eine STIRNlage (PJ2/PJ3, Unterschied ist die Oeffnungsrichtung), und innen/aussen trennt dort die Schneidenlage des Werkzeugs. Das Mapping gehoert in ein eigenes Paket.'
       : 'G71-Zyklussatz: nur die radiale Aussennut ist am Maschinensatz belegt (03.09.2026) — die Stirnnut wird als G-Einzelsaetze ausgegeben (das fruehere PJ2 stand in keinem echten Satz der 1500er; die 1000er schreibt es seit dem 11.09.2026).');
     zyk=false;
   }
@@ -32434,6 +32693,13 @@ function zielHuelleRechnen(){
     if(s2.type==='freistich'){
       // FREISTICH [Daniel, IMG_2620]: die Kerbe ist eine GEWOLLTE
       // Unterschreitung der Sollkontur — Einschnittpruefung dort maskieren.
+      if(q.form==='GW'){
+        // Vierte Form (G80): die Kerbe spannt von der Schulter Z0 bis zum
+        // Beginn Z1 - beide Masse stehen in der Maske, nichts zu schaetzen.
+        const za=Math.min(+q.z0, +q.z1g), zb=Math.max(+q.z0, +q.z1g);
+        masken.push({z1:za-0.4, z2:zb+0.6});
+        return;
+      }
       const nrm={1:{r:0.6,t:0.3},2:{r:1.0,t:0.4},3:{r:1.0,t:0.2},4:{r:1.6,t:0.3},5:{r:2.5,t:0.4},6:{r:4.0,t:0.5}}[q.pm]||{r:1.0,t:0.4};
       const breite = nrm.t/Math.tan(15*Math.PI/180) + nrm.r;
       masken.push({z1:+q.z0-(q.form==='F'? nrm.t:0)-0.4, z2:+q.z0+breite+0.6});
