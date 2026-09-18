@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="18.09.2026 12:20 (2d136431)";</script>
+<script>window.__DZ_STAND="18.09.2026 12:49 (ea5518a2)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -31147,6 +31147,21 @@ const NC_1000_OPFERZEILE='(ENDE UEBERTRAGUNG - OPFERZEILE)';
 // nichts ueber den Empfang. Bis der Roundtrip gefahren ist, bekommt
 // jeder Satz ueber dieser Laenge einen HINWEIS (kein Blocker).
 const NC_1500_UNBELEGT_AB=100;
+// DIE O-ZEILE ZUERST [1500er, 18.09.2026]: die Testdatei BALLEN begann mit
+// drei Kommentarzeilen. Die 7.210i nahm die ERSTE Zeile als Programmkopf,
+// zeigte "(--0000008" statt O9012 als Nummer, und das Programm liess sich
+// nicht anwaehlen (Foto im Terminordner). Die 1000er war nachsichtig
+// (O9167..O9172 liefen mit demselben Kopf). Alles vor der O-Zeile wandert
+// deshalb hinter sie — die Kommentare bleiben erhalten, nur der Platz
+// aendert sich. Gilt fuer den App-Weg UND fuer "Datei senden (roh)".
+function oZeileZuerst(zeilen, warnungen){
+  const iO=zeilen.findIndex(z=>/^O\d/.test(z));
+  if(iO<=0) return zeilen;
+  const davor=zeilen.slice(0,iO).filter(z=>z.trim());
+  if(!davor.length) return zeilen.slice(iO);
+  if(warnungen) warnungen.push(davor.length+' Zeile(n) standen VOR der O-Zeile und stehen jetzt dahinter — die 1500er liest sonst die erste Zeile als Programmkopf und zeigt "(--0000008" statt der Nummer (18.09.2026).');
+  return [zeilen[iO]].concat(davor, zeilen.slice(iO+1));
+}
 function ncFuerMaschine(code, profilId, opt){
   const id=profilId || (typeof MASCHINENPROFIL!=='undefined' && MASCHINENPROFIL ? MASCHINENPROFIL.id : '');
   const warnungen=[];
@@ -31157,6 +31172,7 @@ function ncFuerMaschine(code, profilId, opt){
   const mitOpfer=(opt && opt.opferzeile!==undefined) ? !!opt.opferzeile : praez;
   const maxKom=(opt && +opt.umbruch>0) ? +opt.umbruch : (praez ? NC_1000_MAX_KOMMENTAR : NC_1000_KOMMENTAR_APP);
   let zeilen=String(code||'').replace(/\r\n/g,'\n').split('\n').map(z=>ncAscii(z).replace(/\s+$/,''));
+  zeilen=oZeileZuerst(zeilen, warnungen);
   let klammern=0; const tHoch=[];
   if(id==='MONFORTS_1000_MTC_K_6624B'){
     // Alles HINTER dem letzten M30 weg: die Fusskommentare (Einrichter-
@@ -31210,9 +31226,10 @@ function ncFuerMaschine(code, profilId, opt){
 // bleiben, wie sie sind (kein Umbruch, keine Opferzeile, nichts hinter M30
 // weg); nur ASCII, CR LF und Leerzeilen weg (Regel 4 der 1000er).
 function dncRohDatei(text){
-  const zeilen=String(text||'').replace(/\r\n?/g,'\n').split('\n').map(z=>ncAscii(z).replace(/\s+$/,'')).filter(z=>z);
+  const warnungen=[];
+  const zeilen=oZeileZuerst(String(text||'').replace(/\r\n?/g,'\n').split('\n').map(z=>ncAscii(z).replace(/\s+$/,'')).filter(z=>z), warnungen);
   let laengste=0; zeilen.forEach(z=>{ if(z.length>laengste) laengste=z.length; });
-  return {text: zeilen.join('\r\n')+'\r\n', warnungen:[], zeilen:zeilen.length, laengste, opferzeile:false};
+  return {text: zeilen.join('\r\n')+'\r\n', warnungen, zeilen:zeilen.length, laengste, opferzeile:false};
 }
 
 async function exportGcode(ext){
