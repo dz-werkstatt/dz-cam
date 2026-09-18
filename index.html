@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="18.09.2026 12:49 (ea5518a2)";</script>
+<script>window.__DZ_STAND="18.09.2026 13:39 (613dc15b)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21193,6 +21193,13 @@ const MASCHINEN_PROFILE = {
     // SSWWVV-Form aus DV 610-0C Kap. 5.1 war Handbuch-Konvention und
     // lief hier als Annahme; die Maschine fuehrt sie nicht.
     tLang:false, tStatus:'confirmed_on_machine',
+    // T-GRENZE [Termin 18.09.2026, MINI O9903]: zwei Prueftasten, zwei
+    // Antworten. F3 mit dem Cursor auf der O-Zeile meldete '150 kein Fehler
+    // erkannt'; F4 mit dem Cursor auf N0010 (T33) meldete '152 unzulaessiges
+    // Zahlenformat' — dieselbe Nummer wie an der 1000er (10.09.2026). Die
+    // 7.210i wehrt hohe T-Nummern also ebenso ab. Real sind es 16
+    // Revolverplaetze; die App warnt ab T17.
+    tMax:16, plaetze:16, tMaxBeleg:'18.09.2026 am Geraet: T33 -> 152 unzulaessiges Zahlenformat (wie die 1000er); T17 noch ungeprueft; real 16 Plaetze',
     // IBN-BELEGT seit dem 31.08.2026 (Daniels Datendiskette, IBN.PAR
     // vom 22.01.2004): N4036=0 — die X-Achse ist die DURCHMESSERACHSE,
     // N4037/N4038=0 (WZ-Korrektur/-Verschleiss ebenso). Damit gilt der
@@ -21232,8 +21239,8 @@ const MASCHINEN_PROFILE = {
     // (uebertragung steht weiter oben im Profil — am Geraet bewiesen
     // 03.09.2026; hier nur der Fahrtest-Ertrag des Termins.)
     fahrtests:'gefahren 03.09.2026: Wiedereinstieg per Satzvorlauf (G96-Drehzahl exakt, CRC aktiv), Drehzahlvariation SSV fliegend, Spanbrechen G04 F2; Uebertragung in beide Richtungen',
-    fahrtestsOffen:'G71/G72/G74/G75-Zyklussaetze am Teil; Maskensaetze G74/G75/G76/G77/G73/G78/G79 aus der Zyklen-Maske ziehen (Probenzettel 1500er); T61_1500_KOMPAKT (O9161); MINI_T33 (T-Grenze)',
-    termine:'03.09.2026 — Uebertragung 9600/7/N/1 bewiesen, 42 Bestandsprogramme gesichert, G72 innen und mit Winkeln sowie G71 aus der Zyklen-Maske gezogen, Futter gemessen (Bauhoehe 95, Backen 32)',
+    fahrtestsOffen:'G71/G72/G74/G75-Zyklussaetze am Teil; Maskensaetze G74/G75/G76/G77/G73/G78/G79 aus der Zyklen-Maske ziehen (Probenzettel 1500er); T61_1500_KOMPAKT (O9161)',
+    termine:'03.09.2026 — Uebertragung 9600/7/N/1 bewiesen, 42 Bestandsprogramme gesichert, G72 innen und mit Winkeln sowie G71 aus der Zyklen-Maske gezogen, Futter gemessen (Bauhoehe 95, Backen 32) · 18.09.2026 — App-Weg hin belegt (MINI O9903, BALLEN 645 Zeilen), O-Zeile muss zuerst stehen, T33 gibt 152 unzulaessiges Zahlenformat wie an der 1000er',
     statusZeilen:[
       '(PROFIL: Monforts 1500 - EuroTurn | Zyklussyntax aus DV 610-0C belegt,)',
       '(  Maschinenkonfiguration aus Daniels IBN-Sicherung - Stand 22.01.2004.)',
@@ -30217,6 +30224,9 @@ const DNC_1000_GEBREMST_AB=45, DNC_1000_ZEICHENPAUSE_MS=3, DNC_1000_ZEILENPAUSE_
 // opferzeileGewuenscht bleibt als Name fuer den Bestand. Gilt nur am 1000er-Weg.
 function dncPrecisionGewuenscht(){ try{ return localStorage.getItem('et_dncprecision')==='an'; }catch(e){ return false; } }
 function opferzeileGewuenscht(){ return dncPrecisionGewuenscht(); }
+// BEMERKUNGEN [Daniel 18.09.2026]: Vorgabe AUS — die Maschine schreibt ihre
+// eigenen Programme auch ohne alleinstehende Kommentarzeilen.
+function bemerkungenGewuenscht(){ try{ return localStorage.getItem('et_bemerkungen')==='an'; }catch(e){ return false; } }
 function dncPauseMs(id, vorgabe){ const e=(typeof document!=='undefined')? document.getElementById(id) : null; const v=e? parseFloat(e.value) : NaN; return (isFinite(v) && v>=0) ? v : vorgabe; }
 let dncPort=null, dncXoff=false, dncLeser=null, dncRx=[], dncRxCb=null, dncSendeLauf=false;
 function dncLog(t, warn){
@@ -30465,6 +30475,7 @@ function dncSeriellMalen(){
     +'<label style="font-size:12px;">Stop <select id="dncStop"><option>1</option><option>2</option></select></label>'
     +'<label style="font-size:12px;"><input type="checkbox" id="dncWartXon" checked> auf Anforderung der Maschine warten (Xon)</label>'
     +'<label style="font-size:12px;" title="1000er: Datei fuer DNC Precision aufbereiten - Kommentare bei 45 Zeichen umgebrochen (dort reissen laengere Zeilen, 07.09.2026) und Opferzeile hinter dem M30 (das Programm verliert die letzte Zeile). AUS = App-Weg: Umbruch bei 62 (Editorbreite), keine Opferzeile, lange Saetze zeichenweise gebremst (10.09.2026 bewiesen). Gilt fuer NC sichern und Programm senden."><input type="checkbox" id="dncPrecision"> Datei fuer DNC Precision (Umbruch 45, Opferzeile)</label>'
+    +'<label style="font-size:12px;" title="Bemerkungszeilen - die alleinstehenden Kommentare - mitsenden. Vorgabe aus: die Maschine schreibt ihre eigenen Programme auch ohne sie, und Speicher ist knapp (18.09.2026). Die Tags in den Saetzen bleiben immer."><input type="checkbox" id="dncBemerkungen"> Bemerkungen mitsenden</label>'
     +'<label style="font-size:12px;" title="1000er: Pause je Zeichen bei Saetzen ueber 45 Zeichen (Bremse)">Zeichenpause <input type="number" id="dncZeichenPause" value="3" min="0" step="1" style="width:52px;"> ms</label>'
     +'<label style="font-size:12px;" title="1000er: Pause nach jeder Zeile">Zeilenpause <input type="number" id="dncZeilenPause" value="150" min="0" step="10" style="width:60px;"> ms</label>'
     +'</div>'
@@ -30484,6 +30495,9 @@ function dncSeriellMalen(){
   document.getElementById('dncVerb').onclick=dncVerbindenTrennen;
   document.getElementById('dncSend').onclick=dncSenden;
   document.getElementById('dncEmpf').onclick=dncEmpfangen;
+  { const ob=document.getElementById('dncBemerkungen');
+    if(ob){ ob.checked=bemerkungenGewuenscht();
+      ob.onchange=()=>{ try{ localStorage.setItem('et_bemerkungen', ob.checked?'an':'aus'); }catch(e){} dncLog('Bemerkungen '+(ob.checked?'werden mitgesendet':'bleiben weg')+'.'); }; } }
   { const op=document.getElementById('dncPrecision'); op.checked=dncPrecisionGewuenscht();
     op.onchange=()=>{ try{ localStorage.setItem('et_dncprecision', op.checked?'an':'aus'); }catch(e){} dncLog('Datei fuer DNC Precision '+(op.checked?'AN (Umbruch 45, Opferzeile hinter M30)':'aus (App-Weg: Umbruch 62, keine Opferzeile)')+' - gilt fuer Sichern und Senden an die 1000er.'); }; }
   document.getElementById('dncDateiBtn').onclick=()=>{ const i=document.getElementById('dncDatei'); i.value=''; i.click(); };
@@ -31147,6 +31161,10 @@ const NC_1000_OPFERZEILE='(ENDE UEBERTRAGUNG - OPFERZEILE)';
 // nichts ueber den Empfang. Bis der Roundtrip gefahren ist, bekommt
 // jeder Satz ueber dieser Laenge einen HINWEIS (kein Blocker).
 const NC_1500_UNBELEGT_AB=100;
+// T-GRENZE DER 1500er [18.09.2026 am Geraet, MINI O9903: T33 gibt "152
+//  unzulaessiges Zahlenformat"]. Real sind es 16 Revolverplaetze; Daniels
+//  Regel fuer Beispielprogramme lautet ohnehin 1 bis 16.
+const NC_1500_T_MAX=16;
 // DIE O-ZEILE ZUERST [1500er, 18.09.2026]: die Testdatei BALLEN begann mit
 // drei Kommentarzeilen. Die 7.210i nahm die ERSTE Zeile als Programmkopf,
 // zeigte "(--0000008" statt O9012 als Nummer, und das Programm liess sich
@@ -31154,6 +31172,26 @@ const NC_1500_UNBELEGT_AB=100;
 // (O9167..O9172 liefen mit demselben Kopf). Alles vor der O-Zeile wandert
 // deshalb hinter sie — die Kommentare bleiben erhalten, nur der Platz
 // aendert sich. Gilt fuer den App-Weg UND fuer "Datei senden (roh)".
+// SIM-ZEILEN RAUS [Daniel 18.09.2026: "ich habe kaum Speicher drin"]: die
+// (SIM: ...)-Kommentare sind die Bahn fuer UNSERE Simulation; die Maschine
+// liest sie nie. In T8 waren es 537 von 617 Zeilen. Alles andere bleibt.
+function simZeilenWeg(zeilen, warnungen){
+  const raus=zeilen.filter(z=>!/^\(SIM[: ]/.test(z));
+  const weg=zeilen.length-raus.length;
+  if(weg && warnungen) warnungen.push(weg+" Simulationszeilen (SIM: ...) sind beim Senden weggefallen — sie sind nur fuer die Bahnanzeige in der App und kosten an der Maschine Speicher.");
+  return raus;
+}
+// Alleinstehende Kommentarzeilen raus. Was IN einem Satz steht (das
+// 8-Zeichen-Tag hinter der N-Nummer, der Kommentar hinter der O-Nummer)
+// bleibt — genau so sehen Daniels eigene Maschinenprogramme aus.
+function bemerkungenWeg(zeilen, warnungen){
+  // Leerzeilen gehen mit: sie standen nur zur Gliederung zwischen den
+  // Bemerkungen und lassen sonst Luecken stehen.
+  const raus=zeilen.filter(z=>z.trim() && !/^\(/.test(z));
+  const weg=zeilen.length-raus.length;
+  if(weg && warnungen) warnungen.push(weg+' Bemerkungszeile(n) sind beim Senden weggefallen (Schalter "Bemerkungen mitsenden" im DNC-Block holt sie zurueck). Die Tags in den Saetzen bleiben.');
+  return raus;
+}
 function oZeileZuerst(zeilen, warnungen){
   const iO=zeilen.findIndex(z=>/^O\d/.test(z));
   if(iO<=0) return zeilen;
@@ -31172,7 +31210,9 @@ function ncFuerMaschine(code, profilId, opt){
   const mitOpfer=(opt && opt.opferzeile!==undefined) ? !!opt.opferzeile : praez;
   const maxKom=(opt && +opt.umbruch>0) ? +opt.umbruch : (praez ? NC_1000_MAX_KOMMENTAR : NC_1000_KOMMENTAR_APP);
   let zeilen=String(code||'').replace(/\r\n/g,'\n').split('\n').map(z=>ncAscii(z).replace(/\s+$/,''));
-  zeilen=oZeileZuerst(zeilen, warnungen);
+  const mitBem=(opt && opt.kommentare!==undefined) ? (opt.kommentare!=='sparsam') : bemerkungenGewuenscht();
+  zeilen=simZeilenWeg(oZeileZuerst(zeilen, warnungen), warnungen);
+  if(!mitBem) zeilen=bemerkungenWeg(zeilen, warnungen);
   let klammern=0; const tHoch=[];
   if(id==='MONFORTS_1000_MTC_K_6624B'){
     // Alles HINTER dem letzten M30 weg: die Fusskommentare (Einrichter-
@@ -31215,10 +31255,14 @@ function ncFuerMaschine(code, profilId, opt){
     zeilen=aus;
   } else {
     while(zeilen.length && !zeilen[zeilen.length-1]) zeilen.pop();
+    const tHoch15=[];
     zeilen.forEach(t=>{
+      const mT=t.replace(/\([^)]*\)/g,"").match(/\bT(\d+)\b/);
+      if(mT && +mT[1]>NC_1500_T_MAX && !tHoch15.includes(mT[1])) tHoch15.push(mT[1]);
       if(/^[NO]/.test(t) && t.length>NC_1500_UNBELEGT_AB)
         warnungen.push('Satz mit '+t.length+' Zeichen: Empfang an der 1500er bei dieser Laenge nicht belegt (bis ~40 gefahren, T8 mit 137 nie geprueft) — nach dem Einspielen im Editor nachsehen: '+t.slice(0,32)+'...');
     });
+    if(tHoch15.length) warnungen.push("T"+tHoch15.join(", T")+": die 1500er nimmt nur T1-T"+NC_1500_T_MAX+" (18.09.2026 am Geraet: T33 gibt 152 unzulaessiges Zahlenformat) - das Werkzeug auf einen Revolverplatz 1-16 legen, dann ruft die NC den Platz.");
   }
   return {text: zeilen.join('\r\n')+'\r\n', warnungen, zeilen:zeilen.length, opferzeile:(id==='MONFORTS_1000_MTC_K_6624B' && mitOpfer), umbruch:maxKom, precision:praez, klammern};
 }
@@ -31227,7 +31271,7 @@ function ncFuerMaschine(code, profilId, opt){
 // weg); nur ASCII, CR LF und Leerzeilen weg (Regel 4 der 1000er).
 function dncRohDatei(text){
   const warnungen=[];
-  const zeilen=oZeileZuerst(String(text||'').replace(/\r\n?/g,'\n').split('\n').map(z=>ncAscii(z).replace(/\s+$/,'')).filter(z=>z), warnungen);
+  const zeilen=simZeilenWeg(oZeileZuerst(String(text||'').replace(/\r\n?/g,'\n').split('\n').map(z=>ncAscii(z).replace(/\s+$/,'')).filter(z=>z), warnungen), warnungen);
   let laengste=0; zeilen.forEach(z=>{ if(z.length>laengste) laengste=z.length; });
   return {text: zeilen.join('\r\n')+'\r\n', warnungen, zeilen:zeilen.length, laengste, opferzeile:false};
 }
