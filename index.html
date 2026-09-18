@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="18.09.2026 11:31 (37a64f09)";</script>
+<script>window.__DZ_STAND="18.09.2026 11:45 (6939e1de)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21448,8 +21448,8 @@ function ppMerkmale(){
     // sie nativ mit stehender Warnung; Status "hergeleitet" (Gruppe offen),
     // der Maskensatz vom Probenzettel entscheidet.
     M.push({t:'Abspanzyklus G72 (Ecke)', s:'machine_syntax_1000',
-      w:'Realform aus der Zyklen-Maske, gezogen 16.09.2026: PG=D, PI=U, PK=(X1-X0)/2 und PL=Z1-Z0 inkremental, PM/PN Schenkel-Schnittpunkt, PO=FS — und diese Fase sitzt am SCHENKEL-SCHNITTPUNKT (unser Eckuebergang K2, belegt 18.09.2026 an der Grafiksimulation; Stirn- und Auslaufkante hat die Maske nicht), PQ = RICHTUNG (2 laengs, 1 plan). Keine Winkelwoerter, kein PA/PB/PC/PD/PE (Teach-In). Aussen, innen, Winkel, plan und die Eckfase nativ',
-      offen:'Lauf am Teil; Fase/Radius-Flag des Feldes FS (Softkey toggelt, PR1 steht in jedem Satz) — Rundungen bleiben deshalb auf Einzelsaetzen; MINI_G72 ohne PA/PB'});
+      w:'Realform aus der Zyklen-Maske, gezogen 16.09.2026: PG=D, PI=U, PK=(X1-X0)/2 und PL=Z1-Z0 inkremental, PM/PN Schenkel-Schnittpunkt, PO = das Kantenmass FS am SCHENKEL-SCHNITTPUNKT (unser K2; Stirn und Auslauf hat die Maske nicht), PQ = Richtung (2 laengs, 1 plan), PR1 = die Kante ist eine FASE, ohne PR eine RUNDUNG (O415). Keine Winkelwoerter, kein PA/PB/PC/PD/PE (Teach-In). Aussen, innen, Winkel, plan und beide Kantenformen nativ',
+      offen:'Lauf am Teil; MINI_G72 ohne PA/PB. Am Satz ist seit O415 (18.09.2026) kein Wort mehr offen: PR1 = Fase, ohne PR = Rundung'});
     M.push({t:'Freistich G73 / Form E G79', s:'machine_syntax_1000',
       w:'Realform am SATZ belegt (O411/O412, 18.09.2026, Wort fuer Wort): G73 mit PG=D, PH=V/2 absolut, PI=U, PK=Einstiegswinkel, PM=Normzeile, PN1 innen, P227:90; G79 mit X = Freistichgrund, I = Welle, G91 K0, PH = V/2, PK = Tiefe mit Vorzeichen, PJ1 innen; PF = Schneidenradius des Werkzeugs aus UNSERER Werkzeugtabelle (P105 lief mit T12, RS 1,2 -> PF1.2)',
       offen:'Lauf am Teil; Lage Schulter rechts auf Einzelsaetzen'});
@@ -22348,15 +22348,19 @@ function genAbspanenEinfach(p, N, bump, lines, warnings){
     // kein Rueckfall.
     warnings.push('G72 innen mit Fase am Eckuebergang: das Maskenfeld FS ist dasselbe wie aussen (die Steuerung erkennt innen/aussen an X0 gegen X1), belegt ist die Fase aber nur am AUSSEN-Satz. Ersten Lauf im Einzelsatz.');
   }
-  if(zyklusModusAe && eckUebergangAe>0 && mtckAe && p.k2Typ!=='fase'){
-    // Die Maske toggelt das Feld FS ueber den Softkey "Fase Radius"
-    // zwischen beiden Formen [Maskenbilder 16.09.2026]. WELCHES Wort den
-    // Zustand traegt, ist offen: PR1 stand in jedem belegten Satz, auch
-    // bei FS 0. Eine Rundung als Fase zu fertigen waere ein stiller
-    // Konturfehler (bis 0,29*r), deshalb Einzelsaetze.
-    warnings.push('G72: der Eckuebergang ist eine RUNDUNG. Die Maske hat dafuer denselben Platz (der Softkey "Fase Radius" toggelt das Feld FS), aber welches Wort den Zustand traegt, ist unbelegt — PR1 steht in jedem Satz, auch ohne Kante. Bis zur Probe Ausgabe als G-Einzelsaetze.');
-    zyklusModusAe=false;
-  }
+  // FASE ODER RUNDUNG STEHT IN PR [O415 vom 18.09.2026, 12:16 Uhr]:
+  // ZUORDNUNG: Daniel sagt ausdruecklich "erster Zyklus mit Phase, zweiter
+  // mit Radius im Programm" — N0030 traegt PR1, N0040 nicht. Die beiden
+  // Maskenfotos (21 = Feld R, 22 = Feld FS) kamen in umgekehrter Reihenfolge,
+  // das Hilfebild ist in beiden Modi dasselbe. Zweiter, unabhaengiger Beleg
+  // fuer PR1 = FASE: die vier Maskensaetze vom 16.09.2026 standen alle auf
+  // dem Feld FS (Fase) und trugen alle PR1.
+  // Daniel hat denselben Zyklus zweimal getippt und nur den Softkey
+  // "Fase Radius" umgelegt. Der Fasensatz traegt PR1, der Radiussatz
+  // KEIN PR — sonst sind beide Wort fuer Wort gleich. Damit ist das
+  // letzte offene Wort des G72 geklaert, und beide Kantenformen laufen
+  // als Zyklussatz. (Die vier Saetze vom 16.09. trugen PR1 auch bei
+  // FS 0 — das Feld stand dort schlicht auf "Fase".)
   // Innen leben die Kantenmasse in kant1Inn/kant3Inn (kant1/kant3
   // sind dort per Definition 0) — eine gemeinsame Sicht fuer den
   // Zyklussatz, sonst verloere der Innen-Satz seine Mundfase stumm.
@@ -22478,7 +22482,11 @@ function genAbspanenEinfach(p, N, bump, lines, warnings){
         //   (Grafiksimulation)]. Nur als FASE — der Rundungs-Zustand des
         //   Feldes haengt an einem unbelegten Wort, s. Sperre oben.
         (eckUebergangAe>0?'PO'+fmt(eckUebergangAe):null),
-        (p.richtung==='plan'?'PQ1':'PQ2'), 'PR1',
+        (p.richtung==='plan'?'PQ1':'PQ2'),
+        // PR1 = das Feld FS ist eine FASE; bei einer Rundung faellt das
+        // Wort weg [O415, 18.09.2026]. Ohne Kante bleibt PR1 stehen: so
+        // steht es in allen vier Saetzen vom 16.09. mit FS 0.
+        ((eckUebergangAe>0 && p.k2Typ!=='fase')? null : 'PR1'),
         (doRough?'P240:1':null),(doFinish?'P241:1':null)
       ].filter(Boolean).join('');
       worteAe=['G72','G90','X'+fmt(p.x0),'Z'+fmt(p.z0),'I'+fmt(p.x1),'K'+fmt(p.z1), pblockAe];
