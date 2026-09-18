@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="18.09.2026 20:13 (1fa4a562)";</script>
+<script>window.__DZ_STAND="18.09.2026 20:39 (fbf7b5df)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4786,13 +4786,16 @@ schreibt sie auch dort; beides ist gezogen.
 <b>Flankenwinkeln</b> (PK/PL) und die <b>Form F</b> (G78 &mdash; ihr Satz tr&auml;gt ein
 ungedeutetes <code>PL47</code>). Stirnnut, N&nbsp;gr&ouml;&szlig;er 1 und die Freistich-Sonderlagen
 fallen mit Ansage auf Einzels&auml;tze zur&uuml;ck: f&uuml;r sie fehlt der Maskensatz.
-<br><b>Satz gezogen, Einbau offen:</b> <code>G74</code> Bohren, <code>G75</code> L&auml;ngs- und
-<code>G76</code> Kegelgewinde stehen seit dem 18.09.2026 als Maschinensatz in O6789 &mdash; die App
-schreibt dort aber noch die Handbuchform. Beim G75/G76 tr&auml;gt <code>PO</code> die Lage
-(au&szlig;en negativ, innen positiv), und die Steuerung rechnet die Flankenverschiebung
-<code>PP</code> selbst aus. <b>Nur am Handbuch</b> h&auml;ngt noch <code>G77</code> Plangewinde.
-Vorsicht bleibt: beim G71/G72/G73/G79 schrieb die Maske anders als das Handbuch &mdash; vor dem
-ersten Lauf den Satz aus der Zyklen-Maske ziehen und mit der App-Ausgabe vergleichen.
+<br>Am selben Abend kamen <code>G74</code> Bohren, <code>G75</code> L&auml;ngs- und
+<code>G76</code> Kegelgewinde dazu: auch sie stehen jetzt in der Form aus O6789. F&uuml;nf
+S&auml;tze baut die App <b>zeichengenau</b> nach &mdash; die beiden R&uuml;ckzugsarten des
+Bohrzyklus (sie unterscheidet ein einziges Wort), Gewinde au&szlig;en und innen (die
+Lage steckt im Vorzeichen von <code>PO</code>, wie an der 1000er am Teil bewiesen) und
+das Kegelgewinde. Beim Bohren ist damit auch ein alter Fehler weg: die Handbuchform
+schaltete mit <code>G91</code> auf inkremental und nie zur&uuml;ck.
+<br><b>Nur am Handbuch</b> h&auml;ngt jetzt noch <code>G77</code> Plangewinde. Mehrg&auml;ngige
+Gewinde fallen an beiden Maschinen auf Einzels&auml;tze zur&uuml;ck: alle gezogenen
+S&auml;tze hatten einen Gang.
 <br><b>Aus der Steuerungssoftware gelesen (11.09.2026):</b> das Programm MTC0.EXE der
 Diskettenkopie belegt das P-Wort-Alphabet mit Formaten, die drei T-Formen und die
 Parameterliste des Einstichs (Sicherheitsabstand, Schneidenradius, U, &alpha;1/&alpha;2, B, T,
@@ -21457,12 +21460,12 @@ function ppMerkmale(){
     w:pr.ikDurchmesser? 'I/K absolut; X-Mittelpunkt I im DURCHMESSERMASS ('+(pr.ikBeleg||'IBN')+')'
       : 'R-Wort bevorzugt; im I/K-Rueckfall gilt das RADIUSMASS'});
   if(e){
-    M.push({t:'Bohrzyklus G74', s:'documented_for_control',
-      w:'freigegeben (IBN N9170) — Satz nach DV 610 S. 3-47, Vorlauf W statt SC',
-      offen:'Satzform am 18.09.2026 aus O6789 gezogen (PK1 = Rueckzugsart, PL = W, PM = D, PN = DF, PO = Z1, PP = U, PQ = V) — der Einbau steht noch aus, die App schreibt weiter die Handbuchform. Nie gefahren'});
-    M.push({t:'Gewindezyklus G75', s:'documented_for_control',
-      w:'freigegeben (IBN N9220/9230) — Satz nach DV 610 S. 3-54: PO aussen negativ, PT aus dem Programmkopf-SC, G97 zwingend; Maske lt. DV 594 Kap. 4.6.1 mit E = Eintauchtiefe (Leerschnitte beim Nachschneiden), L Gangzahl, A Gangwechseltiefe',
-      offen:'Satzform am 18.09.2026 aus O6789 gezogen (PO traegt die Lage: aussen negativ, innen positiv; PM = W, PN = R, PQ = D, PR = E, PT = V, PX = alpha, Steigung als F-Wort davor) — der Einbau steht noch aus'});
+    M.push({t:'Bohrzyklus G74', s:'machine_syntax',
+      w:'freigegeben (IBN N9170) — Realform an O6789 N0060/N0070 belegt (18.09.2026): PC95 und PD = der VORSCHUB (die 1000er traegt keinen F im Satz), PK1 NUR bei Rueckzug um Betrag V, PL = W Vorlauf, PM = D, PN = DF, PO = Tiefe, PP = U, PQ = V, PR/PT = Zeitbasis 95, PW90 PY1 PZ1 fest. Kein G90/G91 im Satz — die alte Handbuchform schaltete auf inkremental und nie zurueck',
+      offen:'nie gefahren (Probenzettel 1500er); D = volle Tiefe beim Zentrieren bleibt Annahme — beide Belegsaetze waren Tieflochbohren'});
+    M.push({t:'Gewindezyklus G75', s:'machine_syntax',
+      w:'freigegeben (IBN N9220/9230) — Realform an O6789 N0090/N0110/N0130 belegt (18.09.2026): Steigung im F-WORT vor dem G-Wort und als PU, PO traegt die LAGE im Vorzeichen (aussen negativ, innen positiv — jetzt an beiden Maschinen belegt), PP = Flankenversatz mit demselben Vorzeichen, PG = U, PM = W, PN = R, PQ = D, PR = E, PT = V aus der MASKE (nicht Kopf-SC), PW1 nur degressiv, PX = alpha; Kegel G76 mit I = End-DM und PK radial',
+      offen:'nie gefahren; mehrgaengig faellt auf G33 zurueck (alle drei Belegsaetze hatten EINEN Gang); P232/P235/P237 ungedeutet (immer 1); ob P236 bei alpha 0 entfaellt, ist nicht gezogen'});
     M.push({t:'Bohrzyklen G81 ff', s:'disabled',
       w:'gesperrt — im Handbuch dokumentiert, aber Option A019G lt. IBN nicht freigeschaltet (N9177=0); Ausgabe als G74'});
     M.push({t:'Einstechzyklus G71', s:'machine_syntax',
@@ -27244,25 +27247,38 @@ function genBohren(p, N, bump, lines, warnings){
       ].filter(Boolean).join('');
       worte = ['G74','G90','X0','Z'+fmt(p.z0),'G91','I0','K0', pblock];
     } else {
-      // EuroTurn: Kurzadressen; Zykluswerte inkremental nach G91;
-      // Zeitbasis PT95 = Umdrehungen (wir stehen unter G95), PU0.4 ist
-      // fuer normales Bohren fest dokumentiert.
-      worte = ['G74','G90','X0','Z'+fmt(p.z0),'G91',
-        'PK'+(brechen?1:0),
+      // ===== 1500er: der gezogene Maskensatz [O6789 N0060/N0070, 18.09.2026] =
+      //   bis Startposition  G74 X0 Z0 PC95PD0.25   PL3PM30PN0.8PO55PP2.5PQ2...
+      //   um Betrag V        G74 X0 Z0 PC95PD0.25PK1PL3PM30PN0.8PO55PP2.5PQ2...
+      // Maske: W 3 | D 30 | DF 0,80 | Z1 55 | U 2,5 | V 2 | F 0,25.
+      // Dieselbe Familie wie die 1000er, mit zwei Woertern mehr: PC95 (eine
+      // zweite Zeitbasis) und PD = der VORSCHUB. Die 1000er traegt kein F im
+      // Satz und faehrt den modalen; die 1500er schreibt ihn mit.
+      // Widerlegt ist damit unsere Handbuchform: PK0 gibt es nicht (das Wort
+      // steht nur bei 'um Betrag V'), PU0.4 stand in keinem Satz, und das G91
+      // schrieb die Maske nie — unser Satz schaltete damit auf inkremental
+      // und nie zurueck.
+      const pblock15=[
+        'PC95',
+        'PD'+fmt(p.f||0),
+        (brechen?'PK1':null),
         'PL'+fmt(boVorlauf(p)),
         'PM'+fmt(dWert),
         (tiefBohr&&p.df?'PN'+fmt(p.df):null),
         'PO'+fmt(depth),
         (tiefBohr&&p.u?'PP'+fmt(p.u):null),
-        (brechen&&p.v2?'PQ'+fmt(p.v2):null),
-        'PT95','PU0.4'
-      ].filter(Boolean);
+        // PQ = V. Im gezogenen Paar steht es in BEIDEN Saetzen (V 2), auch
+        // in dem ohne PK — der Rueckzugsbetrag haengt nicht am Softkey.
+        'PQ'+fmt((+p.v2>0)?p.v2:1),
+        'PR95','PT95','PW90','PY1','PZ1'
+      ].filter(Boolean).join('');
+      worte = ['G74','X0','Z'+fmt(p.z0), pblock15];
     }
     lines.push('(=== NATIVER G74-BOHRZYKLUS - Ablauf macht die Steuerung ===)');
     if(MASCHINENPROFIL.id==='MONFORTS_1000_MTC_K_6624B')
       lines.push('(1000er-REALFORM 11.09.2026: PK1 nur Spaenebrechen, PR/PT 95, PW90 PY1 PZ1 fest)');
     else
-      lines.push('(ANNAHME zu pruefen: D=Tiefe bei Zentrieren/Bohren mit trockenem Testsatz bestaetigen)');
+      lines.push('(1500er-REALFORM aus O6789 N0060/N0070, 18.09.2026: PC95 und PD = Vorschub, PK1 nur bei Rueckzug um V; D=Tiefe beim Zentrieren bleibt Annahme)');
     lines.push(`${N()} (BOHREN  ) ${worte.join(' ')}`); bump();
     if(MASCHINENPROFIL.id==='MONFORTS_1000_MTC_K_6624B'){
       // Das G91 des Zyklussatzes bleibt MODAL — Daniels eigene 1000er-
@@ -27652,6 +27668,14 @@ function genGewinde(p, N, bump, lines, warnings){
     warnings.push('Mehrgaengiges Gewinde als G75-Zyklus an der 1000er: der Gangwinkel Q im Satz ist unbelegt — Ausgabe als G33-Einzelsaetze mit Q-Versatz.');
     zyklusModus=false;
   }
+  // AUCH AN DER 1500er [18.09.2026]: die drei gezogenen Saetze hatten alle
+  // L 1. Unser frueheres PY<n> stand nur im Handbuch — dieselbe Quelle, die
+  // sich bei sieben anderen Woertern dieses Zyklus geirrt hat. Bis ein
+  // Maskensatz mit L groesser 1 vorliegt: G33-Einzelsaetze mit Q-Versatz.
+  if(zyklusModus && MASCHINENPROFIL.id!=='MONFORTS_1000_MTC_K_6624B' && (p.n||1)>1){
+    warnings.push('Mehrgaengiges Gewinde als G75-Zyklus an der 1500er: alle drei gezogenen Maskensaetze (O6789) hatten EINEN Gang; das frueher geschriebene PY stand nur im Handbuch, das sich bei diesem Zyklus in sieben Woertern geirrt hat — Ausgabe als G33-Einzelsaetze mit Q-Versatz.');
+    zyklusModus=false;
+  }
   // =========================================================
   // DIE ZWEI PLAUSIBILITAETSPRUEFUNGEN DER STEUERUNG
   // [Maschinentermin 16.09.2026 an der 1000er, beide am Bildschirm
@@ -27778,39 +27802,60 @@ function genGewinde(p, N, bump, lines, warnings){
       // X1 als End-DURCHMESSER - deshalb halbiert.
       if(kegel) warnings.push('Kegelgewinde G76 der 1000er: Satzform belegt am Maskensatz O112244 N0140/N0170 (16.09.2026), I und PK tragen die Gewindeschraege als RADIUSmass. An der Maschine noch nicht GEFAHREN — ersten Lauf im Einzelsatz.');
     } else {
-      // EuroTurn: Kurzadressen, Steigung im F-Wort, K=Z1 absolut,
-      // KEIN Achs-I im zylindrischen Satz. BELEGT am 31.08.2026:
-      // PO aussen negativ (Beispielsatz S. 3-55: PO-3.681 bei X64
-      // aussen), PP = I axiale Flankenbreite (Hilfebild S. 3-55),
-      // P240:-Doppelpunktform (Syntaxzeile S. 3-54), Kegel-G76 mit
-      // I = X1 Gewindeschraege (Tabelle S. 3-56).
-      // PT (V Sicherheitsabstand Ruecklauf) kommt aus dem
-      // Programmkopf-SC [Daniels Entscheid 31.08.]: ohne PT wirkte der
-      // fehlende Parameter als 0 (Teach-In-Regel S. 3-48) und der
-      // Ruecklauf hoebe ohne Abstand von der Flanke ab. Beispielsatz
-      // S. 3-55: PT2 — bei SC=2 entsteht genau das.
-      worte = [
-        kegel?'G76':'G75','G90',
+      // ===== 1500er: die drei gezogenen Maskensaetze [O6789, 18.09.2026] ===
+      //  aussen F1.5 G75 X30 Z0 K-20 PG0.03PL-20PM7PN3PO-0.61PP-0.352184
+      //         PQ0.2PR0.3PT2.5PU1.5PW1PX30PZ0.2P232:1P235:1P236:30P237:1P240:1P250:1.5
+      //  innen  F1.5 G75 X50 Z0 K-20 ... PO0.61PP0.352184 ... (sonst gleich)
+      //  Kegel  F1.5 G76 X20 Z0 I25 K-19 PG0.03PK2.5PL-19PM10PN3PO-0.86
+      //         PP-0.496521PQ0.3PR0.1PT5PU1.5PW1PX30PZ0.3P232:1...P250:1.5
+      // Dieselben Buchstaben wie an der 1000er; die Handbuchform war in
+      // sieben Woertern falsch. Die Steigung steht im F-WORT VOR dem
+      // G-Wort, PT kommt aus dem Maskenfeld V (nicht aus dem Kopf-SC), PW1
+      // steht nur bei degressiver Zustellung, und beim Kegel traegt I den
+      // END-DURCHMESSER, PK die Schraege radial — wie im G72.
+      // PO traegt die LAGE im Vorzeichen (aussen negativ, innen positiv):
+      // die am Teil bewiesene Regel der 1000er gilt hier genauso.
+      // PP rechnet die Steuerung selbst (tan(alpha) mal Tiefe) und gibt ihm
+      // das Vorzeichen von PO. PZ ist eine Kopie von D, P236 eine von PX,
+      // P250 eine der Steigung — diese Steuerung verdoppelt Werte gern
+      // (so wie PW und P230 im Einstich beide die Meisselbreite tragen).
+      // P232:1, P235:1 und P237:1 sind UNGEDEUTET; in allen drei gezogenen
+      // Saetzen stehen sie auf 1, deshalb schreiben wir sie fest mit.
+      // NICHT unterscheidbar am Beleg: in allen drei Saetzen war Z0 = 0,
+      // damit sind 'K absolut' und 'K inkremental' derselbe Wert. Wir
+      // schreiben K und PL ABSOLUT — so haelt es die 1500er im G72 und im
+      // G71 auch, und ohne G91 im Satz waere inkremental ohnehin sinnlos.
+      const fmt6b = v => String(Math.round(v*1e6)/1e6);
+      const po15 = (innen ? 1 : -1) * Math.abs(+p.h1);
+      const pp15 = (po15<0 ? -1 : 1) * flankeI;
+      const pblock15=[
+        'PG'+fmt(p.u||0),
+        (kegel?'PK'+fmt(((+p.x1)-(+p.x0))/2):null),
+        'PL'+fmt(p.z1),
+        'PM'+fmt(p.lw||0),'PN'+fmt(p.lr||0),
+        'PO'+fmt(po15),
+        'PP'+fmt6b(pp15),
+        'PQ'+fmt(p.dz1||0.3),
+        'PR'+fmt(gwE),
+        'PT'+fmt(vr),
+        'PU'+fmt(p.p),
+        (degr?'PW1':null),
+        'PX'+fmt6b(alphaZ),
+        'PZ'+fmt(p.dz1||0.3),
+        'P232:1','P235:1','P236:'+fmt6b(alphaZ),'P237:1',
+        (p.bearbeitung==='beide'?'P240:1':null),
+        'P250:'+fmt(p.p)
+      ].filter(Boolean).join('');
+      worte = ['F'+fmt(p.p), kegel?'G76':'G75',
         'X'+fmt(p.x0),'Z'+fmt(p.z0),
         (kegel?'I'+fmt(p.x1):null),
-        'K'+fmt(p.z1),
-        'F'+fmt(p.p),
-        'PG'+fmt(p.u||0),
-        'PM'+fmt(p.lw||0),'PN'+fmt(p.lr||0),
-        'PO'+fmt(po),
-        (flankeI>0?'PP'+fmt(flankeI):null),
-        'PQ'+fmt(p.dz1||0.3),
-        'PT'+fmt(pkSC()),
-        'PW'+degr,
-        ((p.n||1)>1?'PY'+p.n:null),
-        (p.bearbeitung==='beide'?'P240:1':null)
-      ].filter(Boolean);
+        'K'+fmt(p.z1), pblock15].filter(Boolean);
     }
     lines.push('(=== NATIVER '+(kegel?'G76-KEGELGEWINDEZYKLUS':'G75-LAENGSGEWINDEZYKLUS')+' - Schnittaufteilung macht die Steuerung ===)');
     lines.push(MASCHINENPROFIL.id==='MONFORTS_1000_MTC_K_6624B'
       ? (kegel ? '(1000er-REALFORM 16.09.2026 aus O112244 N0140: I und PK = Gewindeschraege als RADIUSmass, PW1 = degressiv)'
                : '(1000er-REALFORM 11.09.2026: F = Steigung, P-Buchstaben, PX = Flankenwinkel)')
-      : '(PO aussen negativ und Flanke I axial: DV 610-0C S. 3-55 belegt)');
+      : '(1500er-REALFORM aus O6789 N0090/N0110/N0130, 18.09.2026: Steigung im F-Wort, PO traegt die Lage, PT = V aus der Maske)');
     lines.push(`${N()} (GEWINDE ) ${worte.join(' ')}`); bump();
     lines.push('(--- SIM-EXPANSION: nur fuer die CAM-Simulation, Maschine ignoriert Kommentare ---)');
   }
@@ -34571,9 +34616,13 @@ function parseGcodeForSim(code){
     if(mSim) raw=mSim[1];
     let line = raw.replace(/^N\d+\s*\([^)]*\)\s*/,'').trim();
     if(!line || line[0]==='O' || line[0]==='(') return;
-    // Festzyklussätze (G74..G77, G81..G89) sind KEINE Verfahrsätze — die Bahn
-    // kommt aus den (SIM:)-Zeilen; der Zyklussatz selbst wird übersprungen.
-    if(/^G(7[4-9]|8[0-9])\b/.test(line)) return;
+    // Festzyklussaetze sind KEINE Verfahrsaetze — die Bahn kommt aus den
+    // (SIM:)-Zeilen; der Zyklussatz selbst wird uebersprungen. Das Wort darf
+    // ueberall in der Zeile stehen [18.09.2026]: die Gewindesaetze beider
+    // Maschinen beginnen mit der Steigung (F1.5 G75 ...), und die Pruefung
+    // auf den ZEILENANFANG liess sie durch — eine Phantom-Eilfahrt auf den
+    // Zyklus-Startpunkt war die Folge. G71/G72/G73 fehlten im Muster ganz.
+    if(/G(7[1-9]|8[0-9])(?![0-9])/.test(line)) return;
     const tMatch = line.match(/\bT(\w+)/);
     if(tMatch){
       // 6-stellige MTC-Struktur T SSWWVV (Kap. 5.1): Werkzeugnummer = Mittelteil.
