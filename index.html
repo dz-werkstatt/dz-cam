@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="17.09.2026 23:59 (21dfad03)";</script>
+<script>window.__DZ_STAND="18.09.2026 10:07 (a422ac38)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -6668,10 +6668,19 @@ function toWorld(sx,sy){
 // MASSE JE MASCHINE, von Daniel am 03.09.2026 GEMESSEN (der alte
 // Forkardt-Katalogwert "Bauhoehe 130" war fuer BEIDE falsch):
 // - 1500er: SPIRALFUTTER ⌀315, Aufbauhoehe 95. Backen 32 breit,
-//   radial 125 lang (Stufen bei 35/83/125, je 20 tief), axiale
-//   Gesamthoehe 73,16 ab Verzahnungsgrund (Messschieber-Foto).
+//   radial 125 lang, axiale Gesamthoehe 73,16 ab Verzahnungsgrund.
 // - 1000er: Forkardt F 315 KEILSTANGENFUTTER ⌀315, Bauhoehe ~117.
-//   Aufsatzbacken 107 radial, 35 breit, axial ca. 57 (Stufen ~40/95).
+//   Aufsatzbacken (Roehm 94015) 107 radial, 35 breit, axial ca. 57.
+// STUFENTREPPE AXIAL GEMESSEN [Daniel, 18.09.2026, Messschieber an der
+// demontierten Backe — "das sind die Werte in Z-Achsrichtung"]:
+//   1500er 73,11 gesamt, Stufenflaechen bei 55,17 und 36,03 ab dem
+//   Verzahnungsgrund -> von der Backenfront aus 17,94 und 19,14 lang.
+//   1000er zwei Stufen zu 14,99 und 14,93, also rund 15.
+// Vorher drittelte das Modell den Ueberstand blind (1500er 15/15/15,
+// 1000er 21,7 je Stufe) — die Annahme "je 20 tief" vom 03.09. war fuer
+// beide Maschinen zu gross. Die Stufenlaengen stehen von VORN, der Rest
+// bis zur Futterstirn ist der volle Backenklotz; kurze Ausspannlaengen
+// klemmen die Treppe entsprechend.
 // backeH ist die GEZEICHNETE Treppe ueber der Spannstufe (radiale
 // Backenlaenge minus unterster Stufe). backeL ist der axiale
 // UEBERSTAND der Backe vor der Futterstirn: 1000er 65 mm GEMESSEN
@@ -6681,9 +6690,11 @@ function toWorld(sx,sy){
 // bleibt ANNAHME (Backen waren am 03.09. demontiert), nachmessen.
 const FUTTER_JE_MASCHINE = {
   MONFORTS_1500_EUROTURN:   { rAussen:157.5, hoehe:95,  rBohrung:41,
-                              backeB:32, backeH:90, backeL:45 },
+                              backeB:32, backeH:90, backeL:45,
+                              stufenZ:[17.94, 19.14] },
   MONFORTS_1000_MTC_K_6624B:{ rAussen:157.5, hoehe:117, rBohrung:41,
-                              backeB:35, backeH:67, backeL:65 }
+                              backeB:35, backeH:67, backeL:65,
+                              stufenZ:[14.99, 14.93] }
 };
 const FUTTER = Object.assign({}, FUTTER_JE_MASCHINE.MONFORTS_1500_EUROTURN);
 function futterGeometrie(){
@@ -6752,11 +6763,17 @@ function futterGeometrie(){
   // und Bohrbacken); der Backenkoerper steht an der Futterstirn voll und
   // laeuft nach vorn in drei Absaetzen aus. Die Spannflaeche bleibt bei
   // allen dreien der Spannradius — gestuft ist die Hoehe, nicht der Sitz.
-  const zL=(zS-zStirn)/3;
+  // Die Stufenlaengen zaehlen von der BACKENFRONT nach hinten (dort sitzt
+  // die niedrigste Stufe); was bis zur Futterstirn uebrig bleibt, ist der
+  // volle Klotz. Ohne gemessene Werte bleibt es beim Dritteln wie bisher.
+  const stZ = (FUTTER.stufenZ && FUTTER.stufenZ.length===2)
+            ? FUTTER.stufenZ : [(zS-zStirn)/3, (zS-zStirn)/3];
+  const zVorn = Math.max(zStirn, zS - stZ[0]);          // Grenze vorderste Stufe
+  const zMitte= Math.max(zStirn, zVorn - stZ[1]);       // Grenze mittlere Stufe
   const stufen=[
-    {zVon:zStirn,       zBis:zStirn+zL,   r:rSpann+FUTTER.backeH},
-    {zVon:zStirn+zL,    zBis:zStirn+2*zL, r:rSpann+FUTTER.backeH*0.68},
-    {zVon:zStirn+2*zL,  zBis:zS,          r:rSpann+FUTTER.backeH*0.36},
+    {zVon:zStirn, zBis:zMitte, r:rSpann+FUTTER.backeH},
+    {zVon:zMitte, zBis:zVorn,  r:rSpann+FUTTER.backeH*0.68},
+    {zVon:zVorn,  zBis:zS,     r:rSpann+FUTTER.backeH*0.36},
   ];
   const rMitteB=(rSpann+rHoch)/2;
   return {
@@ -21143,7 +21160,7 @@ const MASCHINEN_PROFILE = {
     // 'Prog. Pruefen' - Lauf am Teil offen.
     fahrtests:'gefahren: Kantenwelle O9016 komplett (NMAX 600), Spanbrechen G04 F2, NMAX-Wache haelt die G96-Anwahl (Alarm 007 bleibt aus), SSV auf DM130 pendelt fliegend, M00-Messhalt haelt, Vorschub je Element wirkt, Bemerkung hinter dem Stopp, G33-Gewinde zieht in der Steigung',
     fahrtestsOffen:'Laeufe der Realformen O9167 (G75), O9168 (G74), O9169 (G71); G72, G76, G77 und Form E sind am Satz belegt, aber nie GEFAHREN — ersten Lauf im Einzelsatz; einzige hergeleitete Form bleibt Form F (G78), sie erst nach dem Maskensatz fahren',
-    termine:'07.09.2026 — Uebertragung 9600/7/E/2 RTS/CTS bewiesen, 17 Bestandsprogramme gesichert, G71-Satz aus der Maske · 09.09.2026 — Web-Serial beide Richtungen, Fortsetzungszeilen tot, G71 mit Winkeln und D · 10.09.2026 — Zeichenbremse, M30 kommt an, erster kompletter Lauf, Alarm 007 = Anwahlfalle · 11.09.2026 — SSV, M00, Realformen G75/G74/G71, G73/G79 gelesen, Backenueberstand 65 · 16.09.2026 — Realformen G72/G77/G78 aus der Zyklen-Maske gezogen (G72 anders als hergeleitet: PG=D, PI=U), drei Plausibilitaetspruefungen der Steuerung gefunden, PF = Schneidenradius aus der WZ-KORR belegt · 16.09.2026 spaet — Quittung O112244 ausgewertet: G76 Kegelgewinde als siebte Realform (I und PK im RADIUSmass, PW1 = degressiv), PQ = Richtung des G72 (plan jetzt nativ), PJ2/PJ3 die beiden Stirnlagen, PY/PZ = Anzahl und Abstand der Stiche, festes PF0.4 aus dem G71 entfernt',
+    termine:'07.09.2026 — Uebertragung 9600/7/E/2 RTS/CTS bewiesen, 17 Bestandsprogramme gesichert · 09.09.2026 — Web-Serial beide Richtungen, Fortsetzungszeilen tot, G71 mit Winkeln und D · 10.09.2026 — Zeichenbremse, M30 kommt an, erster kompletter Lauf, Alarm 007 = Anwahlfalle · 11.09.2026 — SSV, M00, Realformen G75/G74/G71, Backenueberstand 65 · 16.09.2026 — Realformen G72/G77/G78/G76 aus der Zyklen-Maske, drei Plausibilitaetspruefungen der Steuerung, PF = Schneidenradius aus der WZ-KORR, PQ = Richtung, PY/PZ = Anzahl und Abstand der Stiche · 18.09.2026 — O411: PL=W und PM=D am G74 (war Annahme), PS1 = Fase an Ecke 1, G73-Woerter, Form F als Realform (widerlegt die Herleitung), G75 innen ohne Lage-Wort, keine Gangzahl, kein Kegelwinkel; Backen der 1500er gemessen · Einzelheiten je Termin in maschinentermin/ERGEBNISSE-<Datum>.md',
     // P5105=1: X = Durchmesserachse -> der ABSOLUTE X-Mittelpunkt I wird
     // unter G90 ebenfalls im DURCHMESSERMASS ausgegeben (IBN-belegt).
     ikDurchmesser:true, ikStatus:'confirmed_on_machine', ikBeleg:'P5105=1, IBN',
@@ -21332,7 +21349,7 @@ function ppMerkmale(){
       w:'gesperrt — im Handbuch dokumentiert, aber Option A019G lt. IBN nicht freigeschaltet (N9177=0); Ausgabe als G74'});
     M.push({t:'Einstechzyklus G71', s:'machine_syntax',
       w:'freigegeben (IBN N9150) — Realform der 7.210i belegt (radiale Aussennut, per DNC gezogen): PG = U, PY = N, PZ = Z0-BS, P230 = BS, PE1 = Sicherheitsabstand 5203; innen (PJ1) und Flankenwinkel (PK/PL) HERGELEITET aus DV 610 und 1000er-Realform; Stirnnut und N>1 fallen auf Einzelsaetze zurueck (PZ nicht ableitbar)',
-      offen:'Lauf am Teil (T8_G71_EINSTICH); Maskensatz innen/Winkel ziehen (Probenzettel 351); der Kegelwinkel W steht in der Software (CONICAL_ANGLE), sein Satzwort ist offen'});
+      offen:'Lauf am Teil (T8_G71_EINSTICH); Maskensatz innen/Winkel ziehen (Probenzettel 351). Kegelwinkel W: die Maske hat KEIN Feld (Daniel am Geraet 18.09.2026, beide Monforts) — kegelige Nuten bleiben G-Einzelsaetze'});
     // PE1 [11.09.2026 spaet]: die Einstich-Parameterliste in MTC0.EXE beginnt
     // mit SAFETY_GAP, und die IBN 2004 fuehrt N5205 Sicherheitsabstand
     // Abspanen = 1,000 mm — exakt das PE1 des gezogenen G72-Satzes.
@@ -21360,8 +21377,8 @@ function ppMerkmale(){
     M.push({t:'Bohrzyklen G81 ff', s:'disabled',
       w:'gesperrt — in R&D 95.05 nicht dokumentiert; Ausgabe als G74'});
     M.push({t:'Einstechzyklus G71', s:'machine_syntax_1000',
-      w:'Realform an sechs Maschinensaetzen belegt: Z = LINKE Nutkante, PM/PN = B/T, PO-PR = R1-R4, PG = U, PK/PL = alpha1/alpha2, P228 = D, PW und P230 = BS, PY = Anzahl und PZ = ABSTAND der Stiche; alle vier Lagen am Satz (kein PJ aussen, PJ1 innen, PJ2/PJ3 die beiden Stirnlagen). Nativ geschrieben, danach ein explizites G90. PF = Schneidenradius des Werkzeugs, NUR radial (die Stirnnut traegt keins)',
-      offen:'Lauf am Teil (O9169); Fasen an den Nutecken, Stirnnut in der BOHRUNG und der Kegelwinkel W fallen auf Einzelsaetze zurueck; PX1 ungedeutet; die App-Werkzeugtabelle muss mit der WZ-KORR der Maschine uebereinstimmen — PF kommt aus UNSERER Tabelle'});
+      w:'Realform an sechs Maschinensaetzen belegt: Z = LINKE Nutkante, PM/PN = B/T, PO-PR = R1-R4, PG = U, PK/PL = alpha1/alpha2, P228 = D, PW und P230 = BS, PY = Anzahl und PZ = ABSTAND der Stiche; alle vier Lagen am Satz (kein PJ aussen, PJ1 innen, PJ2/PJ3 die Stirnlagen); PS1 = Fase an Ecke 1 (O411, 18.09.2026). Nativ geschrieben, danach ein explizites G90. PF = Schneidenradius des Werkzeugs, NUR radial (die Stirnnut traegt keins)',
+      offen:'Lauf am Teil (O9169); Stirnnut in der BOHRUNG auf Einzelsaetzen; PX1 ungedeutet; die Werkzeugtabelle muss zur WZ-KORR passen (PF kommt aus UNSERER Tabelle). Kegelwinkel W: die Maske hat KEIN Feld (18.09.2026), kegelige Nuten bleiben G-Einzelsaetze'});
     // HERGELEITETE FORMEN [Daniels "go" 11.09.2026 spaet]: die App schreibt
     // sie nativ mit stehender Warnung; Status "hergeleitet" (Gruppe offen),
     // der Maskensatz vom Probenzettel entscheidet.
@@ -21370,13 +21387,13 @@ function ppMerkmale(){
       offen:'Lauf am Teil; an WELCHER Kante FS sitzt (die Maske kennt nur EIN Feld); PR1 ungedeutet (steht in jedem Satz); MINI_G72 ohne PA/PB'});
     M.push({t:'Freistich G73 / Form E G79', s:'machine_syntax_1000',
       w:'Realform aus den Maskenfotos P102-P105 (11.09.2026), nativ geschrieben: G73 mit PH = V/2 absolut, PN1 innen, P227:90; G79 mit X = Freistichgrund, I = Welle, G91 K0, PH = V/2, PK = Tiefe mit Vorzeichen, PJ1 innen; PF = Schneidenradius des Werkzeugs aus UNSERER Werkzeugtabelle (P105 lief mit T12, RS 1,2 -> PF1.2)',
-      offen:'Form E ist gezogen (O112255, BEIDE Lagen): PH=V/2, PJ1 innen und das VORZEICHEN von PK sind belegt statt hergeleitet. Offen: G73 ziehen; Lauf am Teil; Lage Schulter rechts faellt auf Einzelsaetze zurueck'});
+      offen:'G73 gezogen (O411, 18.09.2026): PG=D, PI=U, PK=Einstiegswinkel, PH=V/2, PM=Normzeile der DIN-76-Tabelle. Offen: PF beim G73 (die Probe lief mit einem RS-0-Werkzeug); Lauf am Teil; Lage Schulter rechts auf Einzelsaetzen'});
     M.push({t:'Kegelgewinde G76', s:'machine_syntax_1000',
       w:'Realform aus der Zyklen-Maske, gezogen 16.09.2026 (O112244 N0140/N0170 gegen das Maskenbild, Wert fuer Wert): I UND PK tragen die Gewindeschraege als RADIUSmass, PL Z1 inkremental, PM=W PN=R PO=K PP=I PQ=D PR=E PT=V PU=Steigung PZ=D, PX = atan(I/K) wie beim G75. PW1 heisst DEGRESSIV — belegt durch das Satzpaar mit und ohne das Wort',
       offen:'Lauf am Teil — gefahren wurde der Zyklus noch nicht'});
     M.push({t:'Form F G78', s:'derived',
-      w:'HERGELEITET aus dem Form-E-Satz (G91 K0, kein Z-Aufmass, t2 ueber PM)',
-      offen:'Maskensatz ziehen (Probenzettel 251/252) VOR dem ersten Lauf'});
+      w:'Der Generator schreibt weiter die HERGELEITETE Form (G91 K0, t2 ueber PM). Der ECHTE Satz liegt seit O411 (18.09.2026) vor: G78 G90 X<X0> Z<Z0> I<X1> G91 K<Z1> PK2 PL<Z1> PM<Normzeile> — die Maske hat nur Form, X0, Z0, X1, Z1, kein D und kein U',
+      offen:'Generator auf die Realform umstellen (I traegt X1, K unter G91 traegt Z1, PM die Normzeile, PK2 ungedeutet); PF unbelegt, die Probe lief mit einem RS-0-Werkzeug'});
     M.push({t:'Plangewinde G77', s:'machine_syntax_1000',
       w:'Realform aus der Zyklen-Maske, gezogen 16.09.2026 (O112233 N0220): Steigung im F-Wort und als PU, X/Z absolut, G91 I = Radialstrecke inkremental, G90 K0, PG=U PK=I PM=W PN=R PO=K POSITIV PP=I PQ=D PR=E PT=V PZ=D. Offen: das Vorzeichen von I (Daniels Satz laeuft nach innen und schreibt +I)',
       offen:'Maskensatz ziehen (Probenzettel 241)'});
@@ -27185,9 +27202,12 @@ function genGewinde(p, N, bump, lines, warnings){
   // 1000er-REALFORM 11.09.2026 kennt nur das AUSSENGEWINDE (PO positiv) und
   // den Gangwinkel Q im I-Wort (bei Q 0 nie geprueft): innen und mehrgaengig
   // fallen an der MTC-K mit Ansage auf G33-Einzelsaetze zurueck.
+  // INNENGEWINDE LAEUFT JETZT ALS ZYKLUS [18.09.2026]: die Lage steckt im
+  // VORZEICHEN von PO — am Teil belegt (s. Kommentar am PO-Wort). Aussen
+  // negativ, innen positiv. Der Rueckfall auf G33 entfaellt damit; die
+  // Warnung nennt die Bedingung, unter der es gilt.
   if(zyklusModus && MASCHINENPROFIL.id==='MONFORTS_1000_MTC_K_6624B' && p.lage==='innen'){
-    warnings.push('Innengewinde als G75-Zyklus an der 1000er unbelegt (Realform 11.09.2026 ist ein Aussengewinde, PO positiv) — Ausgabe als G33-Einzelsaetze.');
-    zyklusModus=false;
+    warnings.push('Innengewinde als G75-Zyklus: die Lage steckt im VORZEICHEN von PO (aussen negativ am Teil belegt 18.09.2026, innen positiv im Umkehrschluss — der erste Innengewinde-Lauf gehoert in den Einzelsatz). Das Werkzeug muss ein INNEN-Gewindestahl sein (Lage-Symbol unten in der WZ-KORR).');
   }
   if(zyklusModus && MASCHINENPROFIL.id==='MONFORTS_1000_MTC_K_6624B' && (p.n||1)>1){
     warnings.push('Mehrgaengiges Gewinde als G75-Zyklus an der 1000er: der Gangwinkel Q im Satz ist unbelegt — Ausgabe als G33-Einzelsaetze mit Q-Versatz.');
@@ -27256,10 +27276,20 @@ function genGewinde(p, N, bump, lines, warnings){
       // Steuerung selbst: X/Z absolut, dann G91 fuer I (Gangwinkel Q) und K
       // (Laenge inkremental), die P-Buchstaben OHNE Leerzeichen:
       //   PG U Aufmass | PL Laenge (Kopie von K) | PM W Anlauf | PN R Auslauf
-      //   PO Gewindetiefe, aussen POSITIV (anders als das PO der 1500er)
+      //   PO Gewindetiefe, AUSSEN NEGATIV — am Teil belegt [Daniel, 18.09.2026:
+      //     mit PO+0,92 stellte der Zyklus nach AUSSEN zu (X ueber 30) und zog
+      //     nach INNEN auf ⌀27 zurueck (= X0 - 2*V), also spiegelverkehrt; mit
+      //     PO-0,92 lief er richtig, erster Span auf ⌀29,4]. Damit gilt an der
+      //     1000er dieselbe Regel wie im Handbuch der 1500er (DV 610 S. 3-55,
+      //     Beispielsatz PO-3.681 aussen). Die MASKE schreibt den getippten Wert
+      //     POSITIV (O112233/O112244/O411) — sie speichert die Lage also
+      //     woanders; massgeblich fuers Abarbeiten ist das Vorzeichen im Satz.
+      //     Innen ist es folglich POSITIV.
       //   PP axialer Flankenversatz = Tiefe*tan(alpha) | PQ D 1. Zustellung
-      //   PR E = Band ueber dem Grund im Hilfebild; Lesart wie 1500er: kleinste
-      //      Zustellung. AM TEIL OFFEN: geht der erste Schnitt D oder E tief?
+      //   PR E = Band ueber dem Grund im Hilfebild. AM TEIL GEMESSEN [18.09.2026]:
+      //      der ERSTE Span ging auf ⌀29,4 bei X0 30, D 0,25 und E 0,05 — also
+      //      0,3 mm radial = D + E. E ist damit kein Ersatz fuer D, sondern ein
+      //      Zuschlag auf den ersten Schnitt.
       //   PT = V, der RADIALE RUECKZUGSWEG aus der Maske - NICHT der
       //     Programmkopf-SC [belegt 16.09.2026: Daniels Maske V 2.400,
       //     der Satz traegt PT2.4]. Die alte Lesart kam aus dem
@@ -27285,7 +27315,7 @@ function genGewinde(p, N, bump, lines, warnings){
         (kegel?'PK'+fmt(((+p.x1)-(+p.x0))/2):null),
         'PL'+fmt(threadLength),
         'PM'+fmt(p.lw||0),'PN'+fmt(p.lr||0),
-        'PO'+fmt(p.h1),
+        'PO'+fmt((p.lage==='innen' ? 1 : -1) * Math.abs(+p.h1)),
         'PP'+fmt(flankeI),
         'PQ'+fmt(p.dz1||0.3),
         'PR'+fmt(eMin),
@@ -28670,6 +28700,37 @@ function zwischenMListe(q){
   if(/^\d{1,3}$/.test(frei)){ const mw='M'+frei.padStart(2,'0'); if(!aus.includes(mw)) aus.push(mw); }
   return aus;
 }
+// =================================================================
+// BEZUGSSCHNEIDE DER STECHPLATTE [Daniel, 06.09.2026; auf alle
+// Stechzyklen gezogen am 18.09.2026: "ich mag den Stecher eigentlich
+// immer an der linken Schneide verrechnet, weil das zum Ankratzen
+// einfach besser ist"].
+// Die Stichlogik aller Stechzyklen rechnet mit der im Bild RECHTEN
+// Klingenkante als programmiertem Punkt (die Klinge liegt links
+// davon, [z-bw, z]). Ist am Werkzeug die LINKE Kante eingemessen,
+// entsteht dieselbe Nut mit um die Klingenbreite kleineren Z-Werten:
+// der fertige Zyklus wird als Ganzes versetzt, statt die bewaehrten
+// Bahnen anzufassen. Das physische Ergebnis bleibt identisch, nur der
+// programmierte Punkt wechselt die Klingenecke. Mitversetzt wird das
+// K-Wort (absolute Bogenmitte in Z); R hat keine Z-Komponente.
+// Bis zum 18.09.2026 lief das NUR im Einstechzyklus — Stechdrehen und
+// Abstechen blieben auf der rechten Ecke, waehrend Simulation,
+// Massbericht und Maschine der Werkzeugangabe folgen. Mit einem links
+// eingemessenen Stecher lagen ihre Bahnen damit um eine Klingenbreite
+// daneben (gemessen an der Nutwelle: 10 mm Einschnitt im Feld,
+// Mastertestteil 94,9 mm).
+// =================================================================
+function bezugsschneideVersetzen(lines, von, tNr, warnings, wo){
+  const tw = toolTable.find(x=>String(x.t)===String(tNr));
+  if(!tw || tw.refEdge!=='links') return 0;
+  const bw = Math.max(0.5, +tw.len||3);
+  for(let li=von; li<lines.length; li++){
+    if(!/^N\d+/.test(lines[li])) continue;
+    lines[li]=lines[li].replace(/([ZK])(-?\d+(?:\.\d+)?)/g, (m,w,v)=>w+fmt(+v-bw));
+  }
+  warnings.push(wo+' mit T'+tNr+': Bezugsschneide ist die LINKE Klingenkante — alle Z-Werte des Zyklus liegen um die Stechbreite ('+fmt(bw)+' mm) niedriger als bei rechter Bezugskante. Die Bearbeitung selbst sitzt unveraendert; Werkzeug entsprechend eingemessen haben.');
+  return bw;
+}
 function buildProgram(){
   const warnBox=document.getElementById('warnBox');
   warnBox.style.display='none';
@@ -29055,7 +29116,9 @@ function buildProgram(){
         const saved = contour;
         contour = cRef.els;
         st.params._rest = restAt;
+        const sdVon = lines.length;
         genStechdrehen(st.params, N, bump, lines, warnings);
+        bezugsschneideVersetzen(lines, sdVon, st.params.t, warnings, 'Stechdrehen');
         delete st.params._rest;
         contour = saved;
         // Die Reststand-Fuehrung rechnet AUSSENhuellen — ein
@@ -29095,17 +29158,13 @@ function buildProgram(){
       const esVon = lines.length;
       genEinstechen({...st.params,
         safeX: (st.params.lage==='innen') ? undefined : stock + 2}, N, bump, lines, warnings);
-      const esTool = toolTable.find(x=>String(x.t)===String(st.params.t));
-      if(esTool && esTool.refEdge==='links'){
-        const esBw = Math.max(0.5, +esTool.len||3);
-        for(let li=esVon; li<lines.length; li++){
-          if(!/^N\d+/.test(lines[li])) continue;
-          lines[li]=lines[li].replace(/([ZK])(-?\d+(?:\.\d+)?)/g, (m,w,v)=>w+fmt(+v-esBw));
-        }
-        warnings.push('Einstechen mit T'+st.params.t+': Bezugsschneide ist die LINKE Klingenkante — alle Z-Werte des Zyklus liegen um die Stechbreite ('+fmt(esBw)+' mm) niedriger als bei rechter Bezugskante. Die Nut selbst sitzt unveraendert; Werkzeug entsprechend eingemessen haben.');
-      }
+      bezugsschneideVersetzen(lines, esVon, st.params.t, warnings, 'Einstechen');
     }
-    else if(st.type==='abstechen') genAbstechen(st.params, N, bump, lines, warnings);
+    else if(st.type==='abstechen'){
+      const abVon = lines.length;
+      genAbstechen(st.params, N, bump, lines, warnings);
+      bezugsschneideVersetzen(lines, abVon, st.params.t, warnings, 'Abstechen');
+    }
     else if(st.type==='freistich') genFreistich(st.params, N, bump, lines, warnings);
     else if(st.type==='bohren') genBohren(st.params, N, bump, lines, warnings);
     else if(st.type==='gewinde') genGewinde(st.params, N, bump, lines, warnings);
@@ -34597,7 +34656,15 @@ function massBericht(){
           };
           for(let i2=0;i2<zs.length;i2++){
             const z=zs[i2];
-            const lo=Math.max(z, zA), hi=Math.min(z+bw, zB);
+            // BAND NACH DER BEZUGSSCHNEIDE [18.09.2026]: die Platte belegt um ihren
+            // programmierten Punkt [z'-bw, z'] (rechte Ecke eingemessen) oder
+            // [z', z'+bw] (linke). Eine Stelle z wird also von Bahnpunkten z' aus
+            // [z, z+bw] bzw. [z-bw, z] erreicht. Vorher stand das Fenster fest auf
+            // der rechten Ecke — mit einem links eingemessenen Stecher meldete der
+            // Bericht Zonen, die im Materialmodell nicht existieren (Stufenbolzen:
+            // -18,6 mm bei Z-24,9, Feld sauber).
+            const linksRef = (tw.refEdge==='links');
+            const lo=Math.max(linksRef? z-bw : z, zA), hi=Math.min(linksRef? z : z+bw, zB);
             if(lo>hi+1e-9) continue;
             // ECKENKREIS DER PLATTE [17.09.2026 nachts, Daniels Ballen]: an den
             // beiden Klingenenden liegt die Unterkante um den Eckenradius hoeher
@@ -34615,15 +34682,24 @@ function massBericht(){
               if(u>bw-rK){ const w=u-(bw-rK); return rK-Math.sqrt(Math.max(0, rK*rK-w*w)); }
               return 0;
             };
+            // u = Abstand der Stelle z von der linken Klingenkante; v = zugehoeriger
+            // Bahnpunkt. Rechts eingemessen: v = z+bw-u, links: v = z-u.
+            const vVonU=(u)=> linksRef ? (z-u) : (z+bw-u);
+            const uVonV=(v)=> linksRef ? (z-v) : (z+bw-v);
             const kand=[lo, hi];
             if(rK>1e-9){
-              [z+rK, z+bw-rK].forEach(v=>{ if(v>lo && v<hi) kand.push(v); });
+              [rK, bw-rK].forEach(u=>{ const v=vVonU(u); if(v>lo && v<hi) kand.push(v); });
               const sN=(Math.abs(B.z-A.z)<1e-9)?0:(B.x-A.x)/(B.z-A.z);   // ⌀ je mm
-              const q1=sN*sgK/2;  if(q1>0){ const w=rK*q1/Math.sqrt(1+q1*q1); const v=z+(rK-w);    if(v>lo && v<hi) kand.push(v); }
-              const q2=-sN*sgK/2; if(q2>0){ const w=rK*q2/Math.sqrt(1+q2*q2); const v=z+(bw-rK)+w; if(v>lo && v<hi) kand.push(v); }
+              // Stationaer ist h(v)=x(v)+sgK*2*cK(u) dort, wo cK'(u) = sN/(2*sgK) ist; u
+              // zaehlt von der LINKEN Klingenkante und faellt mit v. An der linken
+              // Rundung ist cK' negativ, an der rechten positiv - daher die zwei
+              // Vorzeichen. (Vertauscht man sie, verfehlt der Bericht das Extremum:
+              // die Nutwelle meldete 0,11 mm Rest, den das Materialfeld nicht kennt.)
+              const qL=-sN*sgK/2; if(qL>0){ const w=rK*qL/Math.sqrt(1+qL*qL); const v=vVonU(rK-w);    if(v>lo && v<hi) kand.push(v); }
+              const qR= sN*sgK/2; if(qR>0){ const w=rK*qR/Math.sqrt(1+qR*qR); const v=vVonU(bw-rK+w); if(v>lo && v<hi) kand.push(v); }
             }
             let xh=null;
-            kand.forEach(v=>{ const h=xAn(v)+sgK*2*cK(v-z); if(xh===null || (seite==='innen' ? h>xh : h<xh)) xh=h; });
+            kand.forEach(v=>{ const h=xAn(v)+sgK*2*cK(uVonV(v)); if(xh===null || (seite==='innen' ? h>xh : h<xh)) xh=h; });
             if(besser(xh, ist[i2])){ ist[i2]=xh; von[i2]=m.step; }
           }
         }
