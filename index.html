@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 00:59 (8885e94d)";</script>
+<script>window.__DZ_STAND="20.09.2026 01:54 (6fa24ce8)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -5184,6 +5184,9 @@ Zeichnung und Elementliste l&auml;sst sich ziehen; Doppelklick auf die Linie ste
 wieder her, die Breite wird gemerkt.
 <button class="gcbtn" id="baTrennReset" type="button" style="padding:4px 10px;font-size:11.5px;">Spaltenbreiten zur&uuml;cksetzen</button>
 Stand 08.09.2026.</dd>
+<dt id="ba-be-banner">Meldungen liegen &uuml;ber der Maske (20.09.2026)</dt><dd>Jede Meldung der App &mdash; auch die Hinweise der Masken und des Kontur-Editors
+(&bdquo;Kein Anschlusspunkt&ldquo;, &bdquo;Der Vorg&auml;nger ist noch offen&ldquo;) &mdash; erscheint sieben Sekunden im Banner am unteren Bildrand; ein Tipp darauf
+schlie&szlig;t es. Bis zum 20.09.2026 lag das Banner hinter jeder offenen Maske: wer in einer Maske einen Hinweis ausl&ouml;ste, sah nichts. Seither liegt es &uuml;ber allem.</dd>
 <dt id="ba-be-laptopdesign">Laptop-Ansicht: Tiefe und B&uuml;hne (19.09.2026)</dt><dd>Ab 900 px Breite tr&auml;gt die Oberfl&auml;che seit dem 19.09.2026 eine zweite Schicht,
 die am Handy fehlt (dort &auml;ndert sich kein Pixel): <b>Zeitbalken im Arbeitsplan</b> &mdash; hinter jeder Zyklus-Zeile ein
 blauer Balken, dessen L&auml;nge der Anteil an der l&auml;ngsten Hauptzeit ist; <b>Zeilennummern und Zebra in der NC-Ausgabe</b>
@@ -5272,7 +5275,7 @@ vorschruppen.</dd>
      TT.MM.JJJJ" ergaenzt, MUSS dieses Datum mitziehen — sonst schlaegt
      der Pruefstand an. [Daniels Befund 06.09.2026: die Anleitung war
      inhaltlich nachgezogen, das Standdatum stand noch auf 31.08.] -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 19.09.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 20.09.2026. Sie
 w&auml;chst mit der App &mdash; das Inhaltsverzeichnis wird aus den Kapiteln
 erzeugt und ist damit immer vollst&auml;ndig.</p>
 
@@ -10837,6 +10840,17 @@ function melde(text){
     b.addEventListener('click', ()=>{ b.style.display='none'; }); }
 }
 try{ window.alert = melde; }catch(e){}
+// DAS BANNER HAENGT AM BODY [20.09.2026, Fund aus dem Fraes-Paket
+// "Uebernehmen meldet, warum"]: im Markup steht es in der Kopfzeile .hdr,
+// und die bildet mit position:relative und z-index 2 einen Stapelkontext -
+// darin gilt die 950 des Banners nur gegen die Geschwister im Kopf. Jede
+// offene Maske (z 900 am Laptop, 5 am Handy) lag DARUEBER, gemessen mit
+// elementFromPoint bei offener Einstichmaske (1366: maskEinstechen, 390:
+// mask-body). Weil alert() auf melde umgeleitet ist, waren damit alle 43
+// alert-Meldungen der Masken bei offener Maske unsichtbar. Am Ende des body
+// steht es im Wurzelkontext, und 950 zaehlt. Das Layout aendert sich nicht:
+// position:fixed haengt am Fenster, nicht am Elternteil.
+try{ const b=document.getElementById('meldeBanner'); if(b && document.body && b.parentElement && b.parentElement!==document.body && document.body.appendChild) document.body.appendChild(b); }catch(e){}
 // ANSICHTSWECHSEL OHNE KLASSENVERLUST [Daniel 05.09.2026, Wurzel
 // des "unvollstaendigen" Dunkelmodus]: vier Stellen setzten
 // body.className HART neu — jeder Wechsel Arbeitsplan/Grafisch
