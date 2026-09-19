@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="19.09.2026 19:35 (30a0e409)";</script>
+<script>window.__DZ_STAND="19.09.2026 20:19 (9885e868)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2467,6 +2467,19 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
      width/height 100 % (02-stil.html) - damit wurde das 26x34-Bild so breit wie die Zelle, und die Liste zeigte drei Zeilen.
      Hier bleibt es bei seiner eigenen Groesse. */
   .pointlist.wz-tab td canvas[data-wzic]{width:26px !important;height:34px !important;min-width:0 !important;}
+  /* SCROLLEN IN DEN MASKEN (19.09.2026, Daniels Befund: "manche Bereiche in der
+     Programmauswahl oder Maskeneingabe lassen sich nicht rauf/runter verschieben").
+     Das gemeinsame Stylesheet gibt JEDER Leinwand touch-action:none - die
+     Zeichenflaeche des Drehteils braucht ihre Gesten. In den Fraes-Masken stehen
+     Leinwaende aber als BILDER: Vorlagenkacheln (74 x 48 je Vorlage, 20 Stueck),
+     Werkzeugbilder in jeder Zeile der Liste, das Hilfebild oben in jeder
+     Zyklusmaske (184 px), die Vorschau des Kontureditors. Ein Finger darauf
+     konnte die Liste nicht scrollen; gemessen mit Touch-Emulation bei 390 px
+     (scratchpad zk/touchprobe.js): Wisch auf der Kachel 0 -> 0, daneben auf
+     dem Text 0 -> 145. Die drei Leinwaende mit eigenen Gesten (Simulation 2D/3D,
+     STEP-Drahtbild) tragen touch-action:none INLINE und bleiben unberuehrt.
+     Regel steht HIER, nicht im gemeinsamen Stylesheet (Regel 3 des Drehteils). */
+  .mask canvas{touch-action:auto;}
   .pointlist.wz-tab td:nth-child(2),.pointlist.wz-tab th:nth-child(2),.pointlist.wz-tab td:nth-child(11),.pointlist.wz-tab th:nth-child(11),.pointlist.wz-tab td:nth-child(14),.pointlist.wz-tab th:nth-child(14){text-align:left;}
   .fmerk .st.sperr{background:#f1f1f1;color:#666;}
   /* Paket A (12.09.2026): der Q-Zusatz hinter dem neutralen Feldnamen — nur
