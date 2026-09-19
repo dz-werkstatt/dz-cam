@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="18.09.2026 20:39 (fbf7b5df)";</script>
+<script>window.__DZ_STAND="19.09.2026 09:46 (5123885f)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1638,6 +1638,12 @@ body.dunkel .rz-taste{background:var(--key);color:var(--text);border-color:var(-
 .zw-vorlagen{flex-wrap:wrap;gap:6px;}
 .zw-vorlagen .gcbtn{flex:1 1 auto;padding:7px 8px;font-size:13px;}
 body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
+/* DESIGN-PAKET 19.09.2026: zwei Elemente, die es nur am Laptop gibt (Buehne der
+   3D-Simulation, Startkarte der zuletzt abgelegten Kontur). Unter 900 px sind sie
+   display:none - kein Pixel anders (Regel 3); die Laptop-Regeln stehen am Ende
+   der 900er-Query. */
+#simBuehne{display:none;}
+.leerhero{display:none;}
 
 @media(min-width:900px){
     /* Arbeitsplanzeile bleibt am Desktop EINZEILIG. Dort ist Platz
@@ -1742,7 +1748,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     .mask, body.mode-grafisch #canvasWrap .mask{
       position:fixed !important; inset:auto !important;
       left:50% !important; top:50% !important;
-      transform:translate(-50%,-50%) scale(.985) !important;
+      transform:translate(-50%, calc(-50% + 12px)) scale(.985) !important;   /* Idee 7: gleitet beim Oeffnen 12 px auf */
       width:min(940px,92vw) !important; height:auto !important;
       max-height:88vh !important; max-width:none !important;
       border:1px solid hsl(var(--ton), 21.7%, 77.5%); border-radius:14px;
@@ -2268,6 +2274,123 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
        Fertig); sonst blieb die halbe Hoehe leer (Aufnahme p3-11). */
     body.maskvoll #maskWerkzeuge .pointlist{max-height:calc(100vh - 230px) !important;}
 
+    /* =================================================================
+       DESIGN-PAKET LAPTOP (19.09.2026). Daniels Auftrag der Nacht 18./19.09.
+       ("Wow-Effekt hochwertiger Apps") und seine Freigabe am Morgen ("setze
+       das alles so um"). Vorher/Nachher-Bilder: nachtbericht-2026-09-18/dreh/.
+       Was hier steht, ist TIEFE UND BUEHNE auf dem bestehenden flachen Stil:
+       weiche Schatten statt Rahmen, EIN Akzentblau, Bewegung nur mit
+       Bedeutung. Keine Verlaeufe auf Knoepfen (Pruefung 109, Doktrin vom
+       30.08.), alle Blautoene am Regler --ton (Pruefung 61).
+       ================================================================= */
+    /* (D3) MASKEN MIT TIEFE - Bild X0 -> X1. Die Kachel hebt sich mit einem
+       weichen Schatten ab, der Fokus leuchtet orange statt nur zu rahmen,
+       und Uebernehmen ist der EINE blaue Knopf der Maske (er war anthrazit:
+       der wichtigste Knopf war der unauffaelligste). */
+    .mask.kachelpilot .mrow{
+      box-shadow:0 1px 2px hsla(var(--ton),30%,20%,.06), 0 6px 14px -10px hsla(var(--ton),30%,20%,.25);
+      transition:box-shadow .18s ease, transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .mask.kachelpilot .mrow:hover{transform:translateY(-1px);box-shadow:0 2px 4px hsla(var(--ton),30%,20%,.08), 0 12px 24px -12px hsla(var(--ton),30%,20%,.35);}
+    .mask.kachelpilot .mrow:focus-within{transform:translateY(-1px);box-shadow:0 0 0 3px hsla(28,92%,45%,.22), 0 10px 24px -12px hsla(28,92%,45%,.45);}
+    .mask.kachelpilot .mrow.k-aktion, .mask.kachelpilot .mrow.k-aktion:hover{transform:none;box-shadow:none;}
+    .mask.kachelpilot .mrow.k-aktion{background:linear-gradient(180deg, transparent, hsl(var(--ton),25%,97%) 45%);border-top:1px solid var(--line-light);}
+    .mask .k-aktion .gcbtn.ok-gruen, .mask .k-aktion button.ok-gruen{
+      background:hsl(var(--ton),70%,38%);border-color:hsl(var(--ton),70%,30%);color:#fff;
+      box-shadow:0 8px 18px -10px hsla(var(--ton),70%,38%,.65);
+    }
+    .mask .k-aktion .gcbtn.ok-gruen:active, .mask .k-aktion button.ok-gruen:active{background:hsl(var(--ton),70%,32%);}
+    body.dunkel .mask .k-aktion .gcbtn.ok-gruen, body.dunkel .mask .k-aktion button.ok-gruen{background:hsl(var(--ton),55%,40%);border-color:hsl(var(--ton),55%,30%);color:#fff;}
+    body.dunkel .mask.kachelpilot .mrow.k-aktion{background:linear-gradient(180deg, transparent, hsl(var(--ton),14%,13%) 45%);border-top-color:hsl(var(--ton),14%,24%);}
+    canvas.mask-help, .mask-help{border-radius:12px;box-shadow:inset 0 0 0 1px var(--line-light), 0 10px 30px -18px hsla(var(--ton),30%,20%,.4);}
+    /* (D2) ZEITBALKEN IM ARBEITSPLAN - Bild Z0 -> Z1. Jede Zyklus-Zeile traegt
+       hinter sich einen Balken, Laenge = Anteil an der laengsten Hauptzeit
+       (--zeit setzt renderArbeitsplan je Zeile). Man sieht ohne Lesen, wo
+       die Zeit steckt - am Master steckt ein Drittel im z-parallelen
+       Schruppen. Am Handy gibt es die Variable, aber keine Regel dazu. */
+    .ap-row[data-sidx]{background-image:linear-gradient(90deg, hsla(var(--ton),60%,42%,.10) 0, hsla(var(--ton),60%,42%,.10) var(--zeit,0%), transparent var(--zeit,0%));background-repeat:no-repeat;}
+    .ap-row[data-sidx].sel{background-image:linear-gradient(90deg, hsla(28,90%,50%,.16) 0, hsla(28,90%,50%,.16) var(--zeit,0%), transparent var(--zeit,0%)), linear-gradient(90deg,#fff3d9,#fff8ea);}
+    body.dunkel .ap-row[data-sidx]{background-image:linear-gradient(90deg, hsla(var(--ton),60%,62%,.16) 0, hsla(var(--ton),60%,62%,.16) var(--zeit,0%), transparent var(--zeit,0%));}
+    /* (D5) KOPFZEILE UND SOFTKEYS - Bild Y0 -> Y1. Der Kopf bekommt eine feine
+       Tiefe, der Chip wird zur Pille, Softkeys werden Karten mit Hover, und
+       G-Code - der Aufruf zur Tat - traegt das Akzentblau statt Anthrazit
+       (weiss auf hsl(ton,70%,38%): Kontrast 5,2, ueber der Norm 4,5). */
+    .hdr{box-shadow:0 1px 0 var(--line), 0 8px 22px -16px hsla(var(--ton),40%,20%,.45);border-bottom-color:transparent;}
+    .msgline #statPts{background:hsl(var(--ton),50%,94%);border:1px solid hsl(var(--ton),35%,84%);border-radius:999px;padding:2px 10px;color:hsl(var(--ton),70%,34%);font-weight:600;}
+    .sk{border-radius:10px;box-shadow:0 1px 2px hsla(var(--ton),30%,20%,.05), 0 6px 14px -10px hsla(var(--ton),30%,20%,.3);transition:background .06s, transform .15s ease, box-shadow .15s ease;}
+    .sk:hover{transform:translateY(-1px);box-shadow:0 2px 4px hsla(var(--ton),30%,20%,.08), 0 10px 20px -12px hsla(var(--ton),30%,20%,.4);}
+    .hsk{border-radius:10px;box-shadow:0 1px 2px hsla(var(--ton),30%,20%,.05), 0 6px 14px -10px hsla(var(--ton),30%,20%,.3);transition:background .06s, transform .15s ease, box-shadow .15s ease;}
+    .hsk:hover{transform:translateY(-1px);box-shadow:0 2px 4px hsla(var(--ton),30%,20%,.08), 0 10px 20px -12px hsla(var(--ton),30%,20%,.4);}
+    .hsk.primary{background:hsl(var(--ton),70%,38%);border-color:hsl(var(--ton),70%,30%);color:#fff;box-shadow:0 10px 22px -10px hsla(var(--ton),70%,38%,.65);}
+    .hsk.primary:active{background:hsl(var(--ton),70%,32%);}
+    /* (D4) WERKZEUGLISTE MIT SOCKEL - Bild X6 -> X7: Icons 92 x 64 statt 54 x 40,
+       jedes auf einem radialen Sockel; die Zeile hebt sich beim Ueberfahren.
+       drawToolIcon misst die CSS-Groesse und zeichnet neu; seine Schwelle
+       "Listen-Icon" liegt deshalb bei 110 px statt 70. */
+    /* !important, weil der Canvas seine Handy-Groesse INLINE traegt (70-arbeitsplan.js) - ohne das blieb er 54 x 40 (Aufnahme D4). */
+    #maskWerkzeuge canvas.toolicon{width:92px !important;height:64px !important;border-radius:10px;background:radial-gradient(ellipse at 50% 80%, hsl(var(--ton),22%,90%) 0%, #fff 70%);box-shadow:inset 0 0 0 1px var(--line-light), 0 4px 10px -6px hsla(var(--ton),30%,20%,.35);}
+    #maskWerkzeuge tbody tr{transition:background .15s;}
+    #maskWerkzeuge tbody tr:hover td{background:hsl(var(--ton),30%,97%);}
+    body.dunkel #maskWerkzeuge canvas.toolicon{background:radial-gradient(ellipse at 50% 80%, hsl(var(--ton),15%,22%) 0%, hsl(var(--ton),13%,15%) 70%);box-shadow:inset 0 0 0 1px hsl(var(--ton),14%,26%);}
+    body.dunkel #maskWerkzeuge tbody tr:hover td{background:hsl(var(--ton),14%,17%);}
+    /* (D8) DUNKELMODUS WERKSTATT - Bild Y4 -> Y5: die gelben Softkeys werden
+       dunkle Karten, aktiv im Akzentblau mit Kante; kein Weiss-auf-Schwarz.
+       Am Handy bleibt der Dunkelmodus, wie er am 05.09. abgenommen wurde. */
+    body.dunkel .sk, body.dunkel .sk.yellow{background:hsl(var(--ton),16%,22%);color:hsl(var(--ton),20%,88%);border-color:hsl(var(--ton),16%,32%);box-shadow:0 8px 16px -12px rgba(0,0,0,.9);}
+    body.dunkel .sk.active{background:hsl(var(--ton),55%,36%);color:#fff;border-color:hsl(var(--ton),60%,52%);box-shadow:0 0 0 3px hsla(var(--ton),60%,52%,.22), 0 8px 16px -12px rgba(0,0,0,.9);}
+    body.dunkel .hsk{background:hsl(var(--ton),16%,22%);color:hsl(var(--ton),20%,88%);border-color:hsl(var(--ton),16%,32%);box-shadow:0 8px 16px -12px rgba(0,0,0,.9);}
+    body.dunkel .hsoftkeys .hsk.primary, body.dunkel .hsk.primary{background:hsl(var(--ton),55%,36%);color:#fff;border-color:hsl(var(--ton),60%,52%);}
+    body.dunkel .hdr{box-shadow:0 1px 0 hsl(var(--ton),14%,22%), 0 8px 22px -16px rgba(0,0,0,.8);}
+    body.dunkel .msgline #statPts{background:hsl(var(--ton),18%,20%);border-color:hsl(var(--ton),18%,30%);color:hsl(var(--ton),60%,74%);}
+    /* (D9) TYPOGRAFIE: Tabellenziffern ueberall, wo Zahlen untereinander
+       stehen; Kachel-Titel eine Stufe leichter - Instrument, nicht Formular. */
+    .ap-row .ap-detail, .ap-row .ap-zeit, .pointlist, #kalkBody, .kalkzeile, .planvorschau, #maskWerkzeuge td{font-variant-numeric:tabular-nums;}
+    .mask.kachelpilot .mrow > label{font-weight:600;}
+    /* (D10) NC-ANSICHT WIE EIN EDITOR - Bild XA -> XB: ncAnsichtMalen legt jede
+       Zeile in ein span.nc-z; hier die Zeilennummer als CSS-Zaehler (nicht im
+       Text, Pruefung 136 bleibt bytegleich), leichtes Zebra, blaue Kante. */
+    /* Der Behaelter auf normal: die Zeilenenden ZWISCHEN den spans (Textknoten) kollabieren, die Bloecke
+       stapeln sich; jeder span traegt sein eigenes pre fuer die Leerzeichen der Kommentare. */
+    #gcodeView{counter-reset:ncz;white-space:normal;}
+    /* min-height: eine LEERE NC-Zeile ist ein leerer Block ohne Zeilenkasten - ohne Mindesthoehe fielen die 43
+       Leerzeilen des Masters zusammen (gemessen: 9 Zeilen auf 156 statt 176 px). */
+    #gcodeView .nc-z{display:block;white-space:pre;min-height:1.5em;counter-increment:ncz;padding-left:50px;position:relative;}
+    #gcodeView .nc-z::before{content:counter(ncz);position:absolute;left:0;width:38px;text-align:right;color:hsl(var(--ton),12%,52%);font-size:11px;font-variant-numeric:tabular-nums;}
+    #gcodeView .nc-z:nth-child(even){background:hsla(var(--ton),30%,60%,.06);}
+    #maskGcode #gcodeView{border-left:4px solid hsl(var(--ton),70%,38%);border-radius:0 10px 10px 0;}
+    /* (D1) DIE SIMULATION ALS BUEHNE - Bild B0 -> B1: eine Ebene ueber dem
+       3D-Canvas (Vignette: dunkler Rand, helle Mitte; Bodenschatten als
+       Ellipse), die Leisten als Glas. Das Bild selbst rendert 96-material-3d
+       weiter unveraendert; die Ebene faengt keine Zeiger. */
+    body.simvoll.sim3dan #simBuehne{display:block;position:absolute;inset:0;pointer-events:none;z-index:3;
+      background:radial-gradient(ellipse at 50% 56%, rgba(255,255,255,0) 44%, hsla(var(--ton),50%,8%,.14) 78%, hsla(var(--ton),50%,8%,.36) 100%), linear-gradient(180deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,0) 26%, rgba(0,0,0,0) 64%, hsla(var(--ton),50%,8%,.28) 100%);}
+    body.simvoll.sim3dan #simBuehne::after{content:'';position:absolute;left:22%;right:22%;top:70%;height:16%;border-radius:50%;background:radial-gradient(ellipse at center, hsla(var(--ton),40%,10%,.26) 0%, hsla(var(--ton),40%,10%,.10) 45%, transparent 70%);}
+    body.simvoll #simBar.show, body.simvoll #simZoomBar.show{background:hsla(var(--ton),22%,96.5%,.9);backdrop-filter:blur(8px);}
+    body.dunkel.simvoll #simBar.show, body.dunkel.simvoll #simZoomBar.show{background:hsla(var(--ton),14%,14%,.88);}
+    /* (D6) STARTBILD: die zuletzt abgelegte Kontur als Einstieg (Bild 20-start
+       zeigte ein Menue, kein Teil). Die Karte gibt es nur, wenn die Ablage
+       etwas hat; ohne Ablage steht der Startbildschirm wie bisher. */
+    .leerhero{display:flex;align-items:center;gap:18px;margin:4px 0 12px;padding:14px 18px;border:1px solid var(--line);border-radius:14px;
+      background:linear-gradient(135deg, hsl(var(--ton),40%,97%), #fff 60%);box-shadow:0 12px 30px -18px hsla(var(--ton),30%,20%,.45);}
+    .leerhero canvas{flex:0 0 auto;width:300px;height:112px;border-radius:10px;background:#fff;box-shadow:inset 0 0 0 1px var(--line-light);}
+    .leerhero .lh-tx{flex:1;min-width:0;}
+    .leerhero .lh-tit{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:hsl(var(--ton),55%,38%);}
+    .leerhero .lh-name{font-size:19px;font-weight:700;color:var(--text);margin:2px 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .leerhero .lh-sub{font-size:12px;color:var(--text-dim);}
+    .leerhero .gcbtn.primary{margin-top:10px;padding:8px 16px;font-size:13px;background:hsl(var(--ton),70%,38%);border-color:hsl(var(--ton),70%,30%);color:#fff;box-shadow:0 8px 18px -10px hsla(var(--ton),70%,38%,.65);}
+    body.dunkel .leerhero{background:linear-gradient(135deg, hsl(var(--ton),16%,16%), hsl(var(--ton),14%,13%) 60%);border-color:hsl(var(--ton),14%,26%);}
+    body.dunkel .leerhero canvas{background:hsl(var(--ton),14%,18%);box-shadow:inset 0 0 0 1px hsl(var(--ton),14%,26%);}
+    /* (D7) BEWEGUNG MIT BEDEUTUNG: das Ampel-Urteil pulst EINMAL, wenn es neu
+       gemalt wird; Kachel und Maske gleiten (oben). Wer Bewegung abgestellt
+       hat, bekommt keine (prefers-reduced-motion). */
+    @keyframes dzUrteilPuls{from{transform:scale(.97);opacity:.45;}to{transform:none;opacity:1;}}
+    .ampel-urteil{animation:dzUrteilPuls .35s ease-out;transform-origin:left center;}
+    @media (prefers-reduced-motion: reduce){
+      .mask, .mask.kachelpilot .mrow, .sk, .hsk, #maskWerkzeuge tbody tr{transition:none !important;}
+      .mask.kachelpilot .mrow:hover, .mask.kachelpilot .mrow:focus-within, .sk:hover, .hsk:hover{transform:none !important;}
+      .ampel-urteil{animation:none !important;}
+    }
+
   }
 </style>
 <style>
@@ -2340,6 +2463,10 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
   .pointlist.wz-tab table{min-width:900px;font-size:11.5px;white-space:nowrap;font-variant-numeric:tabular-nums;}
   .pointlist.wz-tab th{position:sticky;top:0;background:var(--white,#fff);font-size:10.5px;letter-spacing:.3px;}
   .pointlist.wz-tab td,.pointlist.wz-tab th{padding:4px 6px;text-align:right;}
+  /* Werkzeugbild je Zeile (Nachtschicht 18./19.09.2026): das gemeinsame Stylesheet setzt JEDEN Canvas auf display:block und
+     width/height 100 % (02-stil.html) - damit wurde das 26x34-Bild so breit wie die Zelle, und die Liste zeigte drei Zeilen.
+     Hier bleibt es bei seiner eigenen Groesse. */
+  .pointlist.wz-tab td canvas[data-wzic]{width:26px !important;height:34px !important;min-width:0 !important;}
   .pointlist.wz-tab td:nth-child(2),.pointlist.wz-tab th:nth-child(2),.pointlist.wz-tab td:nth-child(11),.pointlist.wz-tab th:nth-child(11),.pointlist.wz-tab td:nth-child(14),.pointlist.wz-tab th:nth-child(14){text-align:left;}
   .fmerk .st.sperr{background:#f1f1f1;color:#666;}
   /* Paket A (12.09.2026): der Q-Zusatz hinter dem neutralen Feldnamen — nur
@@ -2498,6 +2625,53 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     #stepPlan th:nth-child(6), #stepPlan td:nth-child(6),
     #stepPlan th:nth-child(7), #stepPlan td:nth-child(7){display:none;}
   }
+  /* ===== FRAES-FEINSCHLIFF a-h (19.09.2026, Daniels Freigabe der Nachtdurchsicht) ================
+     Acht Befunde aus MORGENBERICHT-DESIGN.md, Teil 2. Was am Laptop wirkt, steht in der 900er-Query;
+     die Stufenleiste (b) und der Leerzustand (h) gelten auf beiden Geraeten, weil es die Elemente dort
+     genauso gibt. Nichts davon beruehrt das gemeinsame Stylesheet - das Drehteil bleibt, wie es ist. */
+  /* (b) Stufenleiste des STEP-Fensters: Nummer, Titel, dann die Knoepfe der Stufe. */
+  #maskStep .gcode-head.stufen{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:stretch;}
+  #maskStep .stufe{display:inline-flex;flex-wrap:wrap;align-items:center;gap:5px;padding:4px 8px 4px 5px;
+    border:1px solid var(--line);border-radius:9px;background:var(--card,#fff);}
+  #maskStep .stufe .nr{width:20px;height:20px;border-radius:50%;background:hsl(var(--ton),70%,38%);color:#fff;
+    font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  #maskStep .stufe .tit{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-right:2px;}
+  #maskStep .stufe .lbl{font-size:11px;color:var(--text-dim);}
+  #maskStep .stufe.stufe-einzeln{flex-basis:100%;border-style:dashed;}
+  #maskStep .stufe.stufe-ansicht{margin-left:auto;}
+  body.dunkel #maskStep .stufe{background:var(--panel);}
+  /* (h) Leere Kontur: die Tabelle sagt, was zu tun ist, statt leer zu bleiben. */
+  #maskKontur .fko-leer{color:var(--text-dim);font-size:12px;text-align:left;padding:8px 6px;font-style:italic;}
+  /* (g) Dunkelmodus: die Zyklus- und Gruppenkacheln der Spalte hatten eigene helle Grundfarben (sk-zyk,
+     sk-grp), die spaeter im Dokument stehen als die Dunkelregel des gemeinsamen Stylesheets und sie bei
+     gleicher Spezifitaet schlagen - deshalb blieben sie weiss. Hier dieselben Toene wie Idee 8 der Dreh-App. */
+  body.dunkel .sk.sk-zyk{background:hsl(var(--ton),16%,22%);color:hsl(var(--ton),20%,88%);border-color:hsl(var(--ton),16%,32%);border-left-color:hsl(var(--ton),60%,52%);}
+  body.dunkel .sk.sk-grp{background:hsl(var(--ton),20%,30%);color:#fff;border-color:hsl(var(--ton),20%,24%);}
+  body.dunkel .sk.sk-grp.auf{background:hsl(var(--ton),55%,36%);border-color:hsl(var(--ton),60%,52%);}
+  @media(min-width:900px){
+    /* (a) Uebernehmen unter dem Fold: bei acht Masken war der Koerper hoeher als sichtbar (gewBohr 904 px auf
+       623), der Knopf erst nach dem Scrollen da. Die Aktionszeile klebt am Boden des scrollenden mask-body;
+       deckender Grund, damit nichts durchscheint. Nur ab 900 px - am Handy scrollt die ganze Maske. */
+    #maskZyklus > .mask-body > #zyAktion{position:sticky;bottom:-1px;z-index:3;margin-top:6px;padding:8px 0 6px;
+      background:var(--card,#fff);border-top:1px solid var(--line-light);box-shadow:0 -10px 14px -12px rgba(0,0,0,.35);}
+    body.dunkel #maskZyklus > .mask-body > #zyAktion{background:var(--panel);}
+    /* (c) Das Meldebanner stand rechts unten AUF der Zyklusspalte (Einlippen unerreichbar, 7 s je Meldung).
+       Links unten liegt nur der Fuss der Arbeitsplan-Liste. */
+    #meldeBanner{left:24px;right:auto;max-width:520px;}
+    /* (d) Stift und Kreuz an ALLEN Zeilen: die Bohrbild- und Konturzeilen trugen sie am Laptop dauerhaft, die
+       Zykluszeilen nie (Basisregel des gemeinsamen Stylesheets: nur am angewaehlten Satz) - im selben Plan
+       sah das wie ein Fehler aus. Die Ordnungsknoepfe bleiben am angewaehlten Schritt. */
+    .ap-row[data-sidx] .ap-edit,.ap-row[data-sidx] .ap-del{display:inline-block;}
+    /* (e) Mit zugeklapptem Formular darf die Werkzeugliste hoeher werden (inline stehen 40 vh, das Handy-Mass). */
+    #maskWerkzeuge #wzListe{max-height:min(58vh, calc(100vh - 300px)) !important;}
+    /* (f) Simulation als Vollbild wie die Dreh-App (dort body.simfull): die Bildflaeche war 1140 x 310 px,
+       darunter 130 px Text. Die Zentrierung der Masken traegt !important, deshalb hier auch. */
+    #maskSim{position:fixed !important;left:0 !important;top:0 !important;transform:none !important;
+      width:100vw !important;max-width:none !important;height:100vh !important;max-height:none !important;
+      border-radius:0;box-shadow:none;border:none;}
+    #maskSim > .mask-head{cursor:default;}
+    #maskSim > .mask-griff{display:none;}
+  }
 </style>
 </head>
 <body class="mode-arbeitsplan">
@@ -2612,7 +2786,9 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <div class="mrow"><label data-ba="ba-fk05b">Name</label><input type="text" id="fkoName" value="Kontur 1" style="width:150px;"></div>
           <div class="mrow"><label data-ba="ba-fk05b">Kontur</label><div class="radiobtns fwrap" id="fkoGeschlBtns"><button data-v="geschlossen" class="sel">geschlossen (Tasche / Insel)</button><button data-v="offen">offen (Konturzug)</button></div></div>
           <div class="mrow"><label data-ba="ba-fk05b-elemente">Startpunkt X / Y</label><input type="number" step="any" id="fkoX0" value="20" style="width:51px;"><input type="number" step="any" id="fkoY0" value="20" style="width:51px;"><span class="unit unit2"><i>X</i><i>Y</i></span></div>
-          <div class="msec">Elemente in Laufrichtung (Endpunkt je Element; Bogen: Radius und Drehsinn, &gt;180° = der längere Bogen; Bogen tangential: nur Endpunkt; Vollkreis: X/Y = Mitte; Rundung/Fase wirken auf die Ecke zum nächsten Element)</div>
+          <div class="msec">Elemente in Laufrichtung</div>
+          <!-- Die Erklaerung stand als Teil der Ueberschrift in Grossbuchstaben ueber zwei Zeilen (Nachtschicht 18.09.2026, Aufnahme F-41) - jetzt als Satz darunter. -->
+          <div style="font-size:12px;color:var(--text-dim);line-height:1.4;margin:2px 0 8px;">Endpunkt je Element. Bogen: Radius und Drehsinn, &gt;180° = der längere Bogen. Bogen tangential: nur der Endpunkt. Vollkreis: X/Y = Mitte. Rundung und Fase wirken auf die Ecke zum nächsten Element.</div>
           <div class="pointlist" id="fkoListe" style="max-height:34vh;overflow-x:auto;"><table style="white-space:nowrap;"><thead><tr><th>#</th><th>Typ</th><th>X</th><th>Y</th><th>R / Fase</th><th>DR</th><th></th><th></th></tr></thead><tbody id="fkoBody"></tbody></table></div>
           <div class="mrow" id="fkoP1"><button class="gcbtn" id="btnFkoGerade" style="flex:1 1 auto;padding:8px;">＋ Gerade</button> <button class="gcbtn" id="btnFkoBogen" style="flex:1 1 auto;padding:8px;">＋ Bogen</button> <button class="gcbtn" id="btnFkoEcke" style="flex:1 1 auto;padding:8px;" title="Rundung oder Fase an der Ecke zum nächsten Element">＋ Rundung / Fase</button> <label class="gcbtn" style="flex:1 1 auto;padding:8px;text-align:center;cursor:pointer;" title="2D-DXF (LINE, ARC, CIRCLE, LWPOLYLINE, SPLINE) in der XY-Ebene — jede Kette wird eine Kontur">&#x2B06; DXF einlesen<input type="file" id="fkoDxfFile" accept=".dxf,.DXF" style="display:none;"></label></div>
           <div class="mrow" style="display:block;"><canvas id="fkoCv" style="width:100%;height:200px;display:block;background:#fff;border:1px solid var(--line);border-radius:4px;"></canvas></div>
@@ -2642,6 +2818,8 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <button class="gcbtn primary" id="btnSimPlay" title="Abspielen / Pause">▶ Start</button>
           <button class="gcbtn" id="btnSimEnde" title="Sofort bis zum Ende rechnen">⏭ Ende</button>
           <button class="gcbtn" id="btnSimNeu" title="Rohteil neu, von vorn">↺ Neu</button>
+          <button class="gcbtn" id="btnSimHilfe" title="Bedienhinweise ein- und ausblenden">&#x24D8;</button>
+          <button class="gcbtn" id="btnSimZeitExport" title="Laufzeit der Simulation, Zahl der Werkzeuge und Wechsel, Aufspannungen als Datei dz-cam-zeit — in der Werkstatt-Pipeline, Blatt 2, Zeit aus DZ CAM laden">&#x21EA; Zeit an die Pipeline</button>
           <label style="font-size:11.5px;display:flex;align-items:center;gap:4px;">Tempo <select id="simTempo" class="tool-select" style="width:auto;min-width:0;"><option value="1">1×</option><option value="5" selected>5×</option><option value="25">25×</option><option value="max">max</option></select></label>
           <span style="display:inline-flex;gap:2px;"><button class="gcbtn" id="btnSimAnsicht2D" title="Draufsicht">2D</button><button class="gcbtn primary" id="btnSimAnsicht3D" title="3D-Ansicht: ziehen = drehen, Rad = Zoom, Doppelklick = Ausgangslage">3D</button></span>
           <label style="display:inline-flex;align-items:center;gap:4px;font-size:12px;white-space:nowrap;"><input type="checkbox" id="simKanten"> Rohteilkanten</label>
@@ -2654,7 +2832,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <canvas id="simGl" style="touch-action:none;width:100%;flex:1 1 auto;min-height:260px;display:none;border:1px solid var(--line);border-radius:4px;background:#e9edf1;touch-action:none;cursor:grab;"></canvas>
           <div id="simRestZeile" style="flex:0 0 auto;font-size:12px;padding:4px 2px 0;"></div>
           <div class="small-hint" id="simHinweise" style="flex:0 0 auto;max-height:18vh;overflow-y:auto;"></div>
-          <div class="small-hint" style="flex:0 0 auto;">Ansicht: Rad oder zwei Finger = Zoom, Ziehen = verschieben (3D: ein Finger dreht, zwei Finger oder Umschalt+Ziehen verschieben), Doppelklick oder ⤢ = einpassen; das Rohteil ist undurchsichtig, seine Kanten zeichnet nur der Haken Rohteilkanten; von unten gesehen zeigt sich die Senkung des Rückwärts-Senkens. 2D-Draufsicht: unberührt blaugrau, Abtrag je tiefer je dunkler, Senkung von unten violett. Werkzeug orange mit Bohrerspitze, Vorschub grün, Eilgang rot gestrichelt, Kollision = rotes Kreuz (Eilgang durch stehendes Material). Zeit aus Vorschubweg / F, Eilgang mit 6 m/min.</div>
+          <div class="small-hint" id="simHilfeText" style="flex:0 0 auto;display:none;">Ansicht: Rad oder zwei Finger = Zoom, Ziehen = verschieben (3D: ein Finger dreht, zwei Finger oder Umschalt+Ziehen verschieben), Doppelklick oder ⤢ = einpassen; das Rohteil ist undurchsichtig, seine Kanten zeichnet nur der Haken Rohteilkanten; von unten gesehen zeigt sich die Senkung des Rückwärts-Senkens. 2D-Draufsicht: unberührt blaugrau, Abtrag je tiefer je dunkler, Senkung von unten violett. Werkzeug orange mit Bohrerspitze, Vorschub grün, Eilgang rot gestrichelt, Kollision = rotes Kreuz (Eilgang durch stehendes Material). Zeit aus Vorschubweg / F, Eilgang mit 6 m/min.</div>
         </div>
       </div>
 
@@ -2665,30 +2843,25 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
            Schritt waere jede Flaecheneinordnung falsch. -->
       <div class="mask" id="maskStep" style="position:fixed;z-index:30;">
         <div class="mask-head"><span class="mtitel">STEP-MODELL</span><span id="stepInfo" style="font-size:10.5px;color:var(--text-dim);font-weight:400;margin-left:8px;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span><button class="gcbtn" id="btnStepZu" style="margin-left:auto;min-width:40px;">✕</button></div>
-        <div class="gcode-head" style="gap:6px;flex-wrap:wrap;">
-          <label class="gcbtn primary" style="padding:8px 12px;cursor:pointer;" title="STEP-Datei (.stp oder .step) laden">&#x2B06; Modell laden<input type="file" id="stepFile" accept=".stp,.step,.STP,.STEP" style="display:none;"></label>
-          <span style="font-size:11px;color:var(--text-dim);">Werkzeugachse</span>
-          <span class="radiobtns" id="stepAchseBtns"><button data-v="+X">+X</button><button data-v="-X">-X</button><button data-v="+Y">+Y</button><button data-v="-Y">-Y</button><button data-v="+Z" class="sel">+Z</button><button data-v="-Z">-Z</button></span>
-          <button class="gcbtn" id="btnStepVorschlag" title="Alle sechs Aufspannlagen bewerten: gr&ouml;&szlig;te Auflage nach unten, dann m&ouml;glichst viel in dieser Aufspannung fertig">Aufspannung vorschlagen</button>
-          <span style="font-size:11px;color:var(--text-dim);">Nullpunkt</span>
-          <span class="radiobtns" id="stepNullBtns"><button data-v="ecke" class="sel">Ecke, Oberkante</button><button data-v="mitte">Mitte, Oberkante</button></span>
-          <button class="gcbtn" id="btnStepRoh" title="Huellquader des Modells als BLK FORM in den Programmkopf">Als Rohteil übernehmen</button>
-          <button class="gcbtn" id="btnStepFeld" title="Die Sollform an das Programm geben — danach rechnen die Zyklen Modell abspanen und Schrägen schlichten damit">Sollform ans Programm</button>
-          <span style="font-size:11px;color:var(--text-dim);">Raster</span>
-          <input type="number" id="stepRaster" step="any" placeholder="auto" title="Rasterweite der Sollform in mm. Leer = automatisch nach Teilgröße (0,3 bis 2 mm). Feiner rechnen kostet Zeit und Speicher (die Zellzahl wächst quadratisch) und bringt zweierlei: den Bahnabstand, den die Rautiefe verlangt, UND die Genauigkeit auf den Flächen. Die KANTEN des Modells gehen seit 17.09.2026 exakt ein; an einer scharfen konvexen Kante bleiben rund ein Vierzigstel der Rasterweite (gemessen 0,0174 mm bei 0,60, 0,0066 bei 0,30, 0,0024 bei 0,15)." style="width:62px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);">
-          <span style="font-size:11px;color:var(--text-dim);">Z-Ebene</span>
-          <select id="stepEbene" style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:210px;"></select>
-          <button class="gcbtn" id="btnStepKonturen" title="Die Schleifen dieser Ebene als XY-Konturen in den Arbeitsplan legen">Konturen übernehmen</button>
-          <button class="gcbtn primary" id="btnStepPlan" title="Der ganze Vorschlag in einem Zug: planen, schruppen, bohren, schlichten &mdash; in dieser Reihenfolge und mit so wenig Werkzeugwechseln wie m&ouml;glich">Programm vorschlagen</button>
-          <button class="gcbtn" id="btnStepFlaechen" title="Nur die Fl&auml;chen: planen, Modell abspanen, Schr&auml;gen schlichten &mdash; die Schritte stehen danach VOR den Bohrungen">Fl&auml;chen übernehmen</button>
-          <button class="gcbtn" id="btnStepBohren" title="Die Bohrungen des Modells als Bohrbilder und Schritte anlegen: ein Zentrierschritt über alle Stellen, danach je Durchmesser einer — größter zuerst">Bohrungen übernehmen</button>
-          <span style="display:inline-flex;gap:2px;"><button class="gcbtn primary" id="btnStepDraht" title="Drahtbild des Modells">Drahtbild</button><button class="gcbtn" id="btnStepSoll" title="Sollform von oben: die Höhe, auf die gefräst werden muss">Sollform</button></span>
+        <div class="gcode-head stufen" style="gap:6px 8px;flex-wrap:wrap;align-items:stretch;">
+          <!-- STUFENLEISTE (19.09.2026, Befund b der Nachtdurchsicht): dreizehn Knoepfe in zwei Reihen ohne
+               erkennbare Reihenfolge, darunter 1400 Zeichen Erklaertext. Jetzt vier Stufen in der Folge, in der die
+               App sie braucht - Rohteil und Sollform VOR dem Vorschlag, denn fStepProgrammVorschlagen prueft das
+               Rohteil gegen das Modell und rechnet die Sollform aus dem Raster. Die Einzelknoepfe (Flaechen,
+               Bohrungen, Konturen einer Z-Ebene) stehen in der Klappe "einzeln"; Sollform, Raster und Genauigkeit
+               erklaert die Anleitung Kap. 5c (Knopf i). Alle Knopf-IDs bleiben, die Verdrahtung in F20 auch. -->
+          <div class="stufe" id="stufeLaden"><span class="nr">1</span><span class="tit">Laden</span><label class="gcbtn primary" style="padding:8px 12px;cursor:pointer;" title="STEP-Datei (.stp oder .step) laden">&#x2B06; Modell laden<input type="file" id="stepFile" accept=".stp,.step,.STP,.STEP" style="display:none;"></label></div>
+          <div class="stufe" id="stufeAusrichten"><span class="nr">2</span><span class="tit">Ausrichten</span><span class="lbl">Werkzeugachse</span><span class="radiobtns" id="stepAchseBtns"><button data-v="+X">+X</button><button data-v="-X">-X</button><button data-v="+Y">+Y</button><button data-v="-Y">-Y</button><button data-v="+Z" class="sel">+Z</button><button data-v="-Z">-Z</button></span><span class="lbl">Nullpunkt</span><span class="radiobtns" id="stepNullBtns"><button data-v="ecke" class="sel">Ecke, Oberkante</button><button data-v="mitte">Mitte, Oberkante</button></span><button class="gcbtn" id="btnStepVorschlag" title="Alle sechs Aufspannlagen bewerten: gr&ouml;&szlig;te Auflage nach unten, dann m&ouml;glichst viel in dieser Aufspannung fertig">Aufspannung vorschlagen</button></div>
+          <div class="stufe" id="stufeRohteil"><span class="nr">3</span><span class="tit">Rohteil &amp; Sollform</span><button class="gcbtn" id="btnStepRoh" title="Huellquader des Modells als BLK FORM in den Programmkopf">Als Rohteil übernehmen</button><span class="lbl">Raster</span><input type="number" id="stepRaster" step="any" placeholder="auto" title="Rasterweite der Sollform in mm. Leer = automatisch nach Teilgröße (0,3 bis 2 mm). Feiner rechnen kostet Zeit und Speicher (die Zellzahl wächst quadratisch) und bringt zweierlei: den Bahnabstand, den die Rautiefe verlangt, UND die Genauigkeit auf den Flächen. Die KANTEN des Modells gehen seit 17.09.2026 exakt ein; an einer scharfen konvexen Kante bleiben rund ein Vierzigstel der Rasterweite (gemessen 0,0174 mm bei 0,60, 0,0066 bei 0,30, 0,0024 bei 0,15)." style="width:62px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepFeld" title="Die Sollform an das Programm geben — danach rechnen die Zyklen Modell abspanen und Schrägen schlichten damit">Sollform ans Programm</button></div>
+          <div class="stufe" id="stufeProgramm"><span class="nr">4</span><span class="tit">Programm</span><button class="gcbtn primary" id="btnStepPlan" title="Der ganze Vorschlag in einem Zug: planen, schruppen, bohren, schlichten &mdash; in dieser Reihenfolge und mit so wenig Werkzeugwechseln wie m&ouml;glich">Programm vorschlagen</button><button class="gcbtn" id="btnStepEinzeln" title="Nur Teile des Vorschlags: die Fl&auml;chen, die Bohrungen oder die Konturen einer Z-Ebene">einzeln &#x25BE;</button></div>
+          <div class="stufe stufe-ansicht"><span class="tit">Ansicht</span><span style="display:inline-flex;gap:2px;"><button class="gcbtn primary" id="btnStepDraht" title="Drahtbild des Modells">Drahtbild</button><button class="gcbtn" id="btnStepSoll" title="Sollform von oben: die Höhe, auf die gefräst werden muss">Sollform</button></span><button class="gcbtn" id="btnStepHilfe" title="Anleitung Kap. 5c: Aufspannung, Sollform, Raster, Genauigkeit">&#x24D8;</button></div>
+          <div class="stufe stufe-einzeln" id="stepEinzeln" style="display:none;"><span class="tit">einzeln &uuml;bernehmen</span><button class="gcbtn" id="btnStepFlaechen" title="Nur die Fl&auml;chen: planen, Modell abspanen, Schr&auml;gen schlichten &mdash; die Schritte stehen danach VOR den Bohrungen">Fl&auml;chen übernehmen</button><button class="gcbtn" id="btnStepBohren" title="Die Bohrungen des Modells als Bohrbilder und Schritte anlegen: ein Zentrierschritt über alle Stellen, danach je Durchmesser einer — größter zuerst">Bohrungen übernehmen</button><span class="lbl">Z-Ebene</span><select id="stepEbene" style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:210px;"></select><button class="gcbtn" id="btnStepKonturen" title="Die Schleifen dieser Ebene als XY-Konturen in den Arbeitsplan legen">Konturen übernehmen</button></div>
         </div>
         <div class="mask-body" style="display:flex;flex-direction:column;gap:6px;min-height:0;">
           <canvas id="stepCv" style="width:100%;flex:1 1 auto;min-height:260px;display:block;border:1px solid var(--line);border-radius:4px;background:#e9edf1;touch-action:none;cursor:grab;"></canvas>
           <div id="stepPlan"></div>
           <div class="small-hint" id="stepBericht" style="flex:0 0 auto;max-height:22vh;overflow-y:auto;"></div>
-          <div class="small-hint" style="flex:0 0 auto;">Ziehen = drehen, Rad oder zwei Finger = Zoom, Doppelklick = Ausgangslage. Farben: <b style="color:#2f6fb2;">waagerecht</b> (Boden oder Decke), <b style="color:#7a8593;">senkrecht</b> (Wand), <b style="color:#d08a2a;">Schräge</b>, <b style="color:#2f9e5a;">Bohrung längs der Achse</b>, <b style="color:#9b6fd0;">quer</b>, <b style="color:#c0392b;">Freiform</b>. Gestrichelt der Hüllquader, kräftig orange die gewählte Z-Ebene. Aus ihr werden mit <b>Konturen übernehmen</b> XY-Konturen für die Zyklen; Bahnen entstehen daraus erst über einen Zyklus. <b>Sollform</b> zeigt das Teil von oben mit der Höhe, auf die gefräst werden muss: hell ist oben, dunkel ist tief, blaugrau heißt "hier steht keine Fläche". Mit <b>Sollform ans Programm</b> bekommen die Schritte <b>Modell abspanen</b> (Z-konstant schruppen) und <b>Schrägen schlichten</b> (über die Rautiefe) dieses Höhenfeld. Das Feld <b>Raster</b> ist die Rasterweite in mm (leer = automatisch nach Teilgröße). Sie bestimmt ZWEI Dinge: der Bahnabstand des Schlichtens kann nur ein Vielfaches davon sein — verlangt die Rautiefe weniger, sagt die App es und hier stellt man feiner. Und sie ist die Genauigkeitsgrenze auf den <b>Flächen</b>: die Kanten des Modells gehen seit dem 17.09.2026 exakt in die Bahn ein, geblieben ist die Auflösung des Feldes — an einer scharfen konvexen Kante rund ein Vierzigstel der Rasterweite (gemessen gegen die exakte Geometrie: 0,0174 mm bei 0,60, 0,0066 bei 0,30, 0,0024 bei 0,15). Feiner rechnen kostet Zeit und Speicher quadratisch. Die Sollform hängt am geladenen Modell und wird NICHT mit dem Programm gespeichert.</div>
+          <div class="small-hint" id="stepLegende" style="flex:0 0 auto;">Ziehen = drehen, Rad oder zwei Finger = Zoom, Doppelklick = Ausgangslage. Farben: <b style="color:#2f6fb2;">waagerecht</b>, <b style="color:#7a8593;">senkrecht</b>, <b style="color:#d08a2a;">Schräge</b>, <b style="color:#2f9e5a;">Bohrung längs</b>, <b style="color:#9b6fd0;">quer</b>, <b style="color:#c0392b;">Freiform</b>; gestrichelt der Hüllquader, orange die gewählte Z-Ebene. Was Sollform, Raster und Genauigkeit bedeuten, steht in der Anleitung Kap. 5c (Knopf &#x24D8; oben).</div>
         </div>
       </div>
 
@@ -2723,8 +2896,11 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <div class="mrow" style="flex-wrap:wrap;gap:6px;">
             <label class="gcbtn" style="flex:1 1 46%;padding:9px;text-align:center;cursor:pointer;" title="ASCII-Export der TOOL.T der Maschine (TNCremo oder Programmierplatz) einlesen — ersetzt die Tabelle der App">&#x2B06; TOOL.T einlesen<input type="file" id="wzImportFile" accept=".T,.t,.txt,.TXT" style="display:none;"></label>
             <button class="gcbtn" id="btnWzExport" style="flex:1 1 46%;padding:9px;" title="Tabelle der App als TOOL.T (ASCII, Layout 606 42x) sichern">&#x2B07; Als TOOL.T sichern</button>
+            <button class="gcbtn" id="btnWzNeu" style="flex:1 1 100%;padding:9px;" title="Neues Werkzeug anlegen: n&auml;chste freie Nummer, das Formular klappt auf">&#xFF0B; Neues Werkzeug</button>
           </div>
-          <div class="msec">Werkzeug anlegen / ändern (Spalten der TOOL.T)</div>
+          <!-- KLAPPGRUPPE (19.09.2026, Befund e): das Formular stand immer offen und drueckte die Liste auf 40 vh.
+               Wie in der Dreh-App klappt es zu; der Stift in der Liste und "Neues Werkzeug" oeffnen es (fWzForm setzt .auf). -->
+          <div class="mgroup" id="fwGrp"><div class="mgroup-head"><span class="pfeil">&#x25B6;&#xFE0E;</span><span class="titel">Werkzeug anlegen / ändern</span><span class="zus">Spalten der TOOL.T — ✎ in der Liste oder Neues Werkzeug</span></div><div class="mgroup-body">
           <div class="mrow"><label data-ba="ba-fk04">T Nummer</label><input type="number" step="1" id="fwNr" value="11"><span class="unit"></span></div>
           <div class="mrow"><label data-ba="ba-fk04">NAME</label><input type="text" id="fwName" value="" style="width:150px;" autocapitalize="characters"></div>
           <div class="mrow"><label data-ba="ba-fk04-typ">Art (TYP)</label><select id="fwArt" style="width:150px;"><option value="zentrierer">NC-Anbohrer / Zentrierer (CENT)</option><option value="bohrer" selected>Bohrer (DRILL)</option><option value="gewindebohrer">Gewindebohrer (TAP)</option><option value="reibahle">Reibahle (REAM)</option><option value="fraeser">Fräser (MILL)</option></select></div>
@@ -2741,7 +2917,8 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <div class="mrow"><label data-ba="ba-fk04-schneide">PITCH Steigung</label><input type="number" step="any" id="fwSteig" value="0"><span class="unit">mm</span></div>
           <div class="mrow"><label data-ba="ba-fk04">DOC Kommentar</label><input type="text" id="fwDoc" value="" style="width:150px;"></div>
           <div class="mrow"><label data-ba="ba-fk04-sf">S / F Vorgabe</label><input type="number" step="any" id="fwS" value="1500" style="width:51px;"><input type="number" step="any" id="fwF" value="150" style="width:51px;"><span class="unit unit2"><i>U/min</i><i>mm/min</i></span></div>
-          <div class="mrow"><button class="gcbtn primary" id="btnWzSave" style="flex:1;padding:9px;">Speichern</button> <button class="gcbtn" id="btnWzNeu" style="padding:9px 12px;">Neu</button> <button class="gcbtn" id="btnWzVorgabe" style="padding:9px 12px;" title="Vorgabetabelle der App wiederherstellen">Vorgabe</button></div>
+          <div class="mrow"><button class="gcbtn primary" id="btnWzSave" style="flex:1;padding:9px;">Speichern</button> <button class="gcbtn" id="btnWzVorgabe" style="padding:9px 12px;" title="Vorgabetabelle der App wiederherstellen">Vorgabe</button></div>
+          </div></div>
           <div class="mrow"><button class="gcbtn" id="btnWzFertig" style="width:100%;padding:10px;">✓ Fertig</button></div>
         </div>
       </div>
@@ -2852,7 +3029,11 @@ angetippte Gruppe ihre Zyklen gleich darunter auf.</li>
 sie an jeder Zeile, rutscht der L&ouml;schknopf je nach L&auml;nge des Zeilentextes mal in die erste,
 mal in die zweite Zeile, und ein wandernder L&ouml;schknopf wird irgendwann falsch getroffen. Die
 Zeile <b>Programmkopf</b> beh&auml;lt ihren Stift dauerhaft &mdash; ein einzelner Knopf kann nicht
-wandern. Am Laptop steht wie bisher alles an jeder Zeile.</p>
+wandern. <b>Am Laptop</b> stehen Stift und Kreuz seit dem 19.09.2026 an <b>jeder</b> Zeile (vorher trugen sie nur
+Bohrbild- und Konturzeilen dauerhaft, die Zykluszeilen nie &mdash; im selben Plan sah das wie ein Fehler aus); die
+Ordnungskn&ouml;pfe &#x25B2;&#x25BC;&#x23FB;&#x29C9; erscheinen weiter nur am angew&auml;hlten Schritt. Das Meldebanner steht am Laptop
+<b>links unten</b>, damit es die Zyklusspalte rechts nicht verdeckt, und im Dunkelmodus sind Zyklusspalte und Fu&szlig;leiste
+seit demselben Tag dunkel.</p>
 
 <h3 id="ba-fk02-stand">Welche Fassung Du vor Dir hast &mdash; und wie sie sich erneuert</h3>
 <p>Oben im Kopf dieser Anleitung steht <b>Stand &lt;Datum Uhrzeit&gt;</b>. Das ist die Fassung, die
@@ -2939,6 +3120,9 @@ sie werden nur f&uuml;r die Spannmittelpr&uuml;fung gebraucht (Kap.&nbsp;3) und 
 geraten n&uuml;tzt es nichts. <b>0 = keine Angabe:</b> dann pr&uuml;ft die App nur Schneide und Schaft und schreibt in die
 Meldung, was sie NICHT gepr&uuml;ft hat. Eine Auskragl&auml;nge unter der Schneidenl&auml;nge weist sie zur&uuml;ck &mdash; dann
 steckte die Schneide im Halter.</dd>
+<dt id="ba-fk04-form">Formular als Klappgruppe</dt><dd>Das Formular <b>Werkzeug anlegen / &auml;ndern</b> ist zugeklappt, solange niemand es braucht &mdash;
+die Liste bekommt den Platz. Der Stift &#x270E; an einer Zeile und der Knopf <b>Neues Werkzeug</b> &ouml;ffnen es mit den Werten; der Gruppenkopf
+klappt es von Hand auf und zu. <b>Speichern</b> schreibt die Zeile, <b>Vorgabe</b> stellt die Werkstatt-Tabelle wieder her (zweimal tippen).</dd>
 <dt id="ba-fk04-import">TOOL.T einlesen / sichern</dt><dd><b>Einlesen:</b> die TOOL.T der Maschine als ASCII-Datei (aus TNCremo, oder am
 Programmierplatz &uuml;ber <code>tnc-wandeln.ps1 -Rueck</code>; die bin&auml;re Datei des TNC-Laufwerks kann die App nicht lesen). Die App
 nimmt die Spaltenstarts aus der Kopfzeile, &uuml;berspringt T0 und leere Pl&auml;tze und ERSETZT ihre Tabelle; S/F bekommen
@@ -2947,6 +3131,9 @@ App als TOOL.T im Spaltenlayout der 606&nbsp;42x &mdash; am Programmierplatz dur
 zur&uuml;ckgekommen; ob eine Maschine mit Stand 340&nbsp;49x die Datei annimmt, ist nicht gepr&uuml;ft. Unbekannte Spalten schreibt
 die App so, wie die TNC-Musterzeile sie hat.</dd>
 <dt id="ba-fk04-sf">S / F Vorgabe</dt><dd>Nur f&uuml;r die App: Drehzahl und Vorschub, mit denen ein neuer Schritt vorbelegt wird.</dd>
+<dt id="ba-fk04-bild">Bild je Werkzeug</dt><dd>Jede Zeile der Liste tr&auml;gt ein kleines Bild, gezeichnet aus den Tabellenwerten (Art aus TYP, Breite aus dem
+Durchmesser, Kugelfr&auml;ser mit runder Spitze) &mdash; derselbe Maler wie in den Hilfebildern der Masken, kein eigenes Bildarchiv. Es zeigt die ART, nicht das Ma&szlig;: ein
+&empty;80-Messerkopf und ein &empty;20-Schaftfr&auml;ser sehen bis auf die Breite gleich aus.</dd>
 </dl>
 
 <h2 id="ba-fk05">5 &nbsp;Positionen (Bohrbilder)</h2>
@@ -2981,6 +3168,8 @@ gilt sie f&uuml;r die Ecke am Startpunkt. Zu gro&szlig;e Rundungen oder Fasen un
 <dt>geschlossen / offen</dt><dd>Eine <b>geschlossene</b> Kontur (Tasche oder Insel) schlie&szlig;t die App mit einer Geraden zum Startpunkt, wenn das
 letzte Element nicht dort endet &mdash; wie die Steuerung im Kontur-Unterprogramm. Eine <b>offene</b> Kontur ist ein Konturzug von Anfang bis Ende;
 dort sagt der Schritt, ob das Werkzeug links oder rechts der Laufrichtung f&auml;hrt.</dd>
+<dt id="ba-fk05b-leer">Leere Kontur</dt><dd>Solange kein Element da ist, sagt die Tabelle es (<i>Noch kein Element &mdash; + Gerade, + Bogen oder DXF einlesen</i>),
+und die Vorschau zeigt nur das Rohteil mit demselben Satz. Startpunkt setzen, dann das erste Element anh&auml;ngen.</dd>
 <dt id="ba-fk05b-dxf">DXF einlesen</dt><dd>Der Knopf <b>DXF einlesen</b> im Kontureditor (oder eine DXF-Datei auf die Seite ziehen) liest eine 2D-Zeichnung in der
 XY-Ebene: <code>LINE</code>, <code>ARC</code>, <code>CIRCLE</code>, <code>LWPOLYLINE</code> und die alte <code>POLYLINE</code> (beide mit Bogen-Bulge) sowie
 <code>SPLINE</code> (&uuml;ber die Fit-Punkte als Polygonzug, mit Hinweis); Zoll-Zeichnungen werden umgerechnet.
@@ -3012,6 +3201,14 @@ Drahtbild. Die App liest die Fl&auml;chen des Volumenmodells &mdash; <b>Ebene, Z
 ordnet jede Fl&auml;che nach ihrer Lage zur <b>Werkzeugachse</b> ein: waagerecht (Boden oder Decke), senkrecht (Wand), Schr&auml;ge mit ihrer Neigung, Bohrung
 l&auml;ngs der Achse oder quer.</p>
 <dl>
+<dt id="ba-fk05c-stufen">Das Fenster in vier Stufen</dt><dd>Die Kopfleiste ist seit dem 19.09.2026 eine <b>Stufenleiste</b> in der Reihenfolge, in der die App
+die Angaben braucht: <b>1 Laden</b> (die STEP-Datei), <b>2 Ausrichten</b> (Werkzeugachse, Nullpunkt, <i>Aufspannung vorschlagen</i> bewertet die
+sechs Lagen), <b>3 Rohteil &amp; Sollform</b> (<i>Als Rohteil &uuml;bernehmen</i> schreibt den H&uuml;llquader in die BLK FORM &mdash; Aufma&szlig; von Hand dazu;
+<i>Raster</i> und <i>Sollform ans Programm</i> geben den Zyklen das H&ouml;henfeld) und <b>4 Programm</b> (<i>Programm vorschlagen</i> plant alles in einem
+Zug; hinter <i>einzeln</i> liegen Fl&auml;chen, Bohrungen und die Konturen einer Z-Ebene). Rohteil und Sollform stehen VOR dem Vorschlag, weil der
+Vorschlag das Rohteil gegen das Modell pr&uuml;ft und ohne Sollform keine Bahn rechnen kann. Rechts <b>Ansicht</b> (Drahtbild / Sollform) und der
+Knopf &#x24D8;, der diese Anleitung an dieser Stelle &ouml;ffnet. Unter dem Bild steht nur noch die Farblegende; was Sollform, Raster und
+Genauigkeit bedeuten, steht in den Abs&auml;tzen darunter.</dd>
 <dt id="ba-fk05c-aufspannung">Aufspannung &mdash; welche Seite nach unten</dt><dd>Beim Drehen gibt es zwei Lagen, beim Fr&auml;sen sechs. Die App bewertet alle
 sechs, sobald ein Modell geladen ist, und zeigt sie als Tafel unter dem Bild. Die Regel dahinter ist die aus der Werkstatt: <b>die gr&ouml;&szlig;te ebene Fl&auml;che
 zeigt nach unten</b>, damit das Teil satt aufliegt und nicht federt &mdash; und in dieser ersten Aufspannung soll m&ouml;glichst viel fertig werden. Die Spalten
@@ -3150,14 +3347,17 @@ und spart 24&nbsp;% der S&auml;tze).</li>
 </ul>
 <b>Es gibt daf&uuml;r keinen Steuerungszyklus.</b> Die iTNC kennt ihn nicht; die App schreibt immer ihre eigenen S&auml;tze, und der Programmkopf des Schritts sagt
 das im Klartext. Vor dem ersten Lauf geh&ouml;rt die Bahn in den Programm-Test und in den Einzelsatz.
-<br><b>Restmaterial:</b> die App sagt nach jedem Lauf, was stehen geblieben ist &mdash; Fl&auml;che, gr&ouml;&szlig;te H&ouml;he, gr&ouml;&szlig;te <b>Breite</b> und
+<br><b>Restmaterial:</b> die App sagt am ENDE jedes Laufs, was stehen geblieben ist (mitten im Lauf steht dort nur, dass das Urteil noch aussteht &mdash; vorher w&auml;re alles noch
+nicht Gefr&auml;ste &bdquo;Rest&ldquo;) &mdash; Fl&auml;che, gr&ouml;&szlig;te H&ouml;he, gr&ouml;&szlig;te <b>Breite</b> und
 die Stelle. Die Breite ist die Aussage: ein Saum in der Gr&ouml;&szlig;e des Arbeitsrasters ist Rechengenauigkeit, eine breitere Stelle erreicht dieses Werkzeug
 wirklich nicht &mdash; dort mit einem kleineren nachsetzen. <b>Genau dies ist der Unterschied zum Zyklus 22:</b> ein einziger zu kleiner Eckenradius l&auml;sst dort
 die ganze Tasche ausfallen; hier wird gefahren, was geht, und der Rest wird benannt.
 <br><b>Rohteil nicht vergessen:</b> <b>Als Rohteil &uuml;bernehmen</b> setzt die BLK FORM auf den <b>H&uuml;llquader des Modells</b> &mdash; ohne
 jedes Aufma&szlig;. Bei einem Teil, dessen Deckfl&auml;che oben liegt, steht dann nichts zum Abspanen da, und die App sagt das im Klartext, statt dem
 Werkzeug die Schuld zu geben. Trag das echte Rohteil ein oder setz Z0 h&ouml;her.
-<br><b>Die Sollform wird NICHT mit dem Programm gespeichert</b> &mdash; sie geh&ouml;rt zum geladenen Modell. Nach dem Neuladen der App also erst wieder Modell
+<br><b>Die Sollform wird NICHT mit dem Programm gespeichert</b> &mdash; sie geh&ouml;rt zum geladenen Modell, und sie geh&ouml;rt zu DEM Programm, das sie mit
+&bdquo;Sollform ans Programm&ldquo; bekommen hat: wer ein anderes Programm l&auml;dt (Vorlage, Ablage, neues Programm), hat dort keine Sollform &mdash; bis zum 18.09.2026 blieb die des
+vorigen Modells stehen, und die Simulation bewertete das neue Programm gegen das alte Teil. Nach dem Neuladen der App also erst wieder Modell
 laden und <b>Sollform ans Programm</b> dr&uuml;cken, sonst meldet die Programmpr&uuml;fung einen roten Befund.</dd>
 <dt id="ba-fk05d-schlichten">Schr&auml;gen schlichten &mdash; &uuml;ber die Rautiefe</dt><dd>Der zweite Schritt auf derselben Sollform, mit dem
 <b>Kugelfr&auml;ser</b>. Nicht die Zustellung ist hier das Mass, sondern die <b>Rautiefe Rz</b>: zwischen zwei Bahnen bleibt ein Kamm stehen, und
@@ -3228,6 +3428,9 @@ Postprozessor. Im Heidenhain-Profil steht das Q-Wort klein hinter dem Namen (&bd
 und die Zyklusnummer der Steuerung steht als Marke im Maskenkopf. Ein Siemens-Post ordnet dieselben Felder sp&auml;ter seinen
 CYCLE-Parametern zu &mdash; die Masken bleiben, wie sie sind. Die Zuordnungstabellen je Zyklus stehen am Ende von Kap.&nbsp;6b.</div>
 <dl>
+<dt id="ba-fk06-uebernehmen">&Uuml;bernehmen bleibt sichtbar</dt><dd>Am Laptop bleibt die Zeile mit <b>&Uuml;bernehmen</b> und <b>Abbrechen</b> am unteren Rand der
+Maske stehen, auch wenn das Formular dar&uuml;ber scrollt (19.09.2026; bei acht Masken war der Knopf vorher erst nach dem Scrollen da). Am Handy scrollt
+die ganze Maske wie bisher.</dd>
 <dt id="ba-fk06-art">Zyklen der Gruppen Bohren und Gewinde</dt><dd>Jede Kachel &ouml;ffnet eine eigene Maske: Zentrieren (iTNC 240),
 Bohren (200), Tieflochbohren (203, Universal-Bohren mit Spanbruch/Entspanen), Tiefbohren (205, mit Vorhalteabst&auml;nden),
 Reiben (201), Ausdrehen (202), R&uuml;ckw&auml;rts-Senken (204), Bohrfr&auml;sen (208), Einlippenbohren (241); Gewinde mit
@@ -3448,6 +3651,12 @@ Ausdrehen 202 mit Freifahren, R&uuml;ckw&auml;rts-Senken 204, Bohrfr&auml;sen 20
 R&uuml;ckz&uuml;ge, Helix, Exzenter-Versatz, Freifahren 0,2&nbsp;mm) &mdash; nach dem Buch nachgebaut, nicht die Steuerung selbst. Beim R&uuml;ckw&auml;rts-Senken ist das Durchfahren
 ohne vorgebohrte Bohrung eine Kollision. Helix und Pendeln ohne ANGLE laufen senkrecht. Nicht dargestellt: Halter und Spannmittel. Der Programm-Test der Steuerung bleibt
 die Referenz vor dem ersten Lauf.</p>
+<p id="ba-fk06d-vollbild"><b>Am Laptop f&uuml;llt die Simulation den Bildschirm</b> (19.09.2026) &mdash; wie im Drehteil geh&ouml;rt die ganze Fl&auml;che dem Bild,
+die Bedienhinweise stehen hinter dem Knopf &#x24D8; in der Kopfleiste (auf beiden Ger&auml;ten), das Kreuz oben rechts schlie&szlig;t.</p>
+<p id="ba-fk06d-pipeline"><b>Zeit an die Werkstatt-Pipeline</b> (19.09.2026): der Knopf in der Kopfleiste der Simulation schreibt die Laufzeit der
+Zeitachse (Vorschub aus F, Eilgang 6&nbsp;m/min, Verweilzeiten), die Zahl der Werkzeuge und Werkzeugwechsel der aktiven Schritte und die
+Aufspannungen (zwei, wenn die Bewertung im STEP-Fenster unter 60&nbsp;% erreichbar sagt) als Datei <code>dz-cam-zeit</code>. In der Pipeline,
+Blatt 2, macht <i>Zeit aus DZ CAM laden</i> daraus Hauptzeit, R&uuml;stzeit und Bearbeitungsseiten mit Herkunft &mdash; den Preis rechnet die Pipeline.</p>
 <p id="ba-fk06d-kanten"><b>Rohteilkanten:</b> Das Rohteil ist in der 3D-Ansicht <b>undurchsichtig</b> &mdash; was hinter dem Bauteil liegt, sieht man nicht. Das ist Absicht: durchscheinende
 R&uuml;ckkanten laufen quer durch Werkzeug und Bahn und verf&auml;lschen die Konturen der Elemente, die sich davor bewegen. Wer die Umrisse des Rohteils trotzdem braucht, setzt
 den Haken <b>Rohteilkanten</b> neben den Kn&ouml;pfen 2D/3D; die Kanten werden dann gezeichnet, bleiben aber hinter dem Material verdeckt (kein Durchsehen). Der Haken wird gemerkt.</p>
@@ -7618,7 +7827,7 @@ function fPlanFlaechen(prog, A, F){
 // faehrt mit dem Fraeser durch die fertigen Loecher.
 function fPlanFlaechenAnlegen(prog, plan, F){
   if(!prog || !plan || !plan.schritte.length) return 0;
-  if(F && plan.schritte.some(sp => sp.art === 'modellSchruppen' || sp.art === 'modellSchlichten')) fStepFeldSetzen(F);
+  if(F && plan.schritte.some(sp => sp.art === 'modellSchruppen' || sp.art === 'modellSchlichten')) fStepFeldSetzen(F, prog);
   const neu = plan.schritte.map(sp => {
     const st = fSchrittNeu(prog, sp.art, sp.t, null);
     Object.assign(st, sp.werte);
@@ -7732,7 +7941,7 @@ function fPlanProgramm(prog, A, F){
 function fPlanProgrammAnlegen(prog, plan, F, ersetzen){
   if(!prog || !plan || !plan.schritte.length) return 0;
   if(ersetzen){ prog.schritte = []; prog.muster = []; }
-  if(F && plan.schritte.some(sp => sp.art === 'modellSchruppen' || sp.art === 'modellSchlichten')) fStepFeldSetzen(F);
+  if(F && plan.schritte.some(sp => sp.art === 'modellSchruppen' || sp.art === 'modellSchlichten')) fStepFeldSetzen(F, prog);
   const m0 = (prog.muster || []).length;
   prog.muster = (prog.muster || []).concat((plan.muster || []).map(m => ({name:m.name, typ:'punkte', punkte:m.punkte.slice()})));
   prog.schritte = prog.schritte || [];
@@ -8092,7 +8301,18 @@ function fSimRestWzText(W){
 // um sie mit jedem Programm zu sichern. Fehlt sie, sagt die Bahn das im
 // Klartext, statt stumm nichts zu tun.
 var F_SOLLFELD = null;
-function fStepFeldSetzen(F){ F_SOLLFELD = F || null; return F_SOLLFELD; }
+// Die Sollform gehoert zu EINEM Programm. Wer sie setzt und das Programm
+// kennt, haengt sie daran - nicht aufzaehlbar, damit JSON.stringify sie beim
+// Sichern auslaesst (zu gross fuer die Ablage, s. o.). fProgrammSetzen nimmt
+// sie beim Laden NUR von dort. Befund der Nachtschicht 18.09.2026 (Aufnahme
+// F-46): nach Rampenblock -> DZ4 Taschen stand die Sollform des Rampenblocks
+// noch, und die Simulation meldete 20875 mm2 Restmaterial, 'dort fehlt eine
+// BAHN' - an einem Programm, das mit dem Modell nichts zu tun hat.
+function fSollformBinden(prog, F){
+  if(!prog || typeof prog !== 'object') return;
+  Object.defineProperty(prog, '__sollform', {value:F || null, writable:true, configurable:true, enumerable:false});
+}
+function fStepFeldSetzen(F, prog){ F_SOLLFELD = F || null; if(prog) fSollformBinden(prog, F_SOLLFELD); return F_SOLLFELD; }
 function fStepFeldHolen(){ return F_SOLLFELD; }
 
 // Exakte quadrierte Abstandsverwandlung nach Felzenszwalb und Huttenlocher:
@@ -11691,8 +11911,8 @@ function fDemoLagerbock(){
 // genau wie es das STEP-Fenster tut.
 function fDemoStepRampe(){
   const A = fStepAusrichten(fStepModell(fStepTestkoerper()), {achse:'+Z'});
-  fStepFeldSetzen(fStepSollfeld(A));
   const p = fProgrammNeu();
+  fStepFeldSetzen(fStepSollfeld(A), p);   // gehoert zu DIESEM Programm (fSollformBinden)
   p.kopf.name = 'DZ22';
   Object.assign(p.kopf, {x0:0, y0:0, z0:-18, x1:80, y1:50, z1:0, sc:2, sc2:50, oberflaeche:0, rz:100, stand:'07'});
   // Schruppen mit dem Schaftfraeser 12, schlichten mit dem Kugelfraeser 8.
@@ -11977,6 +12197,9 @@ function fLadeAkt(){
 }
 function fProgrammSetzen(p, quelle){
   fProg = p; fSel = null; fEditSchritt = -1; fEditMuster = -1; fEditKontur = -1;
+  // Die Sollform kommt NUR mit dem Programm, das sie traegt (fSollformBinden in
+  // F10). Vorher blieb die des vorigen Modells stehen - s. dort.
+  fStepFeldSetzen(p.__sollform || null);
   if(!Array.isArray(p.konturen)) p.konturen = [];   // Programme von vor Paket C3
   // Programme von vor dem 17.09.2026 abends: Modell abspanen trug die
   // Bahnueberlappung (x R) statt ae. 0,8 x R = 40 % vom Durchmesser.
@@ -12052,7 +12275,7 @@ function fArbeitsplanRender(){
          '<button class="ap-edit" data-es="' + i + '">✎</button><button class="ap-del" data-ds="' + i + '">✕</button></div>';
   });
   if(!fProg.schritte.length && !fProg.muster.length){
-    h += '<div style="padding:14px 12px;font-size:12.5px;color:var(--text-dim);line-height:1.5;">Noch leer. Rechts <b>Positionen</b> f&uuml;r ein Bohrbild anlegen, dann <b>Zentrieren</b>, <b>Bohren</b> oder <b>Gewinde</b> darauf setzen. Unter <b>Programme</b> liegen zehn Testvorlagen.</div>';
+    h += '<div style="padding:14px 12px;font-size:12.5px;color:var(--text-dim);line-height:1.5;">Noch leer. Rechts <b>Positionen</b> f&uuml;r ein Bohrbild anlegen, dann <b>Zentrieren</b>, <b>Bohren</b> oder <b>Gewinde</b> darauf setzen. Unter <b>Programme</b> liegen ' + F_DEMOS.length + ' Testvorlagen.</div>';
   }
   body.innerHTML = h;
 }
@@ -12458,6 +12681,8 @@ function fKonturTabelle(){
       '<td>' + (bogen ? '<label style="font-size:11px;white-space:nowrap;"><input type="checkbox" data-kgross="' + i + '"' + (e.gross ? ' checked' : '') + '> &gt;180°</label>' : (ecke ? '<span style="font-size:11px;color:var(--text-dim);">an der Ecke danach</span>' : '')) + '</td>' +
       '<td><button data-khoch="' + i + '" class="gcbtn" title="nach oben"' + (i === 0 ? ' disabled' : '') + '>▲</button><button data-kdel="' + i + '" class="gcbtn">✕</button></td></tr>';
   }).join('');
+  // Leerzustand (19.09.2026, Befund h): eine leere Tabelle ueber einem leeren Kasten sagt nichts - der Satz nennt die drei Wege.
+  if(!fKonturTmp.elemente.length) body.innerHTML = '<tr><td colspan="8" class="fko-leer">Noch kein Element — <b>+ Gerade</b>, <b>+ Bogen</b> oder <b>DXF einlesen</b>.</td></tr>';
 }
 function fKonturLesen(){
   const kt = {name:getStr('fkoName').trim() || 'Kontur', geschlossen:(selBtnVal('fkoGeschlBtns') || 'geschlossen') === 'geschlossen', x0:getNum('fkoX0', 0), y0:getNum('fkoY0', 0),
@@ -12499,7 +12724,11 @@ function fKonturSync(){
   const dunkel = document.body.classList.contains('dunkel');
   ctx.strokeStyle = dunkel ? '#9fb3c4' : '#3d5a73'; ctx.lineWidth = 1; ctx.setLineDash([5, 3]);
   ctx.strokeRect(X(k.x0), Y(k.y1), (k.x1 - k.x0) * sc, (k.y1 - k.y0) * sc); ctx.setLineDash([]);
-  if(!K.seg.length) return;
+  if(!K.seg.length){   // (h) derselbe Satz wie in der Tabelle, mitten im Rohteil
+    ctx.fillStyle = dunkel ? '#9fb3c4' : '#6b7a88'; ctx.font = '12px Arial'; ctx.textAlign = 'center';
+    ctx.fillText('Noch kein Element — Startpunkt setzen, dann + Gerade oder + Bogen', W / 2, H / 2); ctx.textAlign = 'left';
+    return;
+  }
   ctx.strokeStyle = '#e07020'; ctx.lineWidth = 2; ctx.fillStyle = 'rgba(224,112,32,.14)';
   ctx.beginPath(); fKonturPfad(ctx, K.seg, X, Y, sc); if(kt.geschlossen){ ctx.closePath(); ctx.fill(); } ctx.stroke();
   // Startmarke und Pfeil in Laufrichtung am ersten Element
@@ -12903,7 +13132,7 @@ function fZyklusMaskeHtml(art, prog){
     h += '<div class="mrow" id="zr_' + f + '">' + label(f) + eingabe(f) + '</div>';
   });
   zu();
-  h += '<div class="mrow"><button class="gcbtn primary ok-gruen" id="btnZyOk" style="flex:1 1 auto;min-width:0;padding:9px;">✓ Übernehmen</button> <button class="gcbtn ab-rot" id="btnZyCancel" style="padding:10px 16px;">✕ Abbrechen</button></div>';
+  h += '<div class="mrow" id="zyAktion"><button class="gcbtn primary ok-gruen" id="btnZyOk" style="flex:1 1 auto;min-width:0;padding:9px;">✓ Übernehmen</button> <button class="gcbtn ab-rot" id="btnZyCancel" style="padding:10px 16px;">✕ Abbrechen</button></div>';
   return h;
 }
 // Felder, die im einfachen Modus verborgen liegen (Gruppen '#!').
@@ -13225,11 +13454,44 @@ function fWzListe(){
   const body = document.getElementById('wzBody'); if(!body) return;
   const z = (v) => { const n = +v || 0; return String(Math.round(n * 1000) / 1000); };
   body.innerHTML = (fProg.werkzeuge || []).slice().sort((a, b) => a.nr - b.nr).map(w =>
-    '<tr data-wz="' + w.nr + '"><td><b>' + w.nr + '</b></td><td title="' + esc(F_WERKZEUGARTEN[w.art] || w.art) + '">' + esc(w.name) + '</td>' +
+    '<tr data-wz="' + w.nr + '"><td style="white-space:nowrap;text-align:left;padding-right:10px;"><b style="display:inline-block;min-width:18px;text-align:right;margin-right:6px;">' + w.nr + '</b><canvas data-wzic="' + w.nr + '" width="26" height="34" style="display:inline-block;vertical-align:middle;"></canvas></td><td title="' + esc(F_WERKZEUGARTEN[w.art] || w.art) + '">' + esc(w.name) + '</td>' +
     '<td>' + klNum((+w.d || 0) / 2) + '</td><td>' + z(w.d) + '</td><td>' + klNum(w.l || 0) + '</td><td>' + klNum(w.r2 || 0) + '</td><td>' + klNum(w.dl || 0) + '</td><td>' + klNum(w.dr || 0) + '</td>' +
     '<td>' + z(w.lcuts) + '</td><td>' + z(w.angle) + '</td><td>' + esc(fToolTyp(w)) + '</td><td>' + z(w.steigung) + '</td><td>' + z(w.spitze) + '</td><td>' + esc(w.doc || '') + '</td>' +
     '<td>' + z(w.s) + '</td><td>' + z(w.f) + '</td>' +
     '<td><button class="gcbtn" data-wzedit="' + w.nr + '">✎</button> <button class="gcbtn" data-wzdel="' + w.nr + '">✕</button></td></tr>').join('');
+  fWzIcons(body);
+}
+// WERKZEUGBILDER IN DER LISTE (Nachtschicht 18.09.2026): die Dreh-App zeigt
+// jedes Werkzeug als Schneidengrafik, die Fraes-Liste war nur Zahlen. Der
+// Maler der Hilfebilder (hbBohrer) zeichnet aus denselben Tabellenwerten -
+// Art aus TYP/art, Breite aus dem Durchmesser, Kugelfraeser mit runder
+// Spitze. HB_PROT ist der Protokollpuffer der Hilfebilder (Pruefung 15) und
+// bleibt unberuehrt.
+function fWzIconArt(w){
+  const typ = String(fToolTyp(w) || '').toUpperCase();
+  if(w.art === 'zentrierer' || typ === 'CENT') return 'zentrieren';
+  if(w.art === 'gewindebohrer' || typ === 'TAP') return 'gewinde';
+  if(w.art === 'reibahle' || typ === 'REAM') return 'reiben';
+  if(w.art === 'fraeser' || typ === 'MILL') return 'fraeser';
+  return 'bohrer';
+}
+function fWzIcons(body){
+  const liste = (body && body.querySelectorAll) ? body.querySelectorAll('canvas[data-wzic]') : [];
+  if(!liste || !liste.length) return;
+  const merk = HB_PROT; HB_PROT = [];
+  try{
+    Array.prototype.forEach.call(liste, cv => {
+      const w = fWerkzeug(+cv.dataset.wzic); const c = cv.getContext ? cv.getContext('2d') : null; if(!w || !c) return;
+      const W = cv.width || 26, H = cv.height || 34; c.clearRect(0, 0, W, H);
+      const art = fWzIconArt(w);
+      const b = Math.max(6, Math.min(W - 6, W * Math.min(1, Math.max(0.35, (+w.d || 8) / 24))));   // 8 mm = ein Drittel der Zelle, ab 24 mm die volle Breite
+      hbBohrer(c, W / 2, 4, H - 3, b, art);
+      if(art === 'fraeser' && typeof fPlanIstKugel === 'function' && fPlanIstKugel(w)){
+        c.fillStyle = '#f5d326'; c.strokeStyle = '#6b4d00'; c.lineWidth = 0.8;
+        c.beginPath(); c.arc(W / 2, H - 3 - b / 2, b / 2, 0, Math.PI); c.closePath(); c.fill(); c.stroke();
+      }
+    });
+  } finally { HB_PROT = merk; }
 }
 function fWzForm(w){
   setVal('fwNr', w.nr); setVal('fwName', w.name || ''); setVal('fwArt', w.art || 'bohrer'); setVal('fwD', w.d || 0);
@@ -13237,6 +13499,8 @@ function fWzForm(w){
   setVal('fwLcuts', w.lcuts || 0); setVal('fwAngle', w.angle || 0);
   setVal('fwAuskrag', w.auskrag || 0); setVal('fwHalterD', w.halterD || 0);
   setVal('fwSpitze', w.spitze || 118); setVal('fwSteig', w.steigung || 0); setVal('fwDoc', w.doc || ''); setVal('fwS', w.s || 1000); setVal('fwF', w.f || 100);
+  // Das Formular ist eine Klappgruppe (19.09.2026): wer ein Werkzeug bearbeitet oder anlegt, soll es sehen.
+  const grp = document.getElementById('fwGrp'); if(grp && grp.classList) grp.classList.add('auf');
 }
 // TOOL.T einlesen (ASCII-Export der Maschine) — ersetzt die Tabelle der App.
 function fWzImport(text, dateiname){
@@ -14217,6 +14481,12 @@ function fSimRestWzHolen(R){
   SIM.restWz = W; SIM.restWzKey = key;
   return W;
 }
+// Das Restmaterial-Urteil gilt erst, wenn der Lauf DURCH ist. Vorher ist alles,
+// was noch nicht gefraest wurde, 'Rest' - und die Zeile sagte am ANFANG des
+// Laufs '20875 mm2, dort fehlt eine BAHN' ueber ein Programm, das noch gar
+// nicht gelaufen war (Nachtschicht 18.09.2026, Aufnahme F-46). Bild und Zeile
+// warten jetzt auf das Ende; mitten im Lauf steht das dabei.
+function fSimAmEnde(){ return !!(SIM.liste && SIM.gesamt > 0 && SIM.t >= SIM.gesamt - 1e-6); }
 function fSimRestHolen(){
   const F = SIM.feld, S = fStepFeldHolen();
   if(!F || !S){ SIM.rest = null; return null; }
@@ -14252,7 +14522,7 @@ function fSimZeichnen2D(){
   const X = (x) => ox + (x - F.x0) * sc, Y = (y) => oy - (y - F.y0) * sc;
   // Feld als Bild: Hoehe -> Grauwert (Oberkante hell, Grund dunkel), unberuehrt
   // blaugrau, Senkung von unten (nur hu angehoben) violett
-  const RM = SIM.restAn ? fSimRestHolen() : null;
+  const RM = (SIM.restAn && fSimAmEnde()) ? fSimRestHolen() : null;
   const restKey = RM ? ('r' + RM.zellen) : 'r-';
   if(!SIM.bild || SIM.bild.gen !== F.gen || SIM.bild.nx !== F.nx || SIM.bild.rest !== restKey){
     const off = document.createElement('canvas'); off.width = F.nx; off.height = F.ny;
@@ -14507,7 +14777,7 @@ function fSim3dZeichnen(){
   }
   // RESTMATERIAL je Gitterpunkt. Eigener Schluessel, weil der Schalter den
   // Befund an- und abschaltet, ohne dass sich am Feld etwas aendert.
-  const RM3 = SIM.restAn ? fSimRestHolen() : null;
+  const RM3 = (SIM.restAn && fSimAmEnde()) ? fSimRestHolen() : null;
   const restKey3 = (RM3 ? ('r' + RM3.zellen + '/' + RM3.gen) : 'aus') + '/' + F.nx + 'x' + F.ny;
   if(SIM3D.restKey !== restKey3){
     gl.bindBuffer(gl.ARRAY_BUFFER, b.rest);
@@ -14614,6 +14884,7 @@ function fSimInfo(){
   const rz = document.getElementById('simRestZeile');
   if(rz){
     if(!SIM.restAn){ rz.textContent = ''; }
+    else if(!fSimAmEnde()){ rz.textContent = 'Restmaterial: Urteil erst am Ende des Laufs (Knopf Ende).'; rz.style.color = 'var(--text-dim)'; rz.style.fontWeight = '400'; }
     else {
       const R = fSimRestHolen();
       rz.textContent = fSimRestText(R) + fSimRestWzText(fSimRestWzHolen(R));
@@ -14648,6 +14919,25 @@ function fSimAnsicht(a){
   ['2d', '3d'].forEach(k => { const bt = document.getElementById('btnSimAnsicht' + k.toUpperCase()); if(bt) bt.classList.toggle('primary', k === a); });
   fSimZeichnen();
 }
+// ZEIT AN DIE WERKSTATT-PIPELINE (19.09.2026, Daniels Freigabe: die Pipeline rechnet den
+// Preis, die CAM-Apps liefern die Zeiten). Laufzeit = Zeitachse der Simulation (Vorschub
+// aus F, Eilgang 6 m/min, Verweilzeiten), Werkzeuge und Wechsel aus den aktiven Schritten,
+// Aufspannungen aus der Bewertung des STEP-Fensters (unter 60 % erreichbar = eine zweite).
+function fZeitDatei(){
+  // Frisch aus dem aktuellen Programm - nie aus SIM: dort kann die Zeitachse eines anderen
+  // Programms stehen (Pruefstand: 4,022 gegen 6,491 min), und die Datei traegt seinen Namen.
+  const B = fSimBahnen(fProg), Z = fSimZeitachse(B.bahnen, fProg);
+  const aktiv = (fProg.schritte || []).filter(s => s.aktiv !== false);
+  const ts = new Set(); let wechsel = 0, letzt = null;
+  aktiv.forEach(s => { if(s.t == null) return; ts.add(String(s.t)); if(String(s.t) !== letzt){ wechsel++; letzt = String(s.t); } });
+  let aufsp = 1;
+  try{ if(STEP.plan && STEP.plan.lagen){ const l = STEP.plan.lagen.find(x => x.achse === STEP.plan.vorschlag) || STEP.plan.lagen[0]; if(l && l.fertig < 0.6) aufsp = 2; } }catch(e){}
+  const prof = F_PROFILE[(fProg.kopf && fProg.kopf.profil) || 'HEIDENHAIN_ITNC530'] || {};
+  return { format:'dz-cam-zeit', version:1, quelle:'fraesen', datum:new Date().toISOString(),
+    programm:{ name:fName(fProg), maschine:prof.name || 'Heidenhain iTNC 530' },
+    zeiten:{ komplett_min:Math.round(Z.gesamt / 60 * 1000) / 1000, werkzeuge:ts.size, wechsel:wechsel },
+    aufspannungen:aufsp };
+}
 function fSimOeffnen(){
   fSimAufbauen();
   maskZeigen('maskSim');
@@ -14660,6 +14950,14 @@ function fSimOeffnen(){
   on('btnSimEnde', ()=>{ fSimPause(); if(!SIM.liste) fSimAufbauen(); fSimBis(SIM.gesamt); fSimZeichnen(); fSimInfo(); const b = document.getElementById('btnSimPlay'); if(b) b.textContent = '▶ Von vorn'; });
   on('btnSimNeu', ()=>{ fSimPause(); fSimAufbauen(); const b = document.getElementById('btnSimPlay'); if(b) b.textContent = '▶ Start'; });
   on('btnSimZu', ()=>{ fSimPause(); maskZu('maskSim'); });
+  on('btnSimZeitExport', ()=>{
+    const z = fZeitDatei();
+    if(!(z.zeiten.komplett_min > 0)){ melde('Keine Laufzeit — erst Schritte anlegen.'); return; }
+    exportiereDatei('zeit-' + z.programm.name + '.json', JSON.stringify(z, null, 1), 'Zeit-Datei fuer die Pipeline');
+    melde('Zeit-Datei geschrieben: ' + z.zeiten.komplett_min + ' min, ' + z.zeiten.werkzeuge + ' Werkzeuge, ' + z.zeiten.wechsel + ' Wechsel, ' + z.aufspannungen + ' Aufspannung(en) — in der Pipeline unter Zeit aus DZ CAM laden.');
+  });
+  // Der Hinweistext (130 px unter dem Bild) steht seit dem 19.09.2026 hinter einem i-Knopf - die Flaeche gehoert dem Bild.
+  on('btnSimHilfe', ()=>{ const h = document.getElementById('simHilfeText'); if(!h) return; h.style.display = (h.style.display === 'none') ? '' : 'none'; const m = document.getElementById('maskSim'); if(m && m.classList.contains('show')) setTimeout(fSimZeichnen, 0); });
   on('btnSimAnsicht2D', ()=>fSimAnsicht('2d'));
   on('btnSimAnsicht3D', ()=>fSimAnsicht('3d'));
   on('btnSimZoomIn', ()=>fSimAnsichtKnopf('in')); on('btnSimZoomOut', ()=>fSimAnsichtKnopf('out')); on('btnSimFit', ()=>fSimAnsichtKnopf('fit'));
@@ -15076,7 +15374,7 @@ function fStepFeldUebernehmen(){
   if(!STEP.aus){ melde('FEHLER: kein Modell geladen.'); return false; }
   if(!STEP.feld){ try{ STEP.feld = fStepSollfeld(STEP.aus, STEP.raster || 0); STEP.bild = null; }catch(e){ STEP.feld = null; } }
   if(!STEP.feld){ melde('FEHLER: die Sollform liess sich nicht rechnen.'); return false; }
-  fStepFeldSetzen(STEP.feld);
+  fStepFeldSetzen(STEP.feld, fProg);
   const F = STEP.feld;
   fRender();
   melde('Sollform ans Programm: ' + F.nx + ' x ' + F.ny + ' Rasterstellen zu ' + fRund(F.raster)
@@ -15183,6 +15481,9 @@ function fStepRohUebernehmen(){
   const on = (id, fn) => { const el = document.getElementById(id); if(el) el.onclick = fn; };
   on('hskStep', ()=>{ maskZeigen('maskStep'); setTimeout(()=>{ try{ fStepBericht(); fStepPlanMalen(); fStepZeichnen(); }catch(e){} }, 0); });
   on('btnStepZu', ()=>maskZu('maskStep'));
+  // Stufenleiste (19.09.2026): die Einzelknoepfe liegen in einer Klappe, der i-Knopf springt in die Anleitung.
+  on('btnStepEinzeln', ()=>{ const e = document.getElementById('stepEinzeln'); if(!e) return; const zu = e.style.display === 'none'; e.style.display = zu ? '' : 'none'; const b = document.getElementById('btnStepEinzeln'); if(b) b.classList.toggle('primary', zu); });
+  on('btnStepHilfe', ()=>baOeffnen('ba-fk05c-stufen'));
   wireRadioGroup('stepAchseBtns', (v)=>{ STEP.achse = v; fStepAusrichtenJetzt(); fStepPlanMalen(); });
   wireRadioGroup('stepNullBtns', (v)=>{ STEP.nullp = v; fStepAusrichtenJetzt(); });
   on('btnStepVorschlag', ()=>{
@@ -15226,7 +15527,7 @@ function fStepRohUebernehmen(){
       STEP.feld = null; STEP.bild = null;
       if(STEP.aus){
         try{ STEP.feld = fStepSollfeld(STEP.aus, STEP.raster || 0); }catch(e){ STEP.feld = null; }
-        if(STEP.feld && fStepFeldHolen()) fStepFeldSetzen(STEP.feld);   // schon uebergeben: mitziehen
+        if(STEP.feld && fStepFeldHolen()) fStepFeldSetzen(STEP.feld, fProg);   // schon uebergeben: mitziehen
       }
       fStepBericht(); fStepZeichnen();
       melde(STEP.feld ? ('Sollform-Raster ' + fRund(STEP.feld.raster) + ' mm: ' + STEP.feld.nx + ' x ' + STEP.feld.ny

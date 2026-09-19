@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="18.09.2026 20:39 (fbf7b5df)";</script>
+<script>window.__DZ_STAND="19.09.2026 09:46 (5123885f)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1638,6 +1638,12 @@ body.dunkel .rz-taste{background:var(--key);color:var(--text);border-color:var(-
 .zw-vorlagen{flex-wrap:wrap;gap:6px;}
 .zw-vorlagen .gcbtn{flex:1 1 auto;padding:7px 8px;font-size:13px;}
 body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
+/* DESIGN-PAKET 19.09.2026: zwei Elemente, die es nur am Laptop gibt (Buehne der
+   3D-Simulation, Startkarte der zuletzt abgelegten Kontur). Unter 900 px sind sie
+   display:none - kein Pixel anders (Regel 3); die Laptop-Regeln stehen am Ende
+   der 900er-Query. */
+#simBuehne{display:none;}
+.leerhero{display:none;}
 
 @media(min-width:900px){
     /* Arbeitsplanzeile bleibt am Desktop EINZEILIG. Dort ist Platz
@@ -1742,7 +1748,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     .mask, body.mode-grafisch #canvasWrap .mask{
       position:fixed !important; inset:auto !important;
       left:50% !important; top:50% !important;
-      transform:translate(-50%,-50%) scale(.985) !important;
+      transform:translate(-50%, calc(-50% + 12px)) scale(.985) !important;   /* Idee 7: gleitet beim Oeffnen 12 px auf */
       width:min(940px,92vw) !important; height:auto !important;
       max-height:88vh !important; max-width:none !important;
       border:1px solid hsl(var(--ton), 21.7%, 77.5%); border-radius:14px;
@@ -2268,6 +2274,123 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
        Fertig); sonst blieb die halbe Hoehe leer (Aufnahme p3-11). */
     body.maskvoll #maskWerkzeuge .pointlist{max-height:calc(100vh - 230px) !important;}
 
+    /* =================================================================
+       DESIGN-PAKET LAPTOP (19.09.2026). Daniels Auftrag der Nacht 18./19.09.
+       ("Wow-Effekt hochwertiger Apps") und seine Freigabe am Morgen ("setze
+       das alles so um"). Vorher/Nachher-Bilder: nachtbericht-2026-09-18/dreh/.
+       Was hier steht, ist TIEFE UND BUEHNE auf dem bestehenden flachen Stil:
+       weiche Schatten statt Rahmen, EIN Akzentblau, Bewegung nur mit
+       Bedeutung. Keine Verlaeufe auf Knoepfen (Pruefung 109, Doktrin vom
+       30.08.), alle Blautoene am Regler --ton (Pruefung 61).
+       ================================================================= */
+    /* (D3) MASKEN MIT TIEFE - Bild X0 -> X1. Die Kachel hebt sich mit einem
+       weichen Schatten ab, der Fokus leuchtet orange statt nur zu rahmen,
+       und Uebernehmen ist der EINE blaue Knopf der Maske (er war anthrazit:
+       der wichtigste Knopf war der unauffaelligste). */
+    .mask.kachelpilot .mrow{
+      box-shadow:0 1px 2px hsla(var(--ton),30%,20%,.06), 0 6px 14px -10px hsla(var(--ton),30%,20%,.25);
+      transition:box-shadow .18s ease, transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .mask.kachelpilot .mrow:hover{transform:translateY(-1px);box-shadow:0 2px 4px hsla(var(--ton),30%,20%,.08), 0 12px 24px -12px hsla(var(--ton),30%,20%,.35);}
+    .mask.kachelpilot .mrow:focus-within{transform:translateY(-1px);box-shadow:0 0 0 3px hsla(28,92%,45%,.22), 0 10px 24px -12px hsla(28,92%,45%,.45);}
+    .mask.kachelpilot .mrow.k-aktion, .mask.kachelpilot .mrow.k-aktion:hover{transform:none;box-shadow:none;}
+    .mask.kachelpilot .mrow.k-aktion{background:linear-gradient(180deg, transparent, hsl(var(--ton),25%,97%) 45%);border-top:1px solid var(--line-light);}
+    .mask .k-aktion .gcbtn.ok-gruen, .mask .k-aktion button.ok-gruen{
+      background:hsl(var(--ton),70%,38%);border-color:hsl(var(--ton),70%,30%);color:#fff;
+      box-shadow:0 8px 18px -10px hsla(var(--ton),70%,38%,.65);
+    }
+    .mask .k-aktion .gcbtn.ok-gruen:active, .mask .k-aktion button.ok-gruen:active{background:hsl(var(--ton),70%,32%);}
+    body.dunkel .mask .k-aktion .gcbtn.ok-gruen, body.dunkel .mask .k-aktion button.ok-gruen{background:hsl(var(--ton),55%,40%);border-color:hsl(var(--ton),55%,30%);color:#fff;}
+    body.dunkel .mask.kachelpilot .mrow.k-aktion{background:linear-gradient(180deg, transparent, hsl(var(--ton),14%,13%) 45%);border-top-color:hsl(var(--ton),14%,24%);}
+    canvas.mask-help, .mask-help{border-radius:12px;box-shadow:inset 0 0 0 1px var(--line-light), 0 10px 30px -18px hsla(var(--ton),30%,20%,.4);}
+    /* (D2) ZEITBALKEN IM ARBEITSPLAN - Bild Z0 -> Z1. Jede Zyklus-Zeile traegt
+       hinter sich einen Balken, Laenge = Anteil an der laengsten Hauptzeit
+       (--zeit setzt renderArbeitsplan je Zeile). Man sieht ohne Lesen, wo
+       die Zeit steckt - am Master steckt ein Drittel im z-parallelen
+       Schruppen. Am Handy gibt es die Variable, aber keine Regel dazu. */
+    .ap-row[data-sidx]{background-image:linear-gradient(90deg, hsla(var(--ton),60%,42%,.10) 0, hsla(var(--ton),60%,42%,.10) var(--zeit,0%), transparent var(--zeit,0%));background-repeat:no-repeat;}
+    .ap-row[data-sidx].sel{background-image:linear-gradient(90deg, hsla(28,90%,50%,.16) 0, hsla(28,90%,50%,.16) var(--zeit,0%), transparent var(--zeit,0%)), linear-gradient(90deg,#fff3d9,#fff8ea);}
+    body.dunkel .ap-row[data-sidx]{background-image:linear-gradient(90deg, hsla(var(--ton),60%,62%,.16) 0, hsla(var(--ton),60%,62%,.16) var(--zeit,0%), transparent var(--zeit,0%));}
+    /* (D5) KOPFZEILE UND SOFTKEYS - Bild Y0 -> Y1. Der Kopf bekommt eine feine
+       Tiefe, der Chip wird zur Pille, Softkeys werden Karten mit Hover, und
+       G-Code - der Aufruf zur Tat - traegt das Akzentblau statt Anthrazit
+       (weiss auf hsl(ton,70%,38%): Kontrast 5,2, ueber der Norm 4,5). */
+    .hdr{box-shadow:0 1px 0 var(--line), 0 8px 22px -16px hsla(var(--ton),40%,20%,.45);border-bottom-color:transparent;}
+    .msgline #statPts{background:hsl(var(--ton),50%,94%);border:1px solid hsl(var(--ton),35%,84%);border-radius:999px;padding:2px 10px;color:hsl(var(--ton),70%,34%);font-weight:600;}
+    .sk{border-radius:10px;box-shadow:0 1px 2px hsla(var(--ton),30%,20%,.05), 0 6px 14px -10px hsla(var(--ton),30%,20%,.3);transition:background .06s, transform .15s ease, box-shadow .15s ease;}
+    .sk:hover{transform:translateY(-1px);box-shadow:0 2px 4px hsla(var(--ton),30%,20%,.08), 0 10px 20px -12px hsla(var(--ton),30%,20%,.4);}
+    .hsk{border-radius:10px;box-shadow:0 1px 2px hsla(var(--ton),30%,20%,.05), 0 6px 14px -10px hsla(var(--ton),30%,20%,.3);transition:background .06s, transform .15s ease, box-shadow .15s ease;}
+    .hsk:hover{transform:translateY(-1px);box-shadow:0 2px 4px hsla(var(--ton),30%,20%,.08), 0 10px 20px -12px hsla(var(--ton),30%,20%,.4);}
+    .hsk.primary{background:hsl(var(--ton),70%,38%);border-color:hsl(var(--ton),70%,30%);color:#fff;box-shadow:0 10px 22px -10px hsla(var(--ton),70%,38%,.65);}
+    .hsk.primary:active{background:hsl(var(--ton),70%,32%);}
+    /* (D4) WERKZEUGLISTE MIT SOCKEL - Bild X6 -> X7: Icons 92 x 64 statt 54 x 40,
+       jedes auf einem radialen Sockel; die Zeile hebt sich beim Ueberfahren.
+       drawToolIcon misst die CSS-Groesse und zeichnet neu; seine Schwelle
+       "Listen-Icon" liegt deshalb bei 110 px statt 70. */
+    /* !important, weil der Canvas seine Handy-Groesse INLINE traegt (70-arbeitsplan.js) - ohne das blieb er 54 x 40 (Aufnahme D4). */
+    #maskWerkzeuge canvas.toolicon{width:92px !important;height:64px !important;border-radius:10px;background:radial-gradient(ellipse at 50% 80%, hsl(var(--ton),22%,90%) 0%, #fff 70%);box-shadow:inset 0 0 0 1px var(--line-light), 0 4px 10px -6px hsla(var(--ton),30%,20%,.35);}
+    #maskWerkzeuge tbody tr{transition:background .15s;}
+    #maskWerkzeuge tbody tr:hover td{background:hsl(var(--ton),30%,97%);}
+    body.dunkel #maskWerkzeuge canvas.toolicon{background:radial-gradient(ellipse at 50% 80%, hsl(var(--ton),15%,22%) 0%, hsl(var(--ton),13%,15%) 70%);box-shadow:inset 0 0 0 1px hsl(var(--ton),14%,26%);}
+    body.dunkel #maskWerkzeuge tbody tr:hover td{background:hsl(var(--ton),14%,17%);}
+    /* (D8) DUNKELMODUS WERKSTATT - Bild Y4 -> Y5: die gelben Softkeys werden
+       dunkle Karten, aktiv im Akzentblau mit Kante; kein Weiss-auf-Schwarz.
+       Am Handy bleibt der Dunkelmodus, wie er am 05.09. abgenommen wurde. */
+    body.dunkel .sk, body.dunkel .sk.yellow{background:hsl(var(--ton),16%,22%);color:hsl(var(--ton),20%,88%);border-color:hsl(var(--ton),16%,32%);box-shadow:0 8px 16px -12px rgba(0,0,0,.9);}
+    body.dunkel .sk.active{background:hsl(var(--ton),55%,36%);color:#fff;border-color:hsl(var(--ton),60%,52%);box-shadow:0 0 0 3px hsla(var(--ton),60%,52%,.22), 0 8px 16px -12px rgba(0,0,0,.9);}
+    body.dunkel .hsk{background:hsl(var(--ton),16%,22%);color:hsl(var(--ton),20%,88%);border-color:hsl(var(--ton),16%,32%);box-shadow:0 8px 16px -12px rgba(0,0,0,.9);}
+    body.dunkel .hsoftkeys .hsk.primary, body.dunkel .hsk.primary{background:hsl(var(--ton),55%,36%);color:#fff;border-color:hsl(var(--ton),60%,52%);}
+    body.dunkel .hdr{box-shadow:0 1px 0 hsl(var(--ton),14%,22%), 0 8px 22px -16px rgba(0,0,0,.8);}
+    body.dunkel .msgline #statPts{background:hsl(var(--ton),18%,20%);border-color:hsl(var(--ton),18%,30%);color:hsl(var(--ton),60%,74%);}
+    /* (D9) TYPOGRAFIE: Tabellenziffern ueberall, wo Zahlen untereinander
+       stehen; Kachel-Titel eine Stufe leichter - Instrument, nicht Formular. */
+    .ap-row .ap-detail, .ap-row .ap-zeit, .pointlist, #kalkBody, .kalkzeile, .planvorschau, #maskWerkzeuge td{font-variant-numeric:tabular-nums;}
+    .mask.kachelpilot .mrow > label{font-weight:600;}
+    /* (D10) NC-ANSICHT WIE EIN EDITOR - Bild XA -> XB: ncAnsichtMalen legt jede
+       Zeile in ein span.nc-z; hier die Zeilennummer als CSS-Zaehler (nicht im
+       Text, Pruefung 136 bleibt bytegleich), leichtes Zebra, blaue Kante. */
+    /* Der Behaelter auf normal: die Zeilenenden ZWISCHEN den spans (Textknoten) kollabieren, die Bloecke
+       stapeln sich; jeder span traegt sein eigenes pre fuer die Leerzeichen der Kommentare. */
+    #gcodeView{counter-reset:ncz;white-space:normal;}
+    /* min-height: eine LEERE NC-Zeile ist ein leerer Block ohne Zeilenkasten - ohne Mindesthoehe fielen die 43
+       Leerzeilen des Masters zusammen (gemessen: 9 Zeilen auf 156 statt 176 px). */
+    #gcodeView .nc-z{display:block;white-space:pre;min-height:1.5em;counter-increment:ncz;padding-left:50px;position:relative;}
+    #gcodeView .nc-z::before{content:counter(ncz);position:absolute;left:0;width:38px;text-align:right;color:hsl(var(--ton),12%,52%);font-size:11px;font-variant-numeric:tabular-nums;}
+    #gcodeView .nc-z:nth-child(even){background:hsla(var(--ton),30%,60%,.06);}
+    #maskGcode #gcodeView{border-left:4px solid hsl(var(--ton),70%,38%);border-radius:0 10px 10px 0;}
+    /* (D1) DIE SIMULATION ALS BUEHNE - Bild B0 -> B1: eine Ebene ueber dem
+       3D-Canvas (Vignette: dunkler Rand, helle Mitte; Bodenschatten als
+       Ellipse), die Leisten als Glas. Das Bild selbst rendert 96-material-3d
+       weiter unveraendert; die Ebene faengt keine Zeiger. */
+    body.simvoll.sim3dan #simBuehne{display:block;position:absolute;inset:0;pointer-events:none;z-index:3;
+      background:radial-gradient(ellipse at 50% 56%, rgba(255,255,255,0) 44%, hsla(var(--ton),50%,8%,.14) 78%, hsla(var(--ton),50%,8%,.36) 100%), linear-gradient(180deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,0) 26%, rgba(0,0,0,0) 64%, hsla(var(--ton),50%,8%,.28) 100%);}
+    body.simvoll.sim3dan #simBuehne::after{content:'';position:absolute;left:22%;right:22%;top:70%;height:16%;border-radius:50%;background:radial-gradient(ellipse at center, hsla(var(--ton),40%,10%,.26) 0%, hsla(var(--ton),40%,10%,.10) 45%, transparent 70%);}
+    body.simvoll #simBar.show, body.simvoll #simZoomBar.show{background:hsla(var(--ton),22%,96.5%,.9);backdrop-filter:blur(8px);}
+    body.dunkel.simvoll #simBar.show, body.dunkel.simvoll #simZoomBar.show{background:hsla(var(--ton),14%,14%,.88);}
+    /* (D6) STARTBILD: die zuletzt abgelegte Kontur als Einstieg (Bild 20-start
+       zeigte ein Menue, kein Teil). Die Karte gibt es nur, wenn die Ablage
+       etwas hat; ohne Ablage steht der Startbildschirm wie bisher. */
+    .leerhero{display:flex;align-items:center;gap:18px;margin:4px 0 12px;padding:14px 18px;border:1px solid var(--line);border-radius:14px;
+      background:linear-gradient(135deg, hsl(var(--ton),40%,97%), #fff 60%);box-shadow:0 12px 30px -18px hsla(var(--ton),30%,20%,.45);}
+    .leerhero canvas{flex:0 0 auto;width:300px;height:112px;border-radius:10px;background:#fff;box-shadow:inset 0 0 0 1px var(--line-light);}
+    .leerhero .lh-tx{flex:1;min-width:0;}
+    .leerhero .lh-tit{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:hsl(var(--ton),55%,38%);}
+    .leerhero .lh-name{font-size:19px;font-weight:700;color:var(--text);margin:2px 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .leerhero .lh-sub{font-size:12px;color:var(--text-dim);}
+    .leerhero .gcbtn.primary{margin-top:10px;padding:8px 16px;font-size:13px;background:hsl(var(--ton),70%,38%);border-color:hsl(var(--ton),70%,30%);color:#fff;box-shadow:0 8px 18px -10px hsla(var(--ton),70%,38%,.65);}
+    body.dunkel .leerhero{background:linear-gradient(135deg, hsl(var(--ton),16%,16%), hsl(var(--ton),14%,13%) 60%);border-color:hsl(var(--ton),14%,26%);}
+    body.dunkel .leerhero canvas{background:hsl(var(--ton),14%,18%);box-shadow:inset 0 0 0 1px hsl(var(--ton),14%,26%);}
+    /* (D7) BEWEGUNG MIT BEDEUTUNG: das Ampel-Urteil pulst EINMAL, wenn es neu
+       gemalt wird; Kachel und Maske gleiten (oben). Wer Bewegung abgestellt
+       hat, bekommt keine (prefers-reduced-motion). */
+    @keyframes dzUrteilPuls{from{transform:scale(.97);opacity:.45;}to{transform:none;opacity:1;}}
+    .ampel-urteil{animation:dzUrteilPuls .35s ease-out;transform-origin:left center;}
+    @media (prefers-reduced-motion: reduce){
+      .mask, .mask.kachelpilot .mrow, .sk, .hsk, #maskWerkzeuge tbody tr{transition:none !important;}
+      .mask.kachelpilot .mrow:hover, .mask.kachelpilot .mrow:focus-within, .sk:hover, .hsk:hover{transform:none !important;}
+      .ampel-urteil{animation:none !important;}
+    }
+
   }
 </style>
 </head>
@@ -2331,6 +2454,8 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
       <div class="stage-main" id="stageMain">
       <div id="canvasWrap" class="view-grafisch">
         <canvas id="cv"></canvas>
+        <!-- Buehne der 3D-Simulation (Design-Paket 19.09.2026): Vignette und Bodenschatten als Ebene ueber dem Canvas, nur am Laptop und nur im 3D-Vollbild (02-stil.html, D1). Unter 900 px display:none. -->
+        <div id="simBuehne" aria-hidden="true"></div>
         <div class="coordreadout" id="coordReadout">X⌀ 0.0 · Z 0.0</div>
         <div class="zoomctrl" id="zoomCtrl">
           <button id="zoomInBtn">+</button>
@@ -3212,6 +3337,16 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
                 <button data-v="innen">innen</button>
               </div>
             </div>
+            <!-- RICHTUNG [Daniel, 18.09.2026]: dasselbe Werkzeug, nur der
+                 Zug laeuft andersherum — rechts von rechts nach links,
+                 links von links nach rechts. M03 bleibt in beiden Faellen
+                 (Standardhalter, kein Ueberkopf). -->
+            <div class="mrow"><label>Richtung</label>
+              <div class="radiobtns" id="gwRichtBtns">
+                <button data-v="rechts" class="sel">Rechtsgewinde</button>
+                <button data-v="links">Linksgewinde</button>
+              </div>
+            </div>
             <div class="mrow"><label id="gwX0Label">X0 Bezugspunkt ⌀ (abs, Nenn-⌀)</label><input type="number" step="any" id="gwX0" value="20"><span class="unit">mm</span></div>
             <div class="mrow"><label>Z0 Bezugspunkt (abs)</label><input type="number" step="any" id="gwZ0" value="0"><span class="unit">mm</span></div>
             <div class="mrow mit-ink"><label>Z1 Endpunkt (abs)</label><input type="number" step="any" id="gwZ1" value="-25"><button class="inkbtn" id="gwZ1mode" data-m="abs" type="button">abs</button><span class="unit">mm</span></div>
@@ -3453,6 +3588,15 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
       <div class="msec">Preisstaffel</div>
       <div id="kalkStaffel"></div>
       <div id="kalkHinweis" style="font-size:11.5px;color:var(--text-dim);padding:6px 10px 12px;line-height:1.45;"></div>
+      <!-- AUSTAUSCH MIT DER WERKSTATT-PIPELINE [19.09.2026, Daniels Freigabe: die Pipeline ist die
+           Quelle des Preises, die CAM-Apps liefern die Zeiten]. Die Zeit geht als Datei hinueber,
+           die Werkstoffpreise kommen als Datei herueber - kein Server dazwischen. -->
+      <div class="msec">Werkstatt-Pipeline</div>
+      <div class="mrow" style="flex-wrap:wrap;gap:6px;padding-right:12px;">
+        <button id="btnKalkZeitExport" style="flex:1 1 46%;font-size:12px;padding:7px;" title="Laufzeit mit Werkzeugwechseln, Zahl der Werkzeuge und Wechsel, gemerkte Aufspannungen als Datei dz-cam-zeit — in der Pipeline, Blatt 2, Zeit aus DZ CAM laden">⇪ Zeit an die Pipeline</button>
+        <label class="gcbtn" style="flex:1 1 46%;font-size:12px;padding:7px;text-align:center;cursor:pointer;" title="Werkstoffliste der Pipeline (Blatt 5, Für die Dreh-App sichern): die Preise je kg kommen in die Betriebswerte">⇩ Werkstoffpreise aus der Pipeline<input type="file" id="kalkWerkstoffDatei" accept=".json,.JSON" style="display:none;"></label>
+      </div>
+      <div id="kalkPipelineHinweis" style="font-size:11.5px;color:var(--text-dim);padding:0 10px 8px;line-height:1.45;">Den Angebotspreis rechnet die Werkstatt-Pipeline; dieses Blatt bleibt die Grobkalkulation fürs Gegenstück.</div>
       <div class="msec">Betriebswerte (werden gespeichert)</div>
       <div class="mrow"><label>Maschinenstundensatz</label><input type="number" step="any" id="kaSatz"><span class="unit">€/h</span></div>
       <div class="mrow"><label>Rüstzeit je Auftrag</label><input type="number" step="any" id="kaRuest"><span class="unit">min</span></div>
@@ -4167,6 +4311,20 @@ einstellbarer Parameter und keine L&uuml;cke der App.</dd>
 <dl>
 <dt id="ba-gw-lage">Lage au&szlig;en / innen</dt>
 <dd>Innen ist die Zustellung gespiegelt (nach gr&ouml;&szlig;erem &empty;).</dd>
+<dt id="ba-gw-richt">Richtung: Rechts- oder Linksgewinde (neu 18.09.2026)</dt>
+<dd>Es ist <b>dasselbe Werkzeug</b> und dieselbe Spindeldrehrichtung &mdash; auf den
+Monforts mit den Standardhaltern immer <b>M03</b>. Getauscht wird nur, an welchem
+Ende der Zug beginnt: das <b>Rechtsgewinde</b> schneidet von rechts nach links (zum
+Futter hin), das <b>Linksgewinde</b> von links nach rechts (zur Stirn). Damit
+wechselt auch die Seite von Vorlauf und Auslauf: beim Linksgewinde liegt der
+<b>Vorlauf futterseitig</b>, der Auslauf stirnseitig. Pr&uuml;fe, dass dort
+Freiraum ist &mdash; beim Rechtsgewinde sitzt an dieser Stelle meist die Schulter.
+<br><b>Ehrlich offen:</b> Die G-Einzels&auml;tze sind reine Geometrie und damit
+sicher. Der <b>Zyklussatz</b> (G75/G76) ist dagegen <b>hergeleitet</b>: er bekommt Z
+am anderen Gewindeende und K mit umgekehrtem Vorzeichen. An keinem Maskensatz
+belegt &mdash; an beiden Maschinen wurden bisher nur Rechtsgewinde getippt. Vor dem
+ersten Lauf den Maskensatz ziehen oder auf Einzels&auml;tze umstellen; die Ampel
+sagt es auch.</dd>
 <dt id="ba-gw-steigung">P Steigung / Z0 / Z1</dt>
 <dd>Steigung in mm, Anfang und Ende. Der Vorlauf vor Z0 und der Auslauf sind in der
 Maskengruppe einstellbar; ohne Auslaufrille den Auslauf gro&szlig; genug
@@ -4895,14 +5053,17 @@ geladen oder entladen, den Platz w&auml;hlst du direkt in der Zeile. Neue Werkze
 lassen sich auch bei voll best&uuml;cktem Revolver anlegen &mdash; &uuml;ber das
 Plus im Lagerkopf, nicht &uuml;ber einen freien Platz.
 <br><b>Die Werkzeugnummer bleibt dabei stabil.</b> Das Programm ruft das WERKZEUG,
-nicht den Platz; erst beim NC-Bau setzt die App die Platznummer der aktuell
-gew&auml;hlten Maschine ein. Dasselbe Programm ruft auf der 1000er also T3 und auf
-der 1500er T7, ohne dass du etwas &auml;nderst.
-<br><b>Die Belegung h&auml;ngt an der Maschine</b>, das Lager ist gemeinsam. Beim
-Profilwechsel sichert die App die Belegung der alten Maschine und holt die der
-neuen. Tabelle und Belegungen &uuml;berleben das Neuladen (Browserspeicher) &mdash;
-vorher war beides nach jedem Schlie&szlig;en weg. Achtung beim R&uuml;cksetzen: der
-Knopf leert Werkzeuge UND Belegungen beider Maschinen.</dd>
+nicht den Platz; erst beim NC-Bau setzt die App die Platznummer ein. Liegt ein
+Lagerwerkzeug auf Platz 11, steht im Satz T11 &mdash; im Programmkopf dazu die
+Lagernummer, damit du beides abgleichen kannst.
+<br><b>Eine Belegung f&uuml;r beide Maschinen</b> (ge&auml;ndert 18.09.2026). Beide
+Monforts haben 16 Pl&auml;tze und sollen gleich best&uuml;ckt sein; der
+Profilwechsel l&auml;sst die Pl&auml;tze deshalb stehen. Musst du f&uuml;r ein
+bestimmtes Bauteil anders best&uuml;cken, entl&auml;dst und bel&auml;dst du vor der
+NC-Ausgabe &mdash; daf&uuml;r ist das Lager da. Bis zum 18.09.2026 hing die Belegung
+am Maschinenprofil; das hie&szlig;, dass dieselbe Best&uuml;ckung zwei St&auml;nde
+haben konnte. Tabelle und Belegung &uuml;berleben das Neuladen (Browserspeicher).
+Achtung beim R&uuml;cksetzen: der Knopf leert die ganze Tabelle.</dd>
 <dt id="ba-wz-refedge">Bezugsschneide bei Stechwerkzeugen (ge&auml;ndert 06.09.2026)</dt>
 <dd>Eine Stechklinge hat zwei Schneidenecken. Die <b>Bezugsschneide</b> ist die,
 auf die der Werkzeug-Nullpunkt eingemessen ist &mdash; also die Ecke, die beim
@@ -5023,6 +5184,15 @@ Zeichnung und Elementliste l&auml;sst sich ziehen; Doppelklick auf die Linie ste
 wieder her, die Breite wird gemerkt.
 <button class="gcbtn" id="baTrennReset" type="button" style="padding:4px 10px;font-size:11.5px;">Spaltenbreiten zur&uuml;cksetzen</button>
 Stand 08.09.2026.</dd>
+<dt id="ba-be-laptopdesign">Laptop-Ansicht: Tiefe und B&uuml;hne (19.09.2026)</dt><dd>Ab 900 px Breite tr&auml;gt die Oberfl&auml;che seit dem 19.09.2026 eine zweite Schicht,
+die am Handy fehlt (dort &auml;ndert sich kein Pixel): <b>Zeitbalken im Arbeitsplan</b> &mdash; hinter jeder Zyklus-Zeile ein
+blauer Balken, dessen L&auml;nge der Anteil an der l&auml;ngsten Hauptzeit ist; <b>Zeilennummern und Zebra in der NC-Ausgabe</b>
+(die Nummern sind Anzeige, sie stehen nicht im Programm und werden nicht mitkopiert); die <b>3D-Simulation als B&uuml;hne</b>
+(dunkler Rand, Bodenschatten, Leisten als Glas &mdash; das Teil bleibt, wie es gerechnet ist); <b>gr&ouml;&szlig;ere Werkzeugbilder</b>
+in der Werkzeugverwaltung; Masken und Kacheln mit Schatten, das Feld im Fokus leuchtet orange, <b>&Uuml;bernehmen ist der blaue
+Knopf</b>; auf dem Startbildschirm eine Karte mit der <b>zuletzt abgelegten Kontur</b> (Ablage, Kap. 6). Im Dunkelmodus sind
+die Softkeys dunkle Karten, die aktive blau. Bewegung gibt es nur mit Bedeutung (Maske gleitet auf, Ampel-Urteil pulst einmal);
+wer im System &bdquo;Bewegung reduzieren&ldquo; gesetzt hat, bekommt keine.</dd>
 <dt id="ba-be-hilfe">Diese Anleitung</dt>
 <dd>Das <b>?</b> in der Kopfzeile &ouml;ffnet sie von &uuml;berall;
 &bdquo;Inhalt&ldquo; springt zum Verzeichnis. Ein Tipp auf die <b>Beschriftung</b> eines
@@ -5052,6 +5222,18 @@ Stundensatz, R&uuml;stumlage auf die Losgr&ouml;&szlig;e &rarr; <b>Herstellkoste
 <b>St&uuml;ckpreis netto</b>. Die <b>Preisstaffel</b> (1/5/10/25/50 St&uuml;ck)
 zeigt, wie die R&uuml;stumlage f&auml;llt &mdash; die Antwort auf &bdquo;und bei
 zehn St&uuml;ck?&ldquo;.</p>
+<p id="ba-k14-pipeline"><b>Zusammenspiel mit der Werkstatt-Pipeline (19.09.2026):</b> den
+Angebotspreis rechnet die Pipeline &mdash; sie kennt Material, Zuschl&auml;ge, Staffel und die
+Auftr&auml;ge; dieses Blatt bleibt die Grobkalkulation f&uuml;rs Gegenst&uuml;ck. Der Knopf
+<b>Zeit an die Pipeline</b> schreibt die Laufzeit mit Werkzeugwechseln, die Zahl der Werkzeuge
+und Wechsel und die gemerkten Aufspannungen als Datei (<code>dz-cam-zeit</code>); in der Pipeline,
+Blatt 2, macht <i>Zeit aus DZ CAM laden</i> daraus Hauptzeit, R&uuml;stzeit und Bearbeitungsseiten
+mit Herkunft. <b>Werkstoffpreise aus der Pipeline</b> liest deren Werkstoffliste (Blatt 5,
+<i>F&uuml;r die Dreh-App sichern</i>) und &uuml;bernimmt die Preise je kg in die Betriebswerte &mdash;
+zugeordnet nach Namen (S235 &rarr; Baustahl, C45 vor 42CrMo4 &rarr; Verg&uuml;tungsstahl, 1.4301 vor
+1.4571 &rarr; Edelstahl, AlMgSi1 vor AlMg3 &rarr; Alu); was die Liste nicht f&uuml;hrt (Guss, Messing),
+bleibt wie es ist und wird genannt. Eine Drehkontur aus einem STEP-Modell kommt den umgekehrten Weg:
+die Pipeline schreibt sie als Programm dieser App, hier <i>Programme &rarr; Importieren</i>.</p>
 <p><b>Grenzen, damit niemand hineinf&auml;llt:</b> Das ist eine GROBE
 Angebotskalkulation, keine Nachkalkulation. Nicht enthalten: H&auml;rten,
 Beschichten, Transport, Fremdleistungen, Werkzeugverschlei&szlig;, Ausschuss.
@@ -5090,7 +5272,7 @@ vorschruppen.</dd>
      TT.MM.JJJJ" ergaenzt, MUSS dieses Datum mitziehen — sonst schlaegt
      der Pruefstand an. [Daniels Befund 06.09.2026: die Anleitung war
      inhaltlich nachgezogen, das Standdatum stand noch auf 31.08.] -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 18.09.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 19.09.2026. Sie
 w&auml;chst mit der App &mdash; das Inhaltsverzeichnis wird aus den Kapiteln
 erzeugt und ist damit immer vollst&auml;ndig.</p>
 
@@ -6128,6 +6310,14 @@ let toolTable = [
   {platz:2, t:'2',  name:'Außen Schlichten DNMG 55°', art:'aussen', r:0.4, sl:3, ew:93, sw:55, len:10, vc:200},
   {platz:3, t:'3',  name:'Außen Kopierschlichten VNMG 35°', art:'aussen', r:0.4, sl:3, ew:93, sw:35, len:8, vc:200},
   {platz:4, t:'4',  name:'Stechdrehmeißel außen 3mm', art:'stechen', r:0.2, sl:3, ew:90, sw:0, len:3, refEdge:'rechts', vc:140},
+  // PLATZ 5 [Daniel, 18.09.2026: "auf Platz 5, der ist aktuell leer,
+  // einen Gewindedrehmeissel fuer aussen"]. An der Maschine sitzt dort
+  // der Gewindestahl — die Luecke in unserer Tabelle war der Grund,
+  // warum die Simulation dort keinen Schneidenradius fand und das
+  // PF-Wort des Zyklussatzes leer blieb. Schneidenlage 3 = Schneide
+  // LINKS UNTEN, wie es die Normplatten fuer das Aussengewinde tragen;
+  // kein Vc, denn Gewinde faehrt G97 (feste Drehzahl).
+  {platz:5, t:'5',  name:'Gewindedrehmeißel außen 60°', art:'gewinde', r:0.1, sl:3, ew:90, sw:60, len:4},
   {platz:6, t:'6',  name:'Zentrierbohrer', art:'bohren', r:0, sl:9, ew:0, sw:118, len:8, dm:3.15},
   {platz:7, t:'7',  name:'Spiralbohrer 10mm', art:'bohren', r:0, sl:9, ew:0, sw:118, len:60, dm:10},
   // SL 4 [Daniel]: Bohrstange kommt von rechts — Koerper rechts,
@@ -6187,19 +6377,22 @@ function toolSortiere(){
 // =================================================================
 const WZ_SLOT='et_werkzeuge';
 const WZ_VORGABE=JSON.parse(JSON.stringify(toolTable));
-// BELEGUNG JE MASCHINE [Daniel, 05.09.2026: "natuerlich macht's
-// Sinn, je Maschine eine eigene Werkzeugtabelle"]: das LAGER ist
-// gemeinsam (ein Werkzeugschrank), die PLATZBELEGUNG haengt am
-// Maschinenprofil. wzBelegungen haelt je Profil-Id die Zuordnung
-// Platz -> Werkzeugnummer; der Profilwechsel tauscht nur die
-// platz-Felder.
-let wzBelegungen = {};
+// EINE BELEGUNG FUER BEIDE MASCHINEN [Daniel, 18.09.2026: "die
+// gleiche Auflistung, die haben auch beide 16 Revolverplaetze, und
+// das moechte ich als Standard so definiert haben"]. Das dreht die
+// Entscheidung vom 05.09.2026 (Belegung am Maschinenprofil) um, und
+// zwar aus der Werkstattpraxis: die Standardbestueckung soll auf
+// beiden Monforts GLEICH aussehen. Wer fuer ein bestimmtes Bauteil
+// anders bestuecken muss, entlaedt und belaedt vor der NC-Ausgabe —
+// dafuer ist das Lager da, nicht ein zweiter Tabellenstand.
+// wzBelegungen und werkzeugBelegungWechseln sind damit ersatzlos
+// entfallen; der Profilwechsel laesst die Plaetze unberuehrt.
 function werkzeugeSpeichern(){
   // refEdgeV2 markiert, dass die Bezugsschneide bereits in der neuen
   // Bedeutung (BILDANSICHT statt Werkzeug-Eigenperspektive) vorliegt —
   // sonst wuerde werkzeugeAusSlot sie bei jedem Laden erneut drehen.
   try{ localStorage.setItem(WZ_SLOT, JSON.stringify(
-    {v:2, refEdgeV2:true, werkzeuge:toolTable, belegungen:wzBelegungen})); }catch(e){}
+    {v:3, refEdgeV2:true, werkzeuge:toolTable})); }catch(e){}
 }
 function werkzeugeAusSlot(){
   try{
@@ -6233,7 +6426,11 @@ function werkzeugeAusSlot(){
                          else if(w.refEdge==='rechts') w.refEdge='links'; });
       }
       toolTable=arr;
-      if(roh && roh.belegungen && typeof roh.belegungen==='object') wzBelegungen=roh.belegungen;
+      // Ein v2-Slot bringt noch belegungen je Maschinenprofil mit. Die
+      // werden seit dem 18.09.2026 VERWORFEN (eine Tabelle fuer beide);
+      // die gespeicherten platz-Felder der Werkzeuge gelten weiter, es
+      // geht also keine Bestueckung verloren — nur die zweite, an der
+      // anderen Maschine hinterlegte Zuordnung.
     }
   }catch(e){}
 }
@@ -6279,30 +6476,13 @@ function wzPlatzNr(tnum){
   const w=(typeof toolTable!=='undefined') && toolTable.find(x=>String(x.t)===String(tnum));
   return (w && w.platz) ? String(w.platz) : String(tnum);
 }
-// Profilwechsel: Belegung der alten Maschine sichern, die der neuen
-// anwenden. ERSTE NUTZUNG: gibt es fuer die neue Maschine noch
-// keine gespeicherte Belegung, bleibt die aktuelle stehen — beide
-// Maschinen starten mit derselben Bestueckung, und bis zur ersten
-// Aenderung verhaelt sich alles wie vorher (die NC-Baselines
-// wechseln die Profile in jedem Pruefstandslauf).
-function werkzeugBelegungWechseln(altId, neuId){
-  if(!altId || !neuId || altId===neuId) return;
-  const alt={};
-  toolTable.forEach(w=>{ if(w.platz) alt[w.platz]=String(w.t); });
-  wzBelegungen[altId]=alt;
-  const neu=wzBelegungen[neuId];
-  if(neu){
-    toolTable.forEach(w=>{ delete w.platz; });
-    Object.keys(neu).forEach(pn=>{
-      const w=toolTable.find(x=>String(x.t)===String(neu[pn]));
-      if(w && !toolTable.some(x=>x!==w && x.platz===+pn)) w.platz=+pn;
-    });
-    toolSortiere();
-  }
-  werkzeugeSpeichern();
-  try{ if(document.getElementById('maskWerkzeuge').classList.contains('show')) renderToolTable(); }catch(e){}
-  try{ populateToolSelects(); }catch(e){}
-}
+// DER PROFILWECHSEL LAESST DIE PLAETZE STEHEN [Daniel, 18.09.2026].
+// Hier stand bis dahin werkzeugBelegungWechseln: es sicherte beim
+// Maschinenwechsel die Belegung der alten Maschine und spielte die der
+// neuen ein. Eine Tabelle fuer beide Monforts braucht das nicht mehr —
+// und sie darf es auch nicht: sonst haette dieselbe Bestueckung nach
+// einem Hin- und Herschalten zwei Staende, und welcher gilt, haengt
+// davon ab, in welchem Profil zuletzt umgeladen wurde.
 let programs = []; // {name, contour, programSteps, settings:{...}}
 // Zuordnung der NC-Schrittnummer auf den Platz in programSteps.
 // Sie weicht ab, sobald ein Schritt stillgelegt ist (s. Punkt 13).
@@ -8482,9 +8662,30 @@ function pdfJpegSuchen(bytes){
 // Douglas-Peucker 2%) — die Kachel zeigt das Teil, bevor man liest.
 // Bei geaenderten Demos die Tabelle neu erzeugen (scratchpad silgen.js);
 // Pruefung 152 misst Max-Radius und z-Spanne gegen die echten Konturen.
-function silhouetteMalen(cv, name){
+// Die Startkarte (Design-Paket 19.09.2026) zeichnet dieselbe Silhouette aus
+// einer ABGELEGTEN Kontur: silhouetteAusEls expandiert die Elemente (Radius,
+// Boegen in 12 Schritten) zu [z, r]-Punkten; silhouetteMalen ist seither
+// nur noch der Aufruf fuer die Demo-Tabelle.
+function silhouetteAusEls(els){
+  const pts=[];
   try{
-    const pts=DEMO_SIL[name];
+    const segs=expandContour(els);
+    if(!segs || !segs.length) return pts;
+    pts.push([segs[0].z1, segs[0].x1]);
+    segs.forEach(s=>{
+      if(s.type==='arc' && isFinite(s.cz) && isFinite(s.cx)){
+        const r=Math.hypot(s.z1-s.cz, s.x1-s.cx);
+        let a0=Math.atan2(s.x1-s.cx, s.z1-s.cz), a1=Math.atan2(s.x2-s.cx, s.z2-s.cz);
+        let d=a1-a0; if(s.cw){ if(d>0) d-=2*Math.PI; } else { if(d<0) d+=2*Math.PI; }
+        for(let k=1;k<=12;k++){ const a=a0+d*k/12; pts.push([s.cz+r*Math.cos(a), s.cx+r*Math.sin(a)]); }
+      } else pts.push([s.z2, s.x2]);
+    });
+  }catch(e){}
+  return pts.map(q=>[q[0], Math.max(0, q[1])]);
+}
+function silhouetteMalen(cv, name){ silhouettePunkteMalen(cv, DEMO_SIL[name], DEMO_SIL_INNEN[name]); }
+function silhouettePunkteMalen(cv, pts, inn){
+  try{
     if(!cv || !cv.getContext || !pts || pts.length<3) return;
     const c2=cv.getContext('2d');
     const zs=pts.map(q=>q[0]);
@@ -8504,7 +8705,6 @@ function silhouetteMalen(cv, name){
     c2.fillStyle='hsl(210, 18%, 84%)';
     c2.fill();
     c2.strokeStyle='#3a4a56'; c2.lineWidth=1.6; c2.stroke();
-    const inn=DEMO_SIL_INNEN[name];
     if(inn && inn.length>1){
       c2.beginPath();
       c2.moveTo(X(inn[0][0]), Y(inn[0][1]));
@@ -11331,6 +11531,9 @@ function editStep(i){
   } else if(st.type==='gewinde'){
     setRadio('gwKuehlBtns', p.kuehl||'an');
     setRadio('gwBearbBtns',p.bearbeitung); setRadio('gwLageBtns',p.lage);
+    // Ohne gespeicherte Richtung gilt RECHTS — so laufen alle Programme
+    // von vor dem 18.09.2026 unveraendert weiter.
+    setRadio('gwRichtBtns', p.richt||'rechts');
     setVal('gwX0',p.x0); setVal('gwZ0',p.z0); setVal('gwZ1',p.z1); setVal('gwP',p.p);
     setVal('gwH1',p.h1); setVal('gwU',p.u); setVal('gwND',p.nd); setVal('gwLW',p.lw);
     setRadio('gwVerfBtns', p.verf||'B');
@@ -11389,7 +11592,7 @@ function wireRadioGroup(id){
     btn.classList.add('sel');
   });
 }
-['akEingabeBtns','stEingabeBtns','esEingabeBtns','gwEingabeBtns','boEingabeBtns','aeEingabeBtns','fsEingabeBtns','abEingabeBtns','aeBearbBtns','aeRichtBtns','aeLageBtns','akBearbBtns','akRichtBtns','akLageBtns','akSchlRichtBtns','aeSchlRichtBtns','esBearbBtns','esAusrBtns','esLageBtns','esFormBtns','esE1Btns','esE2Btns','esE3Btns','esE4Btns','boArtBtns','boEntBearbBtns','gwBearbBtns','gwLageBtns','gwVerfBtns','gwArtBtns','gwAusgBtns','boAusgBtns','aeAusgBtns','aeFormBtns','aeSbBtns','akSbBtns','aeSvBtns','akSvBtns','esSvBtns','esAusgBtns','akTauchBtns','stRichtBtns','stLageBtns','stBearbBtns','stSchlStratBtns','stRaeumBtns','fsAusgBtns','abKaBtns','aeK1Btns','aeK2Btns','aeK3Btns','gwFormBtns',
+['akEingabeBtns','stEingabeBtns','esEingabeBtns','gwEingabeBtns','boEingabeBtns','aeEingabeBtns','fsEingabeBtns','abEingabeBtns','aeBearbBtns','aeRichtBtns','aeLageBtns','akBearbBtns','akRichtBtns','akLageBtns','akSchlRichtBtns','aeSchlRichtBtns','esBearbBtns','esAusrBtns','esLageBtns','esFormBtns','esE1Btns','esE2Btns','esE3Btns','esE4Btns','boArtBtns','boEntBearbBtns','gwBearbBtns','gwLageBtns','gwRichtBtns','gwVerfBtns','gwArtBtns','gwAusgBtns','boAusgBtns','aeAusgBtns','aeFormBtns','aeSbBtns','akSbBtns','aeSvBtns','akSvBtns','esSvBtns','esAusgBtns','akTauchBtns','stRichtBtns','stLageBtns','stBearbBtns','stSchlStratBtns','stRaeumBtns','fsAusgBtns','abKaBtns','aeK1Btns','aeK2Btns','aeK3Btns','gwFormBtns',
 'aeSModeBtns','akSModeBtns','esSModeBtns','stSModeBtns','abSModeBtns','fsFormBtns','fsG76Btns','fsSModeBtns','akHintBtns','pkRueckzugBtns','gwFlankeBtns','akEingrenzBtns','akPlanFertigBtns',
 'aeKuehlBtns','akKuehlBtns','esKuehlBtns','stKuehlBtns','fsKuehlBtns','abKuehlBtns','boKuehlBtns','gwKuehlBtns'].forEach(wireRadioGroup);
 // Kleinumschalter IN einer Feldzeile (wie abs/ink): verdrahtet, aber
@@ -11404,7 +11607,7 @@ wireRadioGroup('boWMode');   // man/auto des Bohr-Vorlaufs — war ebenso tot
   if(g) g.addEventListener('click',()=>{ try{ esLabelsSync(); }catch(e){} }); }
 // Dieselben Gruppen bekommen ihr Auswahlfeld. Eine Liste, damit keine
 // Gruppe verdrahtet ist, aber ohne Feld bleibt (oder umgekehrt).
-const SELFELD_GRUPPEN=['akPlanFertigBtns','akEingabeBtns','stEingabeBtns','esEingabeBtns','gwEingabeBtns','boEingabeBtns','aeEingabeBtns','fsEingabeBtns','abEingabeBtns','aeBearbBtns','aeRichtBtns','aeLageBtns','akBearbBtns','akRichtBtns','akLageBtns','akSchlRichtBtns','aeSchlRichtBtns','esBearbBtns','esAusrBtns','esLageBtns','esFormBtns','esE1Btns','esE2Btns','esE3Btns','esE4Btns','boArtBtns','boEntBearbBtns','gwBearbBtns','gwLageBtns','gwVerfBtns','gwArtBtns','gwAusgBtns','boAusgBtns','aeAusgBtns','aeFormBtns','aeSbBtns','akSbBtns','aeSvBtns','akSvBtns','esSvBtns','esAusgBtns','akTauchBtns','stRichtBtns','stLageBtns','stBearbBtns','stSchlStratBtns','stRaeumBtns','fsAusgBtns','abKaBtns','aeK1Btns','aeK2Btns','aeK3Btns','gwFormBtns',
+const SELFELD_GRUPPEN=['akPlanFertigBtns','akEingabeBtns','stEingabeBtns','esEingabeBtns','gwEingabeBtns','boEingabeBtns','aeEingabeBtns','fsEingabeBtns','abEingabeBtns','aeBearbBtns','aeRichtBtns','aeLageBtns','akBearbBtns','akRichtBtns','akLageBtns','akSchlRichtBtns','aeSchlRichtBtns','esBearbBtns','esAusrBtns','esLageBtns','esFormBtns','esE1Btns','esE2Btns','esE3Btns','esE4Btns','boArtBtns','boEntBearbBtns','gwBearbBtns','gwLageBtns','gwRichtBtns','gwVerfBtns','gwArtBtns','gwAusgBtns','boAusgBtns','aeAusgBtns','aeFormBtns','aeSbBtns','akSbBtns','aeSvBtns','akSvBtns','esSvBtns','esAusgBtns','akTauchBtns','stRichtBtns','stLageBtns','stBearbBtns','stSchlStratBtns','stRaeumBtns','fsAusgBtns','abKaBtns','aeK1Btns','aeK2Btns','aeK3Btns','gwFormBtns',
 'aeSModeBtns','akSModeBtns','esSModeBtns','stSModeBtns','abSModeBtns','fsFormBtns','fsG76Btns','fsSModeBtns','akHintBtns','pkRueckzugBtns','gwFlankeBtns','akEingrenzBtns',
 // KUEHLMITTEL an/aus [10.09.2026]: Antippfeld wie die Drehzahleingabe daneben.
 'aeKuehlBtns','akKuehlBtns','esKuehlBtns','stKuehlBtns','fsKuehlBtns','abKuehlBtns','boKuehlBtns','gwKuehlBtns'];
@@ -12922,6 +13125,7 @@ document.getElementById('btnGwOk').onclick=()=>{
     kuehl: selBtnVal('gwKuehlBtns')||'an',
     bearbeitung: selBtnVal('gwBearbBtns'),
     lage: selBtnVal('gwLageBtns'),
+    richt: selBtnVal('gwRichtBtns') || 'rechts',
     x0: +document.getElementById('gwX0').value, z0: +document.getElementById('gwZ0').value, z1: zykWert('gwZ1','gwZ0'),
     p: +document.getElementById('gwP').value, h1: +document.getElementById('gwH1').value, u: +document.getElementById('gwU').value,
     nd: Math.max(1, Math.round(+document.getElementById('gwND').value||1)),
@@ -13487,9 +13691,16 @@ function refreshArbeitsplan(){
       }); }
     body.appendChild(row);
   });
+  // ZEITBALKEN [Design-Paket 19.09.2026, Idee 2]: je Zeile der Anteil an der
+  // laengsten Hauptzeit als CSS-Variable; die Regel dazu steht NUR in der
+  // 900er-Query (02-stil.html, D2) - am Handy bleibt die Zeile, wie sie ist.
+  const zeitMax=(hauptzeiten && hauptzeiten.proSchritt)
+    ? programSteps.reduce((m,s,j)=>Math.max(m, +hauptzeiten.proSchritt[j]||0), 0) : 0;
   programSteps.forEach((st,i)=>{
     const row=document.createElement('div');
     row.className='ap-row'+(i===selStepIdx?' sel':'');
+    if(zeitMax>0 && row.style && typeof row.style.setProperty==='function' && hauptzeiten.proSchritt[i]!==undefined)
+      row.style.setProperty('--zeit', Math.round(100*(+hauptzeiten.proSchritt[i]||0)/zeitMax)+'%');
     if(row.dataset){
       row.dataset.sidx=String(i);
       if(st.type==='abspanen_kontur'||st.type==='stechdrehen') row.dataset.scid=String(st.params.contourId!==undefined?st.params.contourId:(contours[0]?contours[0].id:''));
@@ -13698,7 +13909,22 @@ function refreshArbeitsplan(){
     // zeigte nur die neun Demos — als waeren sie der Inhalt der App.
     // Jetzt: was man WIRKLICH tut (zeichnen, importieren, laden),
     // darunter die Vorlagen ehrlich als Testvorlagen beschriftet.
-    empty.innerHTML=
+    // STARTKARTE [Design-Paket 19.09.2026, Idee 6]: die zuletzt abgelegte
+    // Kontur als Teil, nicht als Menuepunkt - nur am Laptop (.leerhero ist
+    // unter 900 px display:none) und nur, wenn die Ablage etwas hat.
+    let hero='';
+    try{
+      const abl=(typeof ablageLesen==='function')? ablageLesen() : [];
+      const letzte=abl.length? abl[abl.length-1] : null;
+      if(letzte && letzte.els && letzte.els.length>=2){
+        const nm=String(letzte.name||'Kontur').replace(/[<>&"]/g,'');
+        hero='<div class="leerhero"><canvas id="leerHeroSil" width="600" height="224"></canvas>'+
+          '<div class="lh-tx"><div class="lh-tit">Zuletzt abgelegt</div><div class="lh-name">'+nm+'</div>'+
+          '<div class="lh-sub">'+(letzte.n||(letzte.els.length-1))+' Elemente \u00b7 aus der Ablage dieses Ger\u00e4ts</div>'+
+          '<button class="gcbtn primary" id="leerHeroLaden" type="button">Kontur laden und weiter</button></div></div>';
+      }
+    }catch(e){ hero=''; }
+    empty.innerHTML=hero+
       '<div class="leerakt">'+
       '<button id="leerKontur"><span class="la-ic">\u271B</span><span>Kontur zeichnen<span class="la-sub">Startpunkt, Geraden, Radien \u2014 dann Zyklen darauf</span></span></button>'+
       '<button id="leerDxf"><span class="la-ic">\u21F2</span><span>DXF importieren<span class="la-sub">Fertigteilkontur aus CAD, danach Programmvorschlag</span></span></button>'+
@@ -13718,6 +13944,14 @@ function refreshArbeitsplan(){
     if(bDxf) bDxf.addEventListener('click', ()=>{ const fi=document.getElementById('dxfFile'); if(fi) fi.click(); });
     const bPr=document.getElementById('leerProgs');
     if(bPr) bPr.addEventListener('click', ()=>{ const h=document.getElementById('hskProgs'); if(h) h.click(); });
+    const bHero=document.getElementById('leerHeroLaden');
+    if(bHero) bHero.addEventListener('click', ()=>{
+      try{ const abl=ablageLesen(); const l=abl[abl.length-1]; if(l && ablageLaden(l.name)){ skMode='kontur'; enterGrafischView(); } }catch(e){}
+    });
+    try{
+      const hc=document.getElementById('leerHeroSil');
+      if(hc){ const abl=ablageLesen(); const l=abl[abl.length-1]; if(l) silhouettePunkteMalen(hc, silhouetteAusEls(l.els), null); }
+    }catch(e){}
     // Teile-Silhouetten auf die Kacheln malen (aus DEMO_SIL — die
     // Punkte stammen aus den Demo-Konturen selbst; Pruefung 152
     // wacht, dass die Tabelle nicht von den Demos wegdriftet).
@@ -14495,9 +14729,9 @@ function drawToolShape(c, px, py, scale, tool, opts){
       if(opts.nurPlatte){ delete c.fill; delete c.stroke; }
       c.restore();
       if(opts.dot){ c.fillStyle=opts.dotColor||'#c8281f'; c.beginPath(); c.arc(px,py,opts.dot,0,7); c.fill(); }
-      // Der Zentrierer kehrt frueh zurueck — ohne diese Zeile bekaeme
-      // er als einziges Werkzeug keinen Schneidenring im Icon.
-      if(opts.ring){ c.strokeStyle='#c8281f'; c.lineWidth=1.2; c.beginPath(); c.arc(px,py,opts.ring,0,7); c.stroke(); }
+      // Der Zentrierer kehrt hier frueh zurueck; seit dem 18.09.2026
+      // gibt es keinen Schneidenring mehr (s. Begruendung unten am
+      // programmierten Punkt), deshalb steht hier nur noch der Punkt.
       return;
     }
     const lenPx=Math.max(24, Math.max(25,(+tool.len||40))*scale*0.5);
@@ -14569,34 +14803,203 @@ function drawToolShape(c, px, py, scale, tool, opts){
     c.beginPath(); c.moveTo(px,py); c.lineTo(px,py-bw*1.1); c.stroke();
   }
   else if(art==='gewinde'){
-    // Gewindeplatte: symmetrisches 60°-V (metrisch), Träger dahinter.
-    const prof=(+tool.sw&&+tool.sw<175)?+tool.sw:60;
+    // GEWINDEPLATTE ALS NORMPLATTE [Daniel, 18.09.2026: "diese
+    // Normplatten werden immer links verrechnet und an der Spitze
+    // verrechnet, also links unten"].
+    //
+    // Vorher stand hier ein symmetrisches V mit dem programmierten
+    // Punkt in seiner MITTE. Zwei Dinge waren daran falsch: es las sich
+    // wie eine Verrechnung auf Plattenmitte statt auf die Spitze, und
+    // die SCHNEIDENLAGE war ueberhaupt nicht abgebildet — T40 (SL 3,
+    // aussen) und T41 (SL 4, Bohrstange innen) wurden Pixel fuer Pixel
+    // gleich gezeichnet, obwohl ihre Schneide auf verschiedenen Seiten
+    // sitzt.
+    //
+    // Jetzt wie jede andere Platte: eine Dreieckplatte, deren aktive
+    // Ecke den Profilwinkel traegt und im lokalen z/x-System im
+    // URSPRUNG liegt. toS/mz/mx (aus slDirection) legen sie an die
+    // Stelle, die die Schneidenlage vorgibt — bei SL 3 also links
+    // unten, bei SL 4 links oben. Bild, SL-Datum und Bahnkompensation
+    // bleiben damit eine einzige Quelle, wie bei den Drehplatten.
+    const prof=Math.max(20,Math.min(120,(+tool.sw&&+tool.sw<175)?+tool.sw:60));
+    // Plattenkante in mm. KEINE Pixel-Mindestgroesse: drawToolIcon misst
+    // die fertige Zeichnung und skaliert sie formatfuellend — eine
+    // Mindestgroesse in Pixeln macht die Zeichnung nichtlinear im
+    // Massstab, und dann passt der zweite Durchgang nicht mehr (erster
+    // Anlauf: die Platte der Bohrstange lief links aus dem Icon).
+    // Plattenkante. Der Wert bestimmt zusammen mit schaftL, wie gross
+    // die Platte im Bild steht: seit die Einpassung das GANZE Werkzeug
+    // erfasst (und nicht mehr nur den Ausschnitt), wird auf die
+    // Gesamtlaenge skaliert — mit einem langen Schaft wird die Platte
+    // sonst zum Fleck. Verhaeltnis wie bei den Drehmeisseln gewaehlt,
+    // deren Icons die Platte deutlich zeigen.
+    const L=Math.max(4,+tool.len||4)*1.25;
     const half=prof/2*Math.PI/180;
-    const hPx=Math.max(10, 4*scale);
-    const wPx=Math.tan(half)*hPx;
-    const seatW=wPx*2.6;
-    // Halter: vertikal, rechtsbuendig — Plattenspitze steht links vor
-    // ([Daniel]: Ueberstand in Bearbeitungsrichtung, sonst laeuft der
-    // Halter am tiefen Absatz gegen die Planflaeche)
-    c.fillStyle=steelG(c,px,py-hPx-seatW,px,py-hPx);
+    const a1=Math.PI/4-half, a2=Math.PI/4+half;   // Kanten ab der Spitze
+    const P1={z:Math.cos(a1)*L, x:Math.sin(a1)*L};
+    const P2={z:Math.cos(a2)*L, x:Math.sin(a2)*L};
+    // Die Klemmschraube sitzt im INKREIS, nicht im Schwerpunkt: bei der
+    // 30-Grad-Trapezplatte ist das Dreieck so schmal, dass eine Schraube
+    // nach Schwerpunkt und Kantenlaenge links und rechts ueberstuende.
+    // rIn = Flaeche/halber Umfang, Mitte auf der Winkelhalbierenden.
+    const rIn=0.5*L*Math.sin(prof*Math.PI/180)/(1+Math.sin(half));
+    const dIn=rIn/Math.sin(half);
+    const mid={z:Math.cos(Math.PI/4)*dIn, x:Math.sin(Math.PI/4)*dIn};
+    const S0=toS({z:0,x:0}), S1=toS(P1), S2=toS(P2), Sm=toS(mid);
+    const kante=Math.max(6, Math.hypot(S1[0]-S0[0],S1[1]-S0[1]));
+    const rInPx=Math.max(1.5, rIn*scale);
+    // Halter waagerecht bei der Bohrstange (SL 2/4), sonst senkrecht —
+    // dieselbe Regel wie bei den Drehplatten, nur aus der SL statt aus
+    // art (der Gewindestahl heisst in der Tabelle immer 'gewinde').
+    const innenArt=(+tool.sl===4||+tool.sl===2);
+    const schaft=innenArt ? ((Sm[0]>=px)?0:Math.PI) : ((Sm[1]>=py)?Math.PI/2:-Math.PI/2);
+    // HALTER NACH DEM KATALOGSCHEMA [Daniels Bild 18.09.2026, die vier
+    // Gewindewerkzeuge TER/TEL/SIR/SIL]: der Halter ist KEIN Balken, an
+    // dem die Platte klebt. Er hat einen abgesetzten Kopf, der sich zur
+    // Schneide hin verjuengt, und die Platte sitzt VORN an dessen
+    // Spitze, ueber die Kontur hinausstehend. Genau das fehlte — die
+    // alte Zeichnung war ein Rechteckklotz mit Dreieck davor.
+    const ex=Math.cos(schaft), ey=Math.sin(schaft);   // Richtung in den Schaft
+    const qx=-ey, qy=ex;                              // quer dazu
+    const basM=[(S1[0]+S2[0])/2, (S1[1]+S2[1])/2];    // Mitte der Plattenbasis
+    const bHalb=Math.max(3, Math.hypot(S1[0]-S2[0],S1[1]-S2[1])/2);
+    const schaftHalb=Math.max(bHalb*1.15, kante*0.55);
+    const kopfL=kante*0.85;
+    c.fillStyle=steelG(c,Sm[0],Sm[1]-kante,Sm[0],Sm[1]+kante);
     c.strokeStyle='#1e2830'; c.lineWidth=lw;
-    {
-      const bh=seatW*1.15;
-      const bx=(px-wPx*1.4)+bh/2+wPx*0.55;
-      roundedBarPath(c, bx, py-hPx*1.6, -Math.PI/2, seatW*2.0, bh, 2);
-    }
+    // SCHAFT: innen RUND (Bohrstange), aussen EckIG [Daniels Ansage
+    // 18.09.2026 zum Katalogbild]. In der Draufsicht unterscheidet sie
+    // der Eckenradius — beim runden Schaft ist er die halbe Breite,
+    // also eine Kapsel; dazu ein heller Streifen laengs, der die
+    // Woelbung zeigt. Der Vierkant bleibt scharfkantig.
+    const schaftL=kante*2.3;
+    roundedBarPath(c, basM[0]+ex*kopfL*0.9, basM[1]+ey*kopfL*0.9,
+                   schaft, schaftL, schaftHalb*2, innenArt?schaftHalb:1.5);
     c.fill(); c.stroke();
-    // V-Platte
-    c.fillStyle=carbideGrad(c,px,py-hPx*1.8,px,py);
+    if(innenArt){
+      c.save();
+      c.strokeStyle='rgba(255,255,255,0.22)';
+      c.lineWidth=Math.max(1, schaftHalb*0.45); c.lineCap='round';
+      c.beginPath();
+      c.moveTo(basM[0]+ex*kopfL*1.5-qx*schaftHalb*0.35, basM[1]+ey*kopfL*1.5-qy*schaftHalb*0.35);
+      c.lineTo(basM[0]+ex*schaftL*0.92-qx*schaftHalb*0.35, basM[1]+ey*schaftL*0.92-qy*schaftHalb*0.35);
+      c.stroke();
+      c.restore();
+    }
     c.beginPath();
-    c.moveTo(px,py);
-    c.lineTo(px+wPx,py-hPx);
-    c.lineTo(px+wPx*1.4,py-hPx*1.7);
-    c.lineTo(px-wPx*1.4,py-hPx*1.7);
-    c.lineTo(px-wPx,py-hPx);
+    c.moveTo(basM[0]+qx*bHalb, basM[1]+qy*bHalb);
+    c.lineTo(basM[0]-qx*bHalb, basM[1]-qy*bHalb);
+    c.lineTo(basM[0]+ex*kopfL-qx*schaftHalb, basM[1]+ey*kopfL-qy*schaftHalb);
+    c.lineTo(basM[0]+ex*kopfL+qx*schaftHalb, basM[1]+ey*kopfL+qy*schaftHalb);
     c.closePath(); c.fill(); c.stroke();
-    c.strokeStyle='#c8281f'; c.lineWidth=Math.max(1.3,lw*1.6);
-    c.beginPath(); c.moveTo(px-wPx,py-hPx); c.lineTo(px,py); c.lineTo(px+wPx,py-hPx); c.stroke();
+    // DIE PLATTE IST KEIN DREIECK [Daniel, 18.09.2026: "eine
+    // Gewindeschneidplatte ist einfach kein Dreieck, sondern es ist
+    // eine Konturplatte ... schau dir mal so eine typische
+    // Wendeschneidplatte an und bilde die Kontur nach"].
+    // Nachgezeichnet nach dem Produktfoto einer 16ER-Vollprofilplatte:
+    //   - dreieckige Grundform, aber die Ecken sind GEKAPPT,
+    //   - auf jeder Kappung sitzt ein kleiner PROFILVORSPRUNG — das ist
+    //     die eigentliche Schneide mit dem Gewindeprofil (60/55/30 Grad),
+    //   - drei gleiche Schneiden, die Platte wird gedreht,
+    //   - grosse runde Spanleitmulde um das zentrale Loch.
+    // Die AKTIVE Schneide liegt im Ursprung, also auf dem
+    // programmierten Punkt; die Platte haengt daran.
+    // VERHAELTNISSE AUS ZWEI MASSZEICHNUNGEN [18.09.2026, Katalogbilder
+    // Iscar/Hoffmann und paulimot zur 16ER]: Inkreis 9,525, Bohrung
+    // Oe 4, Dicke 3,65, Kantenlaenge des (ungekappten) Dreiecks
+    // 16,5 mm. Die Ecke ist eine KAPPUNG senkrecht zur Winkelhalbierenden
+    // (Abstand d von der virtuellen Dreiecksecke), und aus der MITTE der
+    // Kappung ragt der Zahn — Hoehe PDY, Breite PDX, Profilwinkel — mit
+    // seiner Spitze RE. Der Zahn ist die Schneide; links und rechts von
+    // ihm bleibt Kappung frei (Freiraum hinter der Schneide). Mein
+    // erster Bau hatte den Zahn abgesetzt und winzig — er sah aus wie
+    // ein angeklebter Splitter. Alle Masse hier als Anteil der
+    // Kantenlaenge L:
+    // Nachjustiert am Bild gegen die paulimot-Zeichnung: Kappung 2,5 mm
+    // und Zahn 2 mm hoch bei 16,5 mm Kante — der Zahn fuellt die Kappung
+    // fast aus, dazwischen bleibt nur ein schmaler Absatz.
+    // Dritter Anlauf am Bild: Zahnfuss etwa 0,7 der Kappungsbreite (bei
+    // 16,5 mm Kante: Kappung 2,9, Zahn 1,8 hoch). Mit 0,94 war die Ecke
+    // wieder eine gewoehnliche Dreiecksecke, mit 0,18/0,10 ein Splitter.
+    const d    = L*0.15;                  // Kappung ab virtueller Ecke
+    const pdy  = L*0.11;                  // Zahnhoehe ueber der Kappung
+    const halbK= d*Math.tan(Math.PI/6);   // halbe Kappungsbreite (60-Grad-Ecke)
+    const halbZ= Math.min(halbK*0.80, pdy*Math.tan(half)); // halbe Zahnbasis
+    const RU   = L/Math.sqrt(3);          // Umkreis des virtuellen Dreiecks
+    // Die Zahnspitze liegt im URSPRUNG (programmierter Punkt). Sie sitzt
+    // (d - pdy) innerhalb der virtuellen Ecke, also liegt die Plattenmitte
+    // RU-(d-pdy) auf der Winkelhalbierenden.
+    const rM   = RU - (d - pdy);
+    const M    = {z: Math.cos(Math.PI/4)*rM, x: Math.sin(Math.PI/4)*rM};
+    const poly = [];
+    for(let k=0;k<3;k++){
+      const w  = Math.atan2(-M.x, -M.z) + k*2*Math.PI/3;   // zur Ecke hin
+      const uz = Math.cos(w), ux = Math.sin(w);            // nach aussen
+      const sz = -ux, sx = uz;                             // quer dazu
+      const Ek = {z: M.z + uz*RU, x: M.x + ux*RU};         // virtuelle Ecke
+      const Kz = Ek.z - uz*d, Kx = Ek.x - ux*d;            // Kappungsmitte
+      const Sz = Kz + uz*pdy, Sx = Kx + ux*pdy;            // Zahnspitze
+      // Die Ecken folgen mit +120 Grad aufeinander, also gegen den
+      // Uhrzeigersinn; INNERHALB der Ecke muss die Punktfolge dieselbe
+      // Richtung haben — erst der Kappungspunkt VOR der Mitte (gegen s),
+      // dann Zahnfuss, Spitze, Zahnfuss, dann der Punkt NACH der Mitte.
+      // Andersherum verbindet das Polygon jede Ecke ueber Kreuz mit der
+      // naechsten und aus dem Dreieck wird ein dreiarmiger Propeller
+      // (erster Anlauf, am Bild gesehen).
+      poly.push({z: Kz - sz*halbK, x: Kx - sx*halbK});
+      poly.push({z: Kz - sz*halbZ, x: Kx - sx*halbZ});
+      poly.push({z: Sz, x: Sx});
+      poly.push({z: Kz + sz*halbZ, x: Kx + sx*halbZ});
+      poly.push({z: Kz + sz*halbK, x: Kx + sx*halbK});
+    }
+    const SP = poly.map(p=>toS(p));
+    const MS = toS(M);
+    c.fillStyle=carbideGrad(c,S0[0],S0[1],MS[0],MS[1]);
+    c.beginPath(); c.moveTo(SP[0][0],SP[0][1]);
+    for(let i=1;i<SP.length;i++) c.lineTo(SP[i][0],SP[i][1]);
+    c.closePath(); c.fill();
+    c.strokeStyle='#6b4e12'; c.lineWidth=Math.max(0.8,lw*0.9); c.lineJoin='round'; c.stroke();
+    // FASENRAND: jede Hartmetallplatte hat an der Oberkante eine kleine
+    // Fase, die auf den Fotos als heller Saum um die Spanflaeche steht.
+    // Gezeichnet als um 8 % zur Mitte geschrumpfte Kontur, halb
+    // durchscheinend hell — nur in der grossen Ansicht sichtbar, im
+    // 54-px-Icon geht sie ohne Schaden unter.
+    if(kante > 24){
+      c.save();
+      c.strokeStyle='rgba(255,246,214,0.55)'; c.lineWidth=Math.max(0.8,lw*0.8);
+      c.beginPath();
+      for(let i=0;i<SP.length;i++){
+        const qx=MS[0]+(SP[i][0]-MS[0])*0.92, qy=MS[1]+(SP[i][1]-MS[1])*0.92;
+        if(i===0) c.moveTo(qx,qy); else c.lineTo(qx,qy);
+      }
+      c.closePath(); c.stroke();
+      c.restore();
+    }
+    // Bohrung Oe 0,24 L mit Senkung Oe 0,38 L (Oe 4 / Oe 6 bei 16,5) und
+    // eine leichte Spanleitmulde darum. Die Mulde GEHOERT ZUR PLATTE und
+    // wird auch ohne Halter gezeichnet — im ersten Bau hing sie an
+    // opts.nurPlatte und fehlte in der Plattenansicht (eigener Fehler).
+    const rLoch = Math.max(1.2, L*0.12*scale), rSenk = Math.max(rLoch*1.5, L*0.19*scale);
+    // Mulde dezent: bei der Standard-AG60 gibt es sie kaum, bei der
+    // Vollprofilplatte (Rinaldi-Foto) ist sie da — ein leichter Schatten
+    // um die Senkung reicht, sonst wird die ganze Platte flaechig beige.
+    const rMulde= Math.max(rSenk*1.25, L*0.25*scale);
+    c.save();
+    c.fillStyle='rgba(60,45,15,0.10)';
+    c.beginPath(); c.arc(MS[0], MS[1], rMulde, 0, 7); c.fill();
+    // Senkung: heller Ring (Kegel faengt Licht), Loch dunkel.
+    const gS=c.createRadialGradient(MS[0],MS[1],rLoch,MS[0],MS[1],rSenk);
+    gS.addColorStop(0,'rgba(40,30,10,0.55)'); gS.addColorStop(1,'rgba(255,240,200,0.35)');
+    c.fillStyle=gS; c.beginPath(); c.arc(MS[0], MS[1], rSenk, 0, 7); c.fill();
+    c.fillStyle='#2a2f35'; c.beginPath(); c.arc(MS[0], MS[1], rLoch, 0, 7); c.fill();
+    c.restore();
+    // Mit Halter sitzt die Klemmschraube in der Bohrung.
+    if(!opts.nurPlatte) drawInsertScrew(c, MS[0], MS[1], rLoch*1.05);
+    // Die aktive Schneide: die beiden Zahnflanken an der Ecke im Ursprung
+    // (Polygonpunkte 1..3 der ersten Ecke).
+    c.strokeStyle='#c8281f'; c.lineWidth=Math.max(1.3,lw*1.6); c.lineCap='round';
+    c.beginPath(); c.moveTo(SP[1][0],SP[1][1]);
+    c.lineTo(SP[2][0],SP[2][1]); c.lineTo(SP[3][0],SP[3][1]); c.stroke();
   }
   else {
     // Außen-/Innendrehmeißel: volle Rhombusplatte, Klemmschraube, Halterschaft.
@@ -14744,14 +15147,15 @@ function drawToolShape(c, px, py, scale, tool, opts){
   c.beginPath(); c.arc(px,py,Math.max(1.5,opts.dot||2),0,7);
   c.fillStyle=opts.dotColor||'#c8281f'; c.fill();
   c.strokeStyle='#fff'; c.lineWidth=Math.max(0.7,lw*0.7); c.stroke();
-  // SCHNEIDENRING [ShopTurn-Vorbild, S. 0739: die Werkzeuglage wird
-  // durch die markierte Schneidenecke gezeigt]. Nur ein Punkt ging im
-  // 54-px-Icon unter; der offene Ring bleibt lesbar und deckt die
-  // Plattenecke nicht zu.
-  if(opts.ring){
-    c.strokeStyle='#c8281f'; c.lineWidth=Math.max(1.1,lw*1.3);
-    c.beginPath(); c.arc(px,py,opts.ring,0,7); c.stroke();
-  }
+  // KEIN SCHNEIDENRING MEHR [Daniel, 18.09.2026: "den runden roten
+  // Kreis um die Schneide finde ich nicht wirklich schoen, es reicht
+  // der Punkt"]. Der Ring (ShopTurn-Vorbild S. 0739) war am 05.09.
+  // eingezogen worden, weil ein 1,8-px-Punkt im 54-px-Icon untergeht.
+  // Gemessen war der Preis hoeher als der Nutzen: mit Radius 6 ragte er
+  // bei JEDEM Aussendreher links ueber den Icon-Rand hinaus und wirkte
+  // wie ein Zeichenfehler, an den Bohrern ueberdeckte er die Spitze.
+  // Stattdessen traegt der Punkt selbst die Lesbarkeit (opts.dot, im
+  // Listen-Icon 2,6 statt 1,8 px, weisser Rand wie bisher).
   if(opts.nurPlatte){ delete c.fill; delete c.stroke; }
   c.restore();
 }
@@ -14771,7 +15175,7 @@ function drawToolIcon(canvas, tool){
   // Automatisch einpassen: Werkzeug einmal unsichtbar in Weltmaß zeichnen ist teuer —
   // stattdessen die bekannte Ausdehnung je Art abschätzen und den Maßstab daraus wählen.
   const isTurn = tool.art==='aussen'||tool.art==='innen'||tool.art==='gewinde';
-  const small = w<70;                  // Tabellen-Icon vs. große Vorschau
+  const small = w<110;                 // Tabellen-Icon vs. große Vorschau (Listen-Icon am Laptop 92 px seit dem 19.09.2026, Design-Paket D4)
   // SCHNEIDENGRAFIK NACH SHOPTURN [Daniel, 05.09.2026; Bedienhandbuch
   // 840D sl Drehen 12/2019 S. 0747: "Die Schneidengrafik gibt die
   // durch Halterwinkel, Schnittrichtung und Plattenwinkel festgelegte
@@ -14809,29 +15213,54 @@ function drawToolIcon(canvas, tool){
   // Skalierung nicht exakt linear — praktisch sitzt ein Durchgang.
   // domstub liefert getImageData voller Nullen -> Fallback ist der
   // bisherige Schaetzweg.
+  // dot 2,6 im Listen-Icon: der Punkt ist seit dem 18.09.2026 die
+  // EINZIGE Lagemarke (der Ring ist raus) und muss den 54-px-Kasten
+  // allein tragen; in der grossen Vorschau bleibt er bei 2,4 — dort
+  // ist die Platte ohnehin gross und ein dicker Punkt deckt die Ecke zu.
   const opts0={ bodyLen: small? extMM*0.5 : extMM*0.62,
-    dot: small?1.8:2.4, lw: small?0.8:1, ring: small? 6 : 0 };
-  let eingepasst=false;
+    dot: small?2.6:2.4, lw: small?0.8:1 };
+  let eingepasst=false, sc=scale, cxP=px, cyP=py;
   if(!small){
     try{
-      const mess=document.createElement('canvas'); mess.width=w; mess.height=h;
+      // GEMESSEN WIRD AUF EINEM GROESSEREN FELD [18.09.2026]. Der
+      // eigentliche Fehler sass hier: das Messcanvas war genau so gross
+      // wie das Ziel. Was darueber hinausragte, kam in der Messung gar
+      // nicht vor — die Bounding-Box fiel zu klein aus, der Faktor zu
+      // gross, und das Werkzeug lief weiter aus dem Kasten. Sichtbar an
+      // der Innen-Bohrstange T41, deren Schaft WAAGERECHT liegt und
+      // deshalb weit ueber den Rand reicht (Daniels Bild).
+      // Zweiter Durchgang zusaetzlich, weil drawToolShape mehrere
+      // Mindestgroessen in PIXELN hat (Plattenkante, Schaftbreite,
+      // Mulde, Klemmschraube): beim Verkleinern bleiben die stehen, das
+      // Werkzeug wird relativ groesser als gemessen.
+      const MF=2.6;
+      const mw=Math.round(w*MF), mh=Math.round(h*MF);
+      const dxM=(mw-w)/2, dyM=(mh-h)/2;
+      const mess=document.createElement('canvas'); mess.width=mw; mess.height=mh;
       const mc=mess.getContext('2d');
-      drawToolShape(mc, px, py, scale, tool, opts0);
-      const dd=mc.getImageData(0,0,w,h).data;
-      let x0=1e9,y0=1e9,x1=-1,y1=-1;
-      for(let yy=0;yy<h;yy++) for(let xx=0;xx<w;xx++){
-        if(dd[(yy*w+xx)*4+3]>10){ if(xx<x0)x0=xx; if(xx>x1)x1=xx; if(yy<y0)y0=yy; if(yy>y1)y1=yy; }
-      }
-      if(x1>x0+3 && y1>y0+3){
-        const f=Math.min(2.6, (Math.min((w-18)/(x1-x0+1), (h-30)/(y1-y0+1))));
-        const cx=(x0+x1)/2, cy=(y0+y1)/2;
-        const px2=w/2 + (px-cx)*f, py2=(h-14)/2 + (py-cy)*f;
-        drawToolShape(c, px2, py2, scale*f, tool, opts0);
+      for(let durchgang=0; durchgang<2; durchgang++){
+        mc.clearRect(0,0,mw,mh);
+        drawToolShape(mc, cxP+dxM, cyP+dyM, sc, tool, opts0);
+        const dd=mc.getImageData(0,0,mw,mh).data;
+        let x0=1e9,y0=1e9,x1=-1,y1=-1;
+        // Schrittweite 2: die Box auf zwei Pixel genau reicht voellig,
+        // und das Messfeld hat die 6,8-fache Flaeche des Ziels.
+        for(let yy=0;yy<mh;yy+=2) for(let xx=0;xx<mw;xx+=2){
+          if(dd[(yy*mw+xx)*4+3]>10){ if(xx<x0)x0=xx; if(xx>x1)x1=xx; if(yy<y0)y0=yy; if(yy>y1)y1=yy; }
+        }
+        if(!(x1>x0+3 && y1>y0+3)) break;
+        const f=Math.min(2.6, (Math.min((w-18)/(x1-x0+3), (h-30)/(y1-y0+3))));
+        const cx=(x0+x1)/2-dxM, cy=(y0+y1)/2-dyM;   // zurueck ins Ziel
+        cxP = w/2 + (cxP-cx)*f;
+        cyP = (h-14)/2 + (cyP-cy)*f;
+        sc  = sc*f;
         eingepasst=true;
+        if(Math.abs(f-1) < 0.02) break;   // sitzt schon
       }
     }catch(e){}
   }
-  if(!eingepasst) drawToolShape(c, px, py, scale, tool, opts0);
+  if(eingepasst) drawToolShape(c, cxP, cyP, sc, tool, opts0);
+  else drawToolShape(c, px, py, scale, tool, opts0);
   if(!small && isTurn && tool.art!=='gewinde'){
     c.font='10px Consolas, monospace'; c.textAlign='center';
     // Die Vorschau zeichnet das FORMULAR-Werkzeug (readToolForm), und
@@ -15427,7 +15856,7 @@ const BA_ANKER={
   boZ1:'ba-bo-z1', boZ1bez:'ba-bo-z1', boZ1zugabe:'ba-bo-z1',
   boD:'ba-bo-tief', boU:'ba-bo-tief', boDF:'ba-bo-tief',
   boV2:'ba-bo-tief', boT1:'ba-bo-tief',
-  gwLageBtns:'ba-gw-lage', gwP:'ba-gw-steigung',
+  gwLageBtns:'ba-gw-lage', gwRichtBtns:'ba-gw-richt', gwP:'ba-gw-steigung',
   gwZ0:'ba-gw-steigung', gwZ1:'ba-gw-steigung',
   gwVerfBtns:'ba-gw-zustellung', gwD:'ba-gw-zustellung', gwN:'ba-gw-zustellung',
   gwND:'ba-gw-zustellung', gwFlankeBtns:'ba-gw-zustellung', gwU:'ba-gw-u'
@@ -20857,7 +21286,6 @@ document.getElementById('btnToolReset').onclick=(e)=>{
   zweiklickBestaetigen(e.target, 'Alle Werkzeuge auf Vorgabe?', ()=>{
     try{ localStorage.removeItem(WZ_SLOT); }catch(err){}
     toolTable=JSON.parse(JSON.stringify(WZ_VORGABE));
-    wzBelegungen={};   // sonst holte der naechste Profilwechsel den alten Stand zurueck
     toolSortiere(); cancelToolEdit();
     renderToolTable(); populateToolSelects();
   });
@@ -21741,11 +22169,10 @@ function setMaschinenProfil(id){
   // 117) — dieselbe FUTTER-Referenz, neue Masse, damit alle 14
   // Lesestellen (Zeichnung, 3D, Kollision) mitgehen.
   Object.assign(FUTTER, FUTTER_JE_MASCHINE[id]||FUTTER_JE_MASCHINE.MONFORTS_1500_EUROTURN);
-  // Die REVOLVERBELEGUNG wechselt mit [Daniel, 05.09.2026]: das
-  // Lager ist gemeinsam, die Plaetze je Maschine. Bewusst IN dieser
-  // Funktion statt als zweiter change-Listener — der liefe vor dem
-  // Original-Handler (die ppMerkmale-Lehre aus Pruefung 138).
-  try{ werkzeugBelegungWechseln(altProfilId, id); }catch(e){}
+  // Die REVOLVERBELEGUNG BLEIBT STEHEN [Daniel, 18.09.2026]: eine
+  // Tabelle fuer beide Monforts, beide haben 16 Plaetze und sollen
+  // gleich bestueckt sein. Hier stand bis dahin der Aufruf von
+  // werkzeugBelegungWechseln (05.09.2026, Plaetze je Maschine).
   try{ const b=document.getElementById('ppInfo');
     if(b && b.style.display!=='none') ppInfoMalen(); }catch(e){}
   const meldungen = ['Maschinenprofil: '+p.label];
@@ -27555,8 +27982,23 @@ function genGewinde(p, N, bump, lines, warnings){
   const doRough = p.bearbeitung!=='schlichten';
   const doFinish = p.bearbeitung!=='schruppen';
   const innen = p.lage==='innen';
-  const zApproach = p.z0 + p.lw; // Gewindevorlauf: Anfangspunkt vorverlagert
-  const zEnd = p.z1 - p.lr;      // Gewindeauslauf: Endpunkt nachverlagert
+  // GEWINDERICHTUNG [Daniels Ansage 18.09.2026: "ein Rechtsgewinde
+  // schneidet man von rechts nach links und ein Linksgewinde von links
+  // nach rechts. Dann aendern sich einfach nur die Start- und
+  // Endpositionen. Die Drehrichtung bleibt gleich — das ist auf den
+  // Monforts mit den Standardhaltern immer M03"]. Es ist also DASSELBE
+  // Werkzeug; getauscht wird allein, an welchem Ende des Gewindes der
+  // Zug beginnt. rz ist die Laufrichtung in Z: rechts laeuft nach -Z
+  // (zum Futter), links nach +Z (zur Stirn).
+  const linksGw = p.richt==='links';
+  const rz = linksGw ? -1 : 1;
+  const zAnf = linksGw ? p.z1 : p.z0;   // Gewindeanfang IN Laufrichtung
+  const zSchl = linksGw ? p.z0 : p.z1;  // Gewindeende IN Laufrichtung
+  const zApproach = zAnf + rz*p.lw; // Gewindevorlauf: Anfangspunkt vorverlagert
+  const zEnd = zSchl - rz*p.lr;     // Gewindeauslauf: Endpunkt nachverlagert
+  // Der Freifahrpunkt liegt IMMER stirnseitig (groesstes Z), nie
+  // futterseitig — sonst zoege das Linksgewinde am Ende zum Futter hin.
+  const zFrei = Math.max(zApproach, zEnd) + 5;
   const clearSign = innen ? -1 : 1;
   // KEGELGEWINDE [Daniel]: X0⌀ am Z0-Anfang, X1⌀ am Z1-Ende; das Profil
   // laeuft geradlinig ueber Vor- und Auslauf hinaus. Steigung K bleibt
@@ -27578,6 +28020,9 @@ function genGewinde(p, N, bump, lines, warnings){
     warnings.push('Gewinde Längs innen: X0 ist der Kern-⌀ der Vorbohrung, die Zustellung läuft nach außen (steigender ⌀) statt nach innen, Freifahren erfolgt zur Bohrungsmitte hin. Ebenfalls nicht an einem realen Innengewinde-Testlauf verifiziert — ersten Schnitt im Einzelsatz fahren.');
   }
   warnings.push('Gewinde Längs: konstante Drehzahl (G97) ist zwingend — Drehzahl während des G33-Schnitts NICHT ändern, keine G96-Schnittgeschwindigkeitsregelung verwenden.');
+  if(linksGw){
+    warnings.push('LINKSGEWINDE: geschnitten wird von LINKS NACH RECHTS (Z steigend, vom Futter zur Stirn) — mit demselben Werkzeug und weiterhin M03 [Daniel, 18.09.2026: "das schneiden wir mit demselben Werkzeug, wir müssen nur die Z-Werte vertauschen"]. Vorlauf W liegt damit futterseitig, der Auslauf R stirnseitig. Prüfe, dass hinter dem Gewindeende (Z'+fmt(p.z0)+') genug Freiraum für den Auslauf steht — beim Rechtsgewinde ist das die Seite, an der sonst die Schulter sitzt. An der Maschine noch nicht gefahren: ersten Schnitt im Einzelsatz.');
+  }
 
   // Werkzeugwechsel bei stehender Spindel am Wechselpunkt — erst T,
   // dann Drehzahl/Spindel/Kuehlmittel ([Daniel], NC-Review)
@@ -27644,6 +28089,16 @@ function genGewinde(p, N, bump, lines, warnings){
   // -> 15°).
   // =========================================================
   let zyklusModus = (p.ausg==='zyklus');
+  // LINKSGEWINDE IM ZYKLUSSATZ IST HERGELEITET, nicht belegt: an beiden
+  // Maschinen wurden bisher ausschliesslich Rechtsgewinde getippt und
+  // gezogen. Die Einzelsatz-Bahn (G33) ist reine Geometrie und damit
+  // sicher; ob die Steuerung aus dem getauschten Z und dem umgedrehten
+  // Vorzeichen von K wirklich ein Linksgewinde macht — oder ob sie dafuer
+  // ein eigenes Wort fuehrt, wie sie es bei der Lage mit PO tut — sagt
+  // erst ein Maskensatz. Bis dahin: Satz schreiben, aber mit Ansage.
+  if(zyklusModus && linksGw){
+    warnings.push('HERGELEITET (Linksgewinde im Zyklussatz): Z steht am anderen Gewindeende und K traegt das umgekehrte Vorzeichen. An KEINEM Maskensatz belegt — beide Maschinen haben bisher nur Rechtsgewinde geliefert. Vor dem ersten Lauf den Maskensatz ziehen (Zyklen-Maske der Steuerung, Linksgewinde tippen und per DNC holen) oder auf G-Einzelsaetze umstellen.');
+  }
   // KEGELGEWINDE G76 der 1000er HERGELEITET [Daniels "go" 11.09.2026 spaet]:
   // DV 594 Kap. 4.6.2 — "identisch mit dem Laengsgewinde, zur Bemassung
   // des Kegels wurde der Parameter X1 hinzugefuegt (Gewindeschraege
@@ -27770,7 +28225,10 @@ function genGewinde(p, N, bump, lines, warnings){
       //      atan(0.3/2) = 8.530766 stand exakt so im Satz) | PZ Kopie von D
       //   P240:1 Schruppen+Schlichten
       // G91 bleibt danach MODAL — der erste Satz nach dem Zyklus schreibt G90.
-      const threadLength = p.z1 - p.z0;
+      // Beim LINKSGEWINDE beginnt der Zyklus am anderen Ende: Z ist
+      // dann z1, und die Laenge K kehrt ihr Vorzeichen um. Rechts
+      // bleibt es Zeichen fuer Zeichen der belegte Satz.
+      const threadLength = zSchl - zAnf;
       const fmt6 = v => String(Math.round(v*1e6)/1e6);
       const eMin = gwE;                       // oben gegen E+D+U <= K geklemmt
       const pblock = [
@@ -27789,7 +28247,7 @@ function genGewinde(p, N, bump, lines, warnings){
         'PZ'+fmt(p.dz1||0.3),
         (p.bearbeitung==='beide'?'P240:1':null)
       ].filter(Boolean).join('');
-      worte = ['F'+fmt(p.p), kegel?'G76':'G75', 'G90','X'+fmt(p.x0),'Z'+fmt(p.z0),'G91','I'+fmt(kegel? ((+p.x1)-(+p.x0))/2 : 0),'K'+fmt(threadLength), pblock];
+      worte = ['F'+fmt(p.p), kegel?'G76':'G75', 'G90','X'+fmt(p.x0),'Z'+fmt(zAnf),'G91','I'+fmt(kegel? ((+p.x1)-(+p.x0))/2 : 0),'K'+fmt(threadLength), pblock];
       // REALFORM 16.09.2026 [O112244 N0140 gegen Maskenbild 06, Wert fuer
       // Wert]: Maske X0 40 / Z0 -3 / X1 6 INK / Z1 -30 INK / W 5,5 / R 3,9 /
       // K 1,1 / I 0,22 / D 0,42 / E 0,3 / U 0,14 / V 2,6 ->
@@ -27831,7 +28289,7 @@ function genGewinde(p, N, bump, lines, warnings){
       const pblock15=[
         'PG'+fmt(p.u||0),
         (kegel?'PK'+fmt(((+p.x1)-(+p.x0))/2):null),
-        'PL'+fmt(p.z1),
+        'PL'+fmt(zSchl),
         'PM'+fmt(p.lw||0),'PN'+fmt(p.lr||0),
         'PO'+fmt(po15),
         'PP'+fmt6b(pp15),
@@ -27847,9 +28305,9 @@ function genGewinde(p, N, bump, lines, warnings){
         'P250:'+fmt(p.p)
       ].filter(Boolean).join('');
       worte = ['F'+fmt(p.p), kegel?'G76':'G75',
-        'X'+fmt(p.x0),'Z'+fmt(p.z0),
+        'X'+fmt(p.x0),'Z'+fmt(zAnf),
         (kegel?'I'+fmt(p.x1):null),
-        'K'+fmt(p.z1), pblock15].filter(Boolean);
+        'K'+fmt(zSchl), pblock15].filter(Boolean);
     }
     lines.push('(=== NATIVER '+(kegel?'G76-KEGELGEWINDEZYKLUS':'G75-LAENGSGEWINDEZYKLUS')+' - Schnittaufteilung macht die Steuerung ===)');
     lines.push(MASCHINENPROFIL.id==='MONFORTS_1000_MTC_K_6624B'
@@ -27924,7 +28382,7 @@ function genGewinde(p, N, bump, lines, warnings){
   // Nach dem 1000er-Zyklussatz ist G91 modal (die Realform schaltet nicht
   // zurueck) — der erste Fahrsatz danach traegt G90, sonst faehrt er relativ.
   const g90nach = (zyklusModus && MASCHINENPROFIL.id==='MONFORTS_1000_MTC_K_6624B') ? 'G90 ' : '';
-  lines.push(`${N()} (GERADE  ) ${g90nach}G00 Z${fmt(zApproach+5)}`); bump();
+  lines.push(`${N()} (GERADE  ) ${g90nach}G00 Z${fmt(zFrei)}`); bump();
 }
 
 // =================================================================
@@ -30335,7 +30793,17 @@ function ncAnsichtMalen(){
   const v=document.getElementById('gcodeView'), ta=document.getElementById('gcodeOut');
   if(!v || !ta) return;
   if(!ta.value){ v.innerHTML='<span class="nc-kom">'+ncEsc(ta.placeholder||'')+'</span>'; return; }
-  v.innerHTML=ncFarbwerk(ta.value);
+  // Jede Zeile in ein span.nc-z [Design-Paket 19.09.2026, Idee 10]: der
+  // Zeilenumbruch bleibt IM span, der Text der Ansicht ist damit weiter
+  // Byte fuer Byte das Programm (Pruefung 136 misst ncFarbwerk selbst). Die
+  // Zeilennummer ist ein CSS-Zaehler auf ::before - nichts, was in den Text
+  // oder in die Zwischenablage geraet. Unter 900 px gibt es keine Regel
+  // fuer .nc-z, die spans sind dort unsichtbar.
+  // Das Zeilenende steht ZWISCHEN den spans, nicht darin. Zwei Anlaeufe davor, beide gemessen: ein Zeilenende
+  // IM Block-span verdoppelte es in innerText (Kopieren per Maus: 22766 statt 22088 Zeichen); inline-block
+  // brach in der pre-Ansicht nie um (alle Zeilen auf einer). So bleibt am Handy der Textfluss byteidentisch
+  // (inline-spans in pre), und am Laptop macht die 900er-Query jeden span zum Block mit eigenem pre.
+  v.innerHTML=ncFarbwerk(ta.value).split('\n').map(z=>'<span class="nc-z">'+z+'</span>').join('\n');
 }
 function generate(){
   const code=buildProgram();
@@ -36373,6 +36841,79 @@ document.getElementById('maskKalk').addEventListener('click',(ev)=>{
   kalkSpeichern(); kalkBlattMalen();
 });
 document.getElementById('btnKalkZu').onclick=()=>document.getElementById('maskKalk').classList.remove('show');
+// =================================================================
+// AUSTAUSCH MIT DER WERKSTATT-PIPELINE [19.09.2026, Daniels Freigabe der
+// Nachtdurchsicht: die Pipeline ist die Quelle des PREISES, die CAM-Apps
+// liefern die ZEITEN]. Zwei Dateien, kein Server dazwischen.
+// -----------------------------------------------------------------
+// zeitDateiBauen: Format dz-cam-zeit 1. komplett = Laufzeit MIT Werkzeug-
+// wechseln (die Zeit, die an der Maschine vergeht), schnitt = ohne; die
+// Werkzeuge werden aus den Schritten gezaehlt (T und, wo geschlichtet wird,
+// T2), die Wechsel aus der NC (hauptzeiten.wechsel); Aufspannungen = diese
+// plus die gemerkten fuers Gegenstueck. Pruefung 207 rechnet es nach.
+function zeitDateiBauen(){
+  const hz=(hauptzeiten && hauptzeiten.komplett>0)? hauptzeiten : null;
+  const w=kalkLaden();
+  const ts=new Set();
+  (programSteps||[]).forEach(s=>{ const p=(s && s.params)||{}; if(p.t!=null && p.t!=='') ts.add(String(p.t));
+    if(p.t2!=null && p.t2!=='' && (p.bearbeitung==='beide'||p.bearbeitung==='schlichten')) ts.add(String(p.t2)); });
+  const eigenName=kalkProgName();
+  const aufsp=(w.aufsp||[]).filter(a=>a.name!==eigenName);
+  const nrEl=document.getElementById('progNo'); const nr=(nrEl && nrEl.value)? String(nrEl.value).trim() : '';
+  const r3=v=>Math.round(v*1000)/1000;
+  return {
+    format:'dz-cam-zeit', version:1, quelle:'drehen', datum:new Date().toISOString(),
+    programm:{ name:eigenName, o:nr? 'O'+nr : '', maschine:(typeof MASCHINENPROFIL!=='undefined' && MASCHINENPROFIL && MASCHINENPROFIL.label)||'' },
+    zeiten:{ komplett_min: hz? r3(hz.komplett):0, schnitt_min: hz? r3(hz.gesamt):0, werkzeuge: ts.size,
+             wechsel: hz? hz.wechsel:0, wechsel_min: hz? r3(hz.wechselMin):0 },
+    aufspannungen: 1+aufsp.length,
+    weitere_aufspannungen: aufsp.map(a=>({name:a.name, min:a.min}))
+  };
+}
+document.getElementById('btnKalkZeitExport').onclick=()=>{
+  const z=zeitDateiBauen();
+  if(!(z.zeiten.komplett_min>0)){ alert('Keine Laufzeit — erst Schritte anlegen; die Zeit kommt aus dem erzeugten Programm.'); return; }
+  exportiereDatei('zeit-'+kalkProgName().replace(/[^A-Za-z0-9_.-]+/g,'_')+'.json', JSON.stringify(z,null,1), 'Zeit-Datei fuer die Pipeline', 'application/json');
+};
+// Werkstoffpreise aus der Pipeline: zugeordnet NACH NAMEN, je Gruppe der erste
+// Treffer der Liste (C45 vor 42CrMo4: der gaengige Verguetungsstahl setzt den
+// Preis). Was die Pipeline nicht fuehrt (Guss, Messing), bleibt und wird genannt.
+const KALK_WERKSTOFF_ZUORDNUNG={
+  baustahl:['S235','S235JR','S355','St37','St52'],
+  verguetung:['C45','C45E','42CrMo4','16MnCr5','34CrNiMo6'],
+  edelstahl:['1.4301','1.4571','1.4404','1.4305','1.4057'],
+  alu:['AlMgSi1','AlMg3','AlZnMgCu1.5','AlCuMgPb','Alu'],
+  messing:['CuZn39Pb3','CuZn40Pb2','MS58','Messing'],
+  guss:['EN-GJL-250','EN-GJS-400','GG25','GGG40','Guss']};
+function werkstoffPreiseUebernehmen(j){
+  const bericht={uebernommen:[], offen:[], fehler:null};
+  if(!j || j.format!=='wp-werkstoffe' || +j.version!==1 || !Array.isArray(j.werkstoffe)){
+    bericht.fehler='Das ist keine Werkstoff-Datei der Pipeline (format wp-werkstoffe, version 1).'; return bericht; }
+  const w=kalkLaden();
+  Object.keys(KALK_WERKSTOFF_ZUORDNUNG).forEach(key=>{
+    let treffer=null;
+    for(const n of KALK_WERKSTOFF_ZUORDNUNG[key]){ treffer=j.werkstoffe.find(x=>String(x.name||'').toLowerCase()===n.toLowerCase()); if(treffer) break; }
+    if(treffer && +treffer.preis>0){
+      w.preise[key]=Math.round(+treffer.preis*100)/100;
+      bericht.uebernommen.push(WERKSTOFFE[key].name+' = '+treffer.name+' '+w.preise[key].toFixed(2).replace('.',',')+' €/kg'+(treffer.gepflegt===false?' (dort noch Platzhalter)':''));
+    } else bericht.offen.push(WERKSTOFFE[key].name);
+  });
+  if(bericht.uebernommen.length) kalkSpeichern();
+  return bericht;
+}
+document.getElementById('kalkWerkstoffDatei').addEventListener('change',(e)=>{
+  const file=e.target.files && e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=(ev)=>{
+    let b;
+    try{ b=werkstoffPreiseUebernehmen(JSON.parse(ev.target.result)); }catch(err){ b={fehler:'Die Datei liess sich nicht lesen: '+err.message}; }
+    e.target.value='';
+    if(b.fehler){ alert(b.fehler); return; }
+    kalkOeffnen();
+    alert('Werkstoffpreise aus der Pipeline: '+(b.uebernommen.join('; ')||'nichts uebernommen')+(b.offen.length? '. Nicht in der Liste, unveraendert: '+b.offen.join(', ') : '')+'.');
+  };
+  reader.readAsText(file);
+});
 document.getElementById('maskKalk').addEventListener('input',()=>{
   const w=kalkLaden();
   const g=id=>parseFloat(document.getElementById(id).value);
