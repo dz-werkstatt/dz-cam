@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="19.09.2026 22:34 (d1b70a8b)";</script>
+<script>window.__DZ_STAND="20.09.2026 00:37 (d9a3c6c4)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2418,6 +2418,14 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     .mask:not(.kachelpilot) .mrow .radiobtns.fwrap:not(.kopfschalter):not(.selfeld){flex-wrap:wrap;}
   }
   body.dunkel .fdrauf{background:#1a2027;}
+  /* UEBERNEHMEN MELDET, WARUM [19.09.2026]: der Grund fuer ein verweigertes
+     Uebernehmen steht IN der Maske - als volle Zeile in der Aktionszeile ueber
+     den Knoepfen (order -1), in Zeilen- wie Kachelansicht und auf jeder Breite -
+     und nicht nur 7 s im Banner am Bildrand. Daniels Befund: "liess sich nicht
+     bestaetigen, es kam auch keine Meldung". */
+  .mask-meldung{flex:1 1 100%;order:-1;white-space:pre-line;font-size:12.5px;line-height:1.4;color:#7c2419;background:#fdecea;
+    border:1px solid #c0392b;border-radius:6px;padding:7px 10px;margin:0 0 6px;}
+  body.dunkel .mask-meldung{background:#3a1d1d;color:#f3c9c4;border-color:#a93226;}
   /* ===== HANDYANSICHT DER HAUPTMASKE (14.09.2026, Daniels Befund) ========
      Beides gilt NUR unter 900 px und NUR hier — das gemeinsame Stylesheet
      bleibt unberuehrt, damit die Handyansicht des Drehteils gleich bleibt. */
@@ -2753,7 +2761,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <div class="mrow"><label data-ba="ba-fk03-sc">SC2 Rückzug zwischen Positionen</label><input type="number" step="any" id="fkSc2" value="50"><span class="unit">mm</span></div>
           <div class="mrow"><label data-ba="ba-fk03-sc">Z0 Oberfläche Werkstück</label><input type="number" step="any" id="fkOber" value="0"><span class="unit">mm</span></div>
           <div class="mrow"><label data-ba="ba-fk03-rz">Sichere Höhe Z (abs)</label><input type="number" step="any" id="fkRz" value="100"><span class="unit">mm</span></div>
-          <div class="mrow"><button class="gcbtn primary ok-gruen" id="btnFkOk" style="flex:1 1 auto;min-width:0;padding:9px;">✓ Übernehmen</button> <button class="gcbtn ab-rot" id="btnFkCancel" style="padding:10px 16px;">✕ Abbrechen</button></div>
+          <div class="mrow" id="fkAktion"><div id="fkMeldung" class="mask-meldung" style="display:none;"></div><button class="gcbtn primary ok-gruen" id="btnFkOk" style="flex:1 1 auto;min-width:0;padding:9px;">✓ Übernehmen</button> <button class="gcbtn ab-rot" id="btnFkCancel" style="padding:10px 16px;">✕ Abbrechen</button></div>
         </div>
       </div>
 
@@ -3530,6 +3538,14 @@ CYCLE-Parametern zu &mdash; die Masken bleiben, wie sie sind. Die Zuordnungstabe
 <dt id="ba-fk06-uebernehmen">&Uuml;bernehmen bleibt sichtbar</dt><dd>Am Laptop bleibt die Zeile mit <b>&Uuml;bernehmen</b> und <b>Abbrechen</b> am unteren Rand der
 Maske stehen, auch wenn das Formular dar&uuml;ber scrollt (19.09.2026; bei acht Masken war der Knopf vorher erst nach dem Scrollen da). Am Handy scrollt
 die ganze Maske wie bisher.</dd>
+<dt id="ba-fk06-pruefung">&Uuml;bernehmen pr&uuml;ft die Eingabe</dt><dd>Beim &Uuml;bernehmen pr&uuml;ft die App den Schritt so, wie es sp&auml;ter die Ampel tut (Kap.&nbsp;8). Ein
+<b>roter</b> Befund &mdash; Tiefe nicht negativ, Tasche schmaler als der Fr&auml;ser, kein Werkzeug, Position &bdquo;Bohrbild&ldquo; ohne Bohrbild &mdash; wird
+<b>nicht &uuml;bernommen</b>: die Maske bleibt offen, der Grund steht rot &uuml;ber den Kn&ouml;pfen und zus&auml;tzlich im Meldebanner unten; korrigiere den Wert
+oder brich ab. <b>Gelbe</b> Befunde (Position au&szlig;erhalb der BLK FORM, Gewindebohrer im Bohrzyklus) werden &uuml;bernommen und als Hinweis gemeldet.
+Zur Position: eine Tasche, Nut oder ein Zapfen &ouml;ffnet mit der <b>eigenen Position X/Y</b> in der Mitte des Rohteils; ein Bohrbild braucht sie nur, wenn
+Du oben &bdquo;Bohrbild&ldquo; w&auml;hlst &mdash; dann muss eines angelegt sein (Softkey Bohrbild). Bohrzyklen &ouml;ffnen am zuletzt angelegten Bohrbild,
+ohne Bohrbild ebenfalls mit X/Y. Dasselbe gilt f&uuml;r den Programmkopf (BLK FORM, sichere H&ouml;he, Sicherheitsabstand). Bis zum 19.09.2026 verlangte
+der Knopf bei jeder Tasche ein Bohrbild, auch in der Stellung &bdquo;eigene Position X/Y&ldquo;, und die Meldung stand nur sieben Sekunden am unteren Bildrand.</dd>
 <dt id="ba-fk06-art">Zyklen der Gruppen Bohren und Gewinde</dt><dd>Jede Kachel &ouml;ffnet eine eigene Maske: Zentrieren (iTNC 240),
 Bohren (200), Tieflochbohren (203, Universal-Bohren mit Spanbruch/Entspanen), Tiefbohren (205, mit Vorhalteabst&auml;nden),
 Reiben (201), Ausdrehen (202), R&uuml;ckw&auml;rts-Senken (204), Bohrfr&auml;sen (208), Einlippenbohren (241); Gewinde mit
@@ -4959,6 +4975,65 @@ function fToolTSchreiben(werkzeuge, opt){
 // Draufsicht. Ein Schritt OHNE posArt gilt als 'muster' - so bleiben
 // gespeicherte Programme und alle Vorlagen unveraendert.
 function fPosArt(s){ return (s && s.posArt === 'xy') ? 'xy' : 'muster'; }
+
+// UEBERNEHMEN MELDET, WARUM [19.09.2026, Daniels Befund: "Rechtecktasche
+// komplett durchgetippt, liess sich nicht bestaetigen, keine Meldung"].
+// Drei DOM-freie Bausteine, damit der Pruefstand die Entscheidung messen kann.
+//
+// fSchrittBefund: die Befunde der Ampel (fPruefen) fuer GENAU diesen Schritt,
+// gerechnet auf einer Kopie des Programms, in der der Schritt an seiner Stelle
+// steht (beim Bearbeiten ersetzt er den alten, sonst haengt er hinten). Nur
+// die eigenen Zeilen zaehlen - ein roter Schritt 1 darf das Uebernehmen von
+// Schritt 2 nicht sperren; ein stillgelegter Schritt hat keine Befunde (die
+// Ampel prueft nur aktive). Das Programm selbst bleibt unangetastet.
+function fSchrittBefund(prog, s, editIdx){
+  const p = Object.assign({}, prog);
+  p.schritte = (prog.schritte || []).slice();
+  if(editIdx >= 0 && editIdx < p.schritte.length) p.schritte[editIdx] = s; else p.schritte.push(s);
+  try{ if(prog.__sollform) fSollformBinden(p, prog.__sollform); }catch(e){}
+  const B = fPruefen(p);
+  const akt = p.schritte.filter(q => q && q.aktiv !== false);
+  const i = akt.indexOf(s);
+  if(i < 0) return {rot:[], gelb:[], nr:0};
+  const nr = 'Schritt ' + (i + 1) + ' (' + ((F_ZYKLEN[s.art] || {}).wort || s.art) + '): ';
+  const eigene = (l) => l.filter(t => t.indexOf(nr) === 0).map(t => t.slice(nr.length));
+  return {rot:eigene(B.rot), gelb:eigene(B.gelb), nr:i + 1};
+}
+// fUebernahmeEntscheid: rot = nicht uebernehmen, mit dem Grund im Klartext;
+// gelb = uebernehmen, der Hinweis geht ins Banner. Der Text nennt den Schritt
+// nicht - er steht in der offenen Maske.
+function fUebernahmeEntscheid(prog, s, editIdx){
+  const B = fSchrittBefund(prog, s, editIdx);
+  const liste = (l) => l.map(t => '\u2022 ' + t).join('\n');
+  if(B.rot.length) return {uebernehmen:false, rot:B.rot, gelb:B.gelb, meldung:'FEHLER - nicht \u00fcbernommen. Bitte korrigieren:\n' + liste(B.rot), hinweis:''};
+  return {uebernehmen:true, rot:[], gelb:B.gelb, meldung:'', hinweis:B.gelb.length ? '\u00dcbernommen. Hinweis:\n' + liste(B.gelb) : ''};
+}
+// fNeuerSchrittFuerMaske: der Schritt, mit dem eine Maske fuer einen NEUEN
+// Zyklus aufgeht. Bis zum 19.09.2026 reichte fZyklusOeffnen IMMER einen
+// Bohrbild-Index an fSchrittNeu (-1, wenn es keines gab) - und "ein Index ist
+// uebergeben" heisst dort "Position = Bohrbild". Damit oeffnete jede Tasche in
+// der Stellung Bohrbild, in einem Programm ohne Bohrbild mit leerer Liste; die
+// Regel vom 15.09. (Formen starten mit eigener Position) griff nur fuer
+// Schritte, die der Code selbst anlegt. Jetzt: ein ausdruecklich angewaehltes
+// Bohrbild bleibt Bohrbild; sonst starten Formen mit X/Y in der Rohteilmitte,
+// Bohren und Gewindefraesen am letzten Bohrbild, und ohne Bohrbild steht
+// ueberall X/Y. Das letzte Bohrbild bleibt vorgemerkt, falls jemand in der
+// Maske auf Bohrbild umschaltet. Konturzyklen bekommen wie bisher die Kontur.
+function fNeuerSchrittFuerMaske(prog, art, tNr, sel){
+  const z = F_ZYKLEN[art] || {};
+  const konturen = prog.konturen || [], muster = prog.muster || [];
+  if(z.kontur){
+    const kIdx = (sel && sel.typ === 'kontur') ? sel.idx : (konturen.length ? konturen.length - 1 : -1);
+    return fSchrittNeu(prog, art, tNr, kIdx);
+  }
+  const gewaehlt = !!(sel && sel.typ === 'muster' && muster[sel.idx]);
+  const mIdx = gewaehlt ? sel.idx : (muster.length ? muster.length - 1 : -1);
+  const fraesForm = !!(z.fraes && !z.gewf && !z.eigenePosition && !z.modell);
+  const arg = gewaehlt ? sel.idx : ((fraesForm || mIdx < 0) ? null : mIdx);
+  const s = fSchrittNeu(prog, art, tNr, arg);
+  if(arg == null) s.muster = mIdx;
+  return s;
+}
 function fPunkte(s, prog){
   if(fPosArt(s) === 'xy') return [{x:fRund(+s.posX || 0), y:fRund(+s.posY || 0)}];
   return fMusterPunkte(((prog && prog.muster) || [])[s && s.muster]);
@@ -11781,7 +11856,8 @@ function fPruefen(prog){
       }
       if(s.art === 'zapfenR' && (!(+s.roh1 >= +s.l1 - 1e-9) || !(+s.roh2 >= +s.l2 - 1e-9))) rot.push(nr + 'Rohteilmass Q424/Q425 (' + s.roh1 + 'x' + s.roh2 + ') muss mindestens das Fertigmass (' + s.l1 + 'x' + s.l2 + ') sein.');
       if(s.art === 'zapfenK' && (!(+s.dm > 0) || !(+s.dmRoh >= +s.dm - 1e-9))) rot.push(nr + 'Rohteil-⌀ Q222 muss mindestens dem Fertig-⌀ Q223 entsprechen.');
-      if(!(+s.ueberl >= 0.1 && +s.ueberl <= 1.414)) rot.push(nr + 'Bahn-Ueberlappung Q370 muss zwischen 0,1 und 1,414 liegen (steht auf ' + s.ueberl + ').');
+      // Q370 fuehren nur die Formen mit Ringbahnen; Nut (253) und runde Nut (254) kennen das Wort nicht [19.09.2026].
+      if((zyk.q || []).indexOf('Q370') >= 0 && !(+s.ueberl >= 0.1 && +s.ueberl <= 1.414)) rot.push(nr + 'Bahn-Ueberlappung Q370 muss zwischen 0,1 und 1,414 liegen (steht auf ' + s.ueberl + ').');
       if(!(+s.fTief > 0)) rot.push(nr + 'Vorschub Tiefenzustellung Q206 fehlt.');
       // Der Hinweis entfaellt, wenn die (importierte) Tabelle einen ANGLE traegt.
       if((+s.eintauch === 1 || +s.eintauch === 2) && !(tool && +tool.angle > 0)) gelb.push(nr + (+s.eintauch === 1 ? 'Helix' : 'Pendelnd') + ' eintauchen (Q366) braucht den Eintauchwinkel ANGLE des Werkzeugs in der TOOL.T der Maschine — bei ANGLE 0 meldet die TNC einen Fehler' + (tool ? ' (T' + s.t + ' hat in der App-Tabelle keinen ANGLE)' : '') + '.');
@@ -12638,6 +12714,29 @@ function melde(text){
   if(meldeTimer) clearTimeout(meldeTimer);
   meldeTimer = setTimeout(()=>{ b.style.display = 'none'; }, 7000);
   if(!b.dataset.klick){ b.dataset.klick = '1'; b.addEventListener('click', ()=>{ b.style.display = 'none'; }); }
+}
+// MELDUNG IN DER MASKE [19.09.2026]: der Grund fuer ein verweigertes
+// Uebernehmen gehoert dorthin, wo der Blick ist - ueber die Knoepfe, nicht
+// nur 7 s in das Banner am Bildrand (Daniels Befund: "keine Meldung"). Leerer
+// Text raeumt die Zeile weg; jeder Text geht zusaetzlich ins Banner.
+// DAS BANNER HAENGT AM BODY [19.09.2026]: im Markup steht es in der Kopfzeile
+// (.hdr), und die bildet mit position:relative und z-index 2 einen
+// Stapelkontext - darin gilt die 950 des Banners nur gegen die Geschwister
+// im Kopf. Eine offene Maske (z 900 am Laptop, 5 am Handy) lag DARUEBER:
+// gemessen mit elementFromPoint, Bild U-04 (der Bannerkopf verschwand unter
+// der Maske). Am Ende des body steht es im Wurzelkontext, und 950 zaehlt.
+try{ const b = document.getElementById('meldeBanner'); if(b && document.body && b.parentElement && b.parentElement !== document.body && document.body.appendChild) document.body.appendChild(b); }catch(e){}
+function maskeMeldung(id, text){
+  const m = document.getElementById(id);
+  if(m){
+    m.textContent = text || '';
+    m.style.display = text ? '' : 'none';
+    // Die ganze Aktionszeile ans untere Ende des Sichtbereichs: die Meldung
+    // steht VOR den Knoepfen in derselben Zeile - nur sie in den Blick zu holen
+    // liess am Handy die Knoepfe unter dem Rand verschwinden (Bild U-04, 390 px).
+    if(text){ const z = (m.parentElement && m.parentElement.classList && m.parentElement.classList.contains('mrow')) ? m.parentElement : m; if(z.scrollIntoView){ try{ z.scrollIntoView({block:'end'}); }catch(e){} } }
+  }
+  if(text) melde(text);
 }
 try{ window.alert = melde; }catch(e){}
 
@@ -13520,6 +13619,7 @@ function hbBildKontur(H, art, s){
 // MASKE PROGRAMMKOPF
 // =====================================================================
 function fKopfOeffnen(){
+  maskeMeldung('fkMeldung', '');
   const k = fProg.kopf;
   setVal('fkName', k.name); setVal('fkProfil', k.profil || 'HEIDENHAIN_ITNC530'); setVal('fkStand', k.stand || '07');
   setVal('fkWerkstoff', F_WERKSTOFFE[k.werkstoff] ? k.werkstoff : 'baustahl'); setVal('fkTw', (k.tw === 0 || +k.tw > 0) ? k.tw : F_TW_VORGABE);
@@ -13544,7 +13644,10 @@ function fKopfSpannSync(){
 }
 {
   const ok = document.getElementById('btnFkOk'); if(ok) ok.onclick = ()=>{
-    const k = fProg.kopf;
+    // UEBERNEHMEN MELDET, WARUM [19.09.2026]: die Werte kommen auf eine KOPIE
+    // des Kopfs; rote Befunde des Kopfs (BLK FORM, sichere Hoehe, SC) blockieren
+    // mit Ansage in der Maske, statt still in die Ampel zu wandern.
+    const k = Object.assign({}, fProg.kopf);
     k.name = getStr('fkName').trim() || 'DZ1'; k.profil = getStr('fkProfil') || 'HEIDENHAIN_ITNC530'; k.stand = getStr('fkStand') || '07';
     k.werkstoff = F_WERKSTOFFE[getStr('fkWerkstoff')] ? getStr('fkWerkstoff') : 'baustahl'; k.tw = Math.max(0, getNum('fkTw', F_TW_VORGABE));
     k.x0 = getNum('fkX0'); k.y0 = getNum('fkY0'); k.z0 = getNum('fkZ0', -20); k.x1 = getNum('fkX1', 100); k.y1 = getNum('fkY1', 80); k.z1 = getNum('fkZ1');
@@ -13552,14 +13655,19 @@ function fKopfSpannSync(){
     k.spann = selBtnVal('fkSpannBtns') || 'aus'; k.spannRichtung = selBtnVal('fkSpannRichtBtns') || 'y';
     k.spannZ = getNum('fkSpannZ'); k.spannBreite = getNum('fkSpannBreite', 40); k.spannLaenge = getNum('fkSpannLaenge', 150);
     k.spannLuft = getNum('fkSpannLuft', 1); k.spannMin = getNum('fkSpannMin', 8);
-    const bereinigt = fName(fProg);
+    const pk = Object.assign({}, fProg, {kopf:k}); const bereinigt = fName(pk);
     if(bereinigt !== k.name.toUpperCase()) melde('Programmname wird als ' + bereinigt + ' geschrieben (nur A-Z 0-9 _ -, max. 16 Zeichen).');
     k.name = bereinigt;
+    const rotK = fPruefen(pk).rot.filter(t => t.indexOf('Schritt ') !== 0);
+    if(rotK.length){ maskeMeldung('fkMeldung', 'FEHLER - nicht \u00fcbernommen. Bitte korrigieren:\n' + rotK.map(t => '\u2022 ' + t).join('\n')); return; }
+    Object.assign(fProg.kopf, k);
+    maskeMeldung('fkMeldung', '');
     setVal('pmSaveName', k.name);
     maskZu('maskKopf'); fRender();
   };
   const ab = document.getElementById('btnFkCancel'); if(ab) ab.onclick = ()=>maskZu('maskKopf');
   wireRadioGroup('fkSpannBtns', fKopfSpannSync); wireRadioGroup('fkSpannRichtBtns', fKopfSpannSync);
+  { const mk = document.getElementById('maskKopf'); if(mk && mk.addEventListener){ ['input', 'change'].forEach(t => mk.addEventListener(t, ()=>maskeMeldung('fkMeldung', ''))); } }
   // AUFSPANNTIEFE VORSCHLAGEN: die Backenoberkante folgt aus der tiefsten
   // Bearbeitung, die Einspanntiefe aus der Rohteilhoehe darunter. Der
   // Knopf SETZT den Wert - der Vorschlag steht danach im Feld und laesst
@@ -13771,7 +13879,7 @@ function fZyklusMaskeHtml(art, prog){
     h += '<div class="mrow" id="zr_' + f + '">' + label(f) + eingabe(f) + '</div>';
   });
   zu();
-  h += '<div class="mrow" id="zyAktion"><button class="gcbtn primary ok-gruen" id="btnZyOk" style="flex:1 1 auto;min-width:0;padding:9px;">✓ Übernehmen</button> <button class="gcbtn ab-rot" id="btnZyCancel" style="padding:10px 16px;">✕ Abbrechen</button></div>';
+  h += '<div class="mrow" id="zyAktion"><div id="zyMeldung" class="mask-meldung" style="display:none;"></div><button class="gcbtn primary ok-gruen" id="btnZyOk" style="flex:1 1 auto;min-width:0;padding:9px;">✓ Übernehmen</button> <button class="gcbtn ab-rot" id="btnZyCancel" style="padding:10px 16px;">✕ Abbrechen</button></div>';
   return h;
 }
 // Felder, die im einfachen Modus verborgen liegen (Gruppen '#!').
@@ -13849,6 +13957,13 @@ function fZyklusWerkzeugVorschlag(art){
   const fr = W.filter(w => w.art === 'fraeser');
   return (nameWunsch && W.find(w => nameWunsch.test(String(w.name || '')))) ||
     (art === 'planfraesen' && fr.length ? fr.slice().sort((a, b) => (+b.d || 0) - (+a.d || 0))[0] : null) ||
+    // Schraegen schlichten braucht die Kugel (r2 = halber Durchmesser) - der
+    // Planfraeser T1 als Vorschlag liess die Maske mit Vorgaben nicht zu [19.09.2026].
+    (art === 'modellSchlichten' ? fr.find(w => +w.r2 > 0 && Math.abs(+w.r2 - (+w.d) / 2) < 1e-6) : null) ||
+    // Tasche, Nut, Zapfen: ein Schaftfraeser mit Eintauchwinkel bis ⌀20, der
+    // groesste zuerst - nicht der Messerkopf T1, mit dem eine 50x30-Tasche
+    // in der Vorgabe gar nicht anzulegen war (Durchlauf 19.09.2026).
+    (F_FRAES_ARTEN.indexOf(art) >= 0 && art !== 'planfraesen' ? fr.filter(w => +w.d <= 20).sort((a, b) => ((+b.angle > 0) - (+a.angle > 0)) || ((+b.d || 0) - (+a.d || 0)))[0] : null) ||
     W.find(w => w.art === artWunsch) || W.find(w => w.art === 'bohrer') || W[0] || {nr:1};
 }
 // Werte eines Schritts in die Felder; fehlende Werte (aeltere Schritte)
@@ -13870,9 +13985,15 @@ function fZyklusSetzen(s){
 function fZyklusLesen(basis){
   const art = ZY.art;
   const z = F_ZYKLEN[art] || {};
-  const s = Object.assign({aktiv:true}, basis || {});
+  // VOLLE VORGABEN FUER EINEN NEUEN SCHRITT [19.09.2026]: die Maske zeigt
+  // nicht jedes Feld (die Nut hat keine Ueberlappung, das Planfraesen keinen
+  // Vorschub Tiefenzustellung) - startete der Schritt mit {aktiv:true},
+  // fehlten genau diese Werte, und die Ampel meldete sie rot. Der Durchlauf
+  // ueber alle Zyklen fand es an Nut, runder Nut und Planfraesen. Ein
+  // bearbeiteter Schritt behaelt seine Werte.
+  const ref = fSchrittNeu(fProg, art, Math.round(getNum('zf_t', (basis && basis.t) || 0)), basis ? basis.muster : undefined);
+  const s = Object.assign({aktiv:true}, basis || ref);
   s.typ = z.fraes ? 'fraesen' : 'bohren'; s.art = art;
-  const ref = fSchrittNeu(fProg, art, Math.round(getNum('zf_t', s.t || 0)), s.muster);
   ZY.felder.forEach(f => {
     const d = F_FELDER[f] || {};
     if(d.typ === 'werkzeug'){ s.t = Math.round(getNum('zf_t', 0)); return; }
@@ -13901,6 +14022,7 @@ function fZyklusLesen(basis){
 function fZyklusSync(e){
   const art = ZY.art; if(!art) return;
   const id = (e && e.target && e.target.id) || (typeof e === 'string' ? e : '');
+  if(e && e.target) maskeMeldung('zyMeldung', '');   // eine Eingabe raeumt die alte Ansage weg
   // Kopplungen: Werkzeugwechsel belegt S/F vor; Gewinde mit Ausgleichsfutter
   // rechnet F = P x S, sobald Drehzahl oder Steigung sich aendern.
   if(id === 'zf_t'){
@@ -13953,10 +14075,10 @@ function fZyklusOeffnen(art, idx){
   if(fEditSchritt >= 0){ s = fProg.schritte[fEditSchritt]; art = s.art; }
   else {
     const tVor = fZyklusWerkzeugVorschlag(art);
-    const kontur = !!((F_ZYKLEN[art] || {}).kontur);
-    const mIdx = kontur ? ((fSel && fSel.typ === 'kontur') ? fSel.idx : ((fProg.konturen || []).length ? fProg.konturen.length - 1 : -1))
-      : ((fSel && fSel.typ === 'muster') ? fSel.idx : (fProg.muster.length ? fProg.muster.length - 1 : -1));
-    s = fSchrittNeu(fProg, art, tVor.nr, mIdx);
+    // POSITION DES NEUEN SCHRITTS [19.09.2026]: Formen starten mit X/Y,
+    // Bohren am letzten Bohrbild, ohne Bohrbild ueberall X/Y - die Regel
+    // steht DOM-frei in fNeuerSchrittFuerMaske (Begruendung dort).
+    s = fNeuerSchrittFuerMaske(fProg, art, tVor.nr, fSel);
   }
   fZyklusMaskeBauen(art);
   fZyklusWerkzeugeFuellen(s.t, art);
@@ -13972,18 +14094,29 @@ function fZyklusOeffnen(art, idx){
   setTimeout(()=>{ try{ fHilfebild(null); }catch(e){} }, 0);
 }
 function fZyklusUebernehmen(){
-  const z = F_ZYKLEN[ZY.art] || {};
-  const s = fZyklusLesen(fEditSchritt >= 0 ? fProg.schritte[fEditSchritt] : null);
-  if(z.kontur && (s.kontur < 0 || !(fProg.konturen || [])[s.kontur])){ melde('FEHLER: erst eine Kontur (Softkey Kontur) anlegen und im Schritt waehlen.'); return; }
-  if(!z.eigenePosition && !z.kontur && (s.muster < 0 || !fProg.muster[s.muster])){ melde('FEHLER: erst Positionen (Bohrbild) anlegen und im Schritt waehlen.'); return; }
-  if(!z.ohneTiefe && !z.eigenePosition && !(s.tiefe < 0) && !(s.art === 'zentrieren' && s.zAuswahl === 'durchmesser')){ melde('FEHLER: Tiefe Z1 muss NEGATIV sein (nach unten).'); return; }
-  // Z1 unter Z0 gilt fuer das PLANFRAESEN (Start- und Endpunkt). Die
-  // Modell-Schritte haben zwar eine eigene Position, aber kein pz/zEnd -
-  // mit der Pruefung war 'Modell abspanen' nicht zu bestaetigen (Daniels
-  // Befund 17.09.2026 abends: 'Der Bestaetigen-Button funktioniert nicht').
-  if(z.eigenePosition && !z.modell && !(s.zEnd < s.pz)){ melde('FEHLER: Endpunkt Z1 muss unter dem Startpunkt Z0 liegen.'); return; }
-  if(fEditSchritt >= 0) fProg.schritte[fEditSchritt] = s; else { fProg.schritte.push(s); fSel = {typ:'schritt', idx:fProg.schritte.length - 1}; }
-  maskZu('maskZyklus'); fRender();
+  // UEBERNEHMEN MELDET, WARUM [19.09.2026, Daniels Befund: "Rechtecktasche
+  // komplett durchgetippt, liess sich nicht bestaetigen, keine Meldung"].
+  // Bis dahin verlangte der Knopf fuer jede Tasche ein Bohrbild - auch in der
+  // Stellung "eigene Position X/Y" (die Stellung gab es seit dem 15.09., der
+  // Knopf kannte sie nicht), und die Meldung stand 7 s im Banner am unteren
+  // Bildrand, weit weg von der Maske. Jetzt entscheidet DIESELBE Pruefung wie
+  // die Ampel (fUebernahmeEntscheid: fPruefen ueber eine Kopie des Programms
+  // mit diesem Schritt an seiner Stelle): rote Befunde blockieren, und der
+  // Grund steht IN der Maske ueber den Knoepfen; gelbe werden uebernommen und
+  // als Hinweis gemeldet. Eine Ausnahme im Handler lief vorher stumm in den
+  // Fehlerfaenger (nur die Konsole sah sie) - jetzt steht auch sie in der Maske.
+  try{
+    const s = fZyklusLesen(fEditSchritt >= 0 ? fProg.schritte[fEditSchritt] : null);
+    const E = fUebernahmeEntscheid(fProg, s, fEditSchritt);
+    if(!E.uebernehmen){ maskeMeldung('zyMeldung', E.meldung); return; }
+    if(fEditSchritt >= 0) fProg.schritte[fEditSchritt] = s; else { fProg.schritte.push(s); fSel = {typ:'schritt', idx:fProg.schritte.length - 1}; }
+    maskeMeldung('zyMeldung', '');
+    maskZu('maskZyklus'); fRender();
+    if(E.hinweis) melde(E.hinweis);
+  }catch(e){
+    maskeMeldung('zyMeldung', 'FEHLER: \u00dcbernehmen ist an einer Ausnahme gescheitert - ' + ((e && e.message) || e) + '. Der Schritt wurde nicht \u00fcbernommen.');
+    try{ console.error('fZyklusUebernehmen', e); }catch(_){}
+  }
 }
 {
   wireRadioGroup('zyEingabeBtns', fZyklusSync);
@@ -14174,6 +14307,8 @@ function fWzImport(text, dateiname){
   });
   const sv = document.getElementById('btnWzSave'); if(sv) sv.onclick = ()=>{
     const nr = Math.round(getNum('fwNr', 0)); if(!(nr > 0)){ melde('FEHLER: Werkzeugnummer fehlt.'); return; }
+    // Ein Werkzeug ohne Durchmesser liesse jede Bahn und jeden Zyklus mit 0 rechnen [19.09.2026].
+    if(!(getNum('fwD') > 0)){ melde('FEHLER: Durchmesser D muss groesser 0 sein - so wird das Werkzeug nicht gespeichert.'); return; }
     const alt = fWerkzeug(nr) || {};
     const w = {nr:nr, name:getStr('fwName').trim() || ('Werkzeug ' + nr), art:getStr('fwArt') || 'bohrer', d:getNum('fwD'),
       l:getNum('fwL'), r2:getNum('fwR2'), dl:getNum('fwDL'), dr:getNum('fwDR'), lcuts:getNum('fwLcuts'), angle:getNum('fwAngle'),
