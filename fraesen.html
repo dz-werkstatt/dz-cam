@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 00:37 (d9a3c6c4)";</script>
+<script>window.__DZ_STAND="20.09.2026 00:59 (8885e94d)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3439,6 +3439,13 @@ Werkzeug die Schuld zu geben. Trag das echte Rohteil ein oder setz Z0 h&ouml;her
 &bdquo;Sollform ans Programm&ldquo; bekommen hat: wer ein anderes Programm l&auml;dt (Vorlage, Ablage, neues Programm), hat dort keine Sollform &mdash; bis zum 18.09.2026 blieb die des
 vorigen Modells stehen, und die Simulation bewertete das neue Programm gegen das alte Teil. Nach dem Neuladen der App also erst wieder Modell
 laden und <b>Sollform ans Programm</b> dr&uuml;cken, sonst meldet die Programmpr&uuml;fung einen roten Befund.</dd>
+<dt id="ba-fk05c-kontur">Bahnart: Zeilen oder konturparallel (20.09.2026)</dt><dd>Beide Schruppschritte (Modell abspanen, Restmaterial abspanen) haben das Feld <b>Bahnart</b>.
+<b>Zeilen</b> ist der M&auml;ander wie bisher. <b>Konturparallel</b> f&auml;hrt je Z-Ebene Ringe um die Sollform: jeder Ring ist eine H&ouml;henlinie des Abstands zur
+Form, der Ringabstand ist ae, gefahren wird von au&szlig;en nach innen (bei einer Tasche von der Mitte zur Wand) &mdash; die Schneide nimmt so immer nur den Streifen ae
+zwischen zwei Ringen, und der letzte Ring l&auml;uft im Abstand Werkzeugradius + UXY an der Wand entlang; es bleibt kein Kamm und kein Querdurchgang. Die Fr&auml;sart
+gilt wie bei den Zeilen: im Gleichlauf liegt das Material (zur Form hin) rechts der Fahrtrichtung, die Ringe laufen im Uhrzeigersinn um das Teil; &bdquo;beides&ldquo;
+f&auml;hrt die Ringe im Gleichlauf. Anfahren und Eintauchen, Rest ab Breite und der Bezug des Rest-Schritts gelten unver&auml;ndert. Konturparallel ist die Wahl f&uuml;r
+Taschen und Inseln mit runden W&auml;nden; an langen geraden Kanten ist der M&auml;ander k&uuml;rzer. Der Bericht der Bahn nennt die Zahl der Ringe je Ebene.</dd>
 <dt id="ba-fk05c-rest">Restmaterial abspanen &mdash; der n&auml;chste Schritt mit dem kleineren Werkzeug</dt><dd>Der zweite Zyklus der Gruppe STEP-Modell (seit 19.09.2026).
 Er rechnet wie <i>Modell abspanen</i>, aber mit einem <b>Bezug</b>: dem <b>letzten Schruppschritt davor im Arbeitsplan</b> (Modell abspanen oder ein weiteres
 Restmaterial abspanen). Das ist kein Feld &mdash; die Schritte werden nacheinander abgearbeitet, also ist der Bezug immer der Schritt davor, und der Maskenkopf nennt ihn.
@@ -4294,6 +4301,13 @@ var F_FELDER = {
   // Bohrreihe ist das Bohrbild richtig, fuer eine einzelne Tasche war es
   // eine Huerde - man musste ein 'Bohrbild' anlegen, um eine Tasche zu
   // setzen, sonst gab es kein Programm.
+  // KONTURPARALLEL [20.09.2026, Daniels Nachtschichtliste]: die zweite Bahnart
+  // des Modell-Schruppens. Ringe im Abstand ae um die Sollform, von aussen
+  // nach innen; der letzte Ring laeuft im Abstand Werkzeugradius + UXY an der
+  // Wand - kein Kamm, kein Querdurchgang.
+  bahnArt:    {name:'Bahnart', typ:'wahl',
+               wahl:[['zeilen','Zeilen (Mäander)'],['kontur','konturparallel (Ringe)']],
+               ba:'ba-fk05c-kontur'},
   posArt:     {name:'Position', typ:'wahl',
                wahl:[['xy','eigene Position X/Y'],['muster','Bohrbild (mehrere Stellen)']],
                ba:'ba-fk05'},
@@ -4544,7 +4558,7 @@ var F_MASKE = {
   // eintauchen in das Bauteil, sondern seitlich zustellen im freien Raum"]:
   // die dritte Stellung laesst jeden Zug aus, der ein Eintauchen im Material
   // braeuchte - das Material bleibt stehen und steht im Restmaterial.
-  modellSchruppen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','aufSeite','aufTiefe','#Bahn','ae','aeArt','bahnSinn','eintauch','#!Sicherheit','sc','sc2'],
+  modellSchruppen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','aufSeite','aufTiefe','#Bahn','bahnArt','ae','aeArt','bahnSinn','eintauch','#!Sicherheit','sc','sc2'],
                feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd'],['3','nur von außen: kein Eintauchen, Unerreichbares bleibt stehen'],['0','über SC anfahren, senkrecht eintauchen']]},
                feldText:{f:'F Vorschub Fräsen', fTief:'FZ Vorschub Eintauchen', zust:'D Zustellung in Z',
                  eintauch:'Anfahren & Eintauchen',
@@ -4555,7 +4569,7 @@ var F_MASKE = {
   // Restmaterial abspanen: dieselben Felder wie das Abspanen plus die
   // Restschwelle. Der BEZUG ist kein Feld - er ist immer der letzte
   // Schruppschritt davor, und die Maske nennt ihn im Kopf.
-  modellRest:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','aufSeite','aufTiefe','#Bahn','ae','aeArt','bahnSinn','restAb','eintauch','#!Sicherheit','sc','sc2'],
+  modellRest:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','aufSeite','aufTiefe','#Bahn','bahnArt','ae','aeArt','bahnSinn','restAb','eintauch','#!Sicherheit','sc','sc2'],
                feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd'],['3','nur von außen: kein Eintauchen, Unerreichbares bleibt stehen'],['0','über SC anfahren, senkrecht eintauchen']]},
                feldText:{f:'F Vorschub Fräsen', fTief:'FZ Vorschub Eintauchen', zust:'D Zustellung in Z',
                  eintauch:'Anfahren & Eintauchen',
@@ -5128,7 +5142,7 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
       // und Tiefe aus dem Rohteil.
       // ausgabe steht fest auf einzel: einen Zyklus gibt es nicht.
       Object.assign(s, {q203:+k.z1 || 0, tiefe:-Math.max(1, fRund((+k.z1 || 0) - (+k.z0 || 0))),
-        zust:2, aufSeite:0.5, aufTiefe:0.2, ae:40, aeArt:'%', bahnSinn:0, dVor:0, fTief:fRund(s.f * 0.3), ausgabe:'einzel'});
+        zust:2, aufSeite:0.5, aufTiefe:0.2, ae:40, aeArt:'%', bahnArt:'zeilen', bahnSinn:0, dVor:0, fTief:fRund(s.f * 0.3), ausgabe:'einzel'});
       if(art === 'modellRest'){
         // Der Bezug ist der letzte Schruppschritt im Arbeitsplan: seine
         // Tiefe, seine Aufmasse und seine Bahnwerte sind die Vorgabe - wer
@@ -5136,7 +5150,7 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
         s.restAb = 0;
         const vor = ((prog && prog.schritte) || []).filter(q => q && q.aktiv !== false && (q.art === 'modellSchruppen' || q.art === 'modellRest'));
         const b = vor.length ? vor[vor.length - 1] : null;
-        if(b) ['q203', 'tiefe', 'zust', 'aufSeite', 'aufTiefe', 'ae', 'aeArt', 'bahnSinn', 'eintauch', 'sc', 'sc2'].forEach(f => { if(b[f] != null) s[f] = b[f]; });
+        if(b) ['q203', 'tiefe', 'zust', 'aufSeite', 'aufTiefe', 'ae', 'aeArt', 'bahnArt', 'bahnSinn', 'eintauch', 'sc', 'sc2'].forEach(f => { if(b[f] != null) s[f] = b[f]; });
       }
     }
     if(art === 'modellSchlichten'){
@@ -8961,6 +8975,8 @@ function fBahnModell(s, tool, prog){
   // immer unbedingt eintauchen in das Bauteil, sondern seitlich zustellen
   // im freien Raum und dann anfangen zu fraesen").
   const nurAussen = Math.round(+s.eintauch || 0) === 3;
+  // KONTURPARALLEL [20.09.2026]: Ringe statt Zeilen (siehe ringDurchgang).
+  const konturparallel = String(s.bahnArt || 'zeilen') === 'kontur';
   const verbinden = pendeln || nurAussen;
   // RESTMATERIAL-SCHRITT [19.09.2026]: dieselbe Rechnung, mit Bezug.
   const istRest = !!(F_ZYKLEN[s.art] && F_ZYKLEN[s.art].rest);
@@ -9050,7 +9066,7 @@ function fBahnModell(s, tool, prog){
   if(!wegZellen) return nein('ueber der Sollform steht kein Material: Rohteil und Modell sind gleich hoch. Im Programmkopf ein groesseres Rohteil eintragen (oder Z0 hoeher setzen) — "Als Rohteil uebernehmen" nimmt genau den Huellquader des Modells, ohne Aufmass.');
   const B = [], sicher = fRund(zOben + sc2);
   let x = null, y = null, zAkt = null, ebenen = 0, zuege = 0, stiche = 0, rampen = 0, senkrecht = 0, unten = 0, frei = 0, zustell = 0, rueck = 0, ausgelassen = 0, ausgelassenMm = 0;
-  let haupt = 0, ebenenX = 0, ebenenY = 0;
+  let haupt = 0, ebenenX = 0, ebenenY = 0, ringeGesamt = 0;
   const eil = (o) => B.push(Object.assign({a:'eil'}, o));
   const vor = (o) => B.push(Object.assign({a:'vor'}, o));
 
@@ -9187,6 +9203,223 @@ function fBahnModell(s, tool, prog){
       S.push({a:a, laeufe:laeufe});
     });
     return {spuren:S, zuege:zuege, laenge:laenge};
+  };
+  // =================================================================
+  // KONTURPARALLEL [20.09.2026, Daniels Nachtschichtliste]: die Ringe einer
+  // Ebene sind die HOEHENLINIEN des Abstandsfelds D = Wurzel(EDT) zur
+  // Sollform (in Zellen) auf den Hoehen L0 + k * ae, k von aussen (grosses D)
+  // nach innen; L0 liegt knapp ueber der Grenze der Ebenenmaske (Radius +
+  // UXY + halbe Zellendiagonale), der letzte Ring laeuft also im Abstand
+  // Werkzeugradius + UXY an der Wand entlang - kein Kamm, kein Querdurchgang.
+  // Bei einem Teil im Rohteil heisst "von aussen" ab der Rohteilkante, bei
+  // einer Tasche "von der Mitte" zur Wand: beides ist "weg vom Teil zuerst",
+  // und das ist die Reihenfolge, in der die Schneide immer nur den Streifen
+  // ae zwischen zwei Ringen nimmt. Die Fraesart entscheidet den Umlaufsinn:
+  // das Material liegt auf der Seite mit KLEINEREM D (zum Teil hin);
+  // Gleichlauf (M3) will es rechts der Fahrtrichtung. Gefahren wird nur, wo
+  // die Schneide Material erreicht (Reichweite rt, wie die Zeilen).
+  // freiWegR/stehtMaterialR sind BEWUSST Kopien der Schliessungen im
+  // Zeilen-Durchgang: die Zeilenbahn bleibt Byte fuer Byte, wie sie ist.
+  // Eine Zelle Toleranz zur Ebenenmaske: die Ringe liegen per Bau auf D >= L0,
+  // ihr Punkt kann aber in eine Zelle fallen, deren Mitte knapp diesseits der
+  // Grenze liegt (gemessen: D 21,63 gegen 21,71 Zellen - die Verbindung unten
+  // scheiterte an genau dieser letzten Zelle). Eine Zelle unter der Grenze sind
+  // r - 0,7 r = 0,15 mm bei Raster 0,5, innerhalb des Aufmasses UXY.
+  const g2Ring = Math.max(0, grenz - 1) * Math.max(0, grenz - 1);
+  const freiWegR = (x1, y1, x2, y2, luft) => {
+    const w = Math.hypot(x2 - x1, y2 - y1);
+    const nS = Math.max(1, Math.ceil(w / (r / 2)));
+    for(let q = 0; q <= nS; q++){
+      const px = x1 + (x2 - x1) * q / nS, py = y1 + (y2 - y1) * q / nS;
+      const pi = Math.floor((px - G.x0) / r), pj = Math.floor((py - G.y0) / r);
+      if(pi < 0 || pj < 0 || pi >= nx || pj >= ny) return false;
+      const c = pj * nx + pi;
+      if(!(d2[c] > g2Ring + 1e-9) || (luft && d2Roh[c] < rr2 - 1e-9)) return false;
+    }
+    return true;
+  };
+  const stehtMaterialR = (px, py, z) => {
+    const R = Math.max(0, rt - r / 2), R2 = R * R;
+    const i0 = Math.max(0, Math.floor((px - R - G.x0) / r)), i1 = Math.min(nx - 1, Math.ceil((px + R - G.x0) / r));
+    const j0 = Math.max(0, Math.floor((py - R - G.y0) / r)), j1 = Math.min(ny - 1, Math.ceil((py + R - G.y0) / r));
+    for(let j = j0; j <= j1; j++){
+      const dy = G.y0 + (j + 0.5) * r - py, o = j * nx;
+      for(let i = i0; i <= i1; i++){
+        const dx = G.x0 + (i + 0.5) * r - px;
+        if(dx * dx + dy * dy > R2) continue;
+        if(G.stand[o + i] > z + 1e-6 && !(duenn && duenn[o + i])) return true;
+      }
+    }
+    return false;
+  };
+  // Douglas-Peucker in der Ebene: die Hoehenlinie liefert je Rasterquadrat
+  // einen Punkt; auf einer Geraden sind das Hunderte Saetze fuer nichts.
+  const duennen2 = (Pk, tol) => {
+    if(Pk.length <= 2) return Pk;
+    const keep = new Uint8Array(Pk.length); keep[0] = 1; keep[Pk.length - 1] = 1;
+    const st = [[0, Pk.length - 1]];
+    while(st.length){
+      const ab = st.pop(), a = ab[0], b = ab[1];
+      const ax = Pk[a][0], ay = Pk[a][1], bx = Pk[b][0], by = Pk[b][1];
+      const L = Math.hypot(bx - ax, by - ay);
+      let m = -1, md = -1;
+      for(let i = a + 1; i < b; i++){
+        const d = (L < 1e-9) ? Math.hypot(Pk[i][0] - ax, Pk[i][1] - ay) : Math.abs((bx - ax) * (ay - Pk[i][1]) - (ax - Pk[i][0]) * (by - ay)) / L;
+        if(d > md){ md = d; m = i; }
+      }
+      if(m >= 0 && md > tol){ keep[m] = 1; st.push([a, m], [m, b]); }
+    }
+    return Pk.filter((p, i) => keep[i]);
+  };
+  const laengeVon = (Pk) => { let L = 0; for(let i = 1; i < Pk.length; i++) L += Math.hypot(Pk[i][0] - Pk[i - 1][0], Pk[i][1] - Pk[i - 1][1]); return L; };
+  const punktBei = (Pk, sWeg) => {
+    let rest = sWeg;
+    for(let i = 1; i < Pk.length; i++){
+      const L = Math.hypot(Pk[i][0] - Pk[i - 1][0], Pk[i][1] - Pk[i - 1][1]);
+      if(rest <= L || i === Pk.length - 1){ const u = L > 1e-12 ? Math.max(0, Math.min(1, rest / L)) : 0; return [Pk[i - 1][0] + (Pk[i][0] - Pk[i - 1][0]) * u, Pk[i - 1][1] + (Pk[i][1] - Pk[i - 1][1]) * u]; }
+      rest -= L;
+    }
+    return Pk[Pk.length - 1];
+  };
+  const ringDurchgang = (z, zr) => {
+    const maske = new Uint8Array(n); let nM = 0;
+    for(let q = 0; q < n; q++){ if(erlaubt[q] && d2M[q] <= rr2 + 1e-9){ maske[q] = 1; nM++; } }
+    if(!nM) return 0;
+    const D = new Float64Array(n); let Dmax = 0;
+    for(let q = 0; q < n; q++){ D[q] = Math.sqrt(d2[q]); if(maske[q] && D[q] > Dmax) Dmax = D[q]; }
+    const mW = fMaskeWeiten(maske, nx, ny, 1);
+    const L0 = grenz + 0.05;
+    const dRing = Math.max(1e-6, Math.min(2 * rt, aeMm) / r);
+    // __nurRing0: nur der innerste Ring an der Wand - so faehrt "Boeden und
+    // Waende schlichten" seine Wandringe (ein Ring je Z-Schritt).
+    const K = s.__nurRing0 ? 0 : Math.max(0, Math.floor((Dmax - L0) / dRing));
+    const Dbei = (px, py) => { const i = Math.max(0, Math.min(nx - 1, Math.floor((px - G.x0) / r))), j = Math.max(0, Math.min(ny - 1, Math.floor((py - G.y0) / r))); return D[j * nx + i]; };
+    // Ringe sammeln, aussen zuerst
+    const ringe = [];
+    for(let kR = K; kR >= 0; kR--){
+      const L = L0 + kR * dRing;
+      fHoehenlinie(D, nx, ny, G.x0, G.y0, r, L, mW).forEach(zg => {
+        const Pk = duennen2(zg, uXY > 0 ? Math.max(0.05, Math.min(0.15, r / 4)) : Math.max(0.02, r / 10));
+        if(Pk.length >= 2 && laengeVon(Pk) >= Math.max(2, r)) ringe.push({k:kR, pts:Pk});
+      });
+    }
+    if(!ringe.length) return 0;
+    // Material liegt auf der Seite mit kleinerem D. Stimmen ueber die Segmente:
+    // true = links der Fahrtrichtung.
+    const materialLinks = (Pk) => {
+      let links = 0, rechts = 0;
+      for(let i = 1; i < Pk.length; i++){
+        const tx = Pk[i][0] - Pk[i - 1][0], ty = Pk[i][1] - Pk[i - 1][1], L = Math.hypot(tx, ty); if(L < 1e-9) continue;
+        const mx = (Pk[i][0] + Pk[i - 1][0]) / 2, my = (Pk[i][1] + Pk[i - 1][1]) / 2, nxL = -ty / L * r, nyL = tx / L * r;
+        const dL = Dbei(mx + nxL, my + nyL), dR = Dbei(mx - nxL, my - nyL);
+        if(dL < dR) links++; else if(dR < dL) rechts++;
+      }
+      return links >= rechts;
+    };
+    const sinnR = sinn || 1;   // "beides" faehrt die Ringe im Gleichlauf
+    let getan = 0;
+    const offen = ringe.slice();
+    while(offen.length){
+      const kMax = offen.reduce((m, o) => Math.max(m, o.k), -1);
+      let best = null, bestD = Infinity, bestI = 0;
+      offen.forEach(o => {
+        if(o.k !== kMax) return;
+        const Pk = o.pts, zu = Math.hypot(Pk[0][0] - Pk[Pk.length - 1][0], Pk[0][1] - Pk[Pk.length - 1][1]) < 1e-6;
+        if(x === null){ if(!best){ best = o; bestI = 0; } return; }
+        if(zu){ Pk.forEach((p, i) => { if(i === Pk.length - 1) return; const dd = Math.hypot(p[0] - x, p[1] - y); if(dd < bestD){ bestD = dd; best = o; bestI = i; } }); }
+        else {
+          // offene Linie: bei fester Fraesart steht die Richtung fest, sonst das naehere Ende
+          const dA = Math.hypot(Pk[0][0] - x, Pk[0][1] - y), dE = Math.hypot(Pk[Pk.length - 1][0] - x, Pk[Pk.length - 1][1] - y);
+          const dd = sinn ? dA : Math.min(dA, dE);
+          if(dd < bestD){ bestD = dd; best = o; bestI = (sinn || dA <= dE) ? 0 : -1; }
+        }
+      });
+      offen.splice(offen.indexOf(best), 1);
+      let Pk = best.pts.slice();
+      const zu = Math.hypot(Pk[0][0] - Pk[Pk.length - 1][0], Pk[0][1] - Pk[Pk.length - 1][1]) < 1e-6;
+      if(zu){
+        Pk.pop();
+        // Umlaufsinn nach Fraesart, dann am naechsten Punkt beginnen
+        if(materialLinks(Pk.concat([Pk[0]])) === (sinnR > 0)) { Pk.reverse(); bestI = Pk.length - 1 - bestI; }
+        Pk = Pk.slice(bestI).concat(Pk.slice(0, bestI)); Pk.push(Pk[0]);
+      } else {
+        if(sinn){ if(materialLinks(Pk) === (sinn > 0)) Pk.reverse(); }
+        else if(bestI === -1) Pk.reverse();
+      }
+      // OFFENES STUECK: ueber sein Ende hinaus ins Freie anlaufen (der Ueberlauf
+      // der Zeilen): vom Start rueckwaerts entlang der Tangente, Zelle fuer
+      // Zelle, bis unter dem Werkzeug nichts mehr steht (hoechstens rt + 2 mm),
+      // sofern die Mitte den ganzen Weg dort stehen darf. Dann kommt der Zug
+      // waagerecht von aussen in den Schnitt - kein Eintauchen; "nur von
+      // aussen" braucht genau das (DZ23: das U-Stueck im Finger hat an der
+      // Muendung noch Material in der Kernzone, dahinter liegt das geraeumte
+      // Feld). Ohne feste Fraesart darf das Stueck dafuer umdrehen.
+      if(!zu && stehtMaterialR(Pk[0][0], Pk[0][1], z)){
+        const vorlauf = (Q) => {
+          const ax = Q[0][0] - Q[1][0], ay = Q[0][1] - Q[1][1], L = Math.hypot(ax, ay); if(L < 1e-9) return null;
+          const ux = ax / L, uy = ay / L, maxV = rt + luftAussen;
+          for(let d = r; d <= maxV + 1e-9; d += r){
+            const px = Q[0][0] + ux * d, py = Q[0][1] + uy * d;
+            if(!freiWegR(Q[0][0], Q[0][1], px, py, false)) return null;
+            if(!stehtMaterialR(px, py, z)) return [fRund(px), fRund(py)];
+          }
+          return null;
+        };
+        let v = vorlauf(Pk);
+        if(!v && !sinn){ const R2 = Pk.slice().reverse(); const v2 = vorlauf(R2); if(v2){ Pk = R2; v = v2; } }
+        if(v) Pk.unshift(v);
+      }
+      let xa = fRund(Pk[0][0]), ya = fRund(Pk[0][1]);
+      const inLuft = (zAkt !== zr);
+      const nah = (x !== null) && Math.hypot(xa - x, ya - y) <= 2 * aeMm + 2 * rt + 1e-9;
+      const wegUnten = (x !== null) && verbinden && !inLuft && nah && freiWegR(x, y, xa, ya, false);
+      const wegLuft = (x !== null) && verbinden && inLuft && freiWegR(x, y, xa, ya, true);
+      // Ohne Verbindung unten: bei einem geschlossenen Ring dort beginnen, wo
+      // unter dem Werkzeug nichts steht (Luft neben dem Teil, schon geraeumt) -
+      // der naechste solche Punkt zum Werkzeug. Dann kommt der Ring von aussen
+      // in den Schnitt statt zu pendeln; "nur von aussen" laesst ihn erst aus,
+      // wenn es keinen solchen Punkt gibt.
+      if(!wegUnten && !wegLuft && zu && stehtMaterialR(xa, ya, z)){
+        let bi = -1, bd = Infinity;
+        for(let i = 0; i < Pk.length - 1; i++){ if(stehtMaterialR(Pk[i][0], Pk[i][1], z)) continue; const dd = (x === null) ? i : Math.hypot(Pk[i][0] - x, Pk[i][1] - y); if(dd < bd){ bd = dd; bi = i; } }
+        if(bi > 0){ Pk.pop(); Pk = Pk.slice(bi).concat(Pk.slice(0, bi)); Pk.push(Pk[0]); xa = fRund(Pk[0][0]); ya = fRund(Pk[0][1]); }
+      }
+      if(!wegUnten && !wegLuft && nurAussen && stehtMaterialR(xa, ya, z)){ ausgelassen++; ausgelassenMm += laengeVon(Pk); continue; }
+      let ueber = sicher, verbunden = false;
+      if(x === null){ eil({x:xa, y:ya, z:sicher}); }
+      else if(wegLuft){ eil({x:xa, y:ya, z:zr}); verbunden = true; zustell++; }
+      else if(wegUnten){ vor({x:xa, y:ya, z:zr, f:f}); verbunden = true; unten++; }
+      else { ueber = fRund(Math.min(sicher, Math.max(fStandMax(G, x, y, xa, ya, rt), z) + sc)); eil({z:ueber}); eil({x:xa, y:ya}); rueck++; }
+      if(!verbunden){
+        const stehtAn = fStandMax(G, xa, ya, xa, ya, rt);
+        const zEil = fRund(Math.max(z, Math.min(ueber, stehtAn + sc)));
+        if(zEil < ueber - 1e-6) eil({z:zEil});
+        const tief = zEil - zr;
+        let imSchnitt = false;
+        if(tief > 1e-6 && !stehtMaterialR(xa, ya, z)){ vor({z:zr, f:fZ}); imSchnitt = true; frei++; }
+        if(!imSchnitt && pendeln && wAngle > 0 && tief > 1e-6){
+          // pendelnd entlang des Rings (hin und zurueck auf seinen ersten Millimetern)
+          const Lz = laengeVon(Pk), tanA = Math.tan(wAngle * Math.PI / 180);
+          let nGang = Math.ceil(tief / Math.max(1e-9, Lz * tanA)); if(nGang < 2) nGang = 2; if(nGang % 2) nGang++;
+          const L0g = tief / (nGang * tanA);
+          if(nGang <= 20 && L0g > 1e-6 && L0g <= Lz + 1e-9){
+            const pq = punktBei(Pk, L0g);
+            for(let q = 1; q <= nGang; q++){
+              const zq = (q === nGang) ? zr : fRund(zEil - tief * q / nGang);
+              if(q % 2) vor({x:fRund(pq[0]), y:fRund(pq[1]), z:zq, f:f}); else vor({x:xa, y:ya, z:zq, f:f});
+            }
+            imSchnitt = true; rampen++;
+          }
+        }
+        if(!imSchnitt){ if(tief > 1e-6){ vor({z:zr, f:fZ}); senkrecht++; } else frei++; }
+      }
+      for(let i = 1; i < Pk.length; i++){
+        vor({x:fRund(Pk[i][0]), y:fRund(Pk[i][1]), z:zr, f:f});
+        fStandStempel(G, Pk[i - 1][0], Pk[i - 1][1], Pk[i][0], Pk[i][1], rt, z);
+      }
+      x = fRund(Pk[Pk.length - 1][0]); y = fRund(Pk[Pk.length - 1][1]); zAkt = zr; zuege++; getan++; ringeGesamt++;
+    }
+    return getan;
   };
   // EIN Durchgang ueber das Gitter, entweder in Zeilen (quer = 0, X faehrt)
   // oder in Spalten (quer = 1, Y faehrt). gut(zelle) sagt, wo die
@@ -9422,15 +9655,19 @@ function fBahnModell(s, tool, prog){
         // nennt die TNC es bei Q366: pendelnd.
         const tief = zEil - zr;
         let imSchnitt = false;
-        // VON AUSSEN UEBER GERAEUMTEM STAND [19.09.2026]: steht in der Kernzone
-        // unter dem Werkzeug nichts ueber der Ebene (Schritt mit Bezug oder
-        // "nur von aussen"), sind die letzten Millimeter bis auf die Ebene
-        // Luft - hoechstens die Kante eines Saums am Schneidenrand. Dann
-        // geradewegs im Vorschub hinunter, kein Pendeln, kein Stich; die
-        // Anfahrhoehe bleibt die konservative (SC ueber allem, was der
-        // Werkzeugkreis samt Randzellen sieht). Der erste Schruppschritt ohne
-        // Bezug bleibt, wie er war.
-        if(!verbunden && tief > 1e-6 && (nurAussen || kette) && !stehtMaterial(xa, ya)){ vor({z:zr, f:fZ}); imSchnitt = true; frei++; }
+        // VON AUSSEN UEBER GERAEUMTEM STAND [19.09.2026, fuer JEDEN Schritt
+        // seit dem 20.09.2026]: steht in der Kernzone unter dem Werkzeug nichts
+        // ueber der Ebene, sind die letzten Millimeter bis auf die Ebene Luft -
+        // hoechstens die Kante eines Saums am Schneidenrand. Dann geradewegs im
+        // Vorschub hinunter, kein Pendeln, kein Stich; die Anfahrhoehe bleibt
+        // die konservative (SC ueber allem, was der Werkzeugkreis samt
+        // Randzellen sieht). Bis zum 20.09. galt das nur fuer Schritte mit
+        // Bezug und fuer "nur von aussen": der erste Schruppschritt pendelte an
+        // einem Zuganfang ueber Stand, den er in derselben Ebene schon
+        // geschnitten hatte, durch Luft - nur weil die Baselines daran hingen.
+        // Daniels Nachtschichtliste. Beweis: die Schnittzuege bleiben Satz fuer
+        // Satz dieselben, nur Anfahrten aendern sich (pendelbeweis.js).
+        if(!verbunden && tief > 1e-6 && !stehtMaterial(xa, ya)){ vor({z:zr, f:fZ}); imSchnitt = true; frei++; }
         if(!verbunden && !imSchnitt && pendeln && wAngle > 0 && tief > 1e-6){
           const Lz = Math.hypot(xb - xa, yb - ya);
           const tanA = Math.tan(wAngle * Math.PI / 180);
@@ -9531,6 +9768,13 @@ function fBahnModell(s, tool, prog){
     const reichM = Math.max(0, rt / r - schritt / 2), rM2 = reichM * reichM;
     const gutEbene = (q) => erlaubt[q] && d2M[q] <= rM2 + 1e-9;
     const weitEbene = (q) => erlaubt[q] && d2M[q] <= rr2 + 1e-9;
+    if(konturparallel){
+      // Ringe statt Zeilen; der Querdurchgang entfaellt (der letzte Ring
+      // laeuft an der Wand, es bleibt kein Kamm).
+      if(ringDurchgang(z, zr)) ebenen++;
+      if(z <= zEnde + 1e-9) break;
+      continue;
+    }
     const wX = laeufeFinden(0, gutEbene, weitEbene, minHaupt), wY = laeufeFinden(1, gutEbene, weitEbene, minHaupt);
     // Eine Richtung OHNE Zug ist kein Bewerber (am Rampenblock: in X sind
     // die Zuege auf den tiefen Ebenen kuerzer als die Mindestlaenge, in Y
@@ -9630,6 +9874,7 @@ function fBahnModell(s, tool, prog){
     + ' — je Ebene die Richtung mit den wenigsten Zuegen.'
     + (stiche ? ' ' + stiche + ' Stelle(n) waeren nur ein senkrechter Stich ohne Fraesweg gewesen und sind ausgelassen — ein Schaftfraeser soll nicht bohren; was dort steht, ist im Restmaterial enthalten.' : ''));
   if(sinn) warn.push('Fraesart: NUR ' + (sinn > 0 ? 'GLEICHLAUF' : 'GEGENLAUF') + ' (bei Rechtslauf M3, Material in Fahrtrichtung ' + (sinn > 0 ? 'rechts' : 'links') + ' vom Werkzeug): jede Zeile in derselben Richtung — nach jedem Zug Rueckzug auf SC ueber das Material, zurueck zum Anfang, seitlich zustellen, wieder hinein; ' + rueck + ' Rueckzuege, keine Verbindung unten.');
+  if(konturparallel) warn.push('KONTURPARALLEL: ' + ringeGesamt + ' Ring(e) auf ' + ebenen + ' Ebene(n), Ringabstand ae ' + fRund(aeMm) + ' mm - jeder Ring ist eine Hoehenlinie des Abstands zur Sollform, von aussen nach innen (bei einer Tasche von der Mitte zur Wand); der letzte Ring laeuft im Abstand Werkzeugradius + UXY an der Wand. Kein Querdurchgang: es bleibt kein Kamm.');
   if(zustell) warn.push(zustell + ' Zustellung(en) auf die naechste Ebene in der LUFT neben dem Rohteil — schraeg im Eilgang, ohne Rueckzug auf Sicherheitshoehe und ohne Schnitt.');
   if(frei) warn.push(frei + ' Zug/Zuege kommen von AUSSEN in den Schnitt: neben dem Rohteil (oder ueber schon ausgeraeumtem Material) auf Ebenentiefe gefahren und waagerecht hinein — kein Stich, kein Pendeln.');
   if(unten) warn.push(unten + ' Zeilenwechsel fahren UNTEN hinueber, im Vorschub und im Schnitt (kein Rueckzug, kein neues Eintauchen) — nur ueber eine Strecke, auf der die Werkzeugmitte laut Ebenenmaske ueberall stehen darf.');
@@ -9652,7 +9897,7 @@ function fBahnModell(s, tool, prog){
   else if(istRest) warn.push('Bezug: kein Schruppschritt davor im Arbeitsplan — gerechnet mit der Annahme, ein Vorwerkzeug ⌀' + fRund(2 * rVor) + ' habe alles erreicht, was es erreichen konnte (alte Programme, Proben des Planers).');
   else if(kette) warn.push('Stand aus dem vorigen Schruppschritt uebernommen (T' + kette.schritt.t + ' ⌀' + fRund(+kette.werkzeug.d) + '): gefahren wird, wo danach noch etwas steht — die Kette rechnet mit dem, was wirklich gefraest wurde, nicht mit dem, was das Vorwerkzeug erreichen konnte.');
   fKetteMerken(kettenSchl, G);
-  return {ok:true, bahn:B, warn:warn, ebenen:ebenen, zuege:zuege, stiche:stiche, rampen:rampen, senkrecht:senkrecht, unten:unten, frei:frei, zustell:zustell, rueck:rueck, ausgelassen:ausgelassen, sinn:sinn, ae:fRund(aeMm), rest:restZellen,
+  return {ok:true, bahn:B, warn:warn, ebenen:ebenen, zuege:zuege, stiche:stiche, rampen:rampen, senkrecht:senkrecht, unten:unten, frei:frei, zustell:zustell, rueck:rueck, ausgelassen:ausgelassen, ringe:ringeGesamt, sinn:sinn, ae:fRund(aeMm), rest:restZellen,
     restMax:fRund(restMax), restBreit:fRund(breit), flaeche:flaeche, saum:fRund(saumZellen * r * r), schwelle:fRund(restAbMm), bezug:kette ? kette.nr : 0, gitter:G};
 }
 
@@ -13261,13 +13506,13 @@ function fFormText(s){
       const i = fProg.schritte.indexOf(s);
       const vor = fProg.schritte.slice(0, i < 0 ? fProg.schritte.length : i).filter(q => fIstSchruppschritt(q));
       const bz = vor.length ? vor[vor.length - 1] : null, wb = bz ? fWerkzeug(Math.round(+bz.t)) : null;
-      return 'Restmaterial abspanen Z' + fRund(+s.q203 || 0) + ' → Z' + fRund((+s.q203 || 0) + (+s.tiefe || 0)) + ' · D ' + s.zust + ' · UXY ' + s.aufSeite + ' / UZ ' + s.aufTiefe
+      return 'Restmaterial abspanen' + (String(s.bahnArt || 'zeilen') === 'kontur' ? ' konturparallel' : '') + ' Z' + fRund(+s.q203 || 0) + ' → Z' + fRund((+s.q203 || 0) + (+s.tiefe || 0)) + ' · D ' + s.zust + ' · UXY ' + s.aufSeite + ' / UZ ' + s.aufTiefe
         + ' · ae ' + hbWert(fAeMm(s, ((fWerkzeug(Math.round(+s.t)) || {}).d || 0) / 2)) + ' mm' + (+s.restAb > 0 ? ' · Rest ab ' + s.restAb : '')
         + (+s.bahnSinn > 0 ? ' · nur Gleichlauf' : (+s.bahnSinn < 0 ? ' · nur Gegenlauf' : '')) + (Math.round(+s.eintauch || 0) === 3 ? ' · nur von außen' : '')
         + (bz ? ' · Bezug Schritt ' + (fProg.schritte.indexOf(bz) + 1) + ' (T' + bz.t + (wb ? ' ⌀' + wb.d : '') + ')' : ' · KEIN SCHRUPPSCHRITT DAVOR')
         + (fStepFeldHolen() ? '' : ' · KEINE SOLLFORM');
     }
-    case 'modellSchruppen': return 'Modell abspanen Z' + fRund(+s.q203 || 0) + ' → Z' + fRund((+s.q203 || 0) + (+s.tiefe || 0)) + ' · D ' + s.zust + ' · UXY ' + s.aufSeite + ' / UZ ' + s.aufTiefe + ' · ae ' + hbWert(fAeMm(s, ((fWerkzeug(Math.round(+s.t)) || {}).d || 0) / 2)) + ' mm' + (+s.bahnSinn > 0 ? ' · nur Gleichlauf' : (+s.bahnSinn < 0 ? ' · nur Gegenlauf' : '')) + (fStepFeldHolen() ? '' : ' · KEINE SOLLFORM');
+    case 'modellSchruppen': return 'Modell abspanen' + (String(s.bahnArt || 'zeilen') === 'kontur' ? ' konturparallel' : '') + ' Z' + fRund(+s.q203 || 0) + ' → Z' + fRund((+s.q203 || 0) + (+s.tiefe || 0)) + ' · D ' + s.zust + ' · UXY ' + s.aufSeite + ' / UZ ' + s.aufTiefe + ' · ae ' + hbWert(fAeMm(s, ((fWerkzeug(Math.round(+s.t)) || {}).d || 0) / 2)) + ' mm' + (+s.bahnSinn > 0 ? ' · nur Gleichlauf' : (+s.bahnSinn < 0 ? ' · nur Gegenlauf' : '')) + (fStepFeldHolen() ? '' : ' · KEINE SOLLFORM');
   }
   return '';
 }
@@ -15034,6 +15279,37 @@ function hbBildRestDraufsicht(c, art, s, k, rx0, ry0, fw, fh, cx, cy, ue, ax){
 // Formen: die Insel des Modells steht in der blauen Abtragschicht, die
 // Zustellungen liegen als waagerechte Ebenen darueber. UXY zeigt mit einer
 // Anschlusslinie an die Wand der Insel, UZ an ihre Deckflaeche.
+// KONTURPARALLEL [20.09.2026, Daniels Nachtschichtliste]: die Draufsicht des
+// Modell-Schruppens mit RINGEN statt Zeilen - Hoehenlinien um die Insel im
+// Abstand ae, von aussen nach innen, der letzte Ring an der Insel (Radius +
+// UXY). Pfeile im Umlaufsinn der Fraesart: Gleichlauf bei M3 hat das Material
+// (die Insel) rechts der Fahrtrichtung, also im Uhrzeigersinn um die Insel.
+// Dieselbe Buehne wie das Zeilenbild (Rohteil blau, Insel grau, Masse).
+function hbBildKonturRinge(c, art, s, k, rx0, ry0, fw, fh, cx, cy, ue, ax){
+  const sinn = Math.round(+s.bahnSinn || 0);
+  hbBlau(c, cc => { cc.rect(rx0, ry0, fw, fh); }, ry0, ry0 + fh);
+  c.save(); c.strokeStyle = HB_EDGE; c.lineWidth = HB_STIL.randStrich; c.beginPath(); c.rect(rx0, ry0, fw, fh); c.stroke(); c.restore();
+  const iw = fw * 0.26, ih = fh * 0.36, ix0 = cx + fw * 0.06, iy0 = cy - ih / 2, luecke = 7 * k;
+  const nR = 4, gap = Math.max(6 * k, Math.min((fh / 2 - ih / 2 - luecke) / nR, 11 * k));
+  const rr = (x0, y0, x1, y1, rad) => { c.beginPath(); c.moveTo(x0 + rad, y0); c.lineTo(x1 - rad, y0); c.quadraticCurveTo(x1, y0, x1, y0 + rad); c.lineTo(x1, y1 - rad); c.quadraticCurveTo(x1, y1, x1 - rad, y1); c.lineTo(x0 + rad, y1); c.quadraticCurveTo(x0, y1, x0, y1 - rad); c.lineTo(x0, y0 + rad); c.quadraticCurveTo(x0, y0, x0 + rad, y0); c.closePath(); };
+  c.save(); c.beginPath(); c.rect(rx0 - ue, ry0 - ue, fw + 2 * ue, fh + 2 * ue); c.clip();
+  c.strokeStyle = 'rgba(255,255,255,0.95)'; c.lineWidth = 1.5 * k; c.lineCap = 'round';
+  const nachRechts = sinn >= 0;   // Uhrzeigersinn: der obere Rand laeuft nach rechts
+  for(let i = 0; i < nR; i++){
+    const d = luecke + i * gap;
+    rr(ix0 - d, iy0 - d, ix0 + iw + d, iy0 + ih + d, d); c.stroke();
+    c.save(); c.fillStyle = '#ffffff'; hbArrow(c, ix0 + iw / 2 + (nachRechts ? 4 : -4) * k, iy0 - d, nachRechts ? Math.PI : 0, false); c.restore();
+  }
+  c.restore();
+  c.save(); c.fillStyle = HB_GRAU; c.strokeStyle = HB_EDGE; c.lineWidth = 1.4; c.beginPath(); c.rect(ix0, iy0, iw, ih); c.fill(); c.stroke(); c.restore();
+  // ae: der Ringabstand, als Mass zwischen zwei Ringen links der Insel
+  const xd1 = ix0 - luecke - gap, xd2 = ix0 - luecke, yd = iy0 + ih / 2;
+  if(HB_FOKUS === 'ae') hbDim(c, xd1, yd, xd2, yd, 0, hbTxt(art, s, 'ae'), 'ae');
+  else hbLabel(c, hbTxt(art, s, 'ae'), (xd1 + xd2) / 2, yd - 6 * k, false, 'center', (xd1 + xd2) / 2, yd);
+  hbLabel(c, hbTxt(art, s, 'bahnArt'), cx, ry0 - 6 * k, HB_FOKUS === 'bahnArt');
+  hbLabel(c, hbTxt(art, s, 'bahnSinn'), cx, ry0 + fh + ue + 8 * k, HB_FOKUS === 'bahnSinn');
+  hbKoordXY(c, ax + 8 * k, ry0 + fh + 2 * k, k);
+}
 function hbBildModell(H, art, s){
   const c = H.c, w = H.w, h = H.h, k = HB_SKAL;
   const rest = art === 'modellRest';                 // 19.09.2026: dasselbe Bild, das Feld schon ausgeraeumt
@@ -15052,7 +15328,9 @@ function hbBildModell(H, art, s){
   const ay = Math.max(9 * k, (h - ah) / 2);
   const rx0 = ax + ue + 12 * k, ry0 = ay + ue + 4 * k, cx = rx0 + fw / 2, cy = ry0 + fh / 2;
   hbMerk('platte', {x0:rx0, y0:ry0, x1:rx0 + fw, y1:ry0 + fh, b:fw, h:fh}, 'Rohteil');
-  if(rest) hbBildRestDraufsicht(c, art, s, k, rx0, ry0, fw, fh, cx, cy, ue, ax); else {
+  if(rest) hbBildRestDraufsicht(c, art, s, k, rx0, ry0, fw, fh, cx, cy, ue, ax);
+  else if(String(s.bahnArt || 'zeilen') === 'kontur') hbBildKonturRinge(c, art, s, k, rx0, ry0, fw, fh, cx, cy, ue, ax);
+  else {
   hbBlau(c, cc => { cc.rect(rx0, ry0, fw, fh); }, ry0, ry0 + fh);
   c.save(); c.strokeStyle = HB_EDGE; c.lineWidth = HB_STIL.randStrich; c.beginPath(); c.rect(rx0, ry0, fw, fh); c.stroke(); c.restore();
   const iw = fw * 0.26, ih = fh * 0.36, ix0 = cx + fw * 0.06, iy0 = cy - ih / 2, luecke = 7 * k;
