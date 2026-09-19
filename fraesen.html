@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="19.09.2026 09:58 (936cb991)";</script>
+<script>window.__DZ_STAND="19.09.2026 19:35 (30a0e409)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2716,6 +2716,10 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <div class="mrow"><label data-ba="ba-fk03-name">Name (= Datei .H)</label><input type="text" id="fkName" value="DZ1" maxlength="25" autocapitalize="characters" style="width:150px;"></div>
           <div class="mrow"><label data-ba="ba-fk03-masch">Zielmaschine</label><select id="fkProfil" class="tool-select" style="width:170px;"><option value="HEIDENHAIN_ITNC530" selected>Heidenhain iTNC 530</option></select></div>
           <div class="mrow"><label data-ba="ba-fk03-stand">Software-Stand</label><select id="fkStand" class="tool-select" style="width:170px;"><option value="07" selected>340 49x-06 / -07, 606 42x</option><option value="02">340 49x-02 / -03 (2006)</option></select></div>
+          <!-- ZEITEN UND KALKULATION (19.09.2026): Werkstoff fuer Dichte und Preis je kg,
+               Werkzeugwechsel als Pauschale je Wechsel (wie pkTw im Drehteil). -->
+          <div class="mrow"><label data-ba="ba-fk03-werkstoff">Werkstoff</label><select id="fkWerkstoff" class="tool-select" style="width:170px;"><option value="baustahl" selected>Baustahl</option><option value="verguetung">Vergütungsstahl</option><option value="edelstahl">Edelstahl</option><option value="guss">Guss</option><option value="alu">Alu</option><option value="messing">Messing</option></select></div>
+          <div class="mrow"><label data-ba="ba-fk03-tw">Werkzeugwechsel</label><input type="number" step="any" min="0" id="fkTw" value="8"><span class="unit">s</span></div>
           <div class="msec">Rohteil — BLK FORM (Werkzeugachse Z)</div>
           <div class="mrow"><label data-ba="ba-fk03-blk">MIN-Punkt X / Y</label><input type="number" step="any" id="fkX0" value="0" style="width:51px;"><input type="number" step="any" id="fkY0" value="0" style="width:51px;"><span class="unit unit2"><i>X</i><i>Y</i></span></div>
           <div class="mrow"><label data-ba="ba-fk03-blk">MIN Z (Unterkante)</label><input type="number" step="any" id="fkZ0" value="-20"><span class="unit">mm</span></div>
@@ -2974,7 +2978,47 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     <div class="hsk" id="hskProgs"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="2.5" width="16" height="11" rx="1.5"/><line x1="6" y1="6" x2="16" y2="6"/><line x1="6" y1="9.5" x2="13" y2="9.5"/></svg><span>Programme</span></div>
     <div class="hsk" id="hskSim" title="Eigene Simulation der Bahnen"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 3 L4 13 L14 8 Z"/><circle cx="17.5" cy="8" r="2.5"/></svg><span>Simulation</span></div>
     <div class="hsk" id="hskStep" title="STEP-Modell laden, ausrichten und ansehen"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 2 L19 6 L19 12 L11 15.5 L3 12 L3 6 Z"/><path d="M3 6 L11 9.5 L19 6"/><line x1="11" y1="9.5" x2="11" y2="15.5"/></svg><span>STEP</span></div>
+    <div class="hsk" id="hskKalk" title="Angebotskalkulation (Zuschlagskalkulation) — Grobkalkulation; den Angebotspreis rechnet die Werkstatt-Pipeline"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3.5 A6 6 0 1 0 15 12.5"/><line x1="5" y1="6.3" x2="13" y2="6.3"/><line x1="5" y1="9.7" x2="13" y2="9.7"/></svg><span>Kalkulation</span></div>
     <div class="hsk primary" id="hskGcode" title="Klartext-Ausgabe"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3 L2.5 8 L7 13"/><path d="M15 3 L19.5 8 L15 13"/></svg><span>NC-Ausgabe</span></div>
+  </div>
+
+  <!-- KALKULATION (19.09.2026, Daniels Befund "keine Zeiten im Arbeitsplan und
+       keine Kalkulation beim Fraesen"): dieselbe Maske wie im Drehteil, mit
+       denselben IDs, damit das gemeinsame Stylesheet greift (#maskKalk .mrow,
+       .kalkzeile, .kstaffel). Rohteil = Quader der BLK FORM, Laufzeit = Zeiten
+       des Arbeitsplans, Werkstoff am Programmkopf. F20: fKalkOeffnen. -->
+  <div class="mask" id="maskKalk" style="position:fixed;z-index:30;">
+    <div class="mask-head"><span class="mtitel">ANGEBOTSKALKULATION</span>
+      <button class="gcbtn" id="btnKalkZu" style="margin-left:auto;min-width:40px;">✕</button>
+    </div>
+    <div id="kalkBody" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:64px;">
+      <div class="msec">Auftrag</div>
+      <div class="mrow"><label data-ba="ba-fk06f-kalk">Losgröße</label><input type="number" step="any" min="1" id="kaLos" value="1"><span class="unit">Stk</span></div>
+      <div class="mrow"><label data-ba="ba-fk03-werkstoff">Werkstoff (steht im Programmkopf)</label><select id="kaWerkstoff" class="tool-select" style="width:108px;min-width:0;flex:0 0 auto;margin-left:auto;"><option value="baustahl">Baustahl</option><option value="verguetung">Vergütungsstahl</option><option value="edelstahl">Edelstahl</option><option value="guss">Guss</option><option value="alu">Alu</option><option value="messing">Messing</option></select></div>
+      <div id="kalkAufspListe"></div>
+      <div class="mrow" style="padding-right:12px;"><button id="btnKalkMerken" style="flex:1;font-size:12px;padding:6px;">⏱ Diese Aufspannung merken — fürs Gegenstück</button></div>
+      <!-- Ergebnis zuerst, die Betriebswerte am Ende (Muster des Drehteils, 31.08.2026). -->
+      <div class="msec">Kalkulationsblatt (je Stück)</div>
+      <div id="kalkBlatt"></div>
+      <div class="msec">Preisstaffel</div>
+      <div id="kalkStaffel"></div>
+      <div id="kalkHinweis" style="font-size:11.5px;color:var(--text-dim);padding:6px 10px 12px;line-height:1.45;"></div>
+      <div class="msec">Werkstatt-Pipeline</div>
+      <div class="mrow" style="flex-wrap:wrap;gap:6px;padding-right:12px;">
+        <button id="btnKalkZeitExport" style="flex:1 1 46%;font-size:12px;padding:7px;" title="Komplettzeit mit Werkzeugwechseln, Schnittzeit, Zahl der Werkzeuge und Wechsel, gemerkte Aufspannungen als Datei dz-cam-zeit — in der Pipeline, Blatt 2, Zeit aus DZ CAM laden">⇪ Zeit an die Pipeline</button>
+        <label class="gcbtn" style="flex:1 1 46%;font-size:12px;padding:7px;text-align:center;cursor:pointer;" title="Werkstoffliste der Pipeline (Blatt 5, Für die Dreh-App sichern — dieselbe Datei passt hier): die Preise je kg kommen in die Betriebswerte">⇩ Preise aus der Pipeline<input type="file" id="kalkWerkstoffDatei" accept=".json,.JSON" style="display:none;"></label>
+      </div>
+      <div id="kalkPipelineHinweis" style="font-size:11.5px;color:var(--text-dim);padding:0 10px 8px;line-height:1.45;">Den Angebotspreis rechnet die Werkstatt-Pipeline; dieses Blatt bleibt die Grobkalkulation fürs Gegenstück.</div>
+      <div class="msec">Betriebswerte (werden gespeichert)</div>
+      <div class="mrow"><label>Maschinenstundensatz</label><input type="number" step="any" id="kaSatz"><span class="unit">€/h</span></div>
+      <div class="mrow"><label>Rüstzeit je Auftrag</label><input type="number" step="any" id="kaRuest"><span class="unit">min</span></div>
+      <div class="mrow"><label>Nebenzeit je Stück (Spannen, Entgraten, Messen)</label><input type="number" step="any" id="kaNeben"><span class="unit">min</span></div>
+      <div class="mrow"><label>Sägezugabe (auf der langen Seite)</label><input type="number" step="any" id="kaSaege"><span class="unit">mm</span></div>
+      <div class="mrow"><label id="kaPreisLabel">Materialpreis</label><input type="number" step="any" id="kaPreis"><span class="unit">€/kg</span></div>
+      <div class="mrow"><label>Materialgemeinkosten</label><input type="number" step="any" id="kaMgk"><span class="unit">%</span></div>
+      <div class="mrow"><label>Verwaltung u. Vertrieb</label><input type="number" step="any" id="kaVw"><span class="unit">%</span></div>
+      <div class="mrow"><label>Gewinn</label><input type="number" step="any" id="kaGewinn"><span class="unit">%</span></div>
+    </div>
   </div>
 
   <div id="baPanel">
@@ -3022,6 +3066,9 @@ vorbeizuwischen, aus der man gerade w&auml;hlt. <b>Am Laptop</b> ist die Leiste 
 angetippte Gruppe ihre Zyklen gleich darunter auf.</li>
 <li><b>NC-Ausgabe</b>: Erzeugen, Pr&uuml;fen, als <code>NAME.H</code> sichern. An der Steuerung: Datei laden,
 <b>Programm-Test</b> laufen lassen, jede Meldung fotografieren.</li>
+<li><b>Zeiten und Kalkulation</b>: der Arbeitsplan zeigt je Schritt die gesch&auml;tzte Laufzeit und in der Kopfzeile die
+Komplettzeit mit Werkzeugwechseln; der Knopf <b>Kalkulation</b> in der unteren Leiste rechnet daraus mit Rohteil und
+Betriebswerten einen St&uuml;ckpreis (Kap.&nbsp;6f). Den Angebotspreis macht die Werkstatt-Pipeline.</li>
 </ol>
 <p><b>Am Handy</b> ist der Arbeitsplan eine schmale Liste, und die Knopfsymbole
 &#9998; (&Auml;ndern) und &#10005; (L&ouml;schen) stehen nur an der Zeile, die gerade
@@ -3067,6 +3114,14 @@ sobald echte MPF-Dateien dieser Maschine vorliegen.</dd>
 heute zwei Dinge: die Nut 253 tr&auml;gt ihre Drehlage im alten Stand als Q224 statt Q374, und die Zapfen 256/257 gibt es dort
 noch nicht (die App sperrt sie). Die Bohrzyklen und Muster sind in allen St&auml;nden gleich. Den Stand liest man an der
 Maschine unter MOD ab.</dd>
+<dt id="ba-fk03-werkstoff">Werkstoff</dt><dd>Baustahl, Verg&uuml;tungsstahl, Edelstahl, Guss, Alu oder Messing &mdash; die <b>Kalkulation</b>
+(Kap.&nbsp;6f) nimmt daraus die Dichte f&uuml;r das Rohteilgewicht und den gemerkten Preis je kg; im Kalkulationsblatt l&auml;sst er sich
+umschalten, gespeichert wird er hier im Programm. Auf die NC-Ausgabe hat der Werkstoff keinen Einfluss; Schnittwerte tr&auml;gt jeder
+Schritt selbst (F, S aus der Werkzeugtabelle).</dd>
+<dt id="ba-fk03-tw">Werkzeugwechsel (Span zu Span)</dt><dd>Sekunden je Werkzeugwechsel, Vorgabe 8 (Kettenmagazin). Die Bahnrechnung kennt
+den Wechsler nicht &mdash; sie sieht nur den Eilgang auf die sichere H&ouml;he; diese Pauschale kommt je Wechsel dazu und macht aus der
+<b>Hauptzeit</b> die <b>Komplettzeit</b> im Arbeitsplan und in der Kalkulation. Der erste Werkzeugaufruf z&auml;hlt mit (Einwechseln beim
+Teilstart). An einer Maschine mit Handwechsel entsprechend h&ouml;her eintragen.</dd>
 <dt id="ba-fk03-blk">BLK FORM</dt><dd>Rohteil als Quader: MIN-Punkt (<code>BLK FORM 0.1 Z X Y Z</code>) und MAX-Punkt (<code>BLK FORM 0.2</code>).
 MAX-Z ist die Oberfl&auml;che, in der Regel 0. Die Draufsicht zeichnet daraus das Rechteck und warnt, wenn
 Bohrungen au&szlig;erhalb liegen.</dd>
@@ -3653,10 +3708,11 @@ ohne vorgebohrte Bohrung eine Kollision. Helix und Pendeln ohne ANGLE laufen sen
 die Referenz vor dem ersten Lauf.</p>
 <p id="ba-fk06d-vollbild"><b>Am Laptop f&uuml;llt die Simulation den Bildschirm</b> (19.09.2026) &mdash; wie im Drehteil geh&ouml;rt die ganze Fl&auml;che dem Bild,
 die Bedienhinweise stehen hinter dem Knopf &#x24D8; in der Kopfleiste (auf beiden Ger&auml;ten), das Kreuz oben rechts schlie&szlig;t.</p>
-<p id="ba-fk06d-pipeline"><b>Zeit an die Werkstatt-Pipeline</b> (19.09.2026): der Knopf in der Kopfleiste der Simulation schreibt die Laufzeit der
-Zeitachse (Vorschub aus F, Eilgang 6&nbsp;m/min, Verweilzeiten), die Zahl der Werkzeuge und Werkzeugwechsel der aktiven Schritte und die
-Aufspannungen (zwei, wenn die Bewertung im STEP-Fenster unter 60&nbsp;% erreichbar sagt) als Datei <code>dz-cam-zeit</code>. In der Pipeline,
-Blatt 2, macht <i>Zeit aus DZ CAM laden</i> daraus Hauptzeit, R&uuml;stzeit und Bearbeitungsseiten mit Herkunft &mdash; den Preis rechnet die Pipeline.</p>
+<p id="ba-fk06d-pipeline"><b>Zeit an die Werkstatt-Pipeline</b> (19.09.2026): der Knopf in der Kopfleiste der Simulation (und derselbe in der
+Kalkulation, Kap.&nbsp;6f) schreibt die Zeiten des Arbeitsplans als Datei <code>dz-cam-zeit</code>: Komplettzeit mit Werkzeugwechseln, Schnittzeit
+der Zeitachse allein (Vorschub aus F, Eilgang 6&nbsp;m/min, Verweilzeiten), Zahl der Werkzeuge und Wechsel der aktiven Schritte und die
+Aufspannungen &mdash; die in der Kalkulation gemerkten, sonst zwei, wenn die Bewertung im STEP-Fenster unter 60&nbsp;% erreichbar sagt. In der
+Pipeline, Blatt 2, macht <i>Zeit aus DZ CAM laden</i> daraus Hauptzeit, R&uuml;stzeit und Bearbeitungsseiten mit Herkunft &mdash; den Preis rechnet die Pipeline.</p>
 <p id="ba-fk06d-kanten"><b>Rohteilkanten:</b> Das Rohteil ist in der 3D-Ansicht <b>undurchsichtig</b> &mdash; was hinter dem Bauteil liegt, sieht man nicht. Das ist Absicht: durchscheinende
 R&uuml;ckkanten laufen quer durch Werkzeug und Bahn und verf&auml;lschen die Konturen der Elemente, die sich davor bewegen. Wer die Umrisse des Rohteils trotzdem braucht, setzt
 den Haken <b>Rohteilkanten</b> neben den Kn&ouml;pfen 2D/3D; die Kanten werden dann gezeichnet, bleiben aber hinter dem Material verdeckt (kein Durchsehen). Der Haken wird gemerkt.</p>
@@ -3682,6 +3738,43 @@ Absicht; es erscheint trotzdem rot, weil gegen die <i>fertige</i> Sollform gemes
 Zeile sagt das auch.</p>
 <p><b>Der Kugelfr&auml;ser wird seit dem 15.09.2026 als Kugel gestempelt</b> (vorher galt jeder Fr&auml;ser als flache Scheibe). Erkannt wird er an
 den Zahlen der Tabelle: R2 = halber Durchmesser.</p>
+
+<h2 id="ba-fk06f">6f &nbsp;Zeiten im Arbeitsplan und Kalkulation</h2>
+<p id="ba-fk06f-zeiten"><b>Zeiten im Arbeitsplan</b> (19.09.2026): jede Zykluszeile tr&auml;gt rechts einen blauen Chip mit ihrer gesch&auml;tzten
+Laufzeit, die Zeile <b>Programmkopf</b> die <b>Komplettzeit</b> (Hauptzeit plus Werkzeugwechsel), und der Chip in der Kopfzeile nennt sie neben
+der Schrittzahl. Am Laptop l&auml;uft hinter jeder Zykluszeile ein blauer Balken, dessen L&auml;nge der Anteil an der l&auml;ngsten Schrittzeit ist
+&mdash; man sieht ohne Lesen, wo die Zeit bleibt.</p>
+<p>Die Zahlen kommen aus <b>derselben Bahnrechnung wie die Simulation</b> (Kap.&nbsp;6d): Vorschubwege durch F, Eilg&auml;nge mit 6&nbsp;m/min,
+Verweilzeiten in Sekunden, Gewinde mit Steigung mal Drehzahl. Bei einem Schritt, der als <b>Steuerungszyklus</b> ausgegeben wird, ist das der
+nach dem Handbuch nachgebaute Ablauf &mdash; die Steuerung selbst beschleunigt, bremst und wechselt anders, deshalb sind es <b>Sch&auml;tzwerte</b>,
+keine Stoppuhr. Der Werkzeugwechsel steht als Pauschale im Programmkopf (Kap.&nbsp;3), der erste Aufruf z&auml;hlt mit. Stillgelegte Schritte haben
+keine Zeit. Bei einem <b>STEP-Modell</b> kostet die Bahnrechnung ein bis zwei Sekunden: die Chips erscheinen dann einen Augenblick nach dem
+Laden, der Arbeitsplan wartet nicht darauf; danach sind sie zwischengespeichert, bis sich am Programm etwas &auml;ndert.</p>
+<p id="ba-fk06f-kalk"><b>Kalkulation:</b> der Knopf <b>Kalkulation</b> in der unteren Leiste &ouml;ffnet dieselbe klassische
+<b>Zuschlagskalkulation</b> wie im Drehteil. Drei Quellen, nichts doppelt eingeben:</p>
+<ul>
+<li><b>Material</b> aus der BLK FORM des Programmkopfs: Quader X&nbsp;&times;&nbsp;Y&nbsp;&times;&nbsp;Z plus <b>S&auml;gezugabe auf der langen
+Seite</b> (der Block ist ein Abschnitt von Stange oder Platte, ein Schnitt je St&uuml;ck). Gewicht &uuml;ber die Dichte des Werkstoffs aus dem
+Programmkopf (im Blatt umschaltbar), Preis je kg einstellbar &mdash; je Werkstoff einzeln, die App merkt sich die Werte.</li>
+<li><b>Fertigungszeit</b> = Komplettzeit des Arbeitsplans (mit Werkzeugwechseln) plus die einstellbare Nebenzeit je St&uuml;ck f&uuml;r Spannen,
+Entgraten, Messen.</li>
+<li><b>Betriebswerte</b>: Maschinenstundensatz (Maschine samt Bediener), R&uuml;stzeit je Auftrag, Materialgemeinkosten,
+Verwaltungs-/Vertriebszuschlag, Gewinn. Einmal eintippen &mdash; sie bleiben im Browserspeicher dieser App, getrennt vom Drehteil: die
+Fr&auml;se hat ihren eigenen Stundensatz.</li>
+</ul>
+<p>Das Blatt rechnet je St&uuml;ck: Materialeinzelkosten + MGK, Fertigung nach Stundensatz, R&uuml;stumlage auf die Losgr&ouml;&szlig;e &rarr;
+<b>Herstellkosten</b>, + Verwaltung/Vertrieb &rarr; <b>Selbstkosten</b>, + Gewinn &rarr; <b>St&uuml;ckpreis netto</b>. Die <b>Preisstaffel</b>
+(1/5/10/25/50 St&uuml;ck) zeigt, wie die R&uuml;stumlage f&auml;llt. <b>Diese Aufspannung merken</b> legt die Laufzeit des offenen Programms
+f&uuml;rs Gegenst&uuml;ck ab: die Kalkulation der zweiten Aufspannung rechnet gemerkte Eintr&auml;ge dazu &mdash; Laufzeiten summiert, Neben- und
+R&uuml;stzeit je Aufspannung, Material einmal. Ein Eintrag mit dem Namen des offenen Programms wird gezeigt, aber durchgestrichen und nicht
+mitgerechnet.</p>
+<p id="ba-fk06f-pipeline"><b>Werkstatt-Pipeline:</b> den Angebotspreis rechnet die Pipeline &mdash; dieses Blatt bleibt die Grobkalkulation.
+<b>Zeit an die Pipeline</b> schreibt die Zeiten als Datei (Kap.&nbsp;6d), <b>Preise aus der Pipeline</b> liest deren Werkstoffliste (Blatt&nbsp;5,
+<i>F&uuml;r die Dreh-App sichern</i> &mdash; dieselbe Datei passt hier) und &uuml;bernimmt die Preise je kg: zugeordnet nach Namen (S235 &rarr;
+Baustahl, C45 vor 42CrMo4 &rarr; Verg&uuml;tungsstahl, 1.4301 vor 1.4571 &rarr; Edelstahl, AlMgSi1 vor AlMg3 &rarr; Alu); was die Liste nicht
+f&uuml;hrt (Guss, Messing), bleibt und wird genannt.</p>
+<p><b>Grenzen:</b> GROBE Angebotskalkulation, keine Nachkalkulation. Nicht enthalten: H&auml;rten, Beschichten, Transport, Fremdleistungen,
+Werkzeugverschlei&szlig;, Ausschuss. Ohne aktiven Bearbeitungsschritt fehlt die Laufzeit &mdash; das Blatt sagt es ausdr&uuml;cklich.</p>
 
 <h2 id="ba-fk07">7 &nbsp;NC-Ausgabe und Weg zur Maschine</h2>
 <p>Aufbau: <code>BEGIN PGM</code>, zwei <code>BLK FORM</code>-S&auml;tze, Kommentar, je Schritt <code>TOOL CALL</code>,
@@ -4801,6 +4894,11 @@ function fProgrammNeu(){
       sc2:50,        // Q204 2. Sicherheits-Abstand (Rueckzug zwischen den Loechern)
       oberflaeche:0, // Q203 Koordinate der Werkstueck-Oberflaeche
       rz:100,        // sichere Hoehe (absolut) fuer Werkzeugwechsel und Programmende
+      // ZEITEN UND KALKULATION (19.09.2026): Werkstoff fuer Dichte und Preis je kg,
+      // tw = Werkzeugwechsel Span zu Span in Sekunden (Kettenmagazin; die Zeitachse
+      // der Bahnen kennt den Wechsler nicht). Alte Programme ohne beides rechnen
+      // mit Baustahl und F_TW_VORGABE - kein NC-Satz haengt daran.
+      werkstoff:'baustahl', tw:8,
       // SPANNMITTEL (16.09.2026). Vorgabe AUS - ein Programm ohne Angabe
       // verhaelt sich wie bisher; die NC-Ausgabe kennt das Spannmittel nicht.
       spann:'aus',       // 'aus' | 'schraubstock'
@@ -12025,6 +12123,155 @@ function fMerkmale(profilId){
     {t:'Maschinentermine: ' + P.termine, s:'pgst', offen:P.offen}
   ];
 }
+
+// =====================================================================
+// ZEITEN IM ARBEITSPLAN UND KALKULATION (19.09.2026, Daniels Befund: "keine
+// Zeiten im Arbeitsplan und auch keine Kalkulation ... so wie das beim Drehen
+// dargestellt ist").
+// ---------------------------------------------------------------------
+// fHauptzeiten: DIESELBE Bahnrechnung wie die Simulation (fSimBahnen +
+// fSimZeitachse), je Schritt aufsummiert. Einen zweiten Weg gibt es nicht:
+// beim Drehteil rechnet berechneHauptzeiten aus dem erzeugten NC, hier
+// schreibt die NC fuer einen Steuerungszyklus keine Bahn - die Zeit kommt aus
+// dem nach dem Handbuch nachgebauten Ablauf und ist so genau wie der
+// (Beschleunigung und den Takt des Wechslers kennt sie nicht). Eilgang
+// F_SIM_EILGANG, kein NC-Wort.
+// proSchritt ist nach dem PLATZ IM PROGRAMM gefuehrt, nicht nach dem Platz in
+// der Liste der aktiven Schritte - sonst stuende die Zeit beim falschen
+// Schritt, sobald einer stillliegt (dieselbe Falle wie schrittIndex beim
+// Drehteil). Werkzeugwechsel = T-Uebergaenge der aktiven Schritte, der erste
+// zaehlt mit (Einwechseln beim Teilstart); Pauschale kopf.tw in Sekunden,
+// Vorgabe F_TW_VORGABE (Span zu Span eines Kettenmagazins), einstellbar im
+// Programmkopf - wie pkTw beim Drehteil.
+// ZWISCHENSPEICHER: die Bahnen eines STEP-Modells kosten ein bis zwei Sekunden
+// je Rechnung (Rampenblock gemessen 1,7 s, fBahnSchlichten hat keinen eigenen
+// Cache), und der Arbeitsplan wird bei jedem Antippen neu gezeichnet.
+// Schluessel = das ganze Programm (kopf, werkzeuge, muster, konturen,
+// schritte) plus die Identitaet der Sollform.
+var F_TW_VORGABE = 8;
+var F_HZ_CACHE = [];
+function fHzSchluessel(prog){
+  const F = (prog && prog.__sollform) || F_SOLLFELD || null;
+  if(F && !F.__kette) F.__kette = 'F' + (++F_KETTE_ZAEHLER);
+  let s = '';
+  try{ s = JSON.stringify([prog.kopf, prog.werkzeuge, prog.muster, prog.konturen, prog.schritte]); }catch(e){ s = 'x' + Math.random(); }
+  return (F ? F.__kette : '-') + '|' + s;
+}
+function fHauptzeitenCache(prog){
+  const k = fHzSchluessel(prog);
+  const e = F_HZ_CACHE.find(x => x.schluessel === k);
+  return e ? e.wert : null;
+}
+function fHauptzeiten(prog){
+  const k = fHzSchluessel(prog);
+  const alt = F_HZ_CACHE.find(x => x.schluessel === k);
+  if(alt) return alt.wert;
+  const wert = fHauptzeitenRechnen(prog);
+  F_HZ_CACHE.push({schluessel:k, wert:wert});
+  while(F_HZ_CACHE.length > 6) F_HZ_CACHE.shift();
+  return wert;
+}
+function fHauptzeitenRechnen(prog){
+  const kopf = (prog && prog.kopf) || {};
+  const twSek = (kopf.tw === 0 || +kopf.tw > 0) ? +kopf.tw : F_TW_VORGABE;
+  const aktiv = []; (prog.schritte || []).forEach((s, i) => { if(s && s.aktiv !== false) aktiv.push(i); });
+  const proSchritt = {};
+  let gesamt = 0, hinweise = [], ok = true;
+  try{
+    const B = fSimBahnen(prog), Z = fSimZeitachse(B.bahnen, prog);
+    hinweise = B.hinweise || [];
+    // e.schritt zaehlt die AKTIVEN Schritte (fSimBahnen filtert), aktiv[] uebersetzt auf den Platz im Programm.
+    Z.liste.forEach(e => { const pi = aktiv[e.schritt]; if(pi === undefined) return; proSchritt[pi] = (proSchritt[pi] || 0) + (e.t1 - e.t0) / 60; });
+    gesamt = Z.gesamt / 60;
+  }catch(e){ ok = false; hinweise = ['Zeitrechnung: ' + (e && e.message)]; }
+  let wechsel = 0, letzt = null;
+  aktiv.forEach(i => { const s = prog.schritte[i]; if(s.t == null) return; if(String(s.t) !== letzt){ wechsel++; letzt = String(s.t); } });
+  const wechselMin = wechsel * twSek / 60;
+  return {proSchritt:proSchritt, gesamt:gesamt, wechsel:wechsel, twSek:twSek, wechselMin:wechselMin, komplett:gesamt + wechselMin, hinweise:hinweise, ok:ok};
+}
+// m:ss wie fmtZeit im Drehteil (Minuten als Zahl, Sekunden gerundet).
+function fZeitText(min){ const s2 = Math.max(0, Math.round((+min || 0) * 60)); return Math.floor(s2 / 60) + ':' + String(s2 % 60).padStart(2, '0'); }
+
+// ---------------------------------------------------------------------
+// KALKULATION - dieselbe Zuschlagskalkulation wie kalkRechnen im Drehteil
+// (31.08.2026), das Rohteil ist hier der QUADER der BLK FORM. Saegezugabe auf
+// die LAENGSTE Seite in XY: der Block ist ein Abschnitt von Stange oder Platte,
+// ein Schnitt je Stueck. Dichten fest (aendern sich nicht); Preise je kg
+// editierbar (Betriebswerte), mit DENSELBEN Schluesseln wie im Drehteil, damit
+// die Werkstoffliste der Pipeline (wp-werkstoffe) beide Apps gleich belegt.
+var F_WERKSTOFFE = {
+  baustahl:  {name:'Baustahl',        dichte:7.85},
+  verguetung:{name:'Vergütungsstahl', dichte:7.85},
+  edelstahl: {name:'Edelstahl',       dichte:7.90},
+  guss:      {name:'Guss',            dichte:7.20},
+  alu:       {name:'Alu',             dichte:2.70},
+  messing:   {name:'Messing',         dichte:8.50}};
+// Vorgaben: Fraese teurer als die Drehbank (satz 60 statt 55), Nebenzeit 2 min
+// (Schraubstock spannen, entgraten, messen) - Richtwerte, Daniel stellt sie ein.
+var F_KALK_VORGABE = {satz:60, ruestMin:30, nebenMin:2, saege:3,
+  mgkProz:8, vwProz:12, gewinnProz:10, los:1, aufsp:[],
+  preise:{baustahl:1.6, verguetung:2.2, edelstahl:5.5, guss:2.5, alu:6.5, messing:9}};
+function fKalkRechnen(e){
+  const los = Math.max(1, Math.round(e.los || 1));   // Los 0 waere Division durch null
+  const lx = Math.max(0, +e.lx || 0), ly = Math.max(0, +e.ly || 0), lz = Math.max(0, +e.lz || 0), saege = Math.max(0, +e.saege || 0);
+  const ax = (lx >= ly) ? lx + saege : lx, ay = (lx >= ly) ? ly : ly + saege;
+  const volCm3 = ax * ay * lz / 1000;
+  const kg = volCm3 * e.dichte / 1000;
+  const mek = kg * e.preisKg;
+  const mgk = mek * e.mgkProz / 100;
+  // Weitere Aufspannungen: jede bringt ihre Laufzeit mit und kostet Neben-
+  // UND Ruestzeit noch einmal; Material nur einmal (dasselbe Rohteil).
+  const aufspN = Math.max(0, Math.round(e.aufspN || 0));
+  const fertMin = Math.max(0, e.hzMin) + Math.max(0, e.aufspMin || 0) + Math.max(0, e.nebenMin) * (1 + aufspN);
+  const fert = fertMin / 60 * e.satz;
+  const ruest = (Math.max(0, e.ruestMin) * (1 + aufspN) / 60 * e.satz) / los;
+  const hk = mek + mgk + fert + ruest;
+  const vw = hk * e.vwProz / 100;
+  const sk = hk + vw;
+  const gewinn = sk * e.gewinnProz / 100;
+  const preis = sk + gewinn;
+  return {los:los, kg:kg, mek:mek, mgk:mgk, fertMin:fertMin, fert:fert, ruest:ruest, hk:hk, vw:vw, sk:sk, gewinn:gewinn, preis:preis, auftrag:preis * los, rohteil:{x:ax, y:ay, z:lz}};
+}
+// Gespeichertes gewinnt, Fehlendes kommt aus der Vorgabe, Muell faellt auf die
+// Vorgabe; die Merkliste nur mit sauberen Eintraegen (Name + Minuten).
+function fKalkMerge(json){
+  const v = JSON.parse(JSON.stringify(F_KALK_VORGABE));
+  try{
+    const d = JSON.parse(json); if(!d) return v;
+    Object.keys(F_KALK_VORGABE).forEach(k => {
+      if(k === 'preise'){ if(d.preise) Object.keys(v.preise).forEach(w => { if(d.preise[w] > 0) v.preise[w] = d.preise[w]; }); }
+      else if(typeof d[k] === 'number' && isFinite(d[k])) v[k] = d[k];
+    });
+    if(Array.isArray(d.aufsp))
+      v.aufsp = d.aufsp.filter(a => a && typeof a.name === 'string' && a.name && a.min > 0).map(a => ({name:a.name, min:a.min}));
+  }catch(e){}
+  return v;
+}
+// Werkstoffpreise aus der Pipeline (wp-werkstoffe 1): zugeordnet NACH NAMEN, je
+// Gruppe der erste Treffer der Liste (C45 vor 42CrMo4: der gaengige Verguetungs-
+// stahl setzt den Preis). Was die Pipeline nicht fuehrt, bleibt und wird genannt.
+// DOM-frei: schreibt in w.preise, der Aufrufer speichert.
+var F_KALK_ZUORDNUNG = {
+  baustahl:['S235', 'S235JR', 'S355', 'St37', 'St52'],
+  verguetung:['C45', 'C45E', '42CrMo4', '16MnCr5', '34CrNiMo6'],
+  edelstahl:['1.4301', '1.4571', '1.4404', '1.4305', '1.4057'],
+  alu:['AlMgSi1', 'AlMg3', 'AlZnMgCu1.5', 'AlCuMgPb', 'Alu'],
+  messing:['CuZn39Pb3', 'CuZn40Pb2', 'MS58', 'Messing'],
+  guss:['EN-GJL-250', 'EN-GJS-400', 'GG25', 'GGG40', 'Guss']};
+function fKalkPreiseUebernehmen(j, w){
+  const bericht = {uebernommen:[], offen:[], fehler:null};
+  if(!j || j.format !== 'wp-werkstoffe' || +j.version !== 1 || !Array.isArray(j.werkstoffe)){
+    bericht.fehler = 'Das ist keine Werkstoff-Datei der Pipeline (format wp-werkstoffe, version 1).'; return bericht; }
+  Object.keys(F_KALK_ZUORDNUNG).forEach(key => {
+    let treffer = null;
+    for(const n of F_KALK_ZUORDNUNG[key]){ treffer = j.werkstoffe.find(x => String(x.name || '').toLowerCase() === n.toLowerCase()); if(treffer) break; }
+    if(treffer && +treffer.preis > 0){
+      w.preise[key] = Math.round(+treffer.preis * 100) / 100;
+      bericht.uebernommen.push(F_WERKSTOFFE[key].name + ' = ' + treffer.name + ' ' + w.preise[key].toFixed(2).replace('.', ',') + ' €/kg' + (treffer.gepflegt === false ? ' (dort noch Platzhalter)' : ''));
+    } else bericht.offen.push(F_WERKSTOFFE[key].name);
+  });
+  return bericht;
+}
 // =====================================================================
 // DZ CAM · FRAESEN — OBERFLAECHE (F20)
 // ---------------------------------------------------------------------
@@ -12223,7 +12470,11 @@ function fRender(){
   const name = fName(fProg);
   const hn = document.getElementById('hdrName'); if(hn) hn.textContent = k.name || name;
   const pb = document.getElementById('progBox'); if(pb) pb.textContent = name + '.H';
-  const sp = document.getElementById('statPts'); if(sp) sp.textContent = fProg.muster.length + ' Bohrbild' + (fProg.muster.length === 1 ? '' : 'er') + ' · ' + fProg.schritte.length + ' Schritt' + (fProg.schritte.length === 1 ? '' : 'e');
+  const hz = fHzSofort();
+  // Die Zeit steht VORN: der Chip ist am Handy rund 95 px breit und schneidet
+  // hinten ab (Aufnahme 19.09.2026: "6 Bohrbilder · ..." - die Zeit war genau
+  // das, was fehlte). Am Laptop steht alles.
+  const sp = document.getElementById('statPts'); if(sp) sp.textContent = ((hz && hz.gesamt > 0) ? '\u23F1 ' + fZeitText(hz.komplett) + ' · ' : '') + fProg.schritte.length + ' Schritt' + (fProg.schritte.length === 1 ? '' : 'e') + ' · ' + fProg.muster.length + ' Bohrbild' + (fProg.muster.length === 1 ? '' : 'er');
   const t1 = document.getElementById('tfsXY'); if(t1) t1.textContent = (k.x1 - k.x0) + ' × ' + (k.y1 - k.y0);
   const t2 = document.getElementById('tfsZ'); if(t2) t2.textContent = k.z1 + ' ← ' + k.z0;
   const t3 = document.getElementById('tfsMasch'); if(t3) t3.textContent = (F_PROFILE[k.profil] || F_PROFILE.HEIDENHAIN_ITNC530).name;
@@ -12231,14 +12482,42 @@ function fRender(){
   fDraufsicht();
   fSpeicherAkt();
 }
+// ZEITEN IM ARBEITSPLAN (19.09.2026, Daniels Befund): sofort aus dem Zwischen-
+// speicher; fehlt er, rechnet der NAECHSTE TAKT und zeichnet neu. Ein STEP-Modell
+// kostet ein bis zwei Sekunden Bahnrechnung (gemessen 1,7 s am Rampenblock) -
+// das Antippen einer Zeile darf nicht daran haengen. Ein Fehlschlag wird
+// gemerkt (leeres Ergebnis im Cache), sonst liefe die Schleife bei jedem Takt.
+var fHzAusstehend = false;
+function fHzSofort(){
+  let hz = null;
+  try{ hz = fHauptzeitenCache(fProg); }catch(e){}
+  if(!hz && !fHzAusstehend){
+    fHzAusstehend = true;
+    setTimeout(()=>{
+      fHzAusstehend = false;
+      try{ fHauptzeiten(fProg); }
+      catch(e){ try{ F_HZ_CACHE.push({schluessel:fHzSchluessel(fProg), wert:{proSchritt:{}, gesamt:0, wechsel:0, twSek:F_TW_VORGABE, wechselMin:0, komplett:0, hinweise:[String(e && e.message)], ok:false}}); }catch(e2){} }
+      fRender();
+    }, 0);
+  }
+  return hz;
+}
 function fArbeitsplanRender(){
   const body = document.getElementById('apBody'); if(!body) return;
   const k = fProg.kopf;
+  // Zeiten: Chip je Schritt, Komplettzeit am Programmkopf; zeitMax skaliert den
+  // Balken je Zeile (--zeit, dieselbe Regel wie im Drehteil in der 900-px-Query
+  // des gemeinsamen Stylesheets - unter 900 px ohne Wirkung).
+  const hz = fHzSofort();
+  const zeitMax = (hz && hz.proSchritt) ? Object.keys(hz.proSchritt).reduce((m, j) => Math.max(m, +hz.proSchritt[j] || 0), 0) : 0;
+  const zeitChip = (min, titel) => '<span class="zeitchip" title="' + titel + '">\u23F1 ' + fZeitText(min) + '</span>';
   const sel = (typ, idx) => (fSel && fSel.typ === typ && fSel.idx === idx) ? ' sel' : '';
   let h = '';
   h += '<div class="ap-row' + sel('kopf', 0) + '" data-k="kopf"><div class="ap-icon" style="background:#4d5860;">P</div>' +
        '<div class="ap-name">Programmkopf</div><div class="ap-detail">' + esc(fName(fProg)) + '.H · BLK ' + (k.x1 - k.x0) + '×' + (k.y1 - k.y0) + '×' + (k.z1 - k.z0) +
-       ' · SC ' + k.sc + ' · SC2 ' + k.sc2 + ' · sicher Z' + k.rz + '</div><div class="ap-zeit"></div><button class="ap-edit" data-ek="1">✎</button></div>';
+       ' · SC ' + k.sc + ' · SC2 ' + k.sc2 + ' · sicher Z' + k.rz +
+       ((hz && hz.gesamt > 0) ? ' · Hauptzeit ' + fZeitText(hz.gesamt) + ' + ' + hz.wechsel + ' WW à ' + hz.twSek + ' s' : '') +
+       '</div><div class="ap-zeit">' + ((hz && hz.gesamt > 0) ? zeitChip(hz.komplett, 'Komplett, mit Werkzeugwechseln') : '') + '</div><button class="ap-edit" data-ek="1">✎</button></div>';
   fProg.muster.forEach((m, i) => {
     const n = fMusterPunkte(m).length;
     h += '<div class="ap-row' + sel('muster', i) + '" data-m="' + i + '"><div class="ap-icon start">⁘</div>' +
@@ -12264,10 +12543,12 @@ function fArbeitsplanRender(){
       (z.fraes ? ' · ' + esc(fFormText(s)) : '') +
       (z.eigenePosition ? '' : (z.ohneTiefe ? ' · Senkung +' + (s.q249 || 0) : ' · Z1 ' + s.tiefe)) + (/^(gewinde|gewindeGS|gewindeSpan)$/.test(s.art) ? ' · P' + s.steigung : '') +
       ' · F' + s.f + ' S' + s.s + (s.kuehl === 'aus' ? ' · trocken' : '') + (s.ausgabe === 'einzel' ? ' · Einzelsätze' : '');
-    h += '<div class="ap-row' + sel('schritt', i) + (s.aktiv === false ? ' ap-aus' : '') + '" data-sidx="' + i + '">' +
+    const zs = (hz && hz.proSchritt && hz.proSchritt[i] !== undefined) ? +hz.proSchritt[i] : null;
+    h += '<div class="ap-row' + sel('schritt', i) + (s.aktiv === false ? ' ap-aus' : '') + '" data-sidx="' + i + '"' +
+         ((zs !== null && zeitMax > 0) ? ' style="--zeit:' + Math.round(100 * zs / zeitMax) + '%"' : '') + '>' +
          '<div class="ap-icon zyklus" title="' + esc(z.wort || s.art) + (z.nr ? ' — iTNC Zyklus ' + z.nr : '') + '">' + fIcon(s.art) + '</div>' +
          '<div class="ap-name" title="' + esc(z.wort) + (t ? ' — T' + s.t + ' ' + esc(t.name) : '') + '">' + esc(z.kurz || z.wort) + ' T' + s.t + '</div>' +
-         '<div class="ap-detail">' + detail + '</div><div class="ap-zeit"></div>' +
+         '<div class="ap-detail">' + detail + '</div><div class="ap-zeit">' + ((zs !== null) ? zeitChip(zs, 'Geschätzte Laufzeit dieses Schritts (dieselbe Bahn wie die Simulation)') : '') + '</div>' +
          '<div class="ap-ordzeile"><button class="ap-ord" data-hoch="' + i + '" title="nach oben"' + (i === 0 ? ' disabled' : '') + '>▲</button>' +
          '<button class="ap-ord" data-runter="' + i + '" title="nach unten"' + (i === fProg.schritte.length - 1 ? ' disabled' : '') + '>▼</button>' +
          '<button class="ap-ord' + (s.aktiv === false ? ' an' : '') + '" data-aus="' + i + '" title="stilllegen / aktivieren">⏻</button>' +
@@ -12886,6 +13167,7 @@ function hbBildKontur(H, art, s){
 function fKopfOeffnen(){
   const k = fProg.kopf;
   setVal('fkName', k.name); setVal('fkProfil', k.profil || 'HEIDENHAIN_ITNC530'); setVal('fkStand', k.stand || '07');
+  setVal('fkWerkstoff', F_WERKSTOFFE[k.werkstoff] ? k.werkstoff : 'baustahl'); setVal('fkTw', (k.tw === 0 || +k.tw > 0) ? k.tw : F_TW_VORGABE);
   setVal('fkX0', k.x0); setVal('fkY0', k.y0); setVal('fkZ0', k.z0); setVal('fkX1', k.x1); setVal('fkY1', k.y1); setVal('fkZ1', k.z1);
   setVal('fkSc', k.sc); setVal('fkSc2', k.sc2); setVal('fkOber', k.oberflaeche); setVal('fkRz', k.rz);
   setRadio('fkSpannBtns', k.spann || 'aus'); setRadio('fkSpannRichtBtns', k.spannRichtung || 'y');
@@ -12909,6 +13191,7 @@ function fKopfSpannSync(){
   const ok = document.getElementById('btnFkOk'); if(ok) ok.onclick = ()=>{
     const k = fProg.kopf;
     k.name = getStr('fkName').trim() || 'DZ1'; k.profil = getStr('fkProfil') || 'HEIDENHAIN_ITNC530'; k.stand = getStr('fkStand') || '07';
+    k.werkstoff = F_WERKSTOFFE[getStr('fkWerkstoff')] ? getStr('fkWerkstoff') : 'baustahl'; k.tw = Math.max(0, getNum('fkTw', F_TW_VORGABE));
     k.x0 = getNum('fkX0'); k.y0 = getNum('fkY0'); k.z0 = getNum('fkZ0', -20); k.x1 = getNum('fkX1', 100); k.y1 = getNum('fkY1', 80); k.z1 = getNum('fkZ1');
     k.sc = getNum('fkSc', 2); k.sc2 = getNum('fkSc2', 50); k.oberflaeche = getNum('fkOber'); k.rz = getNum('fkRz', 100);
     k.spann = selBtnVal('fkSpannBtns') || 'aus'; k.spannRichtung = selBtnVal('fkSpannRichtBtns') || 'y';
@@ -14920,23 +15203,159 @@ function fSimAnsicht(a){
   fSimZeichnen();
 }
 // ZEIT AN DIE WERKSTATT-PIPELINE (19.09.2026, Daniels Freigabe: die Pipeline rechnet den
-// Preis, die CAM-Apps liefern die Zeiten). Laufzeit = Zeitachse der Simulation (Vorschub
-// aus F, Eilgang 6 m/min, Verweilzeiten), Werkzeuge und Wechsel aus den aktiven Schritten,
-// Aufspannungen aus der Bewertung des STEP-Fensters (unter 60 % erreichbar = eine zweite).
+// Preis, die CAM-Apps liefern die Zeiten). Seit dem Abend desselben Tages aus fHauptzeiten:
+// komplett = Zeitachse (Vorschub aus F, Eilgang 6 m/min, Verweilzeiten) PLUS Werkzeugwechsel
+// (kopf.tw je Wechsel), schnitt = die Zeitachse allein - dieselben Felder wie beim Drehteil.
+// Aufspannungen: die in der Kalkulation gemerkten (fuers Gegenstueck), sonst die Bewertung
+// des STEP-Fensters (unter 60 % erreichbar = eine zweite).
 function fZeitDatei(){
   // Frisch aus dem aktuellen Programm - nie aus SIM: dort kann die Zeitachse eines anderen
   // Programms stehen (Pruefstand: 4,022 gegen 6,491 min), und die Datei traegt seinen Namen.
-  const B = fSimBahnen(fProg), Z = fSimZeitachse(B.bahnen, fProg);
-  const aktiv = (fProg.schritte || []).filter(s => s.aktiv !== false);
-  const ts = new Set(); let wechsel = 0, letzt = null;
-  aktiv.forEach(s => { if(s.t == null) return; ts.add(String(s.t)); if(String(s.t) !== letzt){ wechsel++; letzt = String(s.t); } });
-  let aufsp = 1;
-  try{ if(STEP.plan && STEP.plan.lagen){ const l = STEP.plan.lagen.find(x => x.achse === STEP.plan.vorschlag) || STEP.plan.lagen[0]; if(l && l.fertig < 0.6) aufsp = 2; } }catch(e){}
+  const hz = fHauptzeiten(fProg);
+  const aktiv = (fProg.schritte || []).filter(s => s && s.aktiv !== false);
+  const ts = new Set(); aktiv.forEach(s => { if(s.t != null) ts.add(String(s.t)); });
+  const eigen = fName(fProg);
+  const gemerkt = (fKalkLaden().aufsp || []).filter(a => a.name !== eigen);
+  let aufsp = 1 + gemerkt.length;
+  if(!gemerkt.length){ try{ if(STEP.plan && STEP.plan.lagen){ const l = STEP.plan.lagen.find(x => x.achse === STEP.plan.vorschlag) || STEP.plan.lagen[0]; if(l && l.fertig < 0.6) aufsp = 2; } }catch(e){} }
   const prof = F_PROFILE[(fProg.kopf && fProg.kopf.profil) || 'HEIDENHAIN_ITNC530'] || {};
+  const r3 = v => Math.round((+v || 0) * 1000) / 1000;
   return { format:'dz-cam-zeit', version:1, quelle:'fraesen', datum:new Date().toISOString(),
-    programm:{ name:fName(fProg), maschine:prof.name || 'Heidenhain iTNC 530' },
-    zeiten:{ komplett_min:Math.round(Z.gesamt / 60 * 1000) / 1000, werkzeuge:ts.size, wechsel:wechsel },
-    aufspannungen:aufsp };
+    programm:{ name:eigen, maschine:prof.name || 'Heidenhain iTNC 530' },
+    zeiten:{ komplett_min:r3(hz.komplett), schnitt_min:r3(hz.gesamt), werkzeuge:ts.size, wechsel:hz.wechsel, wechsel_min:r3(hz.wechselMin) },
+    aufspannungen:aufsp,
+    weitere_aufspannungen:gemerkt.map(a => ({name:a.name, min:a.min})) };
+}
+function fZeitExport(){
+  const z = fZeitDatei();
+  if(!(z.zeiten.komplett_min > 0)){ melde('Keine Laufzeit — erst Schritte anlegen.'); return; }
+  exportiereDatei('zeit-' + z.programm.name + '.json', JSON.stringify(z, null, 1), 'Zeit-Datei fuer die Pipeline');
+  melde('Zeit-Datei geschrieben: ' + z.zeiten.komplett_min + ' min, ' + z.zeiten.werkzeuge + ' Werkzeuge, ' + z.zeiten.wechsel + ' Wechsel, ' + z.aufspannungen + ' Aufspannung(en) — in der Pipeline unter Zeit aus DZ CAM laden.');
+}
+
+// =====================================================================
+// KALKULATION (19.09.2026, Daniels Befund: "keine Kalkulation ... so wie das beim
+// Drehen dargestellt ist"). Dieselbe Zuschlagskalkulation wie im Drehteil
+// (kalkBlattMalen, 31.08.2026): Rohteil = Quader der BLK FORM, Laufzeit =
+// fHauptzeiten komplett (mit Werkzeugwechseln), Werkstoff am Programmkopf (hier
+// bequem umschaltbar). Betriebswerte im Slot dzf_kalk - eigener Speicher je App:
+// die Fraese hat einen anderen Stundensatz als die Drehbank. Den Angebotspreis
+// rechnet die Werkstatt-Pipeline; dieses Blatt ist die Grobkalkulation.
+// =====================================================================
+var F_SLOT_KALK = 'dzf_kalk';
+var fKalkWerte = null;
+function fKalkLaden(){ if(!fKalkWerte){ let j = null; try{ j = localStorage.getItem(F_SLOT_KALK); }catch(e){} fKalkWerte = fKalkMerge(j); } return fKalkWerte; }
+function fKalkSpeichern(){ try{ localStorage.setItem(F_SLOT_KALK, JSON.stringify(fKalkWerte)); }catch(e){} }
+function fEur(x){ return (+x || 0).toFixed(2).replace('.', ',') + ' €'; }
+function fKalkWerkstoffKey(){ const k = fProg.kopf && fProg.kopf.werkstoff; return F_WERKSTOFFE[k] ? k : 'baustahl'; }
+function fKalkEingabe(){
+  const w = fKalkLaden(), k = fProg.kopf || {}, key = fKalkWerkstoffKey();
+  const hz = fHauptzeiten(fProg);
+  const hzMin = (hz && hz.komplett > 0) ? hz.komplett : 0;
+  // Das offene Programm zaehlt nie doppelt: sein Merker wird am NAMEN erkannt.
+  const eigen = fName(fProg);
+  const aufspAktiv = (w.aufsp || []).filter(a => a.name !== eigen);
+  const ein = {lx:Math.abs((+k.x1 || 0) - (+k.x0 || 0)), ly:Math.abs((+k.y1 || 0) - (+k.y0 || 0)), lz:Math.abs((+k.z1 || 0) - (+k.z0 || 0)),
+    saege:w.saege, dichte:F_WERKSTOFFE[key].dichte, preisKg:w.preise[key], satz:w.satz, ruestMin:w.ruestMin, nebenMin:w.nebenMin,
+    hzMin:hzMin, aufspMin:aufspAktiv.reduce((q, a) => q + a.min, 0), aufspN:aufspAktiv.length,
+    mgkProz:w.mgkProz, vwProz:w.vwProz, gewinnProz:w.gewinnProz, los:w.los};
+  return {ein:ein, w:w, key:key, hz:hz, hzMin:hzMin, eigen:eigen, aufspAktiv:aufspAktiv};
+}
+function fKalkBlattMalen(){
+  const E = fKalkEingabe(), w = E.w, ein = E.ein, key = E.key;
+  const r = fKalkRechnen(ein);
+  const z = (t, wert, cls) => '<div class="kalkzeile' + (cls ? ' ' + cls : '') + '"><span>' + t + '</span><span class="kw">' + wert + '</span></div>';
+  let h = '';
+  h += z('Rohteil ' + r.rohteil.x + ' × ' + r.rohteil.y + ' × ' + r.rohteil.z + ' mm <span class="kdim">(' + F_WERKSTOFFE[key].name + ', ' + F_WERKSTOFFE[key].dichte.toFixed(2).replace('.', ',') + ' g/cm³' + (w.saege > 0 ? ', Sägezugabe ' + w.saege + ' auf der langen Seite' : '') + ')</span>', r.kg.toFixed(2).replace('.', ',') + ' kg');
+  h += z('Materialeinzelkosten', fEur(r.mek));
+  h += z('+ Materialgemeinkosten ' + w.mgkProz + ' %', fEur(r.mgk));
+  const nAuf = 1 + E.aufspAktiv.length;
+  h += z('Fertigung ' + fZeitText(r.fertMin) + ' min à ' + w.satz + ' €/h' + (nAuf > 1 ? ' <span class="kdim">(' + nAuf + ' Aufspannungen)</span>' : ''), fEur(r.fert));
+  h += z('Rüstumlage ' + (nAuf > 1 ? nAuf + ' × ' : '') + w.ruestMin + ' min / ' + r.los + ' Stk', fEur(r.ruest));
+  h += z('= Herstellkosten', fEur(r.hk), 'summe');
+  h += z('+ Verwaltung u. Vertrieb ' + w.vwProz + ' %', fEur(r.vw));
+  h += z('= Selbstkosten', fEur(r.sk), 'summe');
+  h += z('+ Gewinn ' + w.gewinnProz + ' %', fEur(r.gewinn));
+  h += z('STÜCKPREIS netto', fEur(r.preis), 'summe ergebnis');
+  if(r.los > 1) h += z('Auftrag (' + r.los + ' Stk)', fEur(r.auftrag));
+  const bl = document.getElementById('kalkBlatt'); if(bl) bl.innerHTML = h;
+  // Preisstaffel: nur die Ruestumlage verteilt sich - die Antwort auf "und bei 10 Stueck?".
+  const stufen = [1, 5, 10, 25, 50]; if(!stufen.includes(r.los)) stufen.push(r.los);
+  stufen.sort((a, b) => a - b);
+  let st = '<table class="kstaffel"><tr><th>Losgröße</th><th>Stückpreis</th><th>Auftrag</th></tr>';
+  stufen.forEach(n => { const rn = fKalkRechnen(Object.assign({}, ein, {los:n})); st += '<tr' + (n === r.los ? ' class="akt"' : '') + '><td>' + n + ' Stk</td><td>' + fEur(rn.preis) + '</td><td>' + fEur(rn.auftrag) + '</td></tr>'; });
+  const sf = document.getElementById('kalkStaffel'); if(sf) sf.innerHTML = st + '</table>';
+  // Aufspannungen: die aktuelle Zeile plus die gemerkten, jede mit ✕; der eigene
+  // Name wird gezeigt, aber durchgestrichen (stumm verschwinden waere eine Falle).
+  let la = '<div class="kalkzeile"><span>1. Aufspannung <span class="kdim">(' + esc(E.eigen) + ', dieses Programm)</span></span><span class="kw">\u23F1 ' + fZeitText(E.hzMin) + '</span></div>';
+  (w.aufsp || []).forEach((a, ix) => {
+    const selbst = a.name === E.eigen;
+    la += '<div class="kalkzeile"' + (selbst ? ' style="text-decoration:line-through;color:var(--text-dim);"' : '') + '><span>+ gemerkt: ' + esc(a.name) + (selbst ? ' <span class="kdim">(gerade geöffnet — zählt nicht doppelt)</span>' : '') + '</span><span class="kw">\u23F1 ' + fZeitText(a.min) + ' <button data-aufspx="' + ix + '" style="padding:0 6px;margin-left:4px;">✕</button></span></div>';
+  });
+  const al = document.getElementById('kalkAufspListe'); if(al) al.innerHTML = la;
+  const hin = [];
+  if(!(E.hzMin > 0)) hin.push('⚠ Keine Laufzeit — es ist kein aktiver Bearbeitungsschritt angelegt. Die Kalkulation enthält nur Material, Neben- und Rüstzeit.');
+  if(E.hz && E.hz.hinweise && E.hz.hinweise.length) hin.push('Zeitrechnung: ' + E.hz.hinweise.map(esc).join(' · '));
+  if(E.aufspAktiv.length) hin.push('Gesamtkalkulation über ' + (1 + E.aufspAktiv.length) + ' Aufspannungen: Laufzeiten summiert, Rüst- und Nebenzeit je Aufspannung, Material EINMAL aus dem aktuellen Programmkopf.');
+  hin.push('Grobe Angebotskalkulation: Laufzeit aus derselben Bahnrechnung wie die Simulation (' + (E.hzMin > 0 ? fZeitText(E.hzMin) + ' min mit ' + E.hz.wechsel + ' Werkzeugwechseln à ' + E.hz.twSek + ' s' : '—') + '), Material aus der BLK FORM des Programmkopfs. Ohne Härten, Transport, Fremdleistung, Werkzeugverschleiß.');
+  const hw = document.getElementById('kalkHinweis'); if(hw) hw.innerHTML = hin.join('<br>');
+}
+function fKalkOeffnen(){
+  const w = fKalkLaden(), key = fKalkWerkstoffKey();
+  setVal('kaLos', w.los); setVal('kaSatz', w.satz); setVal('kaRuest', w.ruestMin); setVal('kaNeben', w.nebenMin); setVal('kaSaege', w.saege);
+  setVal('kaPreis', w.preise[key]); setVal('kaMgk', w.mgkProz); setVal('kaVw', w.vwProz); setVal('kaGewinn', w.gewinnProz);
+  setVal('kaWerkstoff', key);
+  const pl = document.getElementById('kaPreisLabel'); if(pl) pl.textContent = 'Materialpreis ' + F_WERKSTOFFE[key].name;
+  fKalkBlattMalen();
+  maskZeigen('maskKalk');
+}
+{
+  const on = (id, fn) => { const el = document.getElementById(id); if(el) el.onclick = fn; };
+  on('hskKalk', fKalkOeffnen);
+  on('btnKalkZu', ()=>maskZu('maskKalk'));
+  on('btnKalkZeitExport', fZeitExport);
+  on('btnKalkMerken', ()=>{
+    const E = fKalkEingabe(); if(!(E.hzMin > 0)) return;   // ohne Laufzeit gibt es nichts zu merken; die ⚠-Zeile steht schon im Blatt
+    const w = E.w; w.aufsp = w.aufsp || [];
+    const alt = w.aufsp.find(a => a.name === E.eigen);
+    if(alt) alt.min = E.hzMin; else w.aufsp.push({name:E.eigen, min:E.hzMin});
+    fKalkSpeichern(); fKalkBlattMalen();
+  });
+  const mk = document.getElementById('maskKalk');
+  if(mk && mk.addEventListener){
+    mk.addEventListener('click', (ev)=>{
+      const b = ev.target && ev.target.closest ? ev.target.closest('[data-aufspx]') : null; if(!b) return;
+      const w = fKalkLaden(); w.aufsp.splice(+b.dataset.aufspx, 1); fKalkSpeichern(); fKalkBlattMalen();
+    });
+    mk.addEventListener('input', ()=>{
+      const w = fKalkLaden();
+      const g = id => parseFloat(String(getStr(id)).replace(',', '.'));
+      const nz = (v, alt) => (isFinite(v) && v >= 0) ? v : alt;   // leeres Feld kippt nicht auf 0
+      w.los = nz(g('kaLos'), w.los); w.satz = nz(g('kaSatz'), w.satz); w.ruestMin = nz(g('kaRuest'), w.ruestMin);
+      w.nebenMin = nz(g('kaNeben'), w.nebenMin); w.saege = nz(g('kaSaege'), w.saege);
+      w.preise[fKalkWerkstoffKey()] = nz(g('kaPreis'), w.preise[fKalkWerkstoffKey()]);
+      w.mgkProz = nz(g('kaMgk'), w.mgkProz); w.vwProz = nz(g('kaVw'), w.vwProz); w.gewinnProz = nz(g('kaGewinn'), w.gewinnProz);
+      fKalkSpeichern(); fKalkBlattMalen();
+    });
+  }
+  // Der Werkstoff gehoert zum PROGRAMM (Programmkopf) - hier nur bequem umschaltbar.
+  const ws = document.getElementById('kaWerkstoff');
+  if(ws) ws.onchange = ()=>{ const v = String(ws.value || ''); if(!F_WERKSTOFFE[v]) return; fProg.kopf.werkstoff = v; fSpeicherAkt(); fKalkOeffnen(); };
+  const wd = document.getElementById('kalkWerkstoffDatei');
+  if(wd && wd.addEventListener) wd.addEventListener('change', (e)=>{
+    const file = e.target.files && e.target.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      let b;
+      try{ b = fKalkPreiseUebernehmen(JSON.parse(ev.target.result), fKalkLaden()); }catch(err){ b = {fehler:'Die Datei ließ sich nicht lesen: ' + err.message}; }
+      e.target.value = '';
+      if(b.fehler){ alert(b.fehler); return; }
+      if(b.uebernommen.length) fKalkSpeichern();
+      fKalkOeffnen();
+      alert('Werkstoffpreise aus der Pipeline: ' + (b.uebernommen.join('; ') || 'nichts übernommen') + (b.offen.length ? '. Nicht in der Liste, unverändert: ' + b.offen.join(', ') : '') + '.');
+    };
+    reader.readAsText(file);
+  });
 }
 function fSimOeffnen(){
   fSimAufbauen();
@@ -14950,12 +15369,7 @@ function fSimOeffnen(){
   on('btnSimEnde', ()=>{ fSimPause(); if(!SIM.liste) fSimAufbauen(); fSimBis(SIM.gesamt); fSimZeichnen(); fSimInfo(); const b = document.getElementById('btnSimPlay'); if(b) b.textContent = '▶ Von vorn'; });
   on('btnSimNeu', ()=>{ fSimPause(); fSimAufbauen(); const b = document.getElementById('btnSimPlay'); if(b) b.textContent = '▶ Start'; });
   on('btnSimZu', ()=>{ fSimPause(); maskZu('maskSim'); });
-  on('btnSimZeitExport', ()=>{
-    const z = fZeitDatei();
-    if(!(z.zeiten.komplett_min > 0)){ melde('Keine Laufzeit — erst Schritte anlegen.'); return; }
-    exportiereDatei('zeit-' + z.programm.name + '.json', JSON.stringify(z, null, 1), 'Zeit-Datei fuer die Pipeline');
-    melde('Zeit-Datei geschrieben: ' + z.zeiten.komplett_min + ' min, ' + z.zeiten.werkzeuge + ' Werkzeuge, ' + z.zeiten.wechsel + ' Wechsel, ' + z.aufspannungen + ' Aufspannung(en) — in der Pipeline unter Zeit aus DZ CAM laden.');
-  });
+  on('btnSimZeitExport', fZeitExport);
   // Der Hinweistext (130 px unter dem Bild) steht seit dem 19.09.2026 hinter einem i-Knopf - die Flaeche gehoert dem Bild.
   on('btnSimHilfe', ()=>{ const h = document.getElementById('simHilfeText'); if(!h) return; h.style.display = (h.style.display === 'none') ? '' : 'none'; const m = document.getElementById('maskSim'); if(m && m.classList.contains('show')) setTimeout(fSimZeichnen, 0); });
   on('btnSimAnsicht2D', ()=>fSimAnsicht('2d'));
