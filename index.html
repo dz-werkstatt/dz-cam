@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 21:52 (ee3b67d7)";</script>
+<script>window.__DZ_STAND="20.09.2026 23:18 (98ad0456)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3532,6 +3532,8 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <select id="maschProfilSel" style="flex:1 1 auto;width:auto;min-width:150px;">
             <option value="MONFORTS_1500_EUROTURN" selected>EuroTurn (1500)</option>
             <option value="MONFORTS_1000_MTC_K_6624B">MTC-K (1000)</option>
+            <option value="SINUMERIK_810T">Siemens 810T</option>
+            <option value="SINUMERIK_840D_DREHEN">Siemens 840D</option>
           </select>
           <!-- Die beiden Knoepfe als EINE rechtsbuendige Gruppe [Daniel,
                03.09.2026]: einzeln wrappte "Bett" allein nach links
@@ -4762,7 +4764,7 @@ erkennbar.</dd>
 </dl>
 
 
-<h2 id="ba-k10">10 &nbsp;Die zwei Maschinen (Profile)</h2>
+<h2 id="ba-k10">10 &nbsp;Die Maschinen (Profile)</h2>
 <dl><dt id="ba-masch-bett">Bettverlaufs-Kompensation (Knopf &bdquo;Bett&ldquo; in der G-Code-Ansicht)</dt>
 <dd>F&uuml;r &auml;ltere Betten, die &uuml;ber die Drehl&auml;nge kegelig oder wellig
 drehen. Je Maschine eine Tabelle: <b>Abstand vor der Backenfront</b> und die am
@@ -5048,6 +5050,76 @@ durch) und der Backen&uuml;berstand. <b>Beide:</b> Reitstock und Backen-Stufenti
 Standard-Werkzeugtabelle (Pl&auml;tze 1&ndash;5 und 11&ndash;16, alle linke Schneide). Die
 vollst&auml;ndige Liste steht in MASCHINENTERMIN.md.</dd>
 </dl>
+
+<h2 id="ba-k10b">10b &nbsp;Siemens-Steuerungen als Zielmaschine</h2>
+<p id="ba-si-stand">Die App schreibt das Programm auch f&uuml;r zwei Siemens-Drehsteuerungen:
+<b>SINUMERIK 810T</b> (System 800, die Zyklen hei&szlig;en dort <code>L93</code> bis
+<code>L99</code>) und <b>SINUMERIK 840D</b> (mit <code>CYCLE93</code> bis
+<code>CYCLE98</code>). Umgestellt wird wie bei den Monforts &uuml;ber das Feld
+<b>Zielmaschine</b> in der NC-Ausgabe.</p>
+
+<p><b>Der Belegstand, unverbl&uuml;mt:</b> f&uuml;r keine der beiden Maschinen liegt ein
+Programm vor &mdash; weder eines, das jemand gezogen hat, noch eines, das gelaufen ist.
+Alles steht auf den Handb&uuml;chern. Bei den Monforts hat genau diese Lage zweimal
+danebengelegen: die <code>G72</code>-Herleitung vom 11.09.2026 war in vier W&ouml;rtern
+falsch, und das Vorzeichen von <code>PO</code> fiel erst am 18.09.2026 <i>am Teil</i>
+auf &mdash; das Gewinde lief spiegelverkehrt. Deshalb tr&auml;gt jedes Siemens-Programm
+drei Zeilen im Kopf: am Handbuch gebaut, nie an dieser Maschine gelaufen, ersten Lauf
+im Einzelsatz fahren.</p>
+
+<p id="ba-si-zyklen"><b>Was die App als Zyklus schreibt.</b> Abspanen einer Kontur,
+Einstechen, Gewindeschneiden und Tieflochbohren; bei der 840D dazu Bohren, Zentrieren
+und der Freistich nach DIN&nbsp;509 bzw. DIN&nbsp;76. Die <b>Kontur</b> bekommt der
+Abspanzyklus nicht als Parameter, sondern als eigenes St&uuml;ck Programm: bei der 840D
+als Abschnitt zwischen zwei Sprungmarken im <i>selben</i> Programm, bei der 810T als
+Unterprogramm <code>%L901</code> &mdash; <b>das mu&szlig; mit&uuml;bertragen werden</b>,
+sonst findet der Zyklus seine Kontur nicht.</p>
+
+<p>Alles andere &mdash; Abspanen Ecke, Stechdrehen, Abstechen, die &uuml;brigen Bohrarten
+&mdash; kommt als <b>Einzels&auml;tze</b>. Die App rechnet daf&uuml;r keine neue Bahn: sie
+nimmt die Bahn des Monforts-Programms und schreibt sie im Siemens-Dialekt auf. Das ist
+dieselbe Geometrie, die in der Simulation steht und die an den Monforts gefahren ist.
+<b>Diese S&auml;tze tragen keine Schneidenradiuskorrektur</b> &mdash; sie sind die fertig
+gerechneten Bahnen; an der Steuerung darf dort keine zweite Korrektur aktiv sein.</p>
+
+<p><b>Die zwei Dialekte gehen weiter als die Zyklusnamen.</b> Die 810T kennt den
+Strichpunkt nicht: dort stehen Kommentare <b>in Klammern</b>, und innerhalb einer
+Anmerkung darf keine zweite Klammer stehen &mdash; die Steuerung schlie&szlig;t sie an
+der ersten und liest den Rest als Satz. Das ist dieselbe Falle, die an der 1000er
+am 10.09.2026 den Fehler&nbsp;153 ausgel&ouml;st hat. Die App schreibt das von selbst
+richtig; wer eine Bemerkung eintippt, braucht dort trotzdem keine Klammern zu setzen.
+Dazu nimmt die 810T h&ouml;chstens <b>120 Zeichen je Satz</b> &mdash; der
+Einstechzyklus hat sechzehn R-Parameter und pa&szlig;t nicht in einen; die App bricht
+um und stellt den Aufruf ans Ende.</p>
+
+<p id="ba-si-grenzen"><b>Drei Dinge, die vor dem ersten Lauf zu pr&uuml;fen sind.</b></p>
+<ul>
+<li><b>840D: das Settingdatum <code>_ZSD[0]</code>.</b> Es entscheidet, ob die Steuerung
+die Zustelltiefe <code>MID</code> als Radius- oder als Durchmesserwert liest. Die App
+schreibt einen <b>Radiuswert</b> (Daniels D ist ap, radial) &mdash; das setzt
+<code>_ZSD[0]=1</code> voraus. Steht dort <code>2</code>, stellt die Maschine nur halb so
+tief zu. Das Programm sagt es in einer eigenen Zeile.</li>
+<li><b>840D: der Einstechzyklus braucht ein zweischneidiges Werkzeug.</b>
+<code>D1</code> und <code>D2</code> des Stechers m&uuml;ssen in der Werkzeugtabelle der
+Steuerung stehen, <code>D1</code> vor dem Aufruf aktiv &mdash; sonst Alarm 61000.</li>
+<li><b>810T: die Durchmesserprogrammierung ist dort ein Maschinendatum</b>, kein G-Wort.
+Die App schreibt X im Durchmesser. Erwartet die Steuerung den Radius, ist jedes X-Ma&szlig;
+doppelt so gro&szlig; wie gemeint &mdash; das ist der erste Blick am Panel.</li>
+</ul>
+
+<p id="ba-si-erstlauf"><b>Der erste Lauf.</b> Wie bei jedem neuen Zyklus der Monforts:
+den Zyklus in die Zyklusmaske der <i>Steuerung</i> tippen, den Satz per DNC ziehen und
+Wort f&uuml;r Wort mit dem vergleichen, was die App schreibt. Dabei je Feld einen
+<b>eindeutigen Wert</b> nehmen &mdash; dann verr&auml;t sich jede Adresse durch ihren
+Wert. Ein gezogener Maskensatz belegt allerdings nur die <i>Syntax</i>: das
+PO-Vorzeichen der Monforts stand in jedem Maskensatz positiv und war trotzdem falsch,
+weil die Maske den getippten Wert unver&auml;ndert schreibt. <b>Gefahren schl&auml;gt
+gezogen.</b></p>
+
+<p><b>Nicht geschrieben</b> (mit Ansage im Programm): der Restmaterial-Zyklus (den
+brauchen beide Steuerungen nicht &mdash; ihr Abspanzyklus r&auml;umt Restecken selbst
+mit), das Plangewinde und &mdash; bei der 810T &mdash; der Freistich, weil das Handbuch
+daf&uuml;r kein Beispiel druckt. Angetriebene Werkzeuge kennt dieser Postprozessor nicht.</p>
 
 <h2 id="ba-k11">11 &nbsp;Werkzeugverwaltung</h2>
 <dl>
@@ -21901,6 +21973,10 @@ function ppMerkmale(){
   // die Freigabe, gefahren wurde ihr Satz nie — das ist der Unterschied,
   // den Daniel im Panel sehen will.
   const pr=MASCHINENPROFIL, e=pr.id==='MONFORTS_1500_EUROTURN';
+  // Die Siemens-Steuerungen haben eine andere Zyklusfamilie und einen
+  // anderen Belegstand; ihre Merkmale stehen bei ihrem Postprozessor
+  // (98-siemens-drehen.js), damit hier keine leeren MTC-Felder erscheinen.
+  if(pr.siemens && typeof siMerkmale==='function') return siMerkmale(pr);
   const M=[];
   M.push({t:'Werkzeugaufruf', s:pr.tStatus,
     w:(pr.tLang? '6-stellig SSWWVV':'kurz, Abwahl T00')+' — Beispiel T1 → '+pr.tSatz(1)});
@@ -22159,7 +22235,14 @@ function ppInfoMalen(){
   h+='<div class="ppz ppkopf"><span class="ppw">'+grp('ok').length+' best&auml;tigt &middot; '+grp('satz').length+' Satz belegt, Lauf offen &middot; '+grp('offen').length+' noch zu testen. Stand, keine Historie &mdash; die Chronik steht in der Zeile Maschinentermine und in den Terminprotokollen.</span></div>';
   PP_GRUPPEN.forEach(g=>{ const z=grp(g.k); if(!z.length) return;
     h+='<div class="ppgrp">'+g.titel+'</div>'; z.forEach(m=>{ h+=zeile(m); }); });
-  h+='<div class="ppz fest"><b>Fuer beide Maschinen gleich</b><br><span class="ppw">'+PP_FEST.join('<br>')+'</span></div>';
+  // DIE FESTEN REGELN SIND MASCHINENSPRACHE. PP_FEST spricht von SC, Vorlauf W
+  // und G96-Anwahl der Monforts - an einer Siemens-Steuerung waere das halb
+  // falsch. Deshalb hat sie ihre eigene Liste.
+  const _fest = (MASCHINENPROFIL && MASCHINENPROFIL.siemens && typeof SI_FEST!=='undefined')
+                ? SI_FEST : PP_FEST;
+  const _festT = (MASCHINENPROFIL && MASCHINENPROFIL.siemens)
+                ? 'Feste Regeln dieses Postprozessors' : 'Fuer beide Maschinen gleich';
+  h+='<div class="ppz fest"><b>'+_festT+'</b><br><span class="ppw">'+_fest.join('<br>')+'</span></div>';
   // ZYKLUSSATZ-PARAMETER [Daniel, 01.09.2026]: aufklappbar je Zyklus,
   // gefiltert auf das AKTIVE Profil — beim 1000er stehen nur die dort
   // moeglichen Saetze (G74/G75-Langform), nichts Verwirrendes.
@@ -22196,8 +22279,12 @@ function setMaschinenProfil(id){
   try{ const b=document.getElementById('ppInfo');
     if(b && b.style.display!=='none') ppInfoMalen(); }catch(e){}
   const meldungen = ['Maschinenprofil: '+p.label];
-  // Gesperrte native Zyklen im Arbeitsplan auf G-Einzelsaetze zuruecksetzen
-  try{
+  // Gesperrte native Zyklen im Arbeitsplan auf G-Einzelsaetze zuruecksetzen.
+  // NUR IM MTC-DIALEKT: 'zyklus'/'zyklus81' sind die G71/G74/G75 der
+  // Monforts. Eine Siemens-Steuerung kennt sie nicht, und der
+  // Siemens-Schreiber liest das Feld nicht -- es hier zu loeschen waere
+  // Datenverlust beim Hin- und Zurueckschalten.
+  try{ if(p.siemens) throw 0;
     (typeof plan!=='undefined'?plan:[]).forEach(st=>{
       if(!st || !st.params) return;
       const nat = st.params.ausg==='zyklus' || st.params.ausg==='zyklus81';
@@ -29719,6 +29806,20 @@ function mitReitstock(par, idx, warnings){
   return Object.assign({}, par, {xmin: rs, xminKopf: true});
 }
 function buildProgram(){
+  // ZIELMASCHINE SIEMENS: ein eigener Schreiber (98-siemens-drehen.js).
+  // Er liest denselben Arbeitsplan, kann aber Zyklen statt Einzelsaetzen
+  // und schreibt den Siemens-Dialekt. Diese Funktion bleibt darunter
+  // unangetastet -- sonst waere jede Monforts-Baseline und jeder
+  // Maschinenbeleg hin.
+  //
+  // SI_IM_RUECKWEG ist die Rekursionswache: fuer Schritte ohne
+  // Siemens-Zyklus holt sich der Siemens-Schreiber die Bahnen aus einem
+  // MTC-Programm und ruft dafuer genau diese Funktion wieder auf.
+  if(typeof MASCHINENPROFIL!=='undefined' && MASCHINENPROFIL && MASCHINENPROFIL.siemens
+     && typeof SI_IM_RUECKWEG!=='undefined' && !SI_IM_RUECKWEG
+     && typeof siDrehAlsProgramm==='function'){
+    return siDrehAlsProgramm();
+  }
   const warnBox=document.getElementById('warnBox');
   warnBox.style.display='none';
   const warnings=[];
@@ -37145,6 +37246,1398 @@ document.getElementById('simSpeed').onclick=()=>{
   document.getElementById('simSpeed').textContent=simSpeed+'×';
 };
 
+// ============================================================================
+// SIEMENS-POSTPROZESSOREN FUERS DREHEN (20.09.2026, Daniels Auftrag)
+// ============================================================================
+// Daniels Worte: "beim Drehen haette ich dann gern auch quasi einen
+// Post-Prozessor fuer diese Siemens-Steuerung. Also einmal eine alte, jetzt
+// die 810er einer aelteren Drehmaschine und dann eben auch die neuere 840D
+// habe ich jetzt aber keine Maschine dafuer, aber da haette ich gerne einen
+// Post von dir." Und auf die Rueckfrage nach Einzelsaetzen oder Zyklen:
+// "schreibe auch die Zyklen."
+//
+// DER BELEGSTAND, und er ist der schwaechste des Projekts:
+// Fuer KEINE der beiden Steuerungen gibt es ein gezogenes Programm. Die
+// Plattensuche vom 20.09.2026 (68 521 Dateien, alle .h/.nc/.mpf/.tap/.spf)
+// fand kein einziges Siemens-Drehprogramm. Beide Posts stehen also
+// ausschliesslich auf den HANDBUECHERN:
+//   - SINUMERIK System 800, Zyklen, Anwenderspeichermodul 4 (01.94) -- gilt
+//     laut Titelblatt ausdruecklich fuer die SINUMERIK 810T, um die es geht.
+//   - SINUMERIK 810T GA3, Programmieranleitung (01.93) -- Satzform, G-Woerter,
+//     Kreisradius B, T-Wort, SRK mit D-Nummer.
+//   - SINUMERIK 840D/840Di/810D, Programmieranleitung Zyklen (11/2002).
+// Belegstufe 'handbuch' -- genau wie die 840D powerline der Fraes-App VOR
+// Daniels Fotos. Jedes Programm traegt den Vorbehalt im Kopf und die Ansage,
+// den ersten Lauf im EINZELSATZ zu fahren.
+//
+// WARUM EIN EIGENER SCHREIBER UND KEIN WANDLER:
+// Ein Wandler ueber die fertige MTC-Ausgabe (parseGcodeForSim) kann nur
+// Bahnen. Aus Bahnen laesst sich kein CYCLE95 mehr bauen -- Kontur,
+// Zustelltiefe und Aufmass sind darin nicht mehr enthalten. Daniel will
+// Zyklen, also liest dieser Schreiber die SCHRITTE des Arbeitsplans, so wie
+// buildProgram es tut, und schreibt daraus Siemens-Saetze. buildProgram
+// bleibt dabei Zeichen fuer Zeichen unangetastet: alle 20 NC-Baselines der
+// Monforts und jeder Maschinenbeleg bleiben gueltig.
+// ============================================================================
+
+// Die zwei Steuerungen unterscheiden sich in mehr als den Zyklusnamen. Was
+// hier steht, ist Wort fuer Wort aus den Handbuechern gemessen -- die
+// Fundstelle steht jeweils dabei.
+const SI_DREH = {
+  // ---- SINUMERIK 810T (System 800) --------------------------------------
+  T810: {
+    id:'SINUMERIK_810T', label:'Siemens 810T (Drehen)',
+    // Programmanfang: "%MPF<Nr.>" als erste Zeile (810T-Programmieranleitung
+    // Kap. 1.1, Programmschema). Programmende M02 oder M30 im letzten Satz.
+    anfang:(nr)=>'%MPF'+nr,
+    ende:'M30',
+    // KREISRADIUS IST "B", NICHT "CR=" (Kap. 3.2.2.2, mit Beispielsatz
+    // "N5 G03 G90 X40 Z80 B+15 F500"). Vorzeichen: +B = Verfahrwinkel bis
+    // 180 Grad, -B = darueber. Ein Vollkreis geht NUR ueber I/K.
+    bogenRadius:(r, gross)=>'B'+(gross?'-':'+')+siZ(r),
+    // Satznummern in Fuenferschritten -- das macht die Steuerung selbst so,
+    // wenn der Bediener am Panel tippt (Kap. 1.1).
+    nSchritt:5,
+    // Werkzeug: T mit bis zu vier Stellen (Kap. 4.5), die Korrektur haengt
+    // an der D-Nummer im G41/G42-Satz (Kap. 9, Beispiel "G01 G41 X10 Z20 D1").
+    // OHNE D-WORT STEHT KEINE KORREKTUR AN. T waehlt das Werkzeug, D den
+    // Korrekturblock (Adressuebersicht: "D 1 bis 99 Anwahl der
+    // Werkzeugkorrektur, D0 Abwahl"); das gedruckte Beispiel des
+    // Zyklenhandbuchs schreibt beide zusammen ("D01 T01"). Der Speicher
+    // ist eine FLACHE Liste D1..D99, in der P0 die Werkzeugnummer haelt --
+    // anders als bei der 840D, wo D die Schneide EINES Werkzeugs ist.
+    // Deshalb hier D = Werkzeugnummer und nicht D1.
+    tWort:(t)=>{ const v = parseInt(t,10)||0;
+                 return 'T'+v+' D'+(v>=1 && v<=99 ? v : 1); },
+    // Die L-Zyklen liegen als Unterprogramme im Anwenderspeicher-Modul und
+    // bekommen ihre Werte ueber R-Parameter (System-800-Zyklenhandbuch).
+    zyklusArt:'L',
+    // DREHZAHLBEGRENZUNG BEI G96 IST HIER G92 (Kap. 3.2.4, woertlich:
+    // "Die Funktion G92 ist selbsthaltend und muss einzeln in einem Satz
+    // stehen"). Das ist der Gegensatz zu den Monforts, wo es G92 gar nicht
+    // gibt und der Drehzahlwaechter von Hand gestellt wird (31.08.2026).
+    lims:(nn)=>'G92 S'+siZ(nn), limsAllein:true,
+    // KOMMENTARE STEHEN IN KLAMMERN, nicht hinter einem Strichpunkt
+    // (Kap. 1.3.3: "Der Text einer Anmerkung steht zwischen den Zeichen
+    // Anmerkungsbeginn '(' und Anmerkungsende ')'"). Der Strichpunkt ist
+    // 840D-Sprache; die 810T laese die Zeile als Satz.
+    kom:(t)=>'('+t+')', komMax:118, komKlammerFrei:true,
+    maxSatz:120,   // Kap. 1.2: "Die Satzlaenge kann maximal 120 Zeichen betragen."
+  },
+  // ---- SINUMERIK 840D ----------------------------------------------------
+  D840: {
+    id:'SINUMERIK_840D_DREHEN', label:'Siemens 840D (Drehen)',
+    // Uebertragungskopf wie bei der Fraes-App: er nennt der Steuerung beim
+    // Einlesen Programmnamen und Ablageort.
+    anfang:(nr, name)=>';%_N_'+name+'_MPF',
+    ende:'M30',
+    // CR= ist die Siemens-Standardschreibweise des Kreisradius; ein
+    // negativer Wert waehlt den Bogen ueber 180 Grad.
+    bogenRadius:(r, gross)=>'CR='+(gross?'-':'')+siZ(r),
+    nSchritt:5,
+    // Werkzeug und Schneide getrennt: T waehlt das Werkzeug, D die Schneide.
+    tWort:(t)=>'T'+String(parseInt(t,10)||0)+' D1',
+    zyklusArt:'CYCLE',
+    // Die 840D begrenzt die Drehzahl bei G96 mit LIMS - das darf im Satz
+    // neben anderen Woertern stehen.
+    lims:(nn)=>'LIMS='+siZ(nn), limsAllein:false,
+    // Bei der 840D ist der Strichpunkt das Kommentarzeichen - er gilt bis
+    // zum Zeilenende, Klammern darin sind unbedenklich.
+    kom:(t)=>'; '+t, komMax:0, komKlammerFrei:false,
+    maxSatz:0,     // keine Grenze im Handbuch genannt
+  },
+};
+
+// Zahlformat der Siemens-Saetze: bis drei Nachkommastellen, Punkt als
+// Trennzeichen, keine ueberfluessigen Nullen. Ein Wert wie "30." waere an
+// der Steuerung zulaessig, liest sich aber schlecht.
+function siZ(v){
+  if(v===undefined || v===null || !isFinite(v)) return '0';
+  const r = Math.round(v*1000)/1000;
+  return (Object.is(r, -0) ? 0 : r).toString();
+}
+
+// Achswort mit Vorzeichen. X ist beim Drehen der DURCHMESSER (DIAMON) --
+// die App rechnet intern im Radius, deshalb geht jeder X-Wert durch r2d().
+function siX(rad){ return 'X'+siZ(r2d(rad)); }
+function siZachse(z){ return 'Z'+siZ(z); }
+
+// Eine Kommentarzeile im Dialekt der gewaehlten Steuerung.
+//
+// KEINE INNERE KLAMMER. Die 810T beendet die Anmerkung an der ERSTEN
+// schliessenden Klammer und liest den Rest als Satz -- dieselbe Falle, die
+// an der 1000er am 10.09.2026 den Fehler 153 ausgeloest hat. Ein Klammerpaar
+// wird deshalb zu " - Text", eine einzelne Klammer faellt weg. Das gilt hier
+// fuer BEIDE Steuerungen: die Zeile soll in beiden Ausgaben dieselbe sein.
+function siKom(txt, S){
+  let t = siAscii(txt);
+  // NUR wo die Steuerung selbst Klammern als Anmerkungsgrenze benutzt
+  // (810T), duerfen im Text keine stehen: sie beendet die Anmerkung an der
+  // ERSTEN schliessenden Klammer und liest den Rest als Satz -- dieselbe
+  // Falle wie Fehler 153 an der 1000er. Bei der 840D gilt der Strichpunkt
+  // bis zum Zeilenende, dort bleibt die Klammer stehen und die
+  // Parameterliste ist ein Abbild des Aufrufs darunter.
+  if(!S || S.komKlammerFrei) t = t.replace(/\s*\(([^()]*)\)/g, ' - $1').replace(/[()]/g, '');
+  t = t.replace(/%/g, '').replace(/\s+/g, ' ').trim();
+  if(S && S.komMax && t.length > S.komMax) t = t.slice(0, S.komMax - 3) + '...';
+  return (S && S.kom) ? S.kom(t) : ('; ' + t);
+}
+
+// Eine LANGE Anmerkung auf mehrere Kommentarzeilen verteilen statt sie zu
+// kuerzen. Gebraucht wird das fuer die Parameterliste ueber einem
+// Zyklusaufruf: sie sagt, welcher Wert an welcher Stelle steht, und genau
+// ihr Ende (die hinteren R-Nummern) fiel bei der 810T dem 120-Zeichen-Limit
+// zum Opfer. Umgebrochen wird an Wortgrenzen; die Liste ist eine
+// Aufzaehlung, also liest sich die Fortsetzung von selbst.
+function siKomLang(txt, S){
+  const max = (S && S.komMax) || 0;
+  if(!max) return [siKom(txt, S)];
+  let vor = siAscii(txt);
+  if(S.komKlammerFrei) vor = vor.replace(/\s*\(([^()]*)\)/g, ' - $1').replace(/[()]/g, '');
+  const w = vor.replace(/%/g, '').replace(/\s+/g, ' ').trim().split(' ');
+  const aus = []; let z = '';
+  w.forEach(t => {
+    // Ein einzelnes Wort laenger als die Zeile gibt es hier nicht; kaeme
+    // eines, stuende es allein in seiner Zeile und siKom kuerzte es.
+    if(z && (z + ' ' + t).length > max){ aus.push(z); z = t; }
+    else z = z ? (z + ' ' + t) : t;
+  });
+  if(z) aus.push(z);
+  return aus.map(t => siKom(t, S));
+}
+
+// ---------------------------------------------------------------------------
+// DAS KONTUR-UNTERPROGRAMM
+// ---------------------------------------------------------------------------
+// CYCLE95 und L95 bekommen ihre Kontur nicht als Parameter, sondern als
+// eigenes Unterprogramm, dessen NAMEN sie im Aufruf tragen. Dieses
+// Unterprogramm entsteht hier aus denselben Segmenten, aus denen auch die
+// MTC-Bahnen und die Simulation kommen (expandContour) -- damit ist die
+// Geometrie nachweislich dieselbe, die am Bildschirm steht.
+//
+// EINE FALLE, die hier bewusst vermieden ist: expandContour liefert im
+// RADIUSMASS, die Steuerung erwartet unter DIAMON den DURCHMESSER. Jeder
+// X-Wert laeuft deshalb durch r2d(). Das ist der haeufigste Fehlerherd des
+// ganzen Projekts (s. CLAUDE.md, "Geometrie und NC").
+// Der UEBERSTRICHENE Winkel eines Bogensegments in Grad. Gerechnet wird in
+// der (z,x)-Ebene: atan2(x,z) misst von der +Z-Achse zur +X-Achse, also im
+// mathematisch positiven Sinn der Bilddarstellung (Z nach rechts, X nach
+// oben). cw der App ist der Uhrzeigersinn in genau dieser Darstellung.
+function siBogenWinkel(sg){
+  const a1 = Math.atan2(sg.x1 - sg.cx, sg.z1 - sg.cz);
+  const a2 = Math.atan2(sg.x2 - sg.cx, sg.z2 - sg.cz);
+  let d = a2 - a1;
+  if(sg.cw){ if(d > 0) d -= 2*Math.PI; d = -d; }
+  else     { if(d < 0) d += 2*Math.PI; }
+  return d * 180 / Math.PI;
+}
+
+function siKonturUP(els, name, S, opt){
+  const o = opt || {};
+  const segs = expandContour(els);
+  const zeilen = [];
+  let n = 10;
+  const N = () => 'N'+String(n).padStart(2,'0');
+  const bump = () => { n += S.nSchritt; };
+
+  zeilen.push('; ' + (o.titel || ('KONTUR ' + name)));
+  if(!segs.length){ zeilen.push('; KEINE SEGMENTE'); zeilen.push(S.ende); return zeilen; }
+
+  const warn = o.warn || [];
+  // DER ANFANGSPUNKT GEHOERT NUR IN DIE 840D-KONTUR. Die 810T bekommt ihn
+  // ueber R21/R22 und wuerde ihn hier doppelt fahren (Handbuch: "Der
+  // Anfangspunkt der Kontur darf NICHT im Konturunterprogramm programmiert
+  // werden"); die 840D verlangt ihn dagegen ausdruecklich mit BEIDEN
+  // Koordinaten im ersten Satz.
+  let bew = 0, hatX = false, hatZ = false;
+  if(!o.ohneAnfang){
+    zeilen.push(N()+' G1 '+siX(segs[0].x1)+' '+siZachse(segs[0].z1)); bump();
+    bew++; hatX = true; hatZ = true;
+  }
+
+  let lx = segs[0].x1, lz = segs[0].z1;
+  segs.forEach(s => {
+    if(s.type === 'line'){
+      // Nur die Achse schreiben, die sich aendert -- so steht es in jedem
+      // gedruckten Beispiel des Handbuchs, und es haelt die Saetze kurz
+      // (die 810T nimmt hoechstens 120 Zeichen je Satz).
+      const teile = [];
+      if(Math.abs(s.x2 - lx) > 1e-9) teile.push(siX(s.x2));
+      if(Math.abs(s.z2 - lz) > 1e-9) teile.push(siZachse(s.z2));
+      if(teile.length) { zeilen.push(N()+' G1 '+teile.join(' ')); bump(); bew++; }
+      if(Math.abs(s.x2 - lx) > 1e-9) hatX = true;
+      if(Math.abs(s.z2 - lz) > 1e-9) hatZ = true;
+    } else {
+      // Bogen: cw ist die Drehrichtung der App im Radiusbild. G2 laeuft im
+      // Uhrzeigersinn, G3 dagegen -- in der ZX-Ebene (G18) mit X nach oben
+      // und Z nach links ist das dieselbe Anschauung wie im Editor.
+      const g = s.cw ? 'G2' : 'G3';
+      // Der Mittelpunkt kommt INKREMENTELL zum Satzanfang (I in X, K in Z).
+      // I ist dabei ein RADIUSmass, auch unter DIAMON -- so steht es in der
+      // Programmieranleitung; deshalb geht I NICHT durch r2d().
+      const I = s.cx - s.x1, K = s.cz - s.z1;
+      zeilen.push(N()+' '+g+' '+siX(s.x2)+' '+siZachse(s.z2)+
+                  ' I'+siZ(I)+' K'+siZ(K)); bump();
+      bew++; hatX = true; hatZ = true;
+      // Ein Bogen ueber 180 Grad ist bei der 840D Alarm 10931. Die App
+      // teilt ihre Boegen zwar, aber eine eingelesene DXF-Kontur muss das
+      // nicht tun.
+      const wk = siBogenWinkel(s);
+      if(wk > 180.001)
+        warn.push('Kontur ' + name + ': ein Bogen ueberstreicht ' + siZ(Math.round(wk*10)/10) +
+                  ' Grad. Ueber 180 Grad meldet CYCLE95 Alarm 10931 - den Bogen im ' +
+                  'Kontureditor teilen.');
+    }
+    lx = s.x2; lz = s.z2;
+  });
+  // MINDESTSATZZAHL. Die 840D verlangt drei Bewegungssaetze in beiden
+  // Achsen (sonst Alarm 10933 und 61606), die 810T zwei.
+  const mind = (S.zyklusArt === 'CYCLE') ? 3 : 2;
+  if(bew < mind)
+    warn.push('Kontur ' + name + ': nur ' + bew + ' Bewegungssaetze - die Steuerung ' +
+              'verlangt mindestens ' + mind + '. Der Zyklus bricht mit Alarm ab.');
+  if(S.zyklusArt === 'CYCLE' && !(hatX && hatZ))
+    warn.push('Kontur ' + name + ': sie bewegt sich nur in EINER Achse. CYCLE95 ' +
+              'verlangt Bewegungen in beiden Achsen der Ebene (Alarm 10933).');
+  // UEBERHAENGENDE KONTUR. Laeuft Z in beide Richtungen, haengt die Kontur
+  // ueber. CYCLE95 kann das nicht - und meldet es auch NICHT (Handbuch:
+  // "werden auch nicht ueberwacht, es erfolgt keine Alarmmeldung").
+  // Genau deshalb steht die Warnung hier: die Steuerung schweigt, das Teil
+  // waere falsch.
+  let zPlus = false, zMinus = false;
+  segs.forEach(sg => {
+    if(sg.z2 > sg.z1 + 1e-6) zPlus = true;
+    if(sg.z2 < sg.z1 - 1e-6) zMinus = true;
+  });
+  if(zPlus && zMinus)
+    warn.push('Kontur ' + name + ': sie laeuft in Z in BEIDE Richtungen, haengt also ueber. ' +
+              (S.zyklusArt === 'CYCLE'
+                ? 'CYCLE95 kann ueberhaengende Konturen nicht bearbeiten und meldet das NICHT - '
+                : 'L95 kann das nicht; fuer Hinterschnitte gibt es L96, den dieser Post noch '+
+                  'nicht schreibt - ') +
+              'das Teil waere falsch, ohne dass die Steuerung etwas sagt.');
+  zeilen.push(S.ende);
+  return zeilen;
+}
+
+// Ein Name, den beide Steuerungen annehmen: Grossbuchstaben, Ziffern,
+// Unterstrich; nicht mit einer Ziffer beginnend. Aus "Aussen" wird AUSSEN,
+// aus "DXF Import 2" wird DXF_IMPORT_2.
+function siName(roh, rueckfall){
+  let s = siAscii(String(roh || rueckfall || 'KONTUR'))
+    .toUpperCase().replace(/[^A-Z0-9_]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
+  if(!s) s = rueckfall || 'KONTUR';
+  if(/^[0-9]/.test(s)) s = '_' + s;
+  return s.slice(0, 24);
+}
+
+// Umlaute uebersetzen statt wegwerfen. Dieselbe Lehre wie in der Fraes-App
+// (20.09.2026): auf dem Steuerungsbildschirm stand "BDEN WNDE SCHLICHTEN",
+// weil der Filter alles Nicht-ASCII ersatzlos strich.
+function siAscii(t){
+  return String(t)
+    .replace(/Ä/g,'AE').replace(/Ö/g,'OE').replace(/Ü/g,'UE')
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue')
+    .replace(/ß/g,'ss').replace(/&/g,' UND ')
+    .replace(/[^\x20-\x7E]/g, '');
+}
+
+// ---------------------------------------------------------------------------
+// DER SCHREIBER
+// ---------------------------------------------------------------------------
+// Er liest dieselben Eingaben wie buildProgram: die Schritte des
+// Arbeitsplans, die Konturen, die Werkzeugtabelle und den Programmkopf.
+// Geschrieben wird daraus ein Siemens-Programm -- mit Zyklen, wo die
+// Handbuecher sie hergeben, sonst mit Einzelsaetzen und Ansage.
+function siDrehProgramm(opt){
+  const o = opt || {};
+  const S = SI_DREH[o.steuerung || 'D840'];
+  if(!S) return {text:null, fehler:'unbekannte Steuerung'};
+  const mitZyklen = (o.zyklen !== false);
+  const warn = [], hinweis = [];
+  const L = [];                       // die Saetze des Hauptprogramms
+  const upListe = [];                 // Konturabschnitte/Unterprogramme
+  let n = 10;
+  const N = () => 'N'+String(n).padStart(4,'0');
+  const bump = () => { n += S.nSchritt; };
+  const satz = (txt) => { L.push(N()+' '+txt); bump(); };
+  const kom  = (txt) => { L.push(siKom(txt, S)); };
+
+  const feld = (id, rueck) => {
+    const e = document.getElementById(id);
+    const v = e ? parseFloat(e.value) : NaN;
+    return isFinite(v) ? v : rueck;
+  };
+  const txtFeld = (id) => { const e=document.getElementById(id); return e ? String(e.value||'') : ''; };
+
+  const oNr   = (parseInt(txtFeld('progNo'),10) || 1);
+  const pName = siName(txtFeld('pkName') || ('DZ'+oNr), 'DZ'+oNr);
+  const stock = feld('stockDia', 100);
+  const za    = feld('pkZA', 0);
+  const sc    = feld('safeZ', 2);
+  const wwpX  = feld('wwpX', (MASCHINENPROFIL && MASCHINENPROFIL.wwp ? MASCHINENPROFIL.wwp.x : 300));
+  const wwpZ  = feld('wwpZ', (MASCHINENPROFIL && MASCHINENPROFIL.wwp ? MASCHINENPROFIL.wwp.z : 20));
+  const nmax  = feld('pkNmax', 0);
+
+  // ---- Kopf ----------------------------------------------------------------
+  L.push(S.anfang(String(oNr).padStart(4,'0'), pName));
+  if(S.zyklusArt === 'CYCLE') L.push(';$PATH=/_N_MPF_DIR');
+  kom('DZ CAM ' + new Date().toLocaleDateString('de-DE') + ' - ' + S.label);
+  kom('AM HANDBUCH GEBAUT, NIE AN DIESER MASCHINE GELAUFEN.');
+  kom('ERSTEN LAUF IM EINZELSATZ FAHREN UND JEDEN SATZ PRUEFEN.');
+  kom('Rohteil ' + siZ(stock) + ' x ' + siZ(za - feld('pkZI', -100)) + ' mm');
+
+  // Die WERKZEUGUEBERSICHT [Daniel, Termin 18.09.2026]: die Steuerung prueft
+  // gegen das Werkzeug, das auf dem Platz steckt. Stimmen App-Tabelle und
+  // Maschinentabelle nicht ueberein, meldet die Steuerung zu Recht - und man
+  // sucht den Fehler an der falschen Stelle.
+  {
+    const gesehen = {};
+    (typeof programSteps!=='undefined' ? programSteps : []).forEach(st => {
+      if(!st || st.aus || !st.params) return;
+      [st.params.t, st.params.t2].forEach(tn => {
+        if(tn===undefined || tn===null || tn==='' || gesehen[tn]) return;
+        gesehen[tn] = true;
+        const w = (typeof toolTable!=='undefined') ? toolTable.find(x=>String(x.t)===String(tn)) : null;
+        kom('WZ T' + tn + (w ? ' ' + (w.name||'') + (w.r!==undefined ? ' RS' + siZ(w.r) : '') : ' (nicht in der Werkzeugtabelle)'));
+      });
+    });
+  }
+
+  // G18 ist beim Drehen die Bearbeitungsebene (840D-Zyklenhandbuch Kap. 4.2:
+  // "In der Regel wird es sich beim Drehen um die G18 (ZX-Ebene) handeln").
+  // DIAMON schaltet die Durchmesserprogrammierung ein -- so steht es in jedem
+  // gedruckten Beispielprogramm des Handbuchs ("N15 G18 G0 G90 DIAMON").
+  // Die 810T kennt DIAMON nicht: dort haengt Durchmesser oder Radius an einem
+  // Maschinendatum, und das kann die App nicht setzen.
+  if(S.zyklusArt === 'CYCLE'){
+    satz('G18 G90 G95 DIAMON');
+  } else {
+    satz('G18 G90 G95');
+    kom('DURCHMESSERPROGRAMMIERUNG: an der 810T ein Maschinendatum, kein G-Wort.');
+    kom('PRUEFEN, dass die Steuerung X im Durchmesser erwartet - sonst ist jedes');
+    kom('X-Mass doppelt so gross wie gemeint.');
+  }
+  if(nmax > 0){
+    // G96 braucht eine obere Drehzahlgrenze, sonst laeuft die Spindel am
+    // kleinen Durchmesser hoch. Siemens fuehrt sie als LIMS -- anders als die
+    // Monforts, deren Getriebespindeln nur einen Waechter von Hand haben.
+    satz(S.lims(nmax));
+  }
+
+  // ---- die Schritte -------------------------------------------------------
+  const schritte = (typeof programSteps !== 'undefined' ? programSteps : [])
+    .filter(st => st && !st.aus);
+  if(!schritte.length) return {text:null, fehler:'kein Bearbeitungsschritt im Arbeitsplan'};
+
+  let aktT = null;
+  schritte.forEach((st, idx) => {
+    const p = st.params || {};
+    kom('--- SCHRITT ' + (idx+1) + ': ' + siSchrittName(st) + ' ---');
+
+    // Werkzeugwechsel: vorher auf den Wechselpunkt, wie bei den Monforts
+    // (Daniels Ansage 10.09.2026: "wenn ein Werkzeug neu eingewechselt werden
+    // muss, dann zuvor den Werkzeugwechselpunkt anfahren").
+    const tn = (p.t !== undefined && p.t !== null && p.t !== '') ? String(p.t) : null;
+    if(tn && tn !== aktT){
+      if(aktT !== null){ satz('G0 X' + siZ(wwpX) + ' Z' + siZ(wwpZ)); }
+      satz(S.tWort(tn));
+      aktT = tn;
+    }
+
+    // Technologie. Im gedruckten Beispiel des Handbuchs steht sie im
+    // Werkzeugsatz ("N10 T25 D3 S300 M3 G18 G95 F0.3"); hier bekommt sie
+    // einen eigenen Satz, damit ein Wiedereinstieg mitten im Programm die
+    // Drehzahl mitnimmt -- dieselbe Ueberlegung wie der EILGANG-Satz der
+    // Monforts (02.09.2026).
+    const dreh = siTechnologie(p);
+    if(dreh) satz(dreh);
+
+    const r = siZyklusFuerSchritt(st, S, mitZyklen, {warn:warn, hinweis:hinweis,
+      upListe:upListe, sc:sc, stock:stock, za:za});
+    if(r.vorher) r.vorher.forEach(z => satz(z));
+    // Erst die Erklaerung, dann der Satz: wer das Programm an der
+    // Steuerung liest, soll wissen, was gleich kommt.
+    if(r.kom)    r.kom.forEach(k => kom(k));
+    // Die Parameterliste ueber dem Zyklusaufruf ist ebenfalls ein Kommentar
+    // (sie beginnt mit "; ") -- im 810T-Dialekt gehoert sie in Klammern.
+    // Die Liste wird UMGEBROCHEN, nicht gekuerzt -- sonst fehlen bei der
+    // 810T gerade die hinteren R-Nummern (L93 hat sechzehn, L97 dreizehn).
+    if(r.liste)  siKomLang(String(r.liste).replace(/^;\s*/, ''), S).forEach(z=>L.push(z));
+    // siL liefert bei der 810T mehrere Saetze (Satzgrenze 120 Zeichen),
+    // die 840D einen einzigen Zyklusaufruf.
+    if(r.ruf)    [].concat(r.ruf).forEach(z => satz(z));
+    if(r.einzel) siEinzelsaetze(st, idx, S, satz, kom, warn);
+    if(r.saetze) r.saetze.forEach(z => satz(z));
+    if(r.warn)   r.warn.forEach(w => warn.push('Schritt ' + (idx+1) + ': ' + w));
+  });
+
+  // ---- Fuss ----------------------------------------------------------------
+  satz('G0 X' + siZ(wwpX) + ' Z' + siZ(wwpZ));
+  satz('M5');
+  satz('M9');
+  L.push(S.ende);
+
+  // Die Konturen haengen hinten dran. Bei der 840D als LABEL-ABSCHNITT im
+  // selben Programm (Handbuch S. 4-303: NPP="ANFANG:ENDE") -- damit bleibt es
+  // EINE Datei. Die 810T kennt das nicht: dort ist jede Kontur ein eigenes
+  // Unterprogramm L<nr>, das mitgeschickt werden muss.
+  upListe.forEach(up => { L.push(''); up.zeilen.forEach(z => L.push(z)); });
+
+  const zeilenende = '\r\n';
+  const text = L.join(zeilenende) + zeilenende;
+  // Satzlaengen-Wache: die 810T nimmt hoechstens 120 Zeichen je Satz
+  // (Programmieranleitung Kap. 1.2). Ein zu langer Zyklusaufruf reisst dort
+  // -- genau die Klasse Fehler, die an der 1000er zwei Termine gekostet hat.
+  if(S.maxSatz){
+    L.forEach(z => { if(/^N\d/.test(z) && z.length > S.maxSatz)
+      warn.push('Satz laenger als ' + S.maxSatz + ' Zeichen (' + z.length + '): ' + z.slice(0, 40) + '...'); });
+  }
+  return {text:text, saetze:L.filter(z=>/^N\d/.test(z)).length,
+          warnungen:warn, hinweise:hinweis, name:pName, steuerung:S.label};
+}
+
+
+// ---------------------------------------------------------------------------
+// SCHRITT -> ZYKLUS
+// ---------------------------------------------------------------------------
+// Rueckgabe: {vorher:[Saetze vor dem Zyklus], liste:"Parameterzeile",
+//             ruf:"CYCLE..(..)", saetze:[Einzelsaetze], warn:[], kom:[]}
+function siZyklusFuerSchritt(st, S, mitZyklen, ctx){
+  const p = st.params || {};
+  const R = {vorher:[], saetze:[], warn:[], kom:[]};
+
+  // Wer die Zyklen ausdruecklich abwaehlt, bekommt ueberall Einzelsaetze.
+  if(!mitZyklen && st.type !== "zwischen"){ R.einzel = true; return R; }
+  // Die 810T hat eine voellig andere Zyklusfamilie: L-Unterprogramme mit
+  // R-Parametern statt CYCLE-Aufrufen in Klammern.
+  if(S.zyklusArt === "L" && st.type !== "zwischen") return siZyklus810(st, S, ctx);
+  // Bohren der 840D: CYCLE82 oder CYCLE83.
+  if(st.type === "bohren" && S.zyklusArt === "CYCLE"){
+    if(p.art === "zentrieren" || p.art === "bohren" || p.art === "tief")
+      return siBohren840(p, ctx);
+    R.warn.push("Bohrart \"" + p.art + "\": dafuer gibt es keinen abgeleiteten Zyklus - Einzelsaetze.");
+    R.einzel = true; return R;
+  }
+
+  // ------- Bemerkung / M-Befehl ------------------------------------------
+  if(st.type === "zwischen"){
+    if(p.text) R.kom.push("BEMERKUNG: " + siAscii(p.text));
+    // Die M-Woerter der Monforts sind DIN-Standard und gelten hier genauso;
+    // nur das Kuehlmittel heisst bei Siemens M8 statt M07.
+    const ms = (typeof zwischenMListe === "function") ? zwischenMListe(p) : [];
+    ms.forEach(m => R.saetze.push(m === "M07" ? "M8" : (m === "M09" ? "M9" : m)));
+    return R;
+  }
+
+  // ------- Abspanen Kontur -> CYCLE95 ------------------------------------
+  if(st.type === "abspanen_kontur"){
+    const els = siKonturEls(p);
+    if(!els){ R.warn.push("keine Kontur am Schritt - kein Zyklus geschrieben"); return R; }
+    if(p.bearbeitung === "rest"){
+      R.warn.push("Restmaterial-Zyklus: den kennt die Steuerung nicht. CYCLE95 raeumt " +
+                  "Restecken selbst mit (VARI-Hunderterstelle 0 = mit Nachziehen); " +
+                  "dieser Schritt ist an der Siemens ueberfluessig und wird uebersprungen.");
+      return R;
+    }
+    const label = siKonturLabel(els, p, S, ctx);
+    // Startpunkt vor dem Zyklus: der Zyklus rechnet seinen eigenen, aber er
+    // muss kollisionsfrei erreichbar sein (Handbuch S. 4-292: "Anfangsposition
+    // ist eine beliebige Position, aus welcher der Konturanfangspunkt
+    // kollisionsfrei angefahren werden kann").
+    const anX = (p.lage === "innen") ? Math.max(1, (p.stock || 10)) : (ctx.stock + 2*ctx.sc);
+    R.vorher.push("G0 X" + siZ(anX) + " Z" + siZ(ctx.za + ctx.sc));
+    // MID IST HIER EIN RADIUSWERT. Daniels D ist radial (ap, Ansage
+    // 29.08.2026), und wie die Steuerung MID liest, entscheidet das
+    // Zyklensettingdatum _ZSD[0] (Kap. 4.1: 1 = Radiuswert, 2 =
+    // Durchmesserwert, 0 = "wie bisher"). Das Programm nennt die Bedingung;
+    // setzen kann es sie nicht -- ist GUD7.DEF nicht geladen, braeche es mit
+    // Alarm ab. Fuer die AUFMASSE gibt es kein solches Datum: sie sind
+    // Abstaende zur Kontur und gehen 1:1 hinein.
+    const mid = +p.d || 1;
+    R.kom.push("MID " + siZ(mid) + " ist hier ein RADIUSWERT (Daniels D ist ap, radial).");
+    R.kom.push("Das setzt das Zyklensettingdatum _ZSD[0]=1 voraus - steht dort 2, liest");
+    R.kom.push("die Steuerung einen Durchmesserwert und stellt nur halb so tief zu.");
+    R.warn.push("MID steht als RADIUSWERT im Aufruf. Die Steuerung liest ihn so nur bei " +
+                "_ZSD[0]=1 (Zyklensettingdatum in GUD7.DEF): 1 = Radiuswert, 2 = " +
+                "Durchmesserwert. Vor dem ersten Lauf nachsehen.");
+    const werte = [label, mid, +p.uz || 0, +p.ux || 0, 0,
+                   +p.fr || 0, +p.fr || 0, +p.ff || 0, siVari95(p), null, null, null];
+    const a = siZykAufruf("CYCLE95",
+      ["NPP","MID","FALZ","FALX","FAL","FF1","FF2","FF3","VARI","DT","DAM","_VRT"], werte);
+    R.liste = a.liste; R.ruf = a.ruf;
+    if(p.richtung === "konturparallel")
+      R.warn.push("konturparallel: CYCLE95 spant IMMER achsparallel ab. Der Zyklus laeuft, " +
+                  "die Bahn sieht anders aus als in der Simulation dieser App.");
+    if(p.schlRicht === "lr")
+      R.warn.push("Schlichten links-rechts: CYCLE95 schlichtet in derselben Richtung wie es " +
+                  "schruppt. Die Richtung laesst sich im Zyklus nicht waehlen.");
+    return R;
+  }
+
+  // ------- Einstechen -> CYCLE93 ------------------------------------------
+  if(st.type === "einstechen"){
+    // SPD ist der Anfangspunkt in der Planachse (Durchmesser), SPL der in
+    // der Laengsachse. Beide OHNE Vorzeichen - das Handbuch sagt es zu SPD
+    // ausdruecklich.
+    // FAL1 ist das Aufmass am EINSTICHGRUND, FAL2 das an den FLANKEN
+    // (Parametertabelle Nr. 12 und 13). Welche Achse das ist, haengt an der
+    // Richtung: beim Laengsstich liegt der Grund radial (UX) und die Flanken
+    // axial (UZ), beim Planstich genau umgekehrt. Beide sind ABSTAENDE zur
+    // Kontur und damit echte Masse, keine Durchmesserwerte.
+    const esPlan = (p.ausr === "axial");
+    const falGrund  = esPlan ? (+p.uz || 0) : (+p.ux || 0);
+    const falFlanke = esPlan ? (+p.ux || 0) : (+p.uz || 0);
+    // DIAG IST DIE EINSTICHTIEFE, nicht der Nutgrund. Die Maske fuehrt bei
+    // der radialen Nut den GRUNDDURCHMESSER (Label "T1 Einstichtiefe ⌀
+    // (abs)"), bei der Stirnnut eine Tiefe in mm. Dieselbe Umrechnung wie
+    // im MTC-Generator (91-gen-stechen.js: Math.abs(t1-x0)/2).
+    const esTiefe = esPlan ? Math.abs(+p.t1 || 0)
+                           : Math.abs((+p.t1 || 0) - (+p.x0 || 0)) / 2;
+    const werte = [Math.abs(+p.x0 || 0), +p.z0 || 0, Math.abs(+p.b1 || 0),
+                   esTiefe, Math.abs(+p.w || 0),
+                   Math.abs(+p.a1 || 0), Math.abs(+p.a2 || 0),
+                   siKante(p, 1), siKante(p, 3), siKante(p, 2), siKante(p, 4),
+                   falGrund, falFlanke, Math.abs(+p.d || 0.5),
+                   0, siVari93(p)];
+    R.kom.push("DIAG " + siZ(esTiefe) + " ist die TIEFE" + (esPlan ? " (Maskenfeld T1)."
+               : " - aus X0 " + siZ(p.x0) + " und Nutgrund " + siZ(p.t1) + " gerechnet."));
+    R.kom.push("DTB 0: eine Verweilzeit am Nutgrund fuehrt die Einstichmaske nicht.");
+    const a = siZykAufruf("CYCLE93",
+      ["SPD","SPL","WIDG","DIAG","STA1","ANG1","ANG2","RCO1","RCO2","RCI1","RCI2",
+       "FAL1","FAL2","IDEP","DTB","VARI"], werte);
+    R.liste = a.liste; R.ruf = a.ruf;
+    R.vorher.push("G0 X" + siZ(ctx.stock + 2*ctx.sc) + " Z" + siZ(ctx.za + ctx.sc));
+    // ZWEISCHNEIDIGES WERKZEUG (Handbuch S. 4-285): die Korrekturen beider
+    // Schneiden muessen in ZWEI AUFEINANDERFOLGENDEN D-Nummern liegen, und
+    // die erste davon muss vor dem Aufruf aktiv sein. Die App fuehrt je
+    // Werkzeug nur EINE Schneide - das kann sie nicht sicherstellen.
+    R.warn.push("CYCLE93 braucht ein ZWEISCHNEIDIGES Werkzeug: D1 und D2 des Stechers " +
+                "muessen in der Werkzeugtabelle der Steuerung stehen, D1 vor dem Aufruf " +
+                "aktiv. Sonst Alarm 61000.");
+    if((+p.n || 1) > 1)
+      R.warn.push("mehrere Stiche (N=" + p.n + "): CYCLE93 sticht EINE Nut. Fuer eine Reihe " +
+                  "den Zyklus mehrfach aufrufen - dieser Aufruf sticht nur die erste.");
+    return R;
+  }
+
+  // ------- Gewinde -> CYCLE97 ---------------------------------------------
+  if(st.type === "gewinde"){
+    if(p.form === "plan"){
+      R.warn.push("Plangewinde: CYCLE97 entscheidet laengs oder plan SELBST am Kegelwinkel " +
+                  "(<= 45 Grad laengs, darueber plan). Ein reines Plangewinde braucht " +
+                  "DM1/DM2 auf gleicher Z-Lage - hier nicht geschrieben.");
+      return R;
+    }
+    const x1 = (+p.x1 > 0) ? +p.x1 : +p.x0;
+    // IANG: Vorzeichen entscheidet. Positiv = immer dieselbe Flanke,
+    // NEGATIV = wechselseitig (Handbuch S. 4-313). Daniels Maske fuehrt das
+    // als Feld "Flanke".
+    const iang = (p.flanke === "wechselnd") ? -Math.abs(+p.alpha || 0) : Math.abs(+p.alpha || 0);
+    const werte = [Math.abs(+p.p || 0), null, +p.z0 || 0, +p.z1 || 0,
+                   Math.abs(+p.x0 || 0), Math.abs(x1 || 0),
+                   Math.abs(+p.lw || 0), Math.abs(+p.lr || 0),
+                   Math.abs(+p.h1 || 0), Math.abs(+p.u || 0), iang, 0,
+                   Math.max(1, Math.round(+p.nd || 5)), 2, siVari97(p),
+                   Math.max(1, Math.round(+p.n || 1))];
+    const a = siZykAufruf("CYCLE97",
+      ["PIT","MPIT","SPL","FPL","DM1","DM2","APP","ROP","TDEP","FAL","IANG","NSP",
+       "NRC","NID","VARI","NUMT"], werte);
+    R.liste = a.liste; R.ruf = a.ruf;
+    R.vorher.push("G0 X" + siZ(Math.abs(+p.x0 || 0) + 2*ctx.sc) + " Z" + siZ(+p.z0 + (+p.lw || 2)));
+    if(p.lage === "innen")
+      R.kom.push("INNENGEWINDE: DM1/DM2 ist hier der KERNLOCHDURCHMESSER (Handbuch S. 4-312).");
+    if(p.verf === "A" || p.verf === "B")
+      R.warn.push("Schnittaufteilung " + p.verf + ": die Steuerung kennt A und B nicht getrennt - " +
+                  "beide laufen dort als konstanter Spanquerschnitt (VARI 3/4). Die Zahl der " +
+                  "Schnitte kann deshalb von der Simulation abweichen.");
+    if(p.richt === "links")
+      R.warn.push("Linksgewinde: die Richtung bestimmt bei Siemens die SPINDELDREHRICHTUNG vor " +
+                  "dem Aufruf (M4 statt M3), nicht der Zyklus. Das Programm schreibt M3 - vor " +
+                  "dem Lauf von Hand aendern.");
+    return R;
+  }
+
+  // ------- Freistich -> CYCLE94 / CYCLE96 ---------------------------------
+  if(st.type === "freistich"){
+    if(p.form === "d76"){
+      // Gewindefreistich DIN 76 hat einen eigenen Zyklus.
+      const a = siZykAufruf("CYCLE96", ["DIATH","SPL","FORM","_VARI"],
+        [Math.abs(+p.x0 || 0), +p.z0 || 0, "A", null]);
+      R.liste = a.liste; R.ruf = a.ruf;
+      R.warn.push("CYCLE96 fuehrt die Form ueber A..D (Gewindefreistich DIN 76). Die App " +
+                  "kennt die Steigung, der Zyklus den Durchmesser - FORM hier als A " +
+                  "angenommen, vor dem Lauf pruefen.");
+    } else {
+      // Form E und F nach DIN 509 - genau die zwei, die die App fuehrt.
+      const a = siZykAufruf("CYCLE94", ["SPD","SPL","FORM","_VARI"],
+        [Math.abs(+p.x0 || 0), Math.abs(+p.z0 || 0), (p.form === "F" ? "F" : "E"), null]);
+      R.liste = a.liste; R.ruf = a.ruf;
+      R.kom.push("SPD und SPL sind das FERTIGTEILMASS; der Zyklus setzt seinen Startpunkt");
+      R.kom.push("2 mm ueber dem Durchmesser und 10 mm davor selbst.");
+    }
+    R.vorher.push("G0 X" + siZ(ctx.stock + 2*ctx.sc) + " Z" + siZ(ctx.za + ctx.sc));
+    if(p.pj && +p.pj !== 0)
+      R.warn.push("Lage des Freistichs: der Zyklus leitet sie aus der SCHNEIDENLAGE des " +
+                  "Werkzeugs ab (_VARI=0). Steht dort eine andere Lage als gemeint, " +
+                  "_VARI 1..4 von Hand setzen.");
+    return R;
+  }
+
+  // ------- alles Uebrige: Einzelsaetze aus den Bahnen ----------------------
+  R.einzel = true;
+  return R;
+}
+
+
+// Die Verweilzeiten der ZYKLEN stehen bei Siemens in SEKUNDEN. Das
+// Zyklenhandbuch der 840D sagt es woertlich (Kap. 2.1.1): "Die Parameter
+// fuer Verweilzeiten in den Bohrzyklen werden immer dem F-Wort zugeordnet
+// und sind dementsprechend mit Werten in Sekunden zu versorgen." Beim L93
+// der 810T steht dieselbe Annahme hinter dem Satz "Die Verweilzeit muss so
+// gross gewaehlt werden, dass mindestens eine Spindelumdrehung erfolgt" --
+// in Umdrehungen waere dieser Satz sinnlos.
+//
+// DIE APP FUEHRT t1 IN SPINDELUMDREHUNGEN (Maskenfeld "t1 Verweilzeit je
+// Zustellung", Einheit U; bei den Monforts verweilt G04 unter G95 in
+// Umdrehungen, DV 610 Kap. 3.6). Das ist dieselbe Klasse Falle wie D
+// radial gegen D im Durchmesser: dieselbe Zahl, eine andere Bedeutung.
+// Umgerechnet wird mit der Drehzahl des Schritts; ohne Drehzahl bleibt 0,
+// und der Fall wird benannt statt geraten.
+// NUR FUER BOHRSCHRITTE. In der Einstichmaske traegt dasselbe Feld t1 den
+// Nutgrund -- wer diese Funktion dort ruft, macht aus einem Durchmesser
+// eine Verweilzeit von elf Sekunden (im ersten Probelauf genau so passiert).
+function siVerweilSek(p, warn){
+  const u = Math.abs(+p.t1 || 0);
+  if(!u) return 0;
+  const nn = Math.abs(+p.sr || +p.s || 0);
+  if(!(nn > 0)){
+    if(warn) warn.push('Verweilzeit t1 ' + siZ(u) + ' U laesst sich ohne Drehzahl nicht in ' +
+                       'Sekunden umrechnen - im Zyklus steht 0. Drehzahl am Schritt eintragen.');
+    return 0;
+  }
+  return Math.round(u * 60 / nn * 1000) / 1000;
+}
+
+// ---------------------------------------------------------------------------
+// DIE L-ZYKLEN DER 810T
+// ---------------------------------------------------------------------------
+// R-Parameter und Aufruf in EINEM Satz (System-800-Zyklenhandbuch, beide
+// gedruckten Beispiele auf PDF-Seite 31 und 32).
+function siL(nr, rs, S){
+  const teile = [];
+  Object.keys(rs).forEach(k => {
+    const v = rs[k];
+    if(v === null || v === undefined || v === "") return;
+    teile.push("R" + k + "=" + siZ(v));
+  });
+  const ruf = "L" + nr + " P1";
+  // Platz fuer die Satznummer, die erst spaeter davorkommt ("N0125 ").
+  const max = (S && S.maxSatz) ? S.maxSatz - 8 : 0;
+  if(!max) return [teile.join(" ") + " " + ruf];
+  const saetze = [];
+  let z = "";
+  teile.forEach(t => {
+    if(z && (z.length + 1 + t.length) > max){ saetze.push(z); z = t; }
+    else z = z ? (z + " " + t) : t;
+  });
+  // Der Aufruf gehoert an das Ende -- wenn er nicht mehr dazupasst, in
+  // einen eigenen Satz. Ein Zyklusaufruf allein im Satz ist zulaessig.
+  if(z && (z.length + 1 + ruf.length) <= max) saetze.push(z + " " + ruf);
+  else { if(z) saetze.push(z); saetze.push(ruf); }
+  return saetze;
+}
+
+// R29 des L95: Zehnerstelle = Art, Einerstelle = Richtung und Seite.
+// 1x nur achsparallel schruppen, 2x nur konturparallel schlichten,
+// 4x Komplettbearbeitung. Einerstelle: 1 laengs aussen, 2 plan aussen,
+// 3 laengs innen, 4 plan innen. (Doppelt belegt: Handbuchtext "Schlichten
+// (R29 = 22 bzw. 24)" und die zwei Beispielprogramme mit R29=41 und R29=22.)
+function siR29(p){
+  const laengs = (p.richtung !== "x-parallel");
+  const innen  = (p.lage === "innen");
+  const seite  = (laengs ? 1 : 2) + (innen ? 2 : 0);
+  const art = (p.bearbeitung === "schruppen") ? 10
+            : (p.bearbeitung === "schlichten") ? 20 : 40;
+  return art + seite;
+}
+
+// Die Zyklen der 810T zu denselben Schritten. Rueckgabe wie bei der 840D.
+function siZyklus810(st, S, ctx){
+  const p = st.params || {};
+  const R = {vorher:[], saetze:[], warn:[], kom:[]};
+
+  // ------- Abspanen -> L95 ------------------------------------------------
+  if(st.type === "abspanen_kontur"){
+    const els = siKonturEls(p);
+    if(!els){ R.warn.push("keine Kontur am Schritt - kein Zyklus geschrieben"); return R; }
+    if(p.bearbeitung === "rest"){
+      R.warn.push("Restmaterial-Zyklus: den kennt die Steuerung nicht. L95 raeumt " +
+                  "Hinterschnitte selbst mit; dieser Schritt wird uebersprungen.");
+      return R;
+    }
+    const lnr = siKonturLabel(els, p, S, ctx);
+    const segs = expandContour(els);
+    // R21/R22 ist der ANFANGSPUNKT DER KONTUR, absolut - X im Durchmesser.
+    const rs = {
+      20: lnr,
+      21: r2d(segs[0].x1),
+      22: segs[0].z1,
+      // R24/R25 sind das Schlichtaufmass IN X und IN Z, R26 die
+      // Schruppspantiefe -- alle drei Abstaende zur Kontur und damit echte
+      // Masse auf die Flaeche, keine Durchmesserwerte (siehe Warnung unten).
+      24: +p.ux || 0,
+      25: +p.uz || 0,
+      26: +p.d || 1,
+      // R27 traegt die G-FUNKTIONSNUMMER OHNE "G" -- belegt an den zwei
+      // gedruckten Beispielen (Beispiel 1 "Komplettbearbeitung laengs
+      // aussen": R27=42; Beispiel 2 "Schlichten plan aussen": R27=41).
+      // Die Seite haengt also an der ZUGRICHTUNG, nicht an aussen/innen
+      // allein: das Werkzeug laeuft immer auf der materialfreien Seite.
+      // Laengs aussen und plan innen -> G42, laengs innen und plan aussen
+      // -> G41. Zwei der vier Faelle sind gedruckt, die zwei Innen-Faelle
+      // sind daraus hergeleitet.
+      27: ((p.richtung !== "x-parallel") !== (p.lage === "innen")) ? 42 : 41,
+      28: +p.ff || +p.fr || 0.2,
+      29: siR29(p),
+      30: 0.5,
+    };
+    R.liste = "; L95 R20=Kontur R21/R22=Anfangspunkt R24/R25=Aufmass X/Z R26=Spantiefe " +
+              "R27=SRK R28=Vorschub R29=Art R30=Faktor";
+    R.ruf = siL(95, rs, S);
+    R.kom.push("R24/R25/R26 sind RADIUSWERTE (Abstand zur Kontur, nicht im Durchmesser).");
+    if(p.bearbeitung === "schruppen")
+      R.kom.push("R29 " + siZ(rs[29]) + " = achsparallel schruppen; dabei unterdrueckt der " +
+                 "Zyklus die SRK selbst - R27 wirkt erst ab R29 2x.");
+    R.warn.push("R24/R25 (Aufmass) und R26 (Spantiefe) stehen als RADIUSWERTE im Aufruf. " +
+                "Das Handbuch nennt sie 'Schlichtaufmass in X/Z' und 'Schruppspantiefe', " +
+                "ohne zu sagen, ob X darin ein Durchmessermass ist. An einem Probeschnitt " +
+                "pruefen: bleibt doppelt so viel stehen wie eingetragen, ist es ein " +
+                "Durchmesserwert.");
+    return R;
+  }
+
+  // ------- Einstechen -> L93 ----------------------------------------------
+  if(st.type === "einstechen"){
+    const plan  = (p.ausr === "axial");
+    const t1m   = Math.abs(+p.t1 || 0);
+    const x0m   = Math.abs(+p.x0 || 0);
+    const z0m   = +p.z0 || 0;
+    // R21 UND R22 TAUSCHEN DIE ACHSE mit der Bearbeitungsart: die
+    // Parametertabelle nennt R21 "Aussen- bzw. Innendurchmesser ODER
+    // Anfangslaenge (plan)" und R22 "Anfangspunkt: Laengs Z; Plan X".
+    // R31 ist das Gegenstueck am Nutgrund und ebenfalls ABSOLUT --
+    // beim Laengsstich der Durchmesser am Grund, beim Planstich die Lage
+    // des Grundes in Z. Nicht die Tiefe.
+    const r21 = plan ? z0m : x0m;
+    const r22 = plan ? x0m : z0m;
+    // R31 ist der Nutgrund ABSOLUT. Bei der radialen Nut steht er schon so in
+    // der Maske (T1 = Grunddurchmesser); bei der Stirnnut ist T1 eine Tiefe
+    // ab Z0 und muss abgezogen werden.
+    const r31 = plan ? (z0m - t1m) : t1m;
+    // R24 liegt am GRUND, R25 an den FLANKEN -- dieselbe Unterscheidung
+    // wie FAL1/FAL2 des CYCLE93, und sie dreht sich mit der Richtung.
+    const esGrund  = plan ? (+p.uz || 0) : (+p.ux || 0);
+    const esFlanke = plan ? (+p.ux || 0) : (+p.uz || 0);
+    // R23: +1 = Startpunkt rechts, -1 = links (beide Beispiele des Handbuchs
+    // schreiben -1 fuer "aussen links" bzw. "rechts aussen").
+    const rs = {
+      10: plan ? 1 : 0,
+      21: r21,
+      22: r22,
+      23: -1,
+      24: esGrund,
+      25: esFlanke,
+      26: Math.abs(+p.d || 0.5),
+      27: Math.abs(+p.b1 || 0),
+      // R28 ist die Verweilzeit am Nutgrund. Die Einstichmaske der App fuehrt
+      // keine - das Feld t1 traegt dort den Nutgrund. Also 0, wie im
+      // MTC-Programm auch.
+      28: 0,
+      29: Math.abs(+p.a1 || 0),
+      30: siKante(p, 2),
+      31: r31,
+      32: siKante(p, 1),
+      33: siKante(p, 4),
+      34: siKante(p, 3),
+      35: Math.abs(+p.a2 || 0),
+    };
+    R.liste = "; L93 R10=Art R21/R22=Anfangspunkt R23=Startseite R24=Aufmass Grund " +
+              "R25=Aufmass Flanken R26=Zustellung R27=Breite R28=Verweilzeit " +
+              "R29/R35=Winkel R30..R34=Kanten R31=Grund absolut";
+    R.kom.push("R31 " + siZ(r31) + " ist der Nutgrund ABSOLUT" +
+               (plan ? " (Z-Lage aus Z0 " + siZ(z0m) + " minus Tiefe " + siZ(t1m) + ")."
+                     : " - das Maskenfeld T1 ist bereits der Grunddurchmesser."));
+    R.kom.push("R28 0: eine Verweilzeit am Nutgrund fuehrt die Einstichmaske nicht.");
+    R.ruf = siL(93, rs, S);
+    // Radius POSITIV, Fase NEGATIV (Handbuch, Vorzeichentabelle zu R30/R32/R33/R34).
+    R.kom.push("Kanten: Radius positiv, Fase negativ. R30/R33 liegen am GRUND,");
+    R.kom.push("R32/R34 am RAND. Welche Seite welche Nummer traegt, zeigt das Bild");
+    R.kom.push("der Zyklusmaske - vor dem ersten Lauf dort vergleichen.");
+    R.warn.push("Die Zuordnung der vier Kanten (links/rechts) ist aus der Reihenfolge der " +
+                "R-Parameter abgeleitet, nicht aus einem Maschinensatz. Am Bild der " +
+                "Zyklusmaske pruefen, sonst sitzen Fase und Radius seitenverkehrt.");
+    if((+p.n || 1) > 1)
+      R.warn.push("mehrere Stiche (N=" + p.n + "): L93 sticht EINE Nut.");
+    return R;
+  }
+
+  // ------- Gewinde -> L97 -------------------------------------------------
+  if(st.type === "gewinde"){
+    if(p.form === "plan"){
+      R.warn.push("Plangewinde: L97 entscheidet laengs oder plan selbst am Winkel zwischen " +
+                  "Anfangs- und Endpunkt (ueber 45 Grad = plan). Dieser Aufruf wird nicht " +
+                  "geschrieben - die Achswerte eines Plangewindes sind nicht abgeleitet.");
+      return R;
+    }
+    const x1 = (+p.x1 > 0) ? +p.x1 : +p.x0;
+    // R24 TRAEGT DAS VORZEICHEN DER LAGE: "+ = Innengewinde, - = Aussengewinde"
+    // (Handbuch, R-Parameter-Liste des L97). Das ist dieselbe Art Falle wie
+    // das PO-Vorzeichen der Monforts, das am 18.09.2026 am Teil auffiel.
+    const tiefe = Math.abs(+p.h1 || 0) * ((p.lage === "innen") ? 1 : -1);
+    const rs = {
+      20: Math.abs(+p.p || 0),
+      21: Math.abs(+p.x0 || 0),
+      22: +p.z0 || 0,
+      23: 2,
+      24: tiefe,
+      25: Math.abs(+p.u || 0),
+      26: Math.abs(+p.lw || 0),
+      27: Math.abs(+p.lr || 0),
+      28: Math.max(1, Math.round(+p.nd || 5)),
+      29: Math.abs(+p.alpha || 0),
+      31: Math.abs(x1 || 0),
+      32: +p.z1 || 0,
+    };
+    R.liste = "; L97 R20=Steigung R21/R22=Anfang R23=Leerschnitte R24=Tiefe(+innen/-aussen) " +
+              "R25=Aufmass R26/R27=Ein-/Auslauf R28=Schruppschnitte R29=Winkel R31/R32=Ende";
+    R.ruf = siL(97, rs, S);
+    R.kom.push("R24 " + siZ(tiefe) + ": das VORZEICHEN traegt die Lage - plus innen, minus aussen.");
+    if(p.richt === "links")
+      R.warn.push("Linksgewinde: die Richtung bestimmt die Spindeldrehrichtung vor dem " +
+                  "Aufruf (M04 statt M03), nicht der Zyklus.");
+    return R;
+  }
+
+  // ------- Freistich -> L94 ------------------------------------------------
+  if(st.type === "freistich"){
+    R.warn.push("L94 Freistich: die Maske der Steuerung fuehrt Form E und F ueber eigene " +
+                "R-Parameter. Dieser Schritt kommt als Einzelsaetze - so ist die Kontur " +
+                "die, die in der Simulation steht.");
+    R.einzel = true;
+    return R;
+  }
+
+  // ------- Bohren -> L98 (nur Tieflochbohren) ------------------------------
+  if(st.type === "bohren" && p.art === "tief"){
+    const rs = {
+      11: (p.entBearb === "entspaenen") ? 1 : 0,
+      22: +p.z0 || 0,
+      24: Math.abs(+p.df || 1) < 1 ? Math.abs(+p.d || 5) * Math.abs(+p.df || 0.8)
+                                   : Math.abs(+p.df || 1),
+      25: Math.abs(+p.d || 5),
+      26: +p.z1 || 0,
+      27: 0,
+      28: siVerweilSek(p, R.warn),
+    };
+    R.liste = "; L98 R11=Spanbrechen/Entspaenen R22=Anfang R24=Degression R25=1.Bohrtiefe " +
+              "R26=Endbohrtiefe R27/R28=Verweilzeiten";
+    R.ruf = siL(98, rs, S);
+    R.vorher.push("G0 X0 Z" + siZ(+p.z0 + (+p.safe || 2)));
+    R.kom.push("R24 ist ein BETRAG in mm; die App fuehrt einen Degressionsfaktor -");
+    R.kom.push("hier umgerechnet aus D " + siZ(p.d) + " x DF " + siZ(p.df) + ".");
+    R.kom.push("R27 ist die Verweilzeit am ANFANGSPUNKT (nur beim Entspaenen), R28 die");
+    R.kom.push("auf Bohrtiefe. Die App fuehrt nur die zweite - R27 bleibt 0.");
+    return R;
+  }
+
+  R.einzel = true;
+  return R;
+}
+
+// ---------------------------------------------------------------------------
+// DIE BOHRZYKLEN DER 840D
+// ---------------------------------------------------------------------------
+// CYCLE82 (RTP, RFP, SDIS, DP, DPR, DTB) -- Bohren, Plansenken.
+// CYCLE83 (RTP, RFP, SDIS, DP, DPR, FDEP, FDPR, DAM, DTB, DTS, FRF, VARI, ...)
+//   -- Tieflochbohren.
+// RTP = Rueckzugsebene, RFP = Referenzebene, SDIS = Sicherheitsabstand,
+// DP = Endbohrtiefe absolut. Beim Drehen liegen sie in der LAENGSACHSE Z.
+function siBohren840(p, ctx){
+  const R = {vorher:[], saetze:[], warn:[], kom:[]};
+  const rfp = +p.z0 || 0;                       // Referenzebene = Werkstueckstirn
+  const sdis = Math.abs(+p.safe || 2);          // Sicherheitsabstand
+  const rtp = rfp + sdis + 2;                   // Rueckzugsebene darueber
+  const dp = +p.z1 || 0;                        // Endbohrtiefe absolut
+  R.vorher.push("G0 X0 Z" + siZ(rtp));
+  if(p.art === "tief"){
+    // FDEP = erste Bohrtiefe absolut, DAM = Degression als BETRAG (negativ
+    // waere ein Prozentsatz), DTB/DTS = Verweilzeiten, FRF = Vorschubfaktor
+    // der ersten Zustellung, VARI 0 = Spanbrechen, 1 = Entspaenen.
+    const fdep = rfp - Math.abs(+p.d || 5);
+    const dam = Math.abs(+p.d || 5) * Math.abs(+p.df || 0.8);
+    const a = siZykAufruf("CYCLE83",
+      ["RTP","RFP","SDIS","DP","DPR","FDEP","FDPR","DAM","DTB","DTS","FRF","VARI"],
+      [rtp, rfp, sdis, dp, null, fdep, null, dam, -Math.abs(+p.t1 || 0), 0, 1,
+       (p.entBearb === "entspaenen") ? 1 : 0]);
+    R.liste = a.liste; R.ruf = a.ruf;
+    R.kom.push("DAM " + siZ(dam) + " ist ein BETRAG; die App fuehrt einen Degressionsfaktor.");
+    if(+p.t1)
+      R.kom.push("DTB negativ = Verweilzeit in UMDREHUNGEN (" + siZ(Math.abs(+p.t1)) +
+                 " U) - das kann CYCLE83, CYCLE82 nicht.");
+  } else {
+    // CYCLE82 kennt nur SEKUNDEN -- hier aus t1 [U] und der Drehzahl gerechnet.
+    const dtb = siVerweilSek(p, R.warn);
+    const a = siZykAufruf("CYCLE82", ["RTP","RFP","SDIS","DP","DPR","DTB"],
+      [rtp, rfp, sdis, dp, null, dtb]);
+    R.liste = a.liste; R.ruf = a.ruf;
+    if(dtb) R.kom.push("DTB " + siZ(dtb) + " s = t1 " + siZ(Math.abs(+p.t1)) +
+                       " U bei " + siZ(Math.abs(+p.sr || +p.s)) + " U/min.");
+  }
+  R.warn.push("Der Bohrzyklus bohrt auf der DREHMITTE (X0). Angetriebene Werkzeuge " +
+              "kennt dieser Postprozessor nicht.");
+  return R;
+}
+
+// ---------------------------------------------------------------------------
+// EINZELSAETZE AUS DEN BAHNEN
+// ---------------------------------------------------------------------------
+// Fuer alles, wofuer es keinen Siemens-Zyklus gibt (Abspanen Ecke,
+// Stechdrehen, Abstechen, die uebrigen Bohrarten), kommt die Bahn aus dem
+// MTC-Programm zurueck: buildProgram schreibt es, parseGcodeForSim liest es
+// in Bahnen, und die werden hier in Siemens-Saetze uebersetzt. Die Geometrie
+// ist damit dieselbe, die in der Simulation steht und an den Monforts belegt
+// ist -- nur die Schreibweise ist eine andere.
+//
+// Ein Zwischenspeicher, weil jeder Schritt sonst das ganze Programm neu
+// bauen liesse: bei zwoelf Schritten waeren das zwoelf Durchlaeufe.
+let SI_BAHN_CACHE = null;
+function siBahnen(){
+  if(SI_BAHN_CACHE) return SI_BAHN_CACHE;
+  // DER RUECKWEG LAEUFT IMMER IM EUROTURN-PROFIL, egal welche Siemens-
+  // Steuerung gewaehlt ist. Gebraucht wird aus dem MTC-Programm nur die
+  // GEOMETRIE (parseGcodeForSim liest Bahnen, keinen Dialekt) -- und die
+  // soll nicht davon abhaengen, welches Profil zufaellig aktiv ist.
+  const alt = (typeof MASCHINENPROFIL !== "undefined") ? MASCHINENPROFIL : null;
+  SI_IM_RUECKWEG = true;
+  try{
+    if(alt && alt.siemens && typeof MASCHINEN_PROFILE !== "undefined"
+       && MASCHINEN_PROFILE.MONFORTS_1500_EUROTURN)
+      MASCHINENPROFIL = MASCHINEN_PROFILE.MONFORTS_1500_EUROTURN;
+    const nc = buildProgram();
+    SI_BAHN_CACHE = nc ? (parseGcodeForSim(nc) || []) : [];
+  }catch(e){ SI_BAHN_CACHE = []; }
+  finally{
+    SI_IM_RUECKWEG = false;
+    if(alt) MASCHINENPROFIL = alt;
+  }
+  return SI_BAHN_CACHE;
+}
+function siBahnCacheLeeren(){ SI_BAHN_CACHE = null; }
+
+function siEinzelsaetze(st, idx, S, satz, kom, warn){
+  // SCHRITTNUMMER-FALLE (dieselbe wie im Massbericht der App): die Bahnen
+  // tragen die Nummer aus dem Schrittkopf des MTC-Programms, und die zaehlt
+  // nur die AKTIVEN Schritte -- genau wie idx hier.
+  const alle = siBahnen();
+  const meine = alle.filter(m => m && m.step === (idx + 1));
+  if(!meine.length){
+    warn.push("Schritt " + (idx+1) + ": keine Bahn gefunden - der Schritt steht NICHT im Programm.");
+    kom("KEINE BAHN FUER DIESEN SCHRITT");
+    return;
+  }
+  kom("Einzelsaetze - fuer diese Bearbeitung hat die Steuerung keinen Zyklus");
+  let lx = null, lz = null, lf = null, lg = null;
+  meine.forEach(m => {
+    if(m.type === "dwell"){
+      const u = Math.min(99.9, Math.max(0.1, Math.abs(+m.dwellU || 1)));
+      // Die Verweilzeit muss allein im Satz stehen ("In einem Satz mit
+      // Verweilzeit duerfen keine weiteren Funktionen geschrieben werden").
+      satz("G4 S" + siZ(u));
+      lg = null;   // G4 ist satzweise wirksam - das modale G-Wort ist weg
+      return;
+    }
+    const eil = (m.type === "rapid");
+    const teile = [];
+    const g = eil ? "G0" : (m.cw === undefined ? "G1" : (m.cw ? "G2" : "G3"));
+    if(g !== lg){ teile.push(g); lg = g; }
+    // x der Bahnen ist bereits ein DURCHMESSER (parseGcodeForSim liest die
+    // MTC-Saetze, die im Durchmesser stehen) -- hier also kein r2d().
+    if(lx === null || Math.abs(m.x2 - lx) > 1e-9) teile.push("X" + siZ(m.x2));
+    if(lz === null || Math.abs(m.z2 - lz) > 1e-9) teile.push("Z" + siZ(m.z2));
+    if(m.cw !== undefined && m.cx !== undefined){
+      // I ist ein RADIUSmass, auch unter Durchmesserprogrammierung.
+      teile.push("I" + siZ((m.cx - m.x1) / 2));
+      teile.push("K" + siZ(m.cz - m.z1));
+    }
+    if(!eil && m.f && m.f !== lf){ teile.push("F" + siZ(m.f)); lf = m.f; }
+    if(teile.length > 1 || (teile.length === 1 && !/^G/.test(teile[0]))) satz(teile.join(" "));
+    lx = m.x2; lz = m.z2;
+  });
+  // Die Schneidenradiuskorrektur der MTC-Bahnen (G41/G42) ist hier NICHT
+  // uebernommen: sie haengt an der Werkzeugtabelle der Steuerung, und ein
+  // falsch herum korrigierter Schlichtzug ist Ausschuss. Die Bahnen sind
+  // bereits die korrigierten Bahnen der Simulation.
+  if(meine.some(m => m.comp))
+    warn.push("Schritt " + (idx+1) + ": die MTC-Bahn faehrt mit Schneidenradiuskorrektur " +
+              "(G41/G42). Die Einzelsaetze hier tragen KEINE Korrektur - sie sind die " +
+              "fertig gerechneten Bahnen. An der Steuerung darf dann keine zweite " +
+              "Korrektur aktiv sein.");
+}
+// Die Kontur eines Abspanschritts. Die App fuehrt sie ueber contourId;
+// ohne Angabe gilt die aktive Kontur - dieselbe Regel wie im MTC-Generator.
+function siKonturEls(p){
+  if(typeof contours === "undefined") return null;
+  if(p.contourId !== undefined && p.contourId !== null && p.contourId !== ""){
+    const c = contours.find(x => String(x.id) === String(p.contourId));
+    if(c && c.els && c.els.length > 1) return c.els;
+  }
+  if(typeof contour !== "undefined" && contour && contour.length > 1) return contour;
+  const c0 = contours.find(x => x.els && x.els.length > 1);
+  return c0 ? c0.els : null;
+}
+
+// Die Kontur als LABEL-ABSCHNITT im selben Programm (840D, Handbuch S. 4-303:
+// NPP="ANFANG:ENDE") oder als eigenes Unterprogramm (810T). Rueckgabe ist der
+// Name, den der Zyklus im NPP-Feld traegt.
+function siKonturLabel(els, p, S, ctx){
+  const nr = ctx.upListe.length + 1;
+  if(S.zyklusArt === "CYCLE"){
+    const anf = "KONT" + nr + "_A", end = "KONT" + nr + "_E";
+    const z = siKonturUP(els, "KONT" + nr, S,
+      {titel:"KONTUR " + nr + " - Abschnitt fuer CYCLE95", warn:ctx.warn});
+    // Aus dem Unterprogramm wird ein Abschnitt: Labels statt PROC/M17.
+    const innen = z.slice(1, -1);
+    // DER ABSCHNITT IST KEIN UNTERPROGRAMM. M17 waere das Unterprogramm-Ende;
+    // hier steht die Kontur als Label-Abschnitt IM Hauptprogramm, und das
+    // gedruckte Beispiel (Druckseite 4-303) schliesst ihn mit dem
+    // Programmende. Erreicht wird er im Ablauf nie -- das M30 davor beendet
+    // das Programm; der Zyklus springt gezielt hierher.
+    ctx.upListe.push({name:anf, zeilen:[anf + ":"].concat(innen).concat([end + ":", S.ende])});
+    return anf + ":" + end;
+  }
+  // 810T: eigenes Unterprogramm L<nr>, Ende mit M17 (Programmieranleitung
+  // Kap. 5.1). Anders als bei der 840D ist das eine ZWEITE DATEI -- wer sie
+  // beim Uebertragen vergisst, bekommt an der Steuerung einen Fehler und
+  // sucht ihn im Zyklus. Deshalb steht es als Warnung, nicht nur in den
+  // Merkmalen.
+  const lnr = 900 + nr;
+  const z = siKonturUP(els, "L" + lnr, S,
+    {titel:"KONTUR " + nr + " fuer L95", warn:ctx.warn, ohneAnfang:true});
+  const innen = z.slice(1, -1);
+  ctx.upListe.push({name:"L" + lnr, zeilen:["%L" + lnr].concat(innen).concat(["M17"])});
+  ctx.warn.push("Das Kontur-Unterprogramm %L" + lnr + " ist eine EIGENE DATEI und muss " +
+                "mit an die Steuerung uebertragen werden. Ohne sie findet L95 seine " +
+                "Kontur nicht. Es steht hinter dem Hauptprogramm.");
+  return lnr;
+}
+// Klartextname eines Schritts fuer die Kommentarzeile.
+function siSchrittName(st){
+  const p = st.params || {};
+  const T = {abspanen_kontur:'ABSPANEN KONTUR', abspanen_einfach:'ABSPANEN ECKE',
+             einstechen:'EINSTECHEN', stechdrehen:'STECHDREHEN', abstechen:'ABSTECHEN',
+             freistich:'FREISTICH', bohren:'BOHREN', gewinde:'GEWINDE',
+             zwischen:'BEMERKUNG'};
+  let n = T[st.type] || String(st.type).toUpperCase();
+  if(p.lage === 'innen') n += ' INNEN';
+  if(p.t !== undefined && p.t !== '') n += '  T' + p.t;
+  return n;
+}
+
+// Drehzahl und Vorschub. G96 ist Schnittgeschwindigkeit in m/min, G97 eine
+// feste Drehzahl -- dieselbe Unterscheidung wie in den Masken der App.
+function siTechnologie(p){
+  const teile = [];
+  const s = (p.sMode === 'vc') ? (p.sr || p.sf || p.s) : (p.s || p.sr || p.sf);
+  if(s > 0) teile.push((p.sMode === 'vc' ? 'G96 S' : 'G97 S') + siZ(s));
+  teile.push('M3');
+  const f = p.fr || p.f || p.ff;
+  if(f > 0) teile.push('G95 F' + siZ(f));
+  // Kuehlmittel: M8 ist bei Siemens das Standardwort (die Monforts fahren
+  // M07). Ohne Feld gilt "an" -- wie in der ganzen App.
+  teile.push(p.kuehl === 'aus' ? 'M9' : 'M8');
+  return teile.join(' ');
+}
+
+// ---------------------------------------------------------------------------
+// ZYKLUSAUFRUFE
+// ---------------------------------------------------------------------------
+// Ein Siemens-Zyklus bekommt seine Werte POSITIONAL in Klammern. Eine Stelle,
+// die nicht besetzt wird, bleibt LEER zwischen zwei Kommas -- so steht es in
+// jedem gedruckten Beispiel des Handbuchs:
+//   N20 CYCLE95 (UPNAME, 5, 1.2, 0.6, , 0.2, 0.1, 0.2, 9, , , 0.5)
+// Eine verrutschte Stelle ist an der Maschine ein Crash; deshalb tragen die
+// Aufrufe hier ihre Parameternamen als Kommentarzeile darueber -- der
+// Bediener kann den Satz an der Steuerung in der Zyklusmaske oeffnen und
+// jeden Wert mit seinem Namen sehen.
+function siZykAufruf(name, namen, werte){
+  const w = werte.map(v => (v === null || v === undefined || v === '') ? '' :
+    (typeof v === 'string' ? '"'+v+'"' : siZ(v)));
+  // Leere Stellen am Ende weglassen -- kuerzerer Satz, gleiche Bedeutung
+  // (hintere Parameter duerfen fehlen, sie sind vorbelegt).
+  while(w.length && w[w.length-1] === '') w.pop();
+  return {ruf:name+'('+w.join(', ')+')', liste:'; '+name+'('+namen.join(', ')+')'};
+}
+
+// ---- Abspanen: CYCLE95 ----------------------------------------------------
+// VARI (Handbuch S. 4-297, echte Texttabelle): Einerstelle traegt
+// Bearbeitung (Schruppen 1-4, Schlichten 5-8, Komplett 9-12), darin
+// laengs/plan und aussen/innen.
+function siVari95(p){
+  const laengs = (p.richtung !== 'x-parallel');   // x-parallel = plan
+  const innen  = (p.lage === 'innen');
+  const stufe  = (p.bearbeitung === 'schruppen') ? 0
+               : (p.bearbeitung === 'schlichten') ? 4 : 8;
+  return stufe + (laengs ? 1 : 2) + (innen ? 2 : 0);
+}
+
+// ---- Einstich: CYCLE93 ----------------------------------------------------
+// VARI 1..8 -- die Zehnerstelle (11..18) wuerde Fasen als CHR statt CHF
+// rechnen; die App gibt Fasenlaengen an, also bleibt es bei 1..8 (CHF).
+//
+// DIE ZUORDNUNG IST NICHT SYSTEMATISCH. Sie steht im Handbuch als Bild
+// (Druckseite 4-283) und lautet Wert fuer Wert:
+//   1 laengs aussen links    5 laengs aussen rechts
+//   3 laengs innen  links    7 laengs innen  rechts
+//   6 plan  aussen oben      8 plan  aussen unten
+//   2 plan  innen  oben      4 plan  innen  unten
+// Bei laengs und plan tragen VERSCHIEDENE Stellen aussen/innen. Wer hier
+// eine Formel hineinrechnet, bekommt vier Fehler statt einer Tabelle.
+function siVari93(p){
+  const plan   = (p.ausr === 'axial');
+  const innen  = (p.lage === 'innen');
+  if(!plan) return innen ? 3 : 1;      // laengs, Startpunkt links
+  return innen ? 2 : 6;                // plan, oben
+}
+
+// Radien positiv, Fasen NEGATIV -- woertlich aus dem Handbuch (S. 4-285).
+// Daniels Maske fuehrt je Ecke entweder eine Fase (f1..f4) oder einen
+// Radius (r1..r4); hier wird daraus das Vorzeichen.
+function siKante(p, nr){
+  const f = p['f'+nr], r = p['r'+nr];
+  if(f !== undefined && f !== null && f !== '' && +f > 0) return -Math.abs(+f);
+  if(r !== undefined && r !== null && r !== '' && +r > 0) return  Math.abs(+r);
+  return 0;
+}
+
+// ---- Gewinde: CYCLE97 -----------------------------------------------------
+// VARI 1..4: aussen/innen x konstante Zustellung / konstanter Spanquerschnitt.
+// Daniels drei Verfahren sind A (degressiv, konst. Spanvolumen), B (degressiv,
+// optimierte Schnittzahl) und 'fest' (lineare feste Anzahl). Die Steuerung
+// kennt A und B NICHT getrennt -- beide sind dort "konstanter Spanquerschnitt".
+// Das steht als Warnung in der Ampel, damit niemand die Schnittaufteilung der
+// Simulation eins zu eins an der Maschine erwartet.
+function siVari97(p){
+  const innen = (p.lage === 'innen');
+  const konstZustellung = (p.verf === 'fest');
+  return (konstZustellung ? 1 : 3) + (innen ? 1 : 0);
+}
+
+// ---------------------------------------------------------------------------
+// DIE ZWEI PROFILE
+// ---------------------------------------------------------------------------
+// Sie haengen sich an MASCHINEN_PROFILE, statt dort zu stehen: so bleibt
+// alles Siemens-eigene in dieser einen Datei, und das Profil der Monforts
+// ist nicht angefasst.
+//
+// EHRLICH ZUM BELEGSTAND: fuer keine der beiden Maschinen liegt ein
+// gezogenes Programm vor. Alles hier steht auf den Handbuechern. Bei den
+// Monforts hat genau diese Lage zweimal danebengelegen (die G72-Herleitung
+// vom 11.09.2026 und das PO-Vorzeichen vom 18.09.2026, beide erst am Teil
+// aufgefallen) -- deshalb traegt jedes Programm den Vorbehalt im Kopf.
+if(typeof MASCHINEN_PROFILE !== "undefined"){
+  const siBasis = () => {
+    const b = (typeof _profilBasis === "function") ? _profilBasis() : {};
+    return Object.assign(b, {
+      // WECHSELPUNKT: derselbe sichere Standard wie bei den Monforts
+      // (X300/Z20, Daniels Ansage 31.08.2026). Fuer eine Maschine, die hier
+      // niemand kennt, ist ein Rueckfall ohnehin nur ein Startwert -- der
+      // Punkt ist Bedienersache je Bauteil und steht im Programmkopf.
+      wwp:{x:300, z:20},
+      // Die MTC-Zyklusfreigaben bedeuten hier nichts; der Siemens-Schreiber
+      // liest sie nicht. Sie stehen nur, damit keine Lesestelle ins Leere
+      // greift.
+      zyklen:{g71:"disabled", g72:"disabled", g73:"disabled",
+              g74:"disabled", g75:"disabled", g81ff:"disabled"},
+      ikDurchmesser:true, ikStatus:"handbuch", ikBeleg:"Drehen: X ist die Planachse",
+      tLang:false, tStatus:"handbuch",
+    });
+  };
+  MASCHINEN_PROFILE.SINUMERIK_810T = Object.assign(siBasis(), {
+    id:"SINUMERIK_810T",
+    label:"Siemens 810T (Drehen)",
+    name:"SINUMERIK 810T / System 800",
+    dialekt:"SIEMENS",
+    siemens:"T810",
+    // T bis vier Stellen (Programmieranleitung Kap. 4.5: "Werkzeugnummer
+      // max. 4-dekadig"). Wieviele Plaetze der Revolver hat, weiss nur die
+    // Maschine -- die Zahl hier ist die Grenze der STEUERUNG.
+    tMax:9999, plaetze:9999,
+    tMaxBeleg:"Programmieranleitung Kap. 4.5: T max. 4-dekadig",
+    uebertragung:"nicht bekannt - es liegt kein Abzug dieser Maschine vor",
+    uebertragungOffen:"Schnittstelle, Baudrate und Rahmen am Geraet ablesen",
+    fahrtests:"keine - an dieser Maschine ist nie ein Programm dieser App gelaufen",
+    fahrtestsOffen:"ersten Zyklus im Einzelsatz fahren, Maskensatz ziehen und Wort fuer Wort vergleichen",
+    termine:"noch keiner",
+  });
+  MASCHINEN_PROFILE.SINUMERIK_840D_DREHEN = Object.assign(siBasis(), {
+    id:"SINUMERIK_840D_DREHEN",
+    label:"Siemens 840D (Drehen)",
+    name:"SINUMERIK 840D / 840Di / 810D - Drehzyklen",
+    dialekt:"SIEMENS",
+    siemens:"D840",
+    // Die 840D begrenzt die T-Nummer nicht in der Groessenordnung, die hier
+    // vorkommt; die Grenze ist die Werkzeugverwaltung der Maschine.
+    tMax:32000, plaetze:32000,
+    tMaxBeleg:"keine Grenze im Zyklenhandbuch genannt",
+    uebertragung:"nicht bekannt - es liegt kein Abzug dieser Maschine vor",
+    uebertragungOffen:"Schnittstelle am Geraet ablesen; ein MPF wird ueblich per Netzwerk oder USB uebertragen",
+    fahrtests:"keine - an dieser Maschine ist nie ein Programm dieser App gelaufen",
+    fahrtestsOffen:"Settingdatum _ZSD[0] nachsehen (MID Radius oder Durchmesser), ersten Zyklus im Einzelsatz fahren",
+    termine:"noch keiner",
+  });
+}
+
+// ---------------------------------------------------------------------------
+// DER EINSTIEG AUS buildProgram
+// ---------------------------------------------------------------------------
+// Die Rekursionswache: der Siemens-Schreiber ruft fuer Schritte ohne eigenen
+// Zyklus buildProgram, um an die MTC-Bahnen zu kommen. Ohne diese Wache
+// liefe er sich dabei selbst in die Arme.
+let SI_IM_RUECKWEG = false;
+
+function siDrehAlsProgramm(){
+  siBahnCacheLeeren();
+  const P = (typeof MASCHINENPROFIL !== "undefined") ? MASCHINENPROFIL : null;
+  const r = siDrehProgramm({steuerung: (P && P.siemens) || "D840"});
+  const warnBox = document.getElementById("warnBox");
+  if(!r || !r.text){
+    if(warnBox){
+      warnBox.style.display = "block";
+      warnBox.className = "warn gesperrt";
+      warnBox.textContent = "Siemens-Ausgabe: " + ((r && r.fehler) || "kein Programm entstanden");
+    }
+    return null;
+  }
+  // DIE WARNUNGEN GEHOEREN DEM SIEMENS-LAUF. Der Rueckweg ueber die
+  // MTC-Bahnen hat die Warnbox zwischendurch mit den Monforts-Meldungen
+  // gefuellt -- die gelten hier nicht, das Programm geht an eine andere
+  // Maschine. Deshalb wird sie hier zuletzt neu gesetzt.
+  const w = (r.warnungen || []).slice();
+  if(typeof letzteWarnungen !== "undefined") letzteWarnungen = w.slice();
+  if(warnBox){
+    warnBox.style.display = "none";
+    warnBox.className = "warn";
+    if(w.length && typeof renderWarnBox === "function") renderWarnBox(warnBox, w);
+  }
+  return r.text;
+}
+
+// ---------------------------------------------------------------------------
+// DIE MERKMALE DER ZWEI STEUERUNGEN
+// ---------------------------------------------------------------------------
+// Dieselbe Sprache wie bei den Monforts [Daniels Ansage 11.09.2026]: Stand,
+// keine Historie. Jede Zeile nennt in EINEM Satz, was die App tut, und im
+// Feld `offen`, was dafuer noch fehlt. Die Belegstufen sind die vorhandenen
+// aus PP_STATUS -- ein zweites Vokabular waere nur eine zweite Baustelle.
+const SI_FEST = [
+  "Jedes Programm traegt drei Zeilen im Kopf: am Handbuch gebaut, nie an dieser Maschine gelaufen, ersten Lauf im Einzelsatz fahren. Sie bleiben stehen, bis ein Satz dieser Maschine vorliegt.",
+  "Die Werkzeuguebersicht im Kopf nennt jedes Werkzeug mit Nummer, Namen und Schneidenradius [Termin 18.09.2026]. Stimmen App-Tabelle und Werkzeugkorrektur der Steuerung nicht ueberein, sucht man den Fehler sonst an der falschen Stelle.",
+  "Die Aufmasse UX und UZ gehen als ABSTAND ZUR KONTUR in die Zyklen, nicht im Durchmesser - bei Siemens die uebliche Lesart. Fuer die Zustelltiefe gibt es deshalb ein Settingdatum, fuer die Aufmasse keins.",
+  "D Zustelltiefe und UX Aufmass gelten in der App RADIAL (ap, je Seite); axiale Werte 1:1. Das ist dieselbe Regel wie bei den Monforts.",
+  "Was an dieser Steuerung keinen Zyklus hat (Abspanen Ecke, Stechdrehen, Abstechen, die uebrigen Bohrarten), kommt als Einzelsaetze aus der MTC-Bahn - dieselbe Geometrie wie in der Simulation. Diese Saetze tragen KEINE Schneidenradiuskorrektur; an der Steuerung darf dort keine zweite aktiv sein.",
+  "Die NC-Ausgabe der Monforts ist davon nicht beruehrt: der Siemens-Schreiber ist eine eigene Weiche vor buildProgram, der MTC-Weg bleibt Zeichen fuer Zeichen derselbe.",
+];
+
+function siMerkmale(pr){
+  const t810 = (pr.siemens === "T810");
+  const M = [];
+
+  M.push({t:"Belegstand dieser Maschine", s:"unknown_for_target_machine",
+    w:"Es liegt KEIN Programm dieser Maschine vor - weder gezogen noch gelaufen. Alles hier steht auf " +
+      (t810 ? "der Programmieranleitung 810T (GA3) und dem Zyklenhandbuch System 800 (ASM 4)."
+            : "dem Zyklenhandbuch 840D/840Di/810D (Ausgabe 11.02)."),
+    offen:"Ein einziges gezogenes Programm oder ein Foto der Zyklusmaske macht aus jeder Ableitung hier einen Beleg."});
+
+  M.push({t:"Maschinentermine", s:"unknown_for_target_machine",
+    w:"noch keiner - diese Steuerung steht in keiner Werkstatt, zu der die App Zugang hat."});
+
+  M.push({t:"Programmkopf", s:"documented_for_control",
+    w:(t810 ? "%MPF<Nr> als erste Zeile, dann G18 G90 G95. "
+            : ";%_N_<NAME>_MPF und ;$PATH als Uebertragungskopf, dann G18 G90 G95 DIAMON. ") +
+      "G18 ist die Z-X-Ebene: Laengsachse Z, Planachse X."});
+
+  M.push({t:"Durchmesserprogrammierung", s:(t810 ? "unknown_for_target_machine" : "documented_for_control"),
+    w:(t810 ? "An der 810T ist sie ein MASCHINENDATUM, kein G-Wort - die App schreibt X im Durchmesser und sagt es im Programmkopf."
+            : "DIAMON steht im Kopfsatz; X ist damit der Durchmesser, I des Kreisbogens bleibt ein Radiusmass."),
+    offen:(t810 ? "am Panel nachsehen, ob die Steuerung X im Durchmesser erwartet - sonst ist jedes X-Mass doppelt so gross wie gemeint" : "")});
+
+  M.push({t:"Werkzeugaufruf", s:"documented_for_control",
+    w:(t810 ? "T und D getrennt (T1 D1): T waehlt das Werkzeug, D den Korrekturblock aus der flachen Liste D1..D99. OHNE D steht keine Laengenkorrektur an."
+            : "T<Nr> D1 - D ist bei der 840D die Schneide EINES Werkzeugs.")});
+
+  M.push({t:"Kreisbogen", s:"documented_for_control",
+    w:(t810 ? "I/K inkrementell zum Satzanfang, I als RADIUSmass. Der Radius hiesse B (+ bis 180 Grad, - darueber); die App schreibt I/K, weil damit auch ein Vollkreis geht."
+            : "I/K inkrementell, I als Radiusmass. CR= waere die Radiusform.")});
+
+  M.push({t:"Kommentare", s:"documented_for_control",
+    w:(t810 ? "In KLAMMERN, nicht hinter einem Strichpunkt (Kap. 1.3.3: \"Der Text einer Anmerkung steht zwischen den Zeichen Anmerkungsbeginn '(' und Anmerkungsende ')'\"). Innerhalb einer Anmerkung darf KEINE Klammer stehen - die Steuerung schliesst sie an der ersten und liest den Rest als Satz. Hoechstens 120 Zeichen."
+            : "Hinter einem Strichpunkt bis zum Zeilenende. Ueber jedem Zyklusaufruf steht seine Parameterliste als Kommentar, damit der Bediener die Reihenfolge lesen kann.")});
+
+  M.push({t:"Drehzahlbegrenzung bei G96", s:"documented_for_control",
+    w:(t810 ? "G92 S<n> - selbsthaltend und ALLEIN im Satz (Kap. 3.2.4)."
+            : "LIMS=<n> - darf neben anderen Woertern stehen.")});
+
+  M.push({t:"Verweilzeit", s:"documented_for_control",
+    w:"Im Programm G4 S<Umdrehungen> (810T Kap. 3.2.9, allein im Satz); in den ZYKLEN dagegen in SEKUNDEN. " +
+      "Die App fuehrt t1 in Umdrehungen und rechnet dafuer mit der Drehzahl des Schritts um" +
+      (t810 ? "." : " - ausser beim CYCLE83, der Umdrehungen als negativen Wert selbst kann.")});
+
+  if(t810){
+    M.push({t:"Abspanzyklus L95", s:"documented_for_control",
+      w:"R20 Kontur-Unterprogramm, R21/R22 Anfangspunkt, R24/R25 Aufmass X/Z, R26 Spantiefe, R27 SRK als G-Nummer ohne G, R28 Vorschub, R29 Art (Zehnerstelle Bearbeitung, Einerstelle Richtung und Seite), R30 Eintauchfaktor. Das Kontur-Unterprogramm muss MIT uebertragen werden.",
+      offen:"Ob R24/R25/R26 Radius- oder Durchmesserwerte sind, sagt das Handbuch nicht - die App schreibt Radiuswerte; am Probeschnitt pruefen."});
+    M.push({t:"Einstechzyklus L93", s:"documented_for_control",
+      w:"R10 Art, R21/R22 Anfangspunkt (die Achsen TAUSCHEN mit laengs/plan), R23 Startseite, R24 Aufmass am Grund, R25 an den Flanken, R26 Zustellung, R27 Breite, R29/R35 Flankenwinkel, R30..R34 Kanten (Radius +, Fase -), R31 Nutgrund absolut.",
+      offen:"Welche Nummer welche Kante traegt, ist aus der Parameterreihenfolge abgeleitet - am Bild der Zyklusmaske vergleichen."});
+    M.push({t:"Gewindezyklus L97", s:"documented_for_control",
+      w:"R24 traegt die LAGE im Vorzeichen: plus innen, minus aussen. Laengs oder plan entscheidet der Zyklus selbst am Winkel zwischen Anfang und Ende (ueber 45 Grad = plan).",
+      offen:"Linksgewinde ist die Spindeldrehrichtung vor dem Aufruf (M04), nicht der Zyklus."});
+    M.push({t:"Tiefbohrzyklus L98", s:"documented_for_control",
+      w:"R11 0 Spaenebrechen / 1 Entspaenen, R22 Anfang, R24 Degressionsbetrag in mm (die App fuehrt einen Faktor und rechnet um), R25 erste Bohrtiefe, R26 Endbohrtiefe absolut, R27/R28 Verweilzeiten."});
+    M.push({t:"Freistichzyklus L94", s:"disabled",
+      w:"Nicht geschrieben - Einzelsaetze. Die Zuordnung der Schneidenlage R01 steht im Handbuch nur als Bild, und es gibt kein gedrucktes Beispiel. Die Einzelsaetze fahren dieselbe Kontur wie die Simulation."});
+    M.push({t:"Satzgrenze 120 Zeichen", s:"documented_for_control",
+      w:"Kap. 1.2. Der L93 hat sechzehn R-Parameter und passt nicht in einen Satz; die App bricht die Zuweisungen um und stellt den Aufruf ans Ende. R-Parameter sind modal, das ist zulaessig."});
+  } else {
+    M.push({t:"Abspanzyklus CYCLE95", s:"documented_for_control",
+      w:"Die Kontur steht als LABEL-ABSCHNITT im selben Programm (NPP mit Anfangs- und Endlabel, ab SW 5.2) - damit bleibt es EINE Datei. VARI 1..12: 1-4 Schruppen, 5-8 Schlichten, 9-12 Komplettbearbeitung, je laengs/plan und aussen/innen.",
+      offen:"MID (Zustelltiefe) schreibt die App als RADIUSWERT. Die Steuerung liest ihn so nur bei _ZSD[0]=1; bei 2 waere es ein Durchmesserwert und sie stellte nur halb so tief zu. Vor dem ersten Lauf nachsehen."});
+    M.push({t:"Einstechzyklus CYCLE93", s:"documented_for_control",
+      w:"SPD/SPL Anfangspunkt, WIDG Breite, DIAG Tiefe, ANG1/ANG2 Flankenwinkel, RCO/RCI die vier Kanten (Radius +, Fase -), FAL1 Aufmass am Grund, FAL2 an den Flanken, IDEP Zustellung, VARI 1..8.",
+      offen:"Der Zyklus braucht ein ZWEISCHNEIDIGES Werkzeug: D1 und D2 des Stechers muessen in der Werkzeugtabelle der Steuerung stehen, D1 vor dem Aufruf aktiv - sonst Alarm 61000."});
+    M.push({t:"Gewindezyklus CYCLE97", s:"documented_for_control",
+      w:"VARI 1..4 (aussen/innen x konstante Zustellung / konstanter Spanquerschnitt). IANG negativ = wechselseitige Flanke. Laengs oder plan entscheidet der Zyklus selbst am Kegelwinkel (bis 45 Grad laengs).",
+      offen:"Die Verfahren A und B der App kennt die Steuerung nicht getrennt - beide laufen dort als konstanter Spanquerschnitt; die Schnittzahl kann abweichen."});
+    M.push({t:"Freistich CYCLE94 / CYCLE96", s:"unknown_for_target_machine",
+      w:"CYCLE94 fuer Form E und F nach DIN 509, CYCLE96 fuer den Gewindefreistich DIN 76. SPD/SPL sind das FERTIGTEILMASS; den Startpunkt setzt der Zyklus selbst.",
+      offen:"_VARI 1..4 bestimmt die Lage, aber welche Zahl welche Lage meint, steht nirgends ausgeschrieben - die App laesst _VARI leer (0 = aus der Schneidenlage des Werkzeugs). Beim CYCLE96 ist FORM=A eine Annahme."});
+    M.push({t:"Bohrzyklen CYCLE82 / CYCLE83", s:"documented_for_control",
+      w:"CYCLE82 zum Bohren und Zentrieren, CYCLE83 zum Tieflochbohren. Beide bohren auf der Drehmitte X0; angetriebene Werkzeuge kennt dieser Postprozessor nicht."});
+  }
+
+  M.push({t:"Ohne eigenen Zyklus: Einzelsaetze", s:"documented_for_control",
+    w:"Abspanen Ecke, Stechdrehen, Abstechen und die uebrigen Bohrarten haben an dieser Steuerung keinen passenden Zyklus. Fuer sie schreibt die App die BAHN AUS DEM MTC-PROGRAMM um - dieselbe Geometrie, die in der Simulation steht und an den Monforts gefahren ist.",
+    offen:"Diese Saetze tragen KEINE Schneidenradiuskorrektur: sie sind die fertig gerechneten Bahnen."});
+
+  M.push({t:"Restmaterial-Zyklus", s:"disabled",
+    w:"Uebersprungen mit Ansage. Der Abspanzyklus beider Steuerungen raeumt Restecken selbst mit - ein zweiter Schritt dafuer waere ueberfluessig."});
+
+  M.push({t:"Plangewinde", s:"disabled",
+    w:"Nicht geschrieben. Beide Steuerungen entscheiden laengs oder plan SELBST am Winkel zwischen Anfangs- und Endpunkt; ein reines Plangewinde braucht dafuer Achswerte, die sich aus der Maske der App nicht ableiten lassen."});
+
+  return M;
+}
 </script>
 <script>
 // PWA-Offline [pwa-bauen.js]: nur wenn ueber einen Server geladen —
