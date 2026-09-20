@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 09:29 (90839e22)";</script>
+<script>window.__DZ_STAND="20.09.2026 11:08 (bb8f2cd6)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3454,8 +3454,8 @@ Werkzeugradius an ihr entlang, von der Wandoberkante in <b>Z-Schritten</b> bis z
 zeilenweise mit ae oder konturparallel &mdash; das Material ist das Aufma&szlig; des Schruppens, die Schneide reicht bis an die Wand. Reihenfolge: W&auml;nde von oben nach
 unten, dann B&ouml;den von oben nach unten. <b>Was schlichten</b> w&auml;hlt B&ouml;den, W&auml;nde oder beides. Er braucht einen Schruppschritt davor (sonst rot). Eine Wand, an der das
 Werkzeug in h&ouml;herem Material st&uuml;nde (zweite Wand oder Insel n&auml;her als der Durchmesser), wird &uuml;bersprungen und genannt. <b>Schr&auml;gen</b> geh&ouml;ren weiter dem
-Kugelfr&auml;ser (Schr&auml;gen schlichten) &mdash; an ihnen l&auml;sst dieser Schritt die Treppe des Schruppens stehen und sagt es. Das <b>Hilfebild</b> zeigt links die Draufsicht (die Wandbahn uml&auml;uft die Tasche im Abstand Werkzeugradius, der Boden darin zeilenweise mit ae) und rechts den Schnitt durch die Stufe mit den Z-Schritten der Wand. Kein Steuerungszyklus, immer Einzels&auml;tze;
-an der Maschine nicht gelaufen.</dd>
+Kugelfr&auml;ser (Schr&auml;gen schlichten) &mdash; an ihnen l&auml;sst dieser Schritt die Treppe des Schruppens stehen und sagt es. Das <b>Hilfebild</b> zeigt links die Draufsicht (die Wandbahn uml&auml;uft die Tasche im Abstand Werkzeugradius, der Boden darin zeilenweise mit ae) und rechts den Schnitt durch die Stufe mit den Z-Schritten der Wand. Kein Steuerungszyklus, immer Einzels&auml;tze. <b>Beleg:</b> das Testprogramm DZ24 ist am Programmierplatz durch den Wandler gelaufen (0 ERROR, Satz f&uuml;r Satz zur&uuml;ckgeschrieben) und im <b>Programm-Test der Steuerung ohne Meldung durchgelaufen</b>
+(20.09.2026, 0:00:51 Simulationszeit; in der 3D-Grafik steht die Stufe: links das Rohteil auf Z0, rechts der geschlichtete Boden auf Z&minus;4 mit der Wand dazwischen). Der Lauf an der Maschine steht aus.</dd>
 <dt id="ba-fk05c-rohform">Rohteil aus einem zweiten STEP-Modell (20.09.2026)</dt><dd>Ein Gussteil, ein Schmiedeteil oder eine Vorbearbeitung ist kein Quader. In Stufe 3 l&auml;dt <b>Rohteil-Modell</b>
 ein zweites STEP als Rohform: es bekommt <b>dieselbe Lage</b> wie das Teil (Achse und Nullpunkt des Teils, nicht sein eigener H&uuml;llquader &mdash; beide Modelle m&uuml;ssen im
 CAD im selben Koordinatensystem stehen), und die App rechnet daraus ein zweites H&ouml;henfeld. Modell abspanen, Restmaterial abspanen, B&ouml;den &amp; W&auml;nde schlichten und
@@ -3865,6 +3865,11 @@ Werkzeugverschlei&szlig;, Ausschuss. Ohne aktiven Bearbeitungsschritt fehlt die 
 <code>L Z+.. R0 FMAX M13</code>, <code>CYCL DEF</code> mit den Q-Zeilen, <code>CALL LBL n</code> (oder Musterzyklus),
 <code>L Z+.. R0 FMAX M9</code>; der letzte Schritt endet mit <code>M2</code>, danach die LBL-Unterprogramme,
 zuletzt <code>END PGM</code>. Zeilenende CR LF, Datei <code>NAME.H</code>.</p>
+<p><b>Deutscher Text im Kommentar wird &uuml;bersetzt, nicht weggeworfen</b> (20.09.2026): die Steuerung nimmt nur ASCII,
+also wird aus &bdquo;B&ouml;den &amp; W&auml;nde&ldquo; im Schrittkopf <code>BOEDEN UND WAENDE</code> (&Auml;/&Ouml;/&Uuml; als AE/OE/UE,
+&szlig; als SS, das kaufm&auml;nnische Und als Wort). Vorher warf der Zeichenfilter alles Nicht-ASCII ersatzlos weg &mdash; am
+Programmierplatz stand <code>; SCHRITT 2: BDEN  WNDE SCHLICHTEN</code> auf dem Bildschirm, und wer das liest, wei&szlig; nicht,
+was der Schritt tut. Gilt ebenso f&uuml;r Werkzeugnamen im Schrittkopf und in der exportierten TOOL.T.</p>
 <p><b>Zur Maschine:</b> USB-Stick oder TNCremo &mdash; und zwar <b>&uuml;ber die Dateiverwaltung der TNC</b> (PGM MGT,
 vom USB-Laufwerk auf TNC:\ kopieren) oder TNCremo, nie per Windows-Explorer direkt in ein TNC-Laufwerk. Die Steuerung
 wandelt .H-Dateien beim Einlesen in ihr Bin&auml;rformat; eine unverwandelte Datei quittiert sie mit &bdquo;Dateiformat
@@ -5002,7 +5007,7 @@ function fToolTSchreiben(werkzeuge, opt){
       z = setz(z, 'T-ANGLE', vz(0)); z = setz(z, 'PITCH', vz(0));
       zeilen.push(z); return;
     }
-    z = setz(z, 'T', w.nr); z = setz(z, 'NAME', String(w.name || '').toUpperCase().replace(/[^A-Z0-9_\-.]/g, '_').slice(0, 32));
+    z = setz(z, 'T', w.nr); z = setz(z, 'NAME', fAsciiText(w.name).replace(/[^A-Z0-9_\-.]/g, '_').slice(0, 32));
     z = setz(z, 'L', vz(w.l || 0)); z = setz(z, 'R', vz((+w.d || 0) / 2)); z = setz(z, 'R2', vz(w.r2 || 0));
     z = setz(z, 'DL', vz(w.dl || 0)); z = setz(z, 'DR', vz(w.dr || 0)); z = setz(z, 'DR2', vz(0));
     z = setz(z, 'DOC', String(w.doc || '').replace(/[^\x20-\x7E]/g, '_').slice(0, 32));
@@ -5632,7 +5637,7 @@ function fBahnKlartext(B){
     } else if(m.a === 'kreis'){ ccSatz(m, m.x, m.y); out.push('C X' + klNum(m.x) + ' Y' + klNum(m.y) + ' DR' + (m.dr > 0 ? '+' : '-') + ' R0 F' + fRund(m.f)); merk(m); }
     else if(m.a === 'helix'){ ccSatz(m); out.push('CP IPA' + klNum(360 * m.turns * (m.dr > 0 ? 1 : -1)) + ' IZ' + klNum(m.dz) + ' DR' + (m.dr > 0 ? '+' : '-') + ' R0 F' + fRund(m.f)); if(m.z != null) pos.z = m.z; }
     else if(m.a === 'verweil'){ out.push('CYCL DEF 9.0 VERWEILZEIT'); out.push('CYCL DEF 9.1 V.ZEIT ' + fRund(m.t)); }
-    else if(m.a === 'kom') out.push('; ' + String(m.text).toUpperCase().replace(/[^A-Z0-9 .,\-:=+]/g, ''));
+    else if(m.a === 'kom') out.push('; ' + fAsciiText(m.text).replace(/[^A-Z0-9 .,\-:=+]/g, ''));
   });
   return out;
 }
@@ -11774,6 +11779,21 @@ function fSim3dKamera(F, az, el, dist, aspect){
 }
 
 // ---------------------------------------------------------------------
+// Deutscher Text im NC: UEBERSETZEN, nicht wegwerfen.
+// Die Steuerung nimmt nur ASCII. Bis zum 20.09.2026 warfen die Zeichen-
+// filter alles andere ersatzlos weg - am Programmierplatz stand deshalb
+// "; SCHRITT 2: BDEN  WNDE SCHLICHTEN" auf dem Bildschirm (aus "Böden &
+// Wände"). Wer das liest, weiss nicht, was der Schritt tut. Ae/Oe/Ue wie
+// im Programmnamen, das kaufmaennische Und wird zum Wort.
+// ---------------------------------------------------------------------
+function fAsciiText(s){
+  return String(s == null ? '' : s).toUpperCase()
+    .replace(/[ÄÖÜ]/g, c => ({'Ä':'AE', 'Ö':'OE', 'Ü':'UE'})[c])
+    .replace(/ß/g, 'SS').replace(/&/g, ' UND ')
+    .replace(/\s+/g, ' ').trim();
+}
+
+// ---------------------------------------------------------------------
 // Programmname pruefen: Dateiname = Programmname (BEGIN/END PGM).
 // ---------------------------------------------------------------------
 function fName(prog){
@@ -11837,7 +11857,7 @@ function fProgrammSchreiben(prog, opt){
     const m = prog.muster[s.muster];
     const letzter = (si === schritte.length - 1);
     const rz = +k.rz;
-    satz('; SCHRITT ' + (si + 1) + ': ' + (z ? z.wort.toUpperCase() : s.art).replace(/[^A-Z0-9 ()\-,.]/gi, '') + ' T' + s.t + (tool.name ? ' ' + String(tool.name).toUpperCase().replace(/[^A-Z0-9 .\-]/g, '') : ''));
+    satz('; SCHRITT ' + (si + 1) + ': ' + fAsciiText(z ? z.wort : s.art).replace(/[^A-Z0-9 ()\-,.]/g, '') + ' T' + s.t + (tool.name ? ' ' + fAsciiText(tool.name).replace(/[^A-Z0-9 .\-]/g, '') : ''));
     satz('TOOL CALL ' + s.t + ' ' + (k.achse || 'Z') + ' S' + Math.round(+s.s || 0));
     // M13 = Spindel rechts + Kuehlmittel EIN in einem Wort (Standard-M der
     // TNC); ohne Kuehlmittel nur M3.
