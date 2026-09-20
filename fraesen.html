@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 01:54 (6fa24ce8)";</script>
+<script>window.__DZ_STAND="20.09.2026 09:29 (90839e22)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2877,7 +2877,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
                erklaert die Anleitung Kap. 5c (Knopf i). Alle Knopf-IDs bleiben, die Verdrahtung in F20 auch. -->
           <div class="stufe" id="stufeLaden"><span class="nr">1</span><span class="tit">Laden</span><label class="gcbtn primary" style="padding:8px 12px;cursor:pointer;" title="STEP-Datei (.stp oder .step) laden">&#x2B06; Modell laden<input type="file" id="stepFile" accept=".stp,.step,.STP,.STEP" style="display:none;"></label></div>
           <div class="stufe" id="stufeAusrichten"><span class="nr">2</span><span class="tit">Ausrichten</span><span class="lbl">Werkzeugachse</span><span class="radiobtns" id="stepAchseBtns"><button data-v="+X">+X</button><button data-v="-X">-X</button><button data-v="+Y">+Y</button><button data-v="-Y">-Y</button><button data-v="+Z" class="sel">+Z</button><button data-v="-Z">-Z</button></span><span class="lbl">Nullpunkt</span><span class="radiobtns" id="stepNullBtns"><button data-v="ecke" class="sel">Ecke, Oberkante</button><button data-v="mitte">Mitte, Oberkante</button></span><button class="gcbtn" id="btnStepVorschlag" title="Alle sechs Aufspannlagen bewerten: gr&ouml;&szlig;te Auflage nach unten, dann m&ouml;glichst viel in dieser Aufspannung fertig">Aufspannung vorschlagen</button></div>
-          <div class="stufe" id="stufeRohteil"><span class="nr">3</span><span class="tit">Rohteil &amp; Sollform</span><button class="gcbtn" id="btnStepRoh" title="Huellquader des Modells als BLK FORM in den Programmkopf">Als Rohteil übernehmen</button><span class="lbl">Raster</span><input type="number" id="stepRaster" step="any" placeholder="auto" title="Rasterweite der Sollform in mm. Leer = automatisch nach Teilgröße (0,3 bis 2 mm). Feiner rechnen kostet Zeit und Speicher (die Zellzahl wächst quadratisch) und bringt zweierlei: den Bahnabstand, den die Rautiefe verlangt, UND die Genauigkeit auf den Flächen. Die KANTEN des Modells gehen seit 17.09.2026 exakt ein; an einer scharfen konvexen Kante bleiben rund ein Vierzigstel der Rasterweite (gemessen 0,0174 mm bei 0,60, 0,0066 bei 0,30, 0,0024 bei 0,15)." style="width:62px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepFeld" title="Die Sollform an das Programm geben — danach rechnen die Zyklen Modell abspanen, Restmaterial abspanen und Schrägen schlichten damit">Sollform ans Programm</button></div>
+          <div class="stufe" id="stufeRohteil"><span class="nr">3</span><span class="tit">Rohteil &amp; Sollform</span><button class="gcbtn" id="btnStepRoh" title="Huellquader des Modells als BLK FORM in den Programmkopf">Als Rohteil übernehmen</button><label class="gcbtn" style="padding:8px 10px;cursor:pointer;" title="Ein zweites STEP-Modell als ROHTEIL (Gussteil, Schmiedeteil, Vorbearbeitung): Modell abspanen, Restmaterial, Böden &amp; Wände und die Simulation rechnen dann mit seiner Oberfläche statt mit dem Quader">&#x2B06; Rohteil-Modell<input type="file" id="stepRohFile" accept=".stp,.step,.STP,.STEP" style="display:none;"></label><button class="gcbtn" id="btnStepRohWeg" style="display:none;" title="Rohform entfernen: es gilt wieder der Quader der BLK FORM">Rohform weg</button><span class="lbl">Raster</span><input type="number" id="stepRaster" step="any" placeholder="auto" title="Rasterweite der Sollform in mm. Leer = automatisch nach Teilgröße (0,3 bis 2 mm). Feiner rechnen kostet Zeit und Speicher (die Zellzahl wächst quadratisch) und bringt zweierlei: den Bahnabstand, den die Rautiefe verlangt, UND die Genauigkeit auf den Flächen. Die KANTEN des Modells gehen seit 17.09.2026 exakt ein; an einer scharfen konvexen Kante bleiben rund ein Vierzigstel der Rasterweite (gemessen 0,0174 mm bei 0,60, 0,0066 bei 0,30, 0,0024 bei 0,15)." style="width:62px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepFeld" title="Die Sollform an das Programm geben — danach rechnen die Zyklen Modell abspanen, Restmaterial abspanen und Schrägen schlichten damit">Sollform ans Programm</button></div>
           <div class="stufe" id="stufeProgramm"><span class="nr">4</span><span class="tit">Programm</span><button class="gcbtn primary" id="btnStepPlan" title="Der ganze Vorschlag in einem Zug: planen, schruppen, bohren, schlichten &mdash; in dieser Reihenfolge und mit so wenig Werkzeugwechseln wie m&ouml;glich">Programm vorschlagen</button><button class="gcbtn" id="btnStepEinzeln" title="Nur Teile des Vorschlags: die Fl&auml;chen, die Bohrungen oder die Konturen einer Z-Ebene">einzeln &#x25BE;</button></div>
           <div class="stufe stufe-ansicht"><span class="tit">Ansicht</span><span style="display:inline-flex;gap:2px;"><button class="gcbtn primary" id="btnStepDraht" title="Drahtbild des Modells">Drahtbild</button><button class="gcbtn" id="btnStepSoll" title="Sollform von oben: die Höhe, auf die gefräst werden muss">Sollform</button><button class="gcbtn" id="btnStepRest" title="Materialstand nach dem letzten Schruppschritt des Arbeitsplans (Modell abspanen / Restmaterial abspanen) — rot, was über der Sollform samt Aufmaß steht: das Restmaterial für den nächsten Schritt">Reststand</button></span><button class="gcbtn" id="btnStepHilfe" title="Anleitung Kap. 5c: Aufspannung, Sollform, Raster, Genauigkeit">&#x24D8;</button></div>
           <div class="stufe stufe-einzeln" id="stepEinzeln" style="display:none;"><span class="tit">einzeln &uuml;bernehmen</span><button class="gcbtn" id="btnStepFlaechen" title="Nur die Fl&auml;chen: planen, Modell abspanen, Schr&auml;gen schlichten &mdash; die Schritte stehen danach VOR den Bohrungen">Fl&auml;chen übernehmen</button><button class="gcbtn" id="btnStepBohren" title="Die Bohrungen des Modells als Bohrbilder und Schritte anlegen: ein Zentrierschritt über alle Stellen, danach je Durchmesser einer — größter zuerst">Bohrungen übernehmen</button><span class="lbl">Z-Ebene</span><select id="stepEbene" style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:210px;"></select><button class="gcbtn" id="btnStepKonturen" title="Die Schleifen dieser Ebene als XY-Konturen in den Arbeitsplan legen">Konturen übernehmen</button></div>
@@ -3446,6 +3446,23 @@ zwischen zwei Ringen, und der letzte Ring l&auml;uft im Abstand Werkzeugradius +
 gilt wie bei den Zeilen: im Gleichlauf liegt das Material (zur Form hin) rechts der Fahrtrichtung, die Ringe laufen im Uhrzeigersinn um das Teil; &bdquo;beides&ldquo;
 f&auml;hrt die Ringe im Gleichlauf. Anfahren und Eintauchen, Rest ab Breite und der Bezug des Rest-Schritts gelten unver&auml;ndert. Konturparallel ist die Wahl f&uuml;r
 Taschen und Inseln mit runden W&auml;nden; an langen geraden Kanten ist der M&auml;ander k&uuml;rzer. Der Bericht der Bahn nennt die Zahl der Ringe je Ebene.</dd>
+<dt id="ba-fk05c-boeden">B&ouml;den und W&auml;nde schlichten &mdash; mit dem Schaftfr&auml;ser (20.09.2026)</dt><dd>Die dritte Kachel der Gruppe STEP-Modell.
+Nach dem Schruppen (Modell abspanen, Restmaterial abspanen) bleibt an den W&auml;nden UXY und auf den B&ouml;den UZ stehen; dieser Schritt nimmt beides mit Aufma&szlig; 0 weg.
+<b>W&auml;nde</b> f&auml;hrt er <b>exakt</b>: jede waagerechte Fl&auml;che des Modells bringt ihre Randkonturen mit (sie h&auml;ngen seit dem 20.09.2026 an der Sollform &mdash; eine
+&auml;ltere Sollform neu &uuml;bergeben), und auf einer Seite jeder Kontur steht Material h&ouml;her: das ist die Wand. Das Werkzeug l&auml;uft auf der niedrigeren Seite im Abstand
+Werkzeugradius an ihr entlang, von der Wandoberkante in <b>Z-Schritten</b> bis zum Fu&szlig; (Konturzug, nur Schlichten). <b>B&ouml;den</b> f&auml;hrt er auf genau ihrer H&ouml;he,
+zeilenweise mit ae oder konturparallel &mdash; das Material ist das Aufma&szlig; des Schruppens, die Schneide reicht bis an die Wand. Reihenfolge: W&auml;nde von oben nach
+unten, dann B&ouml;den von oben nach unten. <b>Was schlichten</b> w&auml;hlt B&ouml;den, W&auml;nde oder beides. Er braucht einen Schruppschritt davor (sonst rot). Eine Wand, an der das
+Werkzeug in h&ouml;herem Material st&uuml;nde (zweite Wand oder Insel n&auml;her als der Durchmesser), wird &uuml;bersprungen und genannt. <b>Schr&auml;gen</b> geh&ouml;ren weiter dem
+Kugelfr&auml;ser (Schr&auml;gen schlichten) &mdash; an ihnen l&auml;sst dieser Schritt die Treppe des Schruppens stehen und sagt es. Das <b>Hilfebild</b> zeigt links die Draufsicht (die Wandbahn uml&auml;uft die Tasche im Abstand Werkzeugradius, der Boden darin zeilenweise mit ae) und rechts den Schnitt durch die Stufe mit den Z-Schritten der Wand. Kein Steuerungszyklus, immer Einzels&auml;tze;
+an der Maschine nicht gelaufen.</dd>
+<dt id="ba-fk05c-rohform">Rohteil aus einem zweiten STEP-Modell (20.09.2026)</dt><dd>Ein Gussteil, ein Schmiedeteil oder eine Vorbearbeitung ist kein Quader. In Stufe 3 l&auml;dt <b>Rohteil-Modell</b>
+ein zweites STEP als Rohform: es bekommt <b>dieselbe Lage</b> wie das Teil (Achse und Nullpunkt des Teils, nicht sein eigener H&uuml;llquader &mdash; beide Modelle m&uuml;ssen im
+CAD im selben Koordinatensystem stehen), und die App rechnet daraus ein zweites H&ouml;henfeld. Modell abspanen, Restmaterial abspanen, B&ouml;den &amp; W&auml;nde schlichten und
+die Simulation nehmen dann diese Oberfl&auml;che als Material: gefr&auml;st wird nur, wo die Rohform &uuml;ber der Sollform liegt, und wo die Rohform keine Fl&auml;che hat, steht
+nichts. Die BLK FORM im Programmkopf wird die H&uuml;lle aus Teil und Rohform &mdash; die Steuerung braucht den Quader, ihre Grafik zeigt ihn auch. <b>Rohform weg</b> stellt den Quader wieder
+her. Wie die Sollform wird die Rohform nicht mit dem Programm gespeichert; nach dem Neuladen ist sie neu zu &uuml;bergeben. Nicht ber&uuml;cksichtigt wird sie bei Taschen, Nuten,
+Zapfen, Bohrungen und den Steuerungszyklen &mdash; die kennen nur die BLK FORM.</dd>
 <dt id="ba-fk05c-rest">Restmaterial abspanen &mdash; der n&auml;chste Schritt mit dem kleineren Werkzeug</dt><dd>Der zweite Zyklus der Gruppe STEP-Modell (seit 19.09.2026).
 Er rechnet wie <i>Modell abspanen</i>, aber mit einem <b>Bezug</b>: dem <b>letzten Schruppschritt davor im Arbeitsplan</b> (Modell abspanen oder ein weiteres
 Restmaterial abspanen). Das ist kein Feld &mdash; die Schritte werden nacheinander abgearbeitet, also ist der Bezug immer der Schritt davor, und der Maskenkopf nennt ihn.
@@ -3471,7 +3488,7 @@ was &uuml;ber der Sollform samt Aufma&szlig; steht &mdash; das Restmaterial f&uu
 Sie rechnet gegen die Sollform <i>des Programms</i>; ohne &bdquo;Sollform ans Programm&ldquo; gibt es kein Bild.</li>
 </ul>
 Es gibt daf&uuml;r keinen Steuerungszyklus; die App schreibt ihre eigenen S&auml;tze (Kopfzeile <i>RESTMATERIAL ABSPANEN &ndash; EIGENE BAHN DER APP</i>). Vorlage
-<b>DZ23 T-Tasche</b> zeigt den Ablauf: der &#8960;20 r&auml;umt das Hauptfeld, der &#8960;8 holt als Restmaterial den 14-mm-Finger und die Ecken, nur von au&szlig;en angefahren.
+<b>DZ23 T-Tasche</b> zeigt den Ablauf: der &#8960;20 r&auml;umt das Hauptfeld, der &#8960;8 holt als Restmaterial den 14-mm-Finger und die Ecken, nur von au&szlig;en angefahren; der &#8960;10 schlichtet danach B&ouml;den und W&auml;nde mit Aufma&szlig; 0 &mdash; die W&auml;nde exakt aus den Schleifen der Ebenen des Modells, die B&ouml;den auf ihrer H&ouml;he.
 An der Maschine ist auch diese Bahn noch nicht gelaufen.</dd>
 <dt id="ba-fk05d-schlichten">Schr&auml;gen schlichten &mdash; &uuml;ber die Rautiefe</dt><dd>Der zweite Schritt auf derselben Sollform, mit dem
 <b>Kugelfr&auml;ser</b>. Nicht die Zustellung ist hier das Mass, sondern die <b>Rautiefe Rz</b>: zwischen zwei Bahnen bleibt ein Kamm stehen, und
@@ -4061,7 +4078,7 @@ var F_PROFILE = {
       // durchgelaufen (T241A); Q426 5 brach mit "Undefinierter
       // Programmstart" ab (T241B). Beides gelb in fPruefen.
       ausdrehen:'pgst', senkenRueck:'pgst', tiefUni:'pgst', bohrfraesen:'pgst', gewindeSpan:'pgst', einlippen:'pgst', planfraesen:'pgst',
-      modellSchruppen:'eigenbahn', modellSchlichten:'eigenbahn', modellRest:'eigenbahn'
+      modellSchruppen:'eigenbahn', modellSchlichten:'eigenbahn', modellRest:'eigenbahn', modellSchlichtenEben:'eigenbahn'
     },
     termine:'Programmierplatz 12.09.2026 (Demo 606 424, NC-SW 606 42x): DZ1, DZ2, DZ3 (Bohren, Muster), DZ4 (Taschen, Nuten, Zapfen 251-257) und DZ5 (Planfraesen 232, Bohrzyklen 202/204/205/208/209/241) im Programm-Test ohne Meldung durchgelaufen, Rueckexport Satz fuer Satz gleich; abends DZ6 (Einzelsaetze der eigenen Bahn, Paket C: 240/203/200/201 ohne Zyklus, 3:06 min) ebenso, nachts DZ7 (Kreistasche, Nut, Kreiszapfen als Ringbahnen mit CC/C, 1:55 min) und DZ8 (Planfraesen-Maeander, Rechtecktasche mit Helix CP IPA/IZ, 2:32 min), am 13.09.2026 DZ9 (Insel mit Nut als XY-Kontur: Zyklus 14/25 und dieselbe Kontur als eigene Bahn mit CC/C-Eckenboegen, 0:53 min) und DZ10 (Rundung, Fase, tangentialer Bogen, Vollkreis: natives LBL mit RND/CHF/CT und eigene Bahn, 1:00 min — erster Lauf fiel mit Kreis-Endpunkt falsch, MP7431: CC-Mitten seither auf der Mittelsenkrechten mit 0,0001); alles am selben Tag gebaut und an den Handbuechern 340 49x-02/-06/-07 geprueft. Befund 241: Q427 unter der Mindestdrehzahl der Demo (50 U/min) gibt Falsche Drehzahl, Q426 = 5 Undefinierter Programmstart',
     offen:'Modell abspanen: erster Lauf am Teil (senkrechtes Eintauchen, Restmaterial an den Waenden nachmessen). Schraegen schlichten: Programmierplatz-Lauf (DZ15) und erster Lauf am Teil — geprueft wird nur die Kugel, nicht Schaft und Halter; die Z-konstante Bahn fuer steile Flanken fehlt noch. Lauf an einer der drei Maschinen (Stand 340 49x): Softwarestand je Maschine (MOD), M13/M9 an der PLC, Option Synchron-Gewindebohren (207); danach Daniels eigene .H-Programme als Fixtures'
@@ -4227,6 +4244,11 @@ var F_ZYKLEN = {
   // Feld Vorwerkzeug - niemand sah, dass es ein Restmaterial-Schritt ist.
   modellRest:{nr:null, titel:'RESTMATERIAL ABSPANEN', wort:'Restmaterial abspanen', kurz:'Restmaterial',
     fraes:true, modell:true, rest:true, nurEinzel:true, eigenePosition:true, q:[]},
+  // BOEDEN UND WAENDE SCHLICHTEN [20.09.2026, Daniels Nachtschichtliste]: mit
+  // dem Schaftfraeser, Aufmass 0. Waende exakt entlang der Konturen der
+  // waagerechten Flaechen, Boeden auf ihrer Hoehe - siehe fBahnSchlichtenEben.
+  modellSchlichtenEben:{nr:null, titel:'BOEDEN UND WAENDE SCHLICHTEN', wort:'Böden & Wände schlichten', kurz:'Böden/Wände',
+    fraes:true, modell:true, eben:true, nurEinzel:true, eigenePosition:true, q:[]},
   // ---- Stufe 4 (14.09.2026): die Schraegen ueber die RAUTIEFE schlichten.
   // Ebenfalls ohne Steuerungszyklus. schlicht:true trennt sie vom Abspanen —
   // dieselbe Sollform, aber die Bahn folgt der Flaeche statt Z-konstant zu
@@ -4273,7 +4295,7 @@ var F_ZYKLEN = {
 };
 var F_ARTEN = ['zentrieren','bohren','tief','reiben','gewinde','gewindeGS','ausdrehen','senkenRueck','tiefUni','bohrfraesen','gewindeSpan','einlippen',
   'tascheR','tascheK','nut','nutR','zapfenR','zapfenK','planfraesen','konturzug','slVorbohren','slRaeumen',
-  'gewFraesen','gewSenk','gewBohr','gewHelix','gewAussen','modellSchruppen','modellSchlichten','modellRest'];
+  'gewFraesen','gewSenk','gewBohr','gewHelix','gewAussen','modellSchruppen','modellSchlichten','modellRest','modellSchlichtenEben'];
 var F_FRAES_ARTEN = ['tascheR','tascheK','nut','nutR','zapfenR','zapfenK','planfraesen'];
 var F_BOHR_ARTEN = ['zentrieren','bohren','tief','reiben','gewinde','gewindeGS','ausdrehen','senkenRueck','tiefUni','bohrfraesen','gewindeSpan','einlippen'];
 
@@ -4308,6 +4330,9 @@ var F_FELDER = {
   bahnArt:    {name:'Bahnart', typ:'wahl',
                wahl:[['zeilen','Zeilen (Mäander)'],['kontur','konturparallel (Ringe)']],
                ba:'ba-fk05c-kontur'},
+  ebWas:      {name:'Was schlichten', typ:'wahl',
+               wahl:[['beide','Böden und Wände'],['boeden','nur Böden'],['waende','nur Wände']],
+               ba:'ba-fk05c-boeden'},
   posArt:     {name:'Position', typ:'wahl',
                wahl:[['xy','eigene Position X/Y'],['muster','Bohrbild (mehrere Stellen)']],
                ba:'ba-fk05'},
@@ -4580,6 +4605,13 @@ var F_MASKE = {
   // Stufe 4: wie beim Abspanen traegt kein Feld ein Q-Wort. Der Bereich
   // Z0..Z1 waehlt aus, WELCHE Flaechen geschlichtet werden — nicht wie tief
   // gefahren wird; die Hoehe kommt aus dem Modell.
+  modellSchlichtenEben:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','ebWas','#Bahn','zust','bahnArt','ae','aeArt','bahnSinn','eintauch','#!Sicherheit','sc','sc2'],
+    feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd'],['3','nur von außen: kein Eintauchen, Unerreichbares bleibt stehen'],['0','über SC anfahren, senkrecht eintauchen']]},
+    feldText:{f:'F Vorschub Schlichten', fTief:'FZ Vorschub Eintauchen', zust:'Z-Schritt der Wände',
+      q203:'Z0 oberste Höhe (Bereich)', tiefe:'Z1 unterste Höhe (Bereich)', eintauch:'Anfahren & Eintauchen',
+      ae:'ae Zeilenabstand am Boden', aeArt:'ae bezogen auf', bahnSinn:'Fräsart (bei Rechtslauf M3)',
+      sc2:'SC2 Rückzug über Z0'},
+    ohneQ:['t','s','f','fTief','kuehl','q203','tiefe','ebWas','zust','bahnArt','ae','aeArt','bahnSinn','eintauch','sc','sc2']},
   modellSchlichten:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','winkelMin','winkel','#Mass','rautiefe','tolBahn','strategie','bahnSinn','#!Sicherheit','sc','sc2'],
                feldText:{f:'F Vorschub Schlichten', fTief:'FZ Vorschub Zustellen', tiefe:'Z1 unterste Höhe (Bereich)',
                  q203:'Z0 oberste Höhe (Bereich)', strategie:'Zeilenrichtung', bahnSinn:'Fräsart (bei Rechtslauf M3)', sc2:'SC2 Rückzug über Z0'},
@@ -4599,7 +4631,7 @@ var F_ZYKLUS_GRUPPEN = [
   {id:'taschen', name:'Taschen · Zapfen',  arten:['tascheR','tascheK','nut','nutR','zapfenR','zapfenK']},
   {id:'bohren',  name:'Bohren',            arten:['zentrieren','bohren','tief','tiefUni','reiben','ausdrehen','senkenRueck','bohrfraesen','einlippen']},
   {id:'gewinde', name:'Gewinde',           arten:['gewinde','gewindeGS','gewindeSpan','gewFraesen','gewSenk','gewBohr','gewHelix','gewAussen']},
-  {id:'modell',  name:'STEP-Modell',        arten:['modellSchruppen','modellRest','modellSchlichten']}
+  {id:'modell',  name:'STEP-Modell',        arten:['modellSchruppen','modellRest','modellSchlichten','modellSchlichtenEben']}
 ];
 // Feldliste eines Zyklus ohne Abschnittsmarken.
 function fZyklusFelder(art){ return ((F_MASKE[art] || {}).felder || []).filter(x => x[0] !== '#'); }
@@ -5163,6 +5195,15 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
         rautiefe:0.01, tolBahn:0.005, winkelMin:5, winkel:45, strategie:2, bahnSinn:0,
         f:t.f || 600, fTief:fRund((t.f || 600) * 0.3), ausgabe:'einzel'});
     }
+    if(art === 'modellSchlichtenEben'){
+      // BOEDEN UND WAENDE SCHLICHTEN [20.09.2026]: Schaftfraeser, Aufmass 0
+      // (fest - es ist das Schlichten), Boeden zeilenweise mit ae, Waende als
+      // Konturzug je Z-Schritt; Gleichlauf als Vorgabe, Bereich das ganze
+      // Rohteil, Anfahren im Schnitt (Verbindung unten, Stich ins Aufmass).
+      Object.assign(s, {q203:+k.z1 || 0, tiefe:-Math.max(1, fRund((+k.z1 || 0) - (+k.z0 || 0))),
+        zust:2, aufSeite:0, aufTiefe:0, ae:40, aeArt:'%', bahnArt:'zeilen', bahnSinn:1, eintauch:2, ebWas:'beide',
+        f:t.f || 600, fTief:fRund((t.f || 600) * 0.3), fSchl:t.f || 600, ausgabe:'einzel'});
+    }
     if(art === 'planfraesen'){
       // Planfraesen deckt als Vorgabe die ganze BLK FORM ab: Startpunkt an
       // der MIN-Ecke auf der Oberflaeche, Endhoehe 1 mm tiefer, Laengen =
@@ -5418,6 +5459,7 @@ function fBahnSchritt(s, tool, prog, punkte){
   if(F_ZYKLEN[art] && F_ZYKLEN[art].sl) return fBahnSL(s, tool, prog);                   // Paket D3 (vor der Kontur-Weiche: die SL-Familien tragen kontur:true)
   if(F_ZYKLEN[art] && F_ZYKLEN[art].kontur) return fBahnKontur(s, tool, prog);           // Paket C3
   if(F_ZYKLEN[art] && F_ZYKLEN[art].schlicht) return fBahnSchlichtenKomplett(s, tool, prog);  // Stufe 4 + S2/S3: flach ueber die Zeilen, steil Z-konstant
+  if(F_ZYKLEN[art] && F_ZYKLEN[art].eben) return fBahnSchlichtenEben(s, tool, prog);   // 20.09.2026: Boeden und Waende mit dem Schaftfraeser
   if(F_ZYKLEN[art] && F_ZYKLEN[art].modell) return fBahnModell(s, tool, prog);          // Stufe 3 Teil B: gegen die Sollform, keine Form mit Massen
   if(F_ZYKLEN[art] && F_ZYKLEN[art].fraes && !F_ZYKLEN[art].gewf && !F_ZYKLEN[art].modell) return fBahnFormen(s, tool, prog, punkte);   // Paket C2 (Paket E: Gewindefraesen sind keine Form)
   if(art === 'bohrfraesen' || art === 'einlippen') return fBahnSimSonder(s, tool, prog, punkte);   // Paket D3: Helix bzw. Drehzahlfolge
@@ -8153,7 +8195,7 @@ const F_PLAN_PHASEN = [
 function fPlanPhase(art){
   if(art === 'planfraesen') return 1;
   if(art === 'modellSchruppen' || art === 'modellRest') return 2;
-  if(art === 'modellSchlichten') return 4;
+  if(art === 'modellSchlichten' || art === 'modellSchlichtenEben') return 4;
   const z = F_ZYKLEN[art] || {};
   if(z.fraes && !z.gewf) return 2;                 // Taschen, Nuten, Zapfen
   return 3;                                        // alles Bohrende
@@ -8433,6 +8475,10 @@ function fStepSollfeld(A, raster){
   });
   for(let q = 0; q < quelle.length; q++){ if(quelle[q] === 1) exakt++; else if(quelle[q] === 2) geschaetzt++; }
   F.exakt = exakt; F.geschaetzt = geschaetzt; F.leer = nx * ny - exakt - geschaetzt;
+  // DIE EXAKTEN KONTUREN DER WAAGERECHTEN FLAECHEN [20.09.2026] wandern mit
+  // der Sollform: "Boeden und Waende schlichten" folgt den Waenden exakt
+  // (Kontur mit Werkzeugradius-Versatz), nicht den Raster-Ringen.
+  try{ F.ebenen = fStepEbenen(A).map(e => ({z:e.z, konturen:fStepEbeneKonturen(e, 'Boden').konturen})); }catch(e){ F.ebenen = []; }
   return F;
 }
 // Sollhoehe an einer Stelle (fuer Proben und spaeter fuer die Bahn).
@@ -8616,6 +8662,20 @@ function fSollformBinden(prog, F){
   Object.defineProperty(prog, '__sollform', {value:F || null, writable:true, configurable:true, enumerable:false});
 }
 function fStepFeldSetzen(F, prog){ F_SOLLFELD = F || null; if(prog) fSollformBinden(prog, F_SOLLFELD); return F_SOLLFELD; }
+// ROHFORM AUS EINEM ZWEITEN STEP-MODELL [20.09.2026, Daniels Nachtschichtliste]:
+// ein zweites Hoehenfeld neben der Sollform - die Oberflaeche des ROHTEILS
+// (Gussteil, Schmiedeteil, Vorbearbeitung). Wo es steht, rechnen die
+// Schrupp-, Rest- und Bodenbahnen (fModellGitter) und die Simulation
+// (fSimFeld) mit dieser Oberflaeche statt mit dem Quader der BLK FORM:
+// Material nur dort, wo die Rohform ueber der Sollform liegt. Wie die
+// Sollform haengt es nicht aufzaehlbar am Programm und wird nicht gespeichert.
+var F_ROHFELD = null;
+function fRohformBinden(prog, R){
+  if(!prog || typeof prog !== 'object') return;
+  Object.defineProperty(prog, '__rohform', {value:R || null, writable:true, configurable:true, enumerable:false});
+}
+function fRohformSetzen(R, prog){ F_ROHFELD = R || null; if(R && !R.__id) R.__id = 'R' + (++F_KETTE_ZAEHLER); if(prog) fRohformBinden(prog, F_ROHFELD); return F_ROHFELD; }
+function fRohformHolen(){ return F_ROHFELD; }
 function fStepFeldHolen(){ return F_SOLLFELD; }
 
 // Exakte quadrierte Abstandsverwandlung nach Felzenszwalb und Huttenlocher:
@@ -8676,6 +8736,12 @@ function fModellGitter(F, k, rand){
   const G = {x0:x0, y0:y0, nx:nx, ny:ny, raster:r, grob:grob,
              soll:new Float32Array(n), stand:new Float32Array(n), imRoh:new Uint8Array(n)};
   const kz1 = +k.z1, kz0 = +k.z0;
+  // ROHFORM [20.09.2026]: steht eine am Programm, ist das Material nicht der
+  // Quader, sondern ihre Oberflaeche - Rohteilzelle nur, wo sie ueber der
+  // Sollform liegt, Stand = ihre Hoehe. Zellen ohne Flaeche in der Rohform
+  // (Loch, neben dem Rohteil) tragen kein Material.
+  const RF = F_ROHFELD;
+  G.rohform = !!RF;
   for(let j = 0; j < ny; j++){
     const cy = y0 + (j + 0.5) * r, o = j * nx;
     const fj = Math.floor((cy - F.y0) / F.raster);
@@ -8686,9 +8752,14 @@ function fModellGitter(F, k, rand){
       // Huellquaders liest die innere Nachbarin (siehe dort)
       const fc = fStepSollIdx(F, cx, cy);
       G.soll[o + q] = fc >= 0 ? F.h[fc] : F.unten;
-      const im = imY && cx >= +k.x0 && cx <= +k.x1;
+      let im = imY && cx >= +k.x0 && cx <= +k.x1, st = im ? kz1 : kz0;
+      if(RF){
+        const ir = fStepSollIdx(RF, cx, cy);
+        if(ir >= 0 && RF.quelle[ir] && RF.h[ir] > G.soll[o + q] + 1e-3){ im = true; st = RF.h[ir]; }
+        else { im = false; st = kz0; }
+      }
       G.imRoh[o + q] = im ? 1 : 0;
-      G.stand[o + q] = im ? kz1 : kz0;
+      G.stand[o + q] = st;
     }
   }
   return G;
@@ -8881,7 +8952,7 @@ function fKettenSchluessel(prog, s, tool, F){
     q.ae, q.aeArt, q.ueberl, q.dVor, q.eintauch, q.bahnSinn, q.sc, q.sc2, q.stepRaster, q.restAb]);
   const i = (prog.schritte || []).indexOf(s.__orig || s);
   const vorher = i < 0 ? [] : prog.schritte.slice(0, i).filter(q => q && q.aktiv !== false && fIstSchruppschritt(q));
-  return F.__kette + '|' + JSON.stringify([k.x0, k.y0, k.z0, k.x1, k.y1, k.z1]) + '|' + vorher.map(q => teil(q, wz(q.t))).join(';') + '|' + teil(s, tool);
+  return F.__kette + '|' + (F_ROHFELD ? F_ROHFELD.__id : '-') + '|' + JSON.stringify([k.x0, k.y0, k.z0, k.x1, k.y1, k.z1]) + '|' + vorher.map(q => teil(q, wz(q.t))).join(';') + '|' + teil(s, tool);
 }
 function fKetteMerken(schluessel, gitter){
   if(!schluessel || !gitter) return;
@@ -8950,6 +9021,224 @@ function fStandUebernehmen(G, Gp){
       if(m > -Infinity && m < G.stand[c]) G.stand[c] = m;
     }
   }
+}
+// ===================================================================
+// BOEDEN UND WAENDE SCHLICHTEN MIT DEM SCHAFTFRAESER [20.09.2026, Daniels
+// Nachtschichtliste, Punkt 5]. Zwei Dinge, beide mit Aufmass 0:
+//  - WAENDE, exakt: jede waagerechte Flaeche des Modells bringt ihre
+//    Randschleifen als XY-Konturen mit (F.ebenen, seit heute an der Sollform).
+//    Auf EINER Seite jeder Schleife liegt Material hoeher als die Flaeche -
+//    das ist die Wand; das Werkzeug laeuft auf der niedrigeren Seite im
+//    Abstand Werkzeugradius an ihr entlang: der Konturzug (fBahnKontur, nur
+//    Schlichten, Aufmass 0) in Z-Schritten von der Wandoberkante bis zum
+//    Fuss. Raster-Ringe waeren hier falsch: ihre Lage ist nur r/4 genau, die
+//    Kontur ist es auf Tausendstel. Welche Seite die Wand ist, sagt die
+//    Sollform 1,5 Zellen neben der Kontur (Median ueber alle Segmente).
+//  - BOEDEN: jede waagerechte Flaeche unter der Oberkante ist eine Ebene fuer
+//    sich; dort laeuft fBahnModell auf GENAU dieser Hoehe (UZ 0, UXY 0),
+//    Zeilen oder Ringe nach Wahl. Das Material ist das Aufmass des Schruppens
+//    (Stand-Kette ueber __orig), die Schneide reicht bis an die Wand.
+// Reihenfolge: Waende von oben nach unten, dann Boeden von oben nach unten -
+// der Bodenzug raeumt zuletzt die Ecke am Wandfuss. Eine Wand, an der das
+// Werkzeug in hoeherem Material stuende (zweite Wand oder Insel naeher als
+// der Durchmesser), wird uebersprungen und genannt. Schraegen gehoeren dem
+// Kugelfraeser (Schraegen schlichten): dort bleibt die Treppe des Schruppens.
+function fBahnSchlichtenEben(s, tool, prog){
+  const warn = [];
+  const nein = (g) => ({ok:false, grund:g, bahn:[], warn:warn});
+  const F = F_SOLLFELD;
+  if(!F) return nein('keine Sollform geladen — im STEP-Fenster ein Modell laden und "Sollform ans Programm" druecken');
+  const rt = (tool && +tool.d > 0) ? +tool.d / 2 : 0;
+  if(!(rt > 0)) return nein('Werkzeug-Durchmesser fehlt (Werkzeugtabelle)');
+  if(!fStandKette(prog, s, F)) return nein('Boeden und Waende schlichten braucht einen Schruppschritt DAVOR im Arbeitsplan (Modell abspanen) — ohne ihn stuende das ganze Rohteil, und der Bodenzug waere ein Vollschnitt auf Bodentiefe');
+  const was = String(s.ebWas || 'beide');
+  const zOben = +s.q203 || 0, tiefe = +s.tiefe || 0; if(!(tiefe < 0)) return nein('Tiefe fehlt');
+  const zTief = fRund(zOben + tiefe);
+  const dzW = (+s.zust > 0) ? +s.zust : 2;
+  const sc = +s.sc || 0; if(!(sc > 0)) return nein('Sicherheitsabstand fehlt');
+  const sc2 = Math.max(+s.sc2 || 0, sc), sicher = fRund(zOben + sc2);
+  const f = +s.f || 0; if(!(f > 0)) return nein('Vorschub fehlt');
+  const r = F.raster;
+  const B = [];
+  const Z = {waende:0, ebenenW:0, boeden:0, zuege:0, ausgelassen:0, ohneMaterial:0, anBoden:0, schraegen:0, gemischt:0, gemischtOrte:[], uebersprungen:[]};
+  const anhaengen = (b) => { if(B.length) B.push({a:'eil', z:sicher}); b.bahn.forEach(m => B.push(m)); };
+  const ebenen = (F.ebenen || []).filter(e => e.z <= zOben + 1e-6 && e.z >= zTief - 1e-6);
+  // ---- Waende: je SEGMENT der Schleifen ----
+  // Eine Schleife ist selten rundum Wand: die Oberseite eines Teils zerfaellt
+  // in Teilflaechen, deren Schleifen an Streifen entlanglaufen, an denen nur
+  // eine Seite eine Wand ist; die Aussenkante des Teils hat draussen Luft.
+  // Deshalb entscheidet jedes Segment: hoehere Seite = Wand, Werkzeug auf der
+  // niedrigeren - und nur, wenn dort nach dem Schruppen MATERIAL steht (Stand
+  // der Kette 0,6 rt neben dem Segment ueber der niedrigeren Hoehe). Segmente
+  // mit derselben Werkzeugseite hintereinander werden EIN offener Konturzug;
+  // ist die ganze Schleife Wand, bleibt sie ein geschlossener.
+  if(was !== 'boeden'){
+    if(!F.ebenen) warn.push('Waende: die Sollform traegt keine Konturen der Ebenen (aeltere Sollform) — im STEP-Fenster "Sollform ans Programm" neu druecken, dann laufen die Waende exakt.');
+    const kette = fStandKette(prog, s, F), GK = kette ? kette.gitter : null;
+    const gesehen = new Set();
+    const med = (arr) => { const a2 = arr.slice().sort((p, q) => p - q); return a2[Math.floor(a2.length / 2)]; };
+    const hoehe = (x, y) => { const h = fStepSollHoehe(F, x, y); return (h != null && isFinite(h)) ? h : null; };
+    const segZuElement = (sg) => {
+      if(sg.typ === 'g') return {typ:'g', x:fRund(sg.x1), y:fRund(sg.y1)};
+      const rr = Math.hypot(sg.x1 - sg.cx, sg.y1 - sg.cy);
+      const a0 = Math.atan2(sg.y0 - sg.cy, sg.x0 - sg.cx), a1 = Math.atan2(sg.y1 - sg.cy, sg.x1 - sg.cx);
+      let sw = sg.dr > 0 ? (a1 - a0) : (a0 - a1); while(sw < 0) sw += 2 * Math.PI; while(sw > 2 * Math.PI) sw -= 2 * Math.PI;
+      return {typ:'b', x:fRund(sg.x1), y:fRund(sg.y1), r:fRund(rr), dr:sg.dr, gross:sw > Math.PI};
+    };
+    // Punkt und Linksnormale in der MITTE eines Laufs (nach Bogenlaenge) - fuer
+    // den Schluessel: dieselbe Wand kommt von zwei Flaechen, in Gegenrichtung.
+    const mitteVon = (S2) => {
+      const pts = []; S2.forEach(sg => fSegPunkte(sg).forEach(q => { if(!pts.length || Math.hypot(q.x - pts[pts.length - 1].x, q.y - pts[pts.length - 1].y) > 1e-9) pts.push(q); }));
+      let L = 0; for(let i = 1; i < pts.length; i++) L += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
+      let rest = L / 2;
+      for(let i = 1; i < pts.length; i++){ const d = Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y); if(rest <= d || i === pts.length - 1){ const u = d > 1e-12 ? rest / d : 0; return {x:pts[i - 1].x + (pts[i].x - pts[i - 1].x) * u, y:pts[i - 1].y + (pts[i].y - pts[i - 1].y) * u, tx:(pts[i].x - pts[i - 1].x) / (d || 1), ty:(pts[i].y - pts[i - 1].y) / (d || 1), L:L}; } rest -= d; }
+      return {x:pts[0].x, y:pts[0].y, tx:1, ty:0, L:L};
+    };
+    // s.__debugWand (eine leere Liste, von aussen gesetzt) sammelt je Schleife
+    // die Segmententscheidung und je Lauf das Ergebnis samt erstem Treffer des
+    // Kollisionsblicks. Ohne das war am 20.09.2026 nicht zu sehen, WARUM alle
+    // sechs Laeufe der oberen Flaechen uebersprungen wurden (sie gehoerten der
+    // Bodenschleife) - die Meldung nennt nur das Ergebnis, nicht den Weg dahin.
+    const laufAusfuehren = (kt, seg, idx, geschlossen, info) => {
+      const S2 = idx.map(i => seg[i]);
+      const oben = fRund(Math.min(zOben, med(idx.map(i => info[i].oben)))), unten = fRund(Math.max(zTief, med(idx.map(i => info[i].unten))));
+      if(oben - unten < 0.05) return;
+      const links = info[idx[0]].links;
+      const m = mitteVon(S2), sx = fRund(m.x + (links ? -m.ty : m.ty)), sy = fRund(m.y + (links ? m.tx : -m.tx));
+      const key = [oben, unten, fRund(m.x), fRund(m.y), sx, sy, fRund(m.L), geschlossen ? 'zu' : 'offen'].join('/');
+      // Gemerkt wird eine Wand erst, wenn ihr Lauf GEFAHREN ist: an DZ23 hatte
+      // der gescheiterte Lauf aus der oberen Flaeche denselben Mittelpunkt wie
+      // der gute Lauf der Bodenschleife und verdeckte ihn (20.09.2026).
+      if(gesehen.has(key)) return;
+      const ktW = {name:kt.name + (geschlossen ? '' : ' Wand'), geschlossen:geschlossen, x0:fRund(S2[0].x0), y0:fRund(S2[0].y0), elemente:S2.map(segZuElement)};
+      const o = geschlossen ? fKonturUmlauf(S2) : 0;
+      const sK = Object.assign({}, s, {art:'konturzug', kontur:0, q203:oben, tiefe:fRund(unten - oben), zust:dzW, zustSchl:dzW, umfang:2, aufSeite:0, fSchl:f,
+        fraesart:(+s.bahnSinn < 0) ? -1 : 1, seiteZu:(links === (o > 0)) ? 'innen' : 'aussen', seiteAuf:links ? 'links' : 'rechts'});
+      const b = fBahnKontur(sK, tool, Object.assign({}, prog, {konturen:[ktW]}));
+      if(s.__debugWand) s.__debugWand.push({lauf:ktW.name, idx:idx.slice(), geschlossen:geschlossen, links:links, oben:oben, unten:unten, seiteZu:sK.seiteZu, seiteAuf:sK.seiteAuf, start:[ktW.x0, ktW.y0], ok:b.ok, grund:b.grund || ''});
+      if(!b.ok){ Z.uebersprungen.push('Wand Z' + oben + '..Z' + unten + ' (' + ktW.name + '): ' + b.grund); return; }
+      // Kollisionsblick: im Kreis rt - 0,75 r um jeden Bahnpunkt darf keine Zelle hoeher stehen als seine Ebene.
+      let treffer = 0, x = null, y = null, z = null, erst = null; const R2 = Math.max(0, rt - 0.75 * r);
+      b.bahn.forEach(mm => {
+        const ax = mm.x != null ? mm.x : x, ay = mm.y != null ? mm.y : y, az = mm.z != null ? mm.z : z;
+        if(mm.a === 'vor' && ax != null && az != null && az < oben - 1e-6 && !treffer){
+          const i0 = Math.max(0, Math.floor((ax - R2 - F.x0) / r)), i1 = Math.min(F.nx - 1, Math.ceil((ax + R2 - F.x0) / r));
+          const j0 = Math.max(0, Math.floor((ay - R2 - F.y0) / r)), j1 = Math.min(F.ny - 1, Math.ceil((ay + R2 - F.y0) / r));
+          for(let j = j0; j <= j1 && !treffer; j++) for(let i = i0; i <= i1; i++){
+            const cx = F.x0 + (i + 0.5) * r, cy = F.y0 + (j + 0.5) * r;
+            if((cx - ax) * (cx - ax) + (cy - ay) * (cy - ay) > R2 * R2) continue;
+            if(F.quelle[j * F.nx + i] && F.h[j * F.nx + i] > az + 0.05){ treffer++; erst = [ax, ay, az, cx, cy, F.h[j * F.nx + i]]; break; }
+          }
+        }
+        x = ax; y = ay; z = az;
+      });
+      if(s.__debugWand){ const d = s.__debugWand[s.__debugWand.length - 1]; d.treffer = treffer; d.erst = erst; d.saetze = b.bahn.length; }
+      if(treffer){ Z.uebersprungen.push('Wand Z' + oben + '..Z' + unten + ' (' + ktW.name + '): das Werkzeug ⌀' + fRund(2 * rt) + ' stuende in hoeherem Material (zweite Wand oder Insel naeher als der Durchmesser)'); return; }
+      gesehen.add(key);
+      anhaengen(b); Z.waende++; Z.ebenenW += Math.max(1, Math.ceil((oben - unten) / dzW - 1e-9));
+    };
+    ebenen.forEach(e => e.konturen.forEach(kt => {
+      const K = fKonturSegmente(kt); if(K.fehler.length || !K.seg.length) return;
+      const seg = K.seg, nS = seg.length;
+      // Liegt an (x, y) eine waagerechte Flaeche der Sollform auf Hoehe z (ein Boden)?
+      const bodenFlaeche = (x, y, z) => { const ic = fStepSollIdx(F, x, y); return ic >= 0 && !!F.quelle[ic] && ebenen.some(e2 => Math.abs(e2.z - z) < 0.05); };
+      const info = seg.map(sg => {
+        // Stuetzpunkte LAENGS des Segments: Boegen bringen ihre eigenen mit,
+        // eine Gerade wird alle ~2 mm geteilt (hoechstens 9 Stuecke). So faellt
+        // auf, wenn die Nachbarflaeche laengs der Kante wechselt.
+        let pp = fSegPunkte(sg);
+        if(sg.typ === 'g'){ const L0 = Math.hypot(sg.x1 - sg.x0, sg.y1 - sg.y0), nT = Math.max(1, Math.min(9, Math.ceil(L0 / Math.max(2 * r, 1)))); pp = []; for(let k = 0; k <= nT; k++) pp.push({x:sg.x0 + (sg.x1 - sg.x0) * k / nT, y:sg.y0 + (sg.y1 - sg.y0) * k / nT}); }
+        const proben = [];
+        for(let i = 1; i < pp.length; i++){
+          const tx = pp[i].x - pp[i - 1].x, ty = pp[i].y - pp[i - 1].y, L = Math.hypot(tx, ty); if(L < 1e-9) continue;
+          const mx = (pp[i - 1].x + pp[i].x) / 2, my = (pp[i - 1].y + pp[i].y) / 2, ux = -ty / L, uy = tx / L;   // (ux, uy) zeigt nach LINKS
+          const a = hoehe(mx + ux * 1.5 * r, my + uy * 1.5 * r), b = hoehe(mx - ux * 1.5 * r, my - uy * 1.5 * r);
+          if(a == null || b == null){ proben.push({cls:'-'}); continue; }
+          const q = {hL:a, hR:b, cls:(Math.abs(a - b) < 0.05) ? '-' : (a < b ? 'L' : 'R')};   // Werkzeug auf der NIEDRIGEREN Seite
+          if(q.cls !== '-'){
+            const s1 = (q.cls === 'L') ? 1 : -1, tief = Math.min(a, b);
+            // Eine SCHRAEGE ist keine Wand: faellt die niedrigere Seite 3 Raster
+            // neben der Kante weiter ab als 1,5 Raster daneben, ist es eine
+            // Flaeche, die weiter abfaellt (Rampenblock: -0,45 gegen -0,9 mm).
+            // Die gehoert dem Kugelfraeser; ein Wandzug dort liefe in der Luft.
+            const a2 = hoehe(mx + s1 * ux * 3 * r, my + s1 * uy * 3 * r);
+            if(a2 == null || Math.abs(a2 - tief) > 0.05 + 0.1 * (Math.max(a, b) - tief)){ q.cls = '-'; q.schraege = true; proben.push(q); continue; }
+            q.boden = bodenFlaeche(mx + s1 * ux * 1.5 * r, my + s1 * uy * 1.5 * r, tief);
+            // Steht auf der Werkzeugseite noch etwas ueber der niedrigeren Flaeche?
+            // Drei Abstaende - dicht an der Wand (das Aufmass UXY ist oft nur eine
+            // halbe Rasterweite breit), 1,5 Raster und 0,6 rt. Eine einzige Probe
+            // 3 mm neben der Wand sah das Aufmass nicht (20.09.2026).
+            q.mat = !GK || [0.75 * r, 1.5 * r, 0.6 * rt].some(d => { const st = fStandAt(GK, mx + s1 * ux * d, my + s1 * uy * d); return st != null && st > tief + 0.05; });
+          }
+          proben.push(q);
+        }
+        if(!proben.length) return {wand:false};
+        if(proben.some(q => q.schraege) && proben.every(q => q.cls === '-')){ Z.schraegen++; return {wand:false}; }
+        // Einheitlich laengs der Kante? Die dominierende Klasse darf nur an den
+        // beiden ENDEN abweichen (dort schaut die Seitenprobe schon um die Ecke).
+        // Wechselt sie mittendrin, teilt das Modell seine Kante nicht an den
+        // Nachbarflaechen - eine echte B-Rep tut das immer. Dann wird nicht
+        // geraten (die Trennstelle waere nur auf eine halbe Rasterweite genau),
+        // sondern die Kante genannt.
+        const zaehl = {}; proben.forEach(q => { zaehl[q.cls] = (zaehl[q.cls] || 0) + 1; });
+        const dom = Object.keys(zaehl).sort((p2, q2) => zaehl[q2] - zaehl[p2])[0];
+        const abw = proben.map((q, k) => q.cls !== dom ? k : -1).filter(k => k >= 0);
+        if(abw.some(k => k > 0 && k < proben.length - 1)){ Z.gemischt++; Z.gemischtOrte.push('X' + fRund(sg.x0) + ' Y' + fRund(sg.y0) + ' bis X' + fRund(sg.x1) + ' Y' + fRund(sg.y1)); return {wand:false}; }
+        if(dom === '-') return {wand:false};
+        const Pq = proben.filter(q => q.cls === dom);
+        const mL = med(Pq.map(q => q.hL)), mR = med(Pq.map(q => q.hR));
+        const links = dom === 'L', tief = Math.min(mL, mR), hoch = Math.max(mL, mR);
+        // Liegt auf der Werkzeugseite ein BODEN der Sollform, gehoert die Wand der
+        // Schleife dieses Bodens: dort haengt sie mit ihren Nachbarwaenden
+        // zusammen, und der Versatz nimmt die Innenecken richtig (das Werkzeug
+        // bleibt rt vor der Querwand). Aus der oberen Flaeche kaeme dieselbe Wand
+        // als Stueck ohne ihre Ecken - das Werkzeug liefe am Stueckende in die
+        // Querwand (DZ23, 20.09.2026: sechs Laeufe, alle mit Treffer). Nur wo
+        // unten KEIN Boden liegt (Durchbruch, Aussenkante ueber dem Rohteil,
+        // Schraege), bleibt die obere Schleife zustaendig.
+        if(Math.abs(e.z - hoch) < 0.05 && Pq.every(q => q.boden)){ Z.anBoden++; return {wand:false}; }
+        const material = Pq.some(q => q.mat);
+        if(!material) Z.ohneMaterial++;
+        return {wand:material, links:links, oben:Math.min(zOben, hoch), unten:Math.max(zTief, tief)};
+      });
+      if(s.__debugWand) s.__debugWand.push({schleife:kt.name, segmente:info.map((q, i) => (q.wand ? 'W' : '-') + (q.links == null ? '' : (q.links ? 'L' : 'R')) + (q.wand ? '(' + q.oben + '/' + q.unten + ')' : ''))});
+      const istWand = (i) => info[i].wand && info[i].oben - info[i].unten >= 0.05;
+      if(kt.geschlossen && info.every((q, i) => istWand(i) && q.links === info[0].links)){ laufAusfuehren(kt, seg, seg.map((q, i) => i), true, info); return; }
+      let start = 0;
+      if(kt.geschlossen){ for(let i = 0; i < nS; i++){ const v = (i + nS - 1) % nS; if(!istWand(v) || (istWand(i) && info[v].links !== info[i].links)){ start = i; break; } } }
+      let lauf = [];
+      for(let k2 = 0; k2 < nS; k2++){
+        const i = (start + k2) % nS;
+        if(istWand(i) && (!lauf.length || info[lauf[0]].links === info[i].links)) lauf.push(i);
+        else { if(lauf.length) laufAusfuehren(kt, seg, lauf, false, info); lauf = istWand(i) ? [i] : []; }
+      }
+      if(lauf.length) laufAusfuehren(kt, seg, lauf, false, info);
+    }));
+  }
+  // ---- Boeden ----
+  // Ein Boden zaehlt nur, wenn die Sollform dort wirklich seine Hoehe hat -
+  // die Unterseite der Platte hat auch eine waagerechte Flaeche, aber ueber ihr
+  // steht das Teil (DZ23: Z-12 stand als Boden in der Liste, "kommt nirgends
+  // an das Material").
+  const sichtbar = (z) => { let nz = 0; for(let q = 0; q < F.nx * F.ny; q++) if(F.quelle[q] && Math.abs(F.h[q] - z) < 0.05) nz++; return nz; };
+  const boeden = ebenen.filter(e => e.z < zOben - 1e-6 && sichtbar(e.z) >= 4).map(e => e.z);
+  if(was !== 'waende'){
+    boeden.forEach(zF => {
+      const s2 = Object.assign({}, s, {art:'modellSchruppen', q203:fRund(zF + 0.001), tiefe:-0.001, zust:1, aufSeite:0, aufTiefe:0, dVor:0, restAb:0});
+      try{ Object.defineProperty(s2, '__orig', {value:s.__orig || s, enumerable:false}); }catch(e){ s2.__orig = s.__orig || s; }
+      const b = fBahnModell(s2, tool, prog);
+      if(!b.ok){ Z.uebersprungen.push('Boden Z' + fRund(zF) + ': ' + b.grund); return; }
+      anhaengen(b); Z.boeden++; Z.zuege += b.zuege; Z.ausgelassen += b.ausgelassen || 0;
+    });
+  }
+  if(!B.length) return nein(Z.uebersprungen.length ? Z.uebersprungen.join('; ') : ('im Bereich Z' + zTief + '..Z' + zOben + ' liegt keine waagerechte Flaeche unter der Oberkante und keine Wand'));
+  B.push({a:'eil', z:sicher});
+  warn.unshift('BOEDEN UND WAENDE SCHLICHTEN: ' + Z.waende + ' Wand/Waende exakt entlang der Konturen der Ebenen (Aufmass 0, ' + Z.ebenenW + ' Z-Ebene(n) im Schritt ' + dzW + '), ' + Z.boeden + ' Boden/Boeden auf ' + (boeden.length ? boeden.map(z => 'Z' + z).join(', ') : '—') + ' mit ' + Z.zuege + ' Zuegen — das Material ist das Aufmass des Schruppens. Schraegen gehoeren dem Kugelfraeser (Schraegen schlichten).');
+  if(Z.ohneMaterial) warn.push(Z.ohneMaterial + ' Kantensegment(e) mit Hoehensprung, an denen nach dem Schruppen nichts mehr steht (Aussenkante des Teils, schon geschlichtet) — keine Wand fuer diesen Schritt.');
+  if(Z.schraegen) warn.push(Z.schraegen + ' Kante(n) grenzen an eine SCHRAEGE — keine Wand fuer diesen Schritt; Schraegen gehoeren dem Kugelfraeser (Schraegen schlichten).');
+  if(Z.gemischt) warn.push('MODELL: ' + Z.gemischt + ' Kante(n) wechseln laengs ihrer Laenge die Nachbarflaeche (' + Z.gemischtOrte.slice(0, 3).join('; ') + (Z.gemischt > 3 ? '; …' : '') + ') — das Modell teilt seine Kanten nicht an den Nachbarflaechen. Diese Waende werden NICHT geschlichtet, weil die Trennstelle nur auf eine halbe Rasterweite genau laege: das Modell im CAD nachbauen oder die Wand als Konturzug programmieren.');
+  if(Z.uebersprungen.length) warn.push('UEBERSPRUNGEN: ' + Z.uebersprungen.join(' | '));
+  return {ok:true, bahn:B, warn:warn, waende:Z.waende, ebenenW:Z.ebenenW, boeden:Z.boeden, zuege:Z.zuege, bodenHoehen:boeden, uebersprungen:Z.uebersprungen, ausgelassen:Z.ausgelassen, ohneMaterial:Z.ohneMaterial, anBoden:Z.anBoden, schraegen:Z.schraegen, gemischt:Z.gemischt};
 }
 // Die Bahn: Ebene fuer Ebene, in jeder Ebene zeilenweise im Zickzack.
 function fBahnModell(s, tool, prog){
@@ -9874,6 +10163,7 @@ function fBahnModell(s, tool, prog){
     + ' — je Ebene die Richtung mit den wenigsten Zuegen.'
     + (stiche ? ' ' + stiche + ' Stelle(n) waeren nur ein senkrechter Stich ohne Fraesweg gewesen und sind ausgelassen — ein Schaftfraeser soll nicht bohren; was dort steht, ist im Restmaterial enthalten.' : ''));
   if(sinn) warn.push('Fraesart: NUR ' + (sinn > 0 ? 'GLEICHLAUF' : 'GEGENLAUF') + ' (bei Rechtslauf M3, Material in Fahrtrichtung ' + (sinn > 0 ? 'rechts' : 'links') + ' vom Werkzeug): jede Zeile in derselben Richtung — nach jedem Zug Rueckzug auf SC ueber das Material, zurueck zum Anfang, seitlich zustellen, wieder hinein; ' + rueck + ' Rueckzuege, keine Verbindung unten.');
+  if(G.rohform) warn.push('ROHFORM aus dem Rohteil-Modell: Material nur, wo die Rohform ueber der Sollform liegt — nicht der Quader der BLK FORM.');
   if(konturparallel) warn.push('KONTURPARALLEL: ' + ringeGesamt + ' Ring(e) auf ' + ebenen + ' Ebene(n), Ringabstand ae ' + fRund(aeMm) + ' mm - jeder Ring ist eine Hoehenlinie des Abstands zur Sollform, von aussen nach innen (bei einer Tasche von der Mitte zur Wand); der letzte Ring laeuft im Abstand Werkzeugradius + UXY an der Wand. Kein Querdurchgang: es bleibt kein Kamm.');
   if(zustell) warn.push(zustell + ' Zustellung(en) auf die naechste Ebene in der LUFT neben dem Rohteil — schraeg im Eilgang, ohne Rueckzug auf Sicherheitshoehe und ohne Schnitt.');
   if(frei) warn.push(frei + ' Zug/Zuege kommen von AUSSEN in den Schnitt: neben dem Rohteil (oder ueber schon ausgeraeumtem Material) auf Ebenentiefe gefahren und waagerecht hinein — kein Stich, kein Pendeln.');
@@ -11223,7 +11513,17 @@ function fSimFeld(prog, raster){
   const nx = Math.max(1, Math.ceil(bw / r)), ny = Math.max(1, Math.ceil(bh / r));
   const h = new Float32Array(nx * ny); h.fill(+k.z1 || 0);
   const hu = new Float32Array(nx * ny); hu.fill(+k.z0 || 0);
-  return {x0:x0, y0:y0, nx:nx, ny:ny, raster:r, h:h, hu:hu, oben:+k.z1 || 0, unten:+k.z0 || 0, gen:0};
+  // ROHFORM [20.09.2026]: die Simulation faengt mit der Oberflaeche des
+  // Rohteil-Modells an, nicht mit dem Quader - wo die Rohform keine Flaeche
+  // hat, steht kein Material (Unterkante).
+  if(F_ROHFELD){
+    const RF = F_ROHFELD, zu = +k.z0 || 0;
+    for(let j = 0; j < ny; j++) for(let i = 0; i < nx; i++){
+      const ir = fStepSollIdx(RF, x0 + (i + 0.5) * r, y0 + (j + 0.5) * r);
+      h[j * nx + i] = (ir >= 0 && RF.quelle[ir]) ? Math.max(zu, RF.h[ir]) : zu;
+    }
+  }
+  return {x0:x0, y0:y0, nx:nx, ny:ny, raster:r, h:h, hu:hu, oben:+k.z1 || 0, unten:+k.z0 || 0, gen:0, rohform:!!F_ROHFELD};
 }
 // Werkzeugstempel: Zellen im Radius r um (x,y) auf hoechstens z — mit kegel
 // (cot des halben Spitzenwinkels) liegt die Grenze im Abstand rho um
@@ -11882,6 +12182,7 @@ function fPruefen(prog){
   if(!(+k.x1 > +k.x0) || !(+k.y1 > +k.y0) || !(+k.z1 > +k.z0)) rot.push('BLK FORM: MAX-Punkt muss in X, Y und Z groesser als der MIN-Punkt sein.');
   if(!(+k.rz > +k.z1)) rot.push('Sichere Hoehe (' + k.rz + ') liegt nicht ueber der Rohteil-Oberkante Z' + k.z1 + '.');
   if(!(+k.sc > 0)) rot.push('Sicherheits-Abstand Q200 muss groesser 0 sein.');
+  if(F_ROHFELD) gelb.push('Rohform aus einem Modell (' + (F_ROHFELD.name || 'Rohteil') + '): Modell abspanen, Restmaterial, Boeden & Waende und die Simulation rechnen mit ihrer Oberflaeche; die BLK FORM ist nur die Huelle, die Grafik der Steuerung zeigt den Quader.');
   if(+k.sc2 < +k.sc) gelb.push('2. Sicherheits-Abstand Q204 ist kleiner als Q200 — Rueckzug zwischen den Loechern unter dem Sicherheitsabstand.');
   const schritte = (prog.schritte || []).filter(s => s && s.aktiv !== false);
   if(!schritte.length) gelb.push('Kein aktiver Arbeitsschritt — das Programm enthaelt nur Kopf und Ende.');
@@ -12067,7 +12368,14 @@ function fPruefen(prog){
         }
         if(+s.restAb < 0) rot.push(nr + 'Rest ab Breite darf nicht negativ sein.');
       }
-      gelb.push(nr + (zyk.rest ? 'Restmaterial abspanen' : 'Modell abspanen') + ' ist die eigene Bahn der App (kein Steuerungszyklus) — ' + (Math.round(+s.eintauch || 0) === 3 ? 'nur von aussen angefahren, Unerreichbares bleibt stehen' : 'SENKRECHT eingetaucht, das Werkzeug muss ueber Mitte schneiden') + '; vor dem ersten Lauf Programm-Test und Einzelsatz.');
+      if(zyk.eben){
+        // Boeden und Waende schlichten: ohne Schruppschritt davor stuende das
+        // ganze Rohteil - der Bodenzug waere ein Vollschnitt auf Bodentiefe.
+        const idxE = (prog.schritte || []).indexOf(s);
+        if(!(prog.schritte || []).slice(0, idxE < 0 ? (prog.schritte || []).length : idxE).some(q => fIstSchruppschritt(q))) rot.push(nr + 'kein Schruppschritt DAVOR im Arbeitsplan — Boeden und Waende schlichten setzt auf dem Stand nach Modell abspanen auf.');
+        if(!(fStepFeldHolen() && fStepFeldHolen().ebenen)) gelb.push(nr + 'die Sollform traegt keine Konturen der Ebenen (aeltere Sollform) — nur die Boeden laufen; fuer die Waende im STEP-Fenster "Sollform ans Programm" neu druecken.');
+      }
+      gelb.push(nr + (zyk.rest ? 'Restmaterial abspanen' : (zyk.eben ? 'Boeden und Waende schlichten' : 'Modell abspanen')) + ' ist die eigene Bahn der App (kein Steuerungszyklus) — ' + (Math.round(+s.eintauch || 0) === 3 ? 'nur von aussen angefahren, Unerreichbares bleibt stehen' : 'SENKRECHT eingetaucht, das Werkzeug muss ueber Mitte schneiden') + '; vor dem ersten Lauf Programm-Test und Einzelsatz.');
     } else if(z && z.fraes){
       const stand = String(k.stand || '07');
       if(z.abStand && stand < z.abStand) rot.push(nr + 'Zyklus ' + z.nr + ' gibt es erst ab Software-Stand 340 49x-' + z.abStand + ' — der Programmkopf steht auf Stand ' + stand + '.');
@@ -12531,17 +12839,23 @@ function fStepTestkoerper(art){
     // einem Hauptfeld 40 x 30 (x 5..45, y 5..35) und einem FINGER von 14 mm
     // Breite (x 45..55, y 13..27). Ein ⌀20 raeumt das Hauptfeld und kommt in
     // den Finger nicht hinein - das ist das Restmaterial fuer den ⌀8. Die
-    // Deckflaeche steht als sechs Rechtecke um die Tasche (der Sollform ist
-    // die obere Huelle aller Flaechen, Ueberlappung stoert nicht; einen
-    // Innenrand kennt dieser Bauer nicht). Senkrechte Waende braucht die
-    // Sollform nicht.
+    // Deckflaeche steht als sechs Flaechen um die Tasche (der Sollform ist die
+    // obere Huelle aller Flaechen; einen Innenrand kennt dieser Bauer nicht).
+    // Senkrechte Waende braucht die Sollform nicht.
+    // KANTEN AN DEN ECKEN DER NACHBARFLAECHEN GETEILT [20.09.2026]: eine
+    // echte B-Rep teilt jede Kante dort, wo die Nachbarflaeche wechselt — das
+    // Schlichten der Waende liest die Schleifen der Ebenen und verlaesst sich
+    // darauf (eine Kante = eine Nachbarflaeche). Mit ungeteilten Rechtecken
+    // war die rechte Kante des Hauptfelds x 45 zu einem Drittel Wand und zu
+    // zwei Dritteln Naht zum Finger — und wurde als Ganzes falsch bewertet.
+    const poly = (Pp, z) => Pp.map((q, i) => kGer([q[0], q[1], z], [Pp[(i + 1) % Pp.length][0], Pp[(i + 1) % Pp.length][1], z]));
     flaeche(ebene(0, 0, -12, 0, 0, 1), quad(0, 0, 60, 40, -12));
-    flaeche(ebene(0, 0, -6, 0, 0, 1), quad(5, 5, 45, 35, -6));
+    flaeche(ebene(0, 0, -6, 0, 0, 1), poly([[5, 5], [45, 5], [45, 13], [45, 27], [45, 35], [5, 35]], -6));
     flaeche(ebene(0, 0, -6, 0, 0, 1), quad(45, 13, 55, 27, -6));
-    flaeche(ebene(0, 0, 0, 0, 0, 1), quad(0, 0, 5, 40, 0));
-    flaeche(ebene(0, 0, 0, 0, 0, 1), quad(55, 0, 60, 40, 0));
-    flaeche(ebene(0, 0, 0, 0, 0, 1), quad(5, 0, 55, 5, 0));
-    flaeche(ebene(0, 0, 0, 0, 0, 1), quad(5, 35, 55, 40, 0));
+    flaeche(ebene(0, 0, 0, 0, 0, 1), poly([[0, 0], [5, 0], [5, 5], [5, 35], [5, 40], [0, 40]], 0));
+    flaeche(ebene(0, 0, 0, 0, 0, 1), poly([[55, 0], [60, 0], [60, 40], [55, 40], [55, 35], [55, 27], [55, 13], [55, 5]], 0));
+    flaeche(ebene(0, 0, 0, 0, 0, 1), poly([[5, 0], [55, 0], [55, 5], [45, 5], [5, 5]], 0));
+    flaeche(ebene(0, 0, 0, 0, 0, 1), poly([[5, 35], [45, 35], [55, 35], [55, 40], [5, 40]], 0));
     flaeche(ebene(0, 0, 0, 0, 0, 1), quad(45, 5, 55, 13, 0));
     flaeche(ebene(0, 0, 0, 0, 0, 1), quad(45, 27, 55, 35, 0));
   } else {
@@ -12683,7 +12997,13 @@ function fDemoStepRest(){
   p.schritte = [a];
   const b = fSchrittNeu(p, 'modellRest', 11);      // erbt Tiefe, Aufmass und Bahnwerte vom Bezug (Schritt 1)
   Object.assign(b, {eintauch:3, restAb:0, s:4800, f:570, fTief:180});
-  p.schritte = [a, b];
+  // Boeden und Waende schlichten mit dem Schaftfraeser 10 (Platz 12), Aufmass 0
+  // [20.09.2026]: das Material ist das Aufmass des Schruppens (UXY 0,5 / UZ 0,2);
+  // die Waende kommen exakt aus den Schleifen der Ebenen des Modells.
+  const c = fSchrittNeu(p, 'modellSchlichtenEben', 12);
+  Object.assign(c, {q203:0, tiefe:-6, zust:2, ebWas:'beide', bahnArt:'zeilen', ae:40, aeArt:'%', bahnSinn:1, eintauch:2,
+                    sc:2, sc2:50, s:3800, f:570, fTief:200, fSchl:570});
+  p.schritte = [a, b, c];
   return p;
 }
 
@@ -12704,7 +13024,7 @@ var F_DEMOS = [
   {id:'steprampe', nr:'DZ22', gruppe:'werkstueck', name:'Rampenblock 80 x 50 (STEP)',
    was:'aus dem STEP-Modell: Z-konstant schruppen, Schräge über die Rautiefe schlichten', lade:fDemoStepRampe},
   {id:'steprest', nr:'DZ23', gruppe:'werkstueck', name:'T-Tasche 60 x 40 (STEP)',
-   was:'aus dem STEP-Modell: Hauptfeld mit ⌀20 abspanen, Finger und Ecken als Restmaterial mit ⌀8 — nur von außen angefahren', lade:fDemoStepRest},
+   was:'aus dem STEP-Modell: Hauptfeld mit ⌀20 abspanen, Finger und Ecken als Restmaterial mit ⌀8 — nur von außen angefahren, danach Böden und Wände mit ⌀10 schlichten', lade:fDemoStepRest},
 
   {id:'flansch', nr:'DZ1', gruppe:'test', name:'Flanschplatte',
    was:'Lochkreis 6x zentrieren und bohren, vier M8 in den Ecken', lade:fDemoFlansch},
@@ -13133,6 +13453,7 @@ function fProgrammSetzen(p, quelle){
   // Die Sollform kommt NUR mit dem Programm, das sie traegt (fSollformBinden in
   // F10). Vorher blieb die des vorigen Modells stehen - s. dort.
   fStepFeldSetzen(p.__sollform || null);
+  fRohformSetzen(p.__rohform || null);   // die Rohform gehoert wie die Sollform zu DIESEM Programm
   if(!Array.isArray(p.konturen)) p.konturen = [];   // Programme von vor Paket C3
   // Programme von vor dem 17.09.2026 abends: Modell abspanen trug die
   // Bahnueberlappung (x R) statt ae. 0,8 x R = 40 % vom Durchmesser.
@@ -13480,7 +13801,7 @@ function fDraufsicht(){
   });
   const info = document.getElementById('fdInfo');
   if(info){
-    let txt = 'Rohteil ' + (k.x1 - k.x0) + ' × ' + (k.y1 - k.y0) + ' × ' + (k.z1 - k.z0) + ' mm · ' + fProg.muster.reduce((a, m) => a + fMusterPunkte(m).length, 0) + ' Bohrpositionen';
+    let txt = 'Rohteil ' + (k.x1 - k.x0) + ' × ' + (k.y1 - k.y0) + ' × ' + (k.z1 - k.z0) + ' mm' + (fRohformHolen() ? ' (Rohform aus ' + (fRohformHolen().name || 'Modell') + ')' : '') + ' · ' + fProg.muster.reduce((a, m) => a + fMusterPunkte(m).length, 0) + ' Bohrpositionen';
     if(fSel && fSel.typ === 'schritt' && fProg.schritte[fSel.idx]){ const s = fProg.schritte[fSel.idx]; const t = fWerkzeug(s.t); const zz = F_ZYKLEN[s.art] || {}; txt = 'Schritt ' + (fSel.idx + 1) + ': ' + zz.wort + ' T' + s.t + (t ? ' ⌀' + t.d : '') + (zz.modell ? ' · Z1 ' + s.tiefe + ' · ' + (fStepFeldHolen() ? 'Sollform geladen' : 'KEINE SOLLFORM') : (zz.eigenePosition ? ' · Z' + s.pz + ' → Z' + s.zEnd : (zz.ohneTiefe ? ' · Senkung +' + (s.q249 || 0) : ' · Z1 ' + s.tiefe))); }
     if(fSel && fSel.typ === 'muster' && fProg.muster[fSel.idx]) txt = fMusterText(fProg.muster[fSel.idx]) + ' — Punkte nummeriert in Abfahrfolge';
     if(fSel && fSel.typ === 'kontur' && (fProg.konturen || [])[fSel.idx]){ const kt = fProg.konturen[fSel.idx]; txt = 'Kontur ' + kt.name + ': ' + fKonturText(kt) + ' — S = Start, Laufrichtung wie gezeichnet'; }
@@ -13512,6 +13833,10 @@ function fFormText(s){
         + (bz ? ' · Bezug Schritt ' + (fProg.schritte.indexOf(bz) + 1) + ' (T' + bz.t + (wb ? ' ⌀' + wb.d : '') + ')' : ' · KEIN SCHRUPPSCHRITT DAVOR')
         + (fStepFeldHolen() ? '' : ' · KEINE SOLLFORM');
     }
+    case 'modellSchlichtenEben': return 'Böden & Wände schlichten Z' + fRund(+s.q203 || 0) + ' → Z' + fRund((+s.q203 || 0) + (+s.tiefe || 0))
+        + ' · ' + (({beide:'Böden und Wände', boeden:'nur Böden', waende:'nur Wände'})[String(s.ebWas || 'beide')] || 'Böden und Wände') + ' · Z-Schritt ' + s.zust
+        + ' · ae ' + hbWert(fAeMm(s, ((fWerkzeug(Math.round(+s.t)) || {}).d || 0) / 2)) + ' mm' + (String(s.bahnArt || 'zeilen') === 'kontur' ? ' · konturparallel' : '')
+        + (+s.bahnSinn > 0 ? ' · Gleichlauf' : (+s.bahnSinn < 0 ? ' · Gegenlauf' : '')) + (fStepFeldHolen() ? '' : ' · KEINE SOLLFORM');
     case 'modellSchruppen': return 'Modell abspanen' + (String(s.bahnArt || 'zeilen') === 'kontur' ? ' konturparallel' : '') + ' Z' + fRund(+s.q203 || 0) + ' → Z' + fRund((+s.q203 || 0) + (+s.tiefe || 0)) + ' · D ' + s.zust + ' · UXY ' + s.aufSeite + ' / UZ ' + s.aufTiefe + ' · ae ' + hbWert(fAeMm(s, ((fWerkzeug(Math.round(+s.t)) || {}).d || 0) / 2)) + ' mm' + (+s.bahnSinn > 0 ? ' · nur Gleichlauf' : (+s.bahnSinn < 0 ? ' · nur Gegenlauf' : '')) + (fStepFeldHolen() ? '' : ' · KEINE SOLLFORM');
   }
   return '';
@@ -14065,6 +14390,7 @@ const F_ICONS = {
   // Stufe 3 Teil B: Rohteil gestrichelt, das Modell als Stufenkoerper darin,
   // die Z-Ebenen als waagerechte Striche.
   modellSchruppen:'<rect x="2" y="1.5" width="18" height="12" rx="1" stroke-dasharray="1.8 1.4"/><path d="M4 13h4V9h4V5.5h5"/><path d="M2 9h4M2 5.5h6" stroke-dasharray="1.4 1.2"/>',
+  modellSchlichtenEben:'<rect x="2" y="1.5" width="18" height="12" rx="1" stroke-dasharray="1.8 1.4"/><path d="M4 4v9h14"/><path d="M6 13v-1.5M9 13v-1.5M12 13v-1.5M15 13v-1.5M4 6h1.5M4 9h1.5" stroke-width="1.2"/>',
   modellSchlichten:'<rect x="2" y="1.5" width="18" height="12" rx="1" stroke-dasharray="1.8 1.4"/><path d="M3 13l7-7h9"/><circle cx="8.5" cy="6.2" r="2.1"/><path d="M4.6 10.6l1.1 1.1M6.6 8.6l1.1 1.1M11 6h1.6M14 6h1.6" stroke-dasharray="0"/>',
   modellRest:'<rect x="2" y="1.5" width="18" height="12" rx="1" stroke-dasharray="1.8 1.4"/><path d="M4 13h4V9h4V5.5h5"/><circle cx="6.4" cy="11" r="1.5"/><circle cx="10.4" cy="7.2" r="1.5"/><circle cx="14.6" cy="3.8" r="1.5"/>',
   grp_modell:'<rect x="2" y="1.5" width="18" height="12" rx="1" stroke-dasharray="1.8 1.4"/><path d="M4 13h4V9h4V5.5h5"/>'
@@ -14208,7 +14534,7 @@ function fZyklusWerkzeugVorschlag(art){
     // Tasche, Nut, Zapfen: ein Schaftfraeser mit Eintauchwinkel bis ⌀20, der
     // groesste zuerst - nicht der Messerkopf T1, mit dem eine 50x30-Tasche
     // in der Vorgabe gar nicht anzulegen war (Durchlauf 19.09.2026).
-    (F_FRAES_ARTEN.indexOf(art) >= 0 && art !== 'planfraesen' ? fr.filter(w => +w.d <= 20).sort((a, b) => ((+b.angle > 0) - (+a.angle > 0)) || ((+b.d || 0) - (+a.d || 0)))[0] : null) ||
+    ((F_FRAES_ARTEN.indexOf(art) >= 0 && art !== 'planfraesen') || art === 'modellSchlichtenEben' ? fr.filter(w => +w.d <= 20).sort((a, b) => ((+b.angle > 0) - (+a.angle > 0)) || ((+b.d || 0) - (+a.d || 0)))[0] : null) ||
     W.find(w => w.art === artWunsch) || W.find(w => w.art === 'bohrer') || W[0] || {nr:1};
 }
 // Werte eines Schritts in die Felder; fehlende Werte (aeltere Schritte)
@@ -14943,7 +15269,7 @@ function hbSpitze(feld, ySC, yT, yZust, ySC2, y0){
 function hbWert(v, nk){ const n = +v; if(!isFinite(n)) return String(v == null ? '' : v); return String(Math.round(n * 1000) / 1000); }
 // Kurzzeichen der Pille: das erste Wort des Feldnamens, ausser bei Feldern, deren
 // erstes Wort nichts sagt ("max.", "Zustellung je Helixgang").
-const HB_KURZ = {ueberl:'Überl.', ae:'ae', bahnSinn:'Fräsart', q334:'Helix-Zust.', q379:'Start vertieft', vUnten:'Verweilen', restAb:'Rest ab'};
+const HB_KURZ = {ebWas:'Böden/Wände', ueberl:'Überl.', ae:'ae', bahnSinn:'Fräsart', q334:'Helix-Zust.', q379:'Start vertieft', vUnten:'Verweilen', restAb:'Rest ab'};
 function hbKurz(art, feld){ return HB_KURZ[feld] || fFeldName(art, feld).split(' ')[0]; }
 // Text am Bild. Paket H: nur das ANGEFASSTE Feld zeigt seinen Wert; sonst
 // steht dort die stille Marke mit dem Kurzzeichen. Ein Wahlfeld nennt im
@@ -15417,6 +15743,97 @@ function hbBildModell(H, art, s){
     hbArrow(c, pfeilZiel, tip - 3 * k, Math.PI, false); c.restore();
   }
 }
+// Boeden und Waende schlichten: links die Draufsicht auf eine Tasche - die
+// WANDBAHN laeuft im Abstand Werkzeugradius um sie herum, der Boden darin
+// zeilenweise; rechts der Schnitt durch die Stufe mit den Z-Schritten der Wand.
+// Eigenes Bild, weil das des Abspanens weder die Wand noch ihre Z-Schritte
+// zeigt - und "Z-Schritt der Waende" dort gar keine Entsprechung hatte.
+function hbBildEben(H, art, s){
+  const c = H.c, w = H.w, h = H.h, k = HB_SKAL;
+  const was = String(s.ebWas || 'beide'), mitWand = was !== 'boeden', mitBoden = was !== 'waende';
+  // --- Draufsicht: Platte mit einer Tasche ---
+  const ax = 9 * k, aw = w * 0.53 - 14 * k;
+  const fw = aw * 0.84, fh = fw * 0.62, rand = (aw - fw) / 2;
+  const ah = Math.min(h * 0.60, fh + 2 * rand);
+  const ay = Math.max(9 * k, (h - ah) / 2);
+  const cx = ax + aw / 2, cy = ay + ah / 2;
+  hbMerk('platte', {x0:cx - fw / 2, y0:cy - fh / 2, x1:cx + fw / 2, y1:cy + fh / 2, b:fw, h:fh}, 'Rohteil');
+  c.save(); c.fillStyle = '#f3f4f6'; c.strokeStyle = HB_EDGE; c.lineWidth = HB_STIL.randStrich;
+  c.beginPath(); c.rect(cx - fw / 2, cy - fh / 2, fw, fh); c.fill(); c.stroke(); c.restore();
+  // die Tasche (blau = hier wird geschlichtet)
+  const tw = fw * 0.66, th = fh * 0.60;
+  hbBlau(c, cc => { cc.rect(cx - tw / 2, cy - th / 2, tw, th); }, cy - th / 2, cy + th / 2);
+  // die Wandbahn: EIN Umlauf im Abstand Werkzeugradius, mit Pfeil
+  const rt = Math.min(tw, th) * 0.13;
+  if(mitWand){
+    c.save(); c.strokeStyle = HB_ON; c.lineWidth = 1.7 * k; c.setLineDash([]);
+    c.beginPath(); c.rect(cx - tw / 2 + rt, cy - th / 2 + rt, tw - 2 * rt, th - 2 * rt); c.stroke();
+    c.fillStyle = HB_ON; hbArrow(c, cx, cy - th / 2 + rt, 0, false);
+    c.restore();
+    hbLabel(c, 'Wandbahn = ' + String.fromCharCode(8960) + '/2', cx, cy - th / 2 - 7 * k, false, null, cx + tw * 0.2, cy - th / 2 + rt);
+  }
+  // der Boden: Zeilen innerhalb der Wandbahn
+  if(mitBoden){
+    const sinn = Math.round(+s.bahnSinn || 0), nz = 4;
+    c.save(); c.strokeStyle = 'rgba(255,255,255,0.92)'; c.fillStyle = '#ffffff'; c.lineWidth = 1.3 * k; c.lineCap = 'round';
+    for(let i = 0; i < nz; i++){
+      const yy = cy - th / 2 + rt + (th - 2 * rt) * (i + 0.5) / nz;
+      const plus = sinn ? (sinn < 0) : (i % 2 === 0);
+      c.beginPath(); c.moveTo(cx - tw / 2 + rt + 2, yy); c.lineTo(cx + tw / 2 - rt - 2, yy); c.stroke();
+      hbArrow(c, cx + (plus ? 1 : -1) * (tw / 2 - rt) * 0.35, yy, plus ? Math.PI : 0, false);
+    }
+    c.restore();
+    // ae als Mass zwischen zwei Bodenzeilen
+    const y1 = cy - th / 2 + rt + (th - 2 * rt) * 0.5 / nz, y2 = cy - th / 2 + rt + (th - 2 * rt) * 1.5 / nz;
+    const xd = cx - tw / 2 + rt + (tw - 2 * rt) * 0.18;
+    if(HB_FOKUS === 'ae') hbDim(c, xd, y1, xd, y2, 0, hbTxt(art, s, 'ae'), 'ae');
+    else hbLabel(c, hbTxt(art, s, 'ae'), xd + 6 * k, (y1 + y2) / 2 + 3.5, false, 'left', xd, (y1 + y2) / 2);
+  }
+  hbLabel(c, hbTxt(art, s, 'ebWas'), cx, cy + fh / 2 + 12 * k, HB_FOKUS === 'ebWas');
+  hbKoordXY(c, ax + 8 * k, cy + fh / 2 + 2 * k, k);
+  // --- Schnitt rechts: die Stufe, das Werkzeug an der Wand ---
+  const sx = w * 0.55 + 4 * k, sw = w - sx - 14 * k;
+  const sy0 = h * HB_STIL.teilOben, teilH = h * HB_STIL.teilHoehe, syB = sy0 + teilH;
+  const sTief = teilH * HB_STIL.abtragTief;
+  const yGrund = sy0 + sTief;                 // der Boden
+  const xk = sx + sw * 0.42;                  // die Wand steht hier
+  hbBlock(c, cc => {
+    cc.moveTo(sx, sy0); cc.lineTo(xk, sy0); cc.lineTo(xk, yGrund);
+    cc.lineTo(sx + sw, yGrund); cc.lineTo(sx + sw, syB); cc.lineTo(sx, syB);
+  });
+  // das Aufmass, das hier weggeht: ein duenner Streifen an der Wand und auf dem Boden
+  const d = 4 * k;
+  if(mitWand) hbBlau(c, cc => { cc.rect(xk, sy0, d, sTief); }, sy0, yGrund);
+  if(mitBoden) hbBlau(c, cc => { cc.rect(xk + d, yGrund - d, sx + sw - xk - d, d); }, yGrund - d, yGrund);
+  // die Z-Schritte der Wand (die Werkzeugbreite steht schon hier fest, weil
+  // die Linien rechts am Werkzeug vorbei auslaufen)
+  const tbW = Math.max(12, Math.min(sw * 0.16, sw * HB_STIL.wzBreite));
+  if(mitWand){
+    const nZ = (+s.zust > 0) ? Math.max(2, Math.min(4, Math.ceil(Math.abs(+s.tiefe || 8) / (+s.zust || 2)))) : 2, dZ = sTief / nZ;
+    // Die Linien liegen AN DER WAND (dort laeuft die Bahn), nicht quer ueber
+    // den Boden - so stand es im ersten Bau und sah aus wie eine Bodenaufteilung.
+    const xzr = xk + tbW + 9 * k;
+    for(let i = 1; i < nZ; i++) hbLine(c, xk - 6 * k, sy0 + dZ * i, xzr, sy0 + dZ * i, HB_ON, 1, [2, 2]);
+    if(HB_FOKUS === 'zust') hbDim(c, xzr + 3 * k, sy0, xzr + 3 * k, sy0 + dZ, 0, hbTxt(art, s, 'zust'), 'zust', 'in');
+    else hbLabel(c, hbTxt(art, s, 'zust'), xzr + 6 * k, sy0 + dZ * 1.9, false, 'left', xzr, sy0 + dZ * 1.5);
+  }
+  // Die Tiefe wird AN DER WAND gemessen - sie IST die Wandhoehe, und beim
+  // Anfassen soll der Pfeil dort stehen, wo der Wert wirkt. (Im Grundbild
+  // zeichnet hbDim nichts - Masspfeile gibt es nur beim angefassten Mass,
+  // Paket H. Ich hielt das erst fuer ein fehlendes Mass; es ist die Regel.)
+  hbDim(c, sx + sw * 0.13, sy0, sx + sw * 0.13, yGrund, 6 * k, hbTxt(art, s, 'tiefe'), 'tiefe');
+  const ySC = sy0 - 21 * k;
+  hbLine(c, sx - 4, ySC, sx + sw + 4, ySC, HB_AXIS, 1, [5, 3]);
+  hbLabel(c, hbTxt(art, s, 'sc'), sx + sw + 2 * k, ySC - 3, HB_FOKUS === 'sc', 'right');
+  hbLabel(c, hbTxt(art, s, 'q203'), sx + sw + 2 * k, sy0 - 4, HB_FOKUS === 'q203', 'right');
+  // Das Werkzeug steht AN der Wand, auf der niedrigeren Seite - genau so faehrt die Bahn.
+  const tb = tbW;
+  const tx = xk + d + tb / 2, Lw = h * HB_STIL.wzLaenge;
+  const fokusHoehe = (HB_FOKUS === 'sc' || HB_FOKUS === 'sc2' || HB_FOKUS === 'q203' || HB_FOKUS === 'tiefe' || (F_FELDER[HB_FOKUS] || {}).einheit === 'mm/min');
+  const tip = fokusHoehe ? hbSpitze(HB_FOKUS, ySC, yGrund, sy0, ySC, sy0) : yGrund;
+  hbBohrer(c, tx, tip - Lw, tip, tb, 'fraeser');
+  hbFokusSymbol(c, art, tx, tip, tb, k);
+}
 // Stufe 4: die Schraege mit dem Kugelfraeser. Links die Draufsicht mit den
 // Zeilen quer ueber die Schraege, rechts der Schnitt: der Kugelkopf sitzt auf
 // der Schraege, der Bahnabstand ist als Reihe von Kugelstellungen gezeigt, und
@@ -15514,6 +15931,7 @@ function fHilfebild(fokus){
   HB_SPAET = [];
   try{
     if((F_ZYKLEN[ZY.art] || {}).schlicht) hbBildSchlicht(H, ZY.art, s);
+    else if((F_ZYKLEN[ZY.art] || {}).eben) hbBildEben(H, ZY.art, s);
     else if((F_ZYKLEN[ZY.art] || {}).modell) hbBildModell(H, ZY.art, s);
     else if(ZY.art === 'planfraesen') hbBildPlan(H, ZY.art, s);
     else if((F_ZYKLEN[ZY.art] || {}).kontur) hbBildKontur(H, ZY.art, s);
@@ -16692,6 +17110,7 @@ function fStepFeldUebernehmen(){
   if(!STEP.feld){ try{ STEP.feld = fStepSollfeld(STEP.aus, STEP.raster || 0); STEP.bild = null; }catch(e){ STEP.feld = null; } }
   if(!STEP.feld){ melde('FEHLER: die Sollform liess sich nicht rechnen.'); return false; }
   fStepFeldSetzen(STEP.feld, fProg);
+  if(STEP.rohfeld) fRohformSetzen(STEP.rohfeld, fProg);
   const F = STEP.feld;
   fRender();
   melde('Sollform ans Programm: ' + F.nx + ' x ' + F.ny + ' Rasterstellen zu ' + fRund(F.raster)
@@ -16784,6 +17203,40 @@ function fStepFlaechenUebernehmen(){
     + (plan.hinweise.length ? ' ' + plan.hinweise.join(' ') : ''));
   return true;
 }
+// ROHTEIL AUS EINEM ZWEITEN STEP-MODELL [20.09.2026]. Dieselbe Lage wie das
+// Teil: Achse und Verschiebung des Teils, nicht der eigene Huellquader -
+// sonst laege die Rohform neben dem Teil. Die BLK FORM wird die Huelle aus
+// Teil und Rohform (die Steuerung braucht den Quader).
+function fStepRohModellLaden(text, name){
+  const A = STEP.aus;
+  if(!A){ melde('FEHLER: erst das TEIL laden und ausrichten — die Rohform bekommt dieselbe Lage.'); return false; }
+  let M;
+  try{ M = fStepModell(text); }catch(e){ melde('FEHLER beim Lesen der Rohteil-STEP: ' + e.message); return false; }
+  if(!M.flaechen.length){ melde('FEHLER: keine Flaechen im Rohteil-Modell — ist das ein Volumenmodell?'); return false; }
+  const v = A.versatz || [0, 0, 0];
+  const AR = fStepAusrichten(M, {achse:STEP.achse, x0:v[0], y0:v[1], z0:v[2]});
+  let R;
+  try{ R = fStepSollfeld(AR, (STEP.feld && STEP.feld.raster) || STEP.raster || 0); }catch(e){ melde('FEHLER: die Rohform liess sich nicht rechnen (' + e.message + ').'); return false; }
+  R.name = name || 'Rohteil';
+  STEP.rohModell = M; STEP.rohAus = AR; STEP.rohfeld = R;
+  fRohformSetzen(R, fProg);
+  const k = fProg.kopf, B = AR.box, P = A.box;
+  k.x0 = fRund(Math.min(P.x0, B.x0)); k.x1 = fRund(Math.max(P.x1, B.x1)); k.y0 = fRund(Math.min(P.y0, B.y0)); k.y1 = fRund(Math.max(P.y1, B.y1));
+  k.z0 = fRund(Math.min(P.z0, B.z0)); k.z1 = fRund(Math.max(P.z1, B.z1));
+  let mat = 0; for(let q = 0; q < R.h.length; q++) if(R.quelle[q]) mat++;
+  const w = document.getElementById('btnStepRohWeg'); if(w) w.style.display = '';
+  fRender(); try{ fStepZeichnen(); }catch(e){}
+  melde('Rohform aus ' + R.name + ': ' + M.bericht.flaechen + ' Flaechen, Huelle X ' + B.x0 + '..' + B.x1 + '  Y ' + B.y0 + '..' + B.y1 + '  Z ' + B.z0 + '..' + B.z1 + ', ' + mat
+    + ' Rasterstellen mit Material. Modell abspanen, Restmaterial, Boeden & Waende und die Simulation rechnen jetzt mit dieser Oberflaeche statt mit dem Quader; die BLK FORM ist die Huelle aus Teil und Rohform. Die Rohform wird NICHT mit dem Programm gespeichert.');
+  return true;
+}
+function fStepRohWeg(){
+  STEP.rohModell = null; STEP.rohAus = null; STEP.rohfeld = null;
+  fRohformSetzen(null, fProg);
+  const w = document.getElementById('btnStepRohWeg'); if(w) w.style.display = 'none';
+  fRender();
+  melde('Rohform entfernt — es gilt wieder der Quader der BLK FORM.');
+}
 function fStepRohUebernehmen(){
   const A = STEP.aus;
   if(!A){ melde('FEHLER: kein Modell geladen.'); return false; }
@@ -16865,6 +17318,14 @@ function fStepRohUebernehmen(){
     rd.onload = ()=>{ fStepLaden(String(rd.result || ''), f.name); fi.value = ''; };
     rd.readAsText(f);
   });
+  const fr = document.getElementById('stepRohFile');
+  if(fr && fr.addEventListener) fr.addEventListener('change', ()=>{
+    const f = fr.files && fr.files[0]; if(!f) return;
+    const rd = new FileReader();
+    rd.onload = ()=>{ fStepRohModellLaden(String(rd.result || ''), f.name); fr.value = ''; };
+    rd.readAsText(f);
+  });
+  { const wg = document.getElementById('btnStepRohWeg'); if(wg) wg.onclick = fStepRohWeg; }
   // Ziehen = drehen, Rad = Zoom, Doppelklick = Ausgangslage
   const cv = document.getElementById('stepCv');
   if(cv && cv.addEventListener){
