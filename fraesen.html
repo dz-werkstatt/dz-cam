@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 12:52 (5a42cc28)";</script>
+<script>window.__DZ_STAND="20.09.2026 12:55 (2fc4b46b)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -8717,7 +8717,11 @@ function fFormAusModell(M, opt){
   for(let c = 0; c < NN.length; c++){ if(NN[c] > steilst) steilst = NN[c]; if(NN[c] > grenz + 0.1) steil++; }
   steilst = Math.round(steilst * 10) / 10;
   if(steil) hin.push(steil + ' Rasterstellen stehen steiler als ' + grenz + ' Grad (steilste ' + steilst + ' Grad) - bei ' + ew + ' Grad Entformungswinkel bleibt das Teil dort haengen. Die Formschraege gehoert ins CAD, nicht ins CAM.');
-  else hin.push('Der Entformungswinkel von ' + ew + ' Grad ist eingehalten: keine Wand steht steiler als ' + grenz + ' Grad, die steilste Stelle misst ' + steilst + ' Grad.');
+  // WORTLAUT: die Messung laeuft auf dem Raster und darf um 0,1 Grad
+  // danebenliegen - deshalb steht in der Zahl auch mal 85,1 gegen die Grenze
+  // 85. "Keine Wand steht steiler als 85 Grad ... steilste Stelle 85,1 Grad"
+  // war ein Widerspruch im selben Satz.
+  else hin.push('Der Entformungswinkel von ' + ew + ' Grad ist eingehalten: die steilste Stelle misst ' + steilst + ' Grad gegen die Grenze ' + grenz + ' Grad (bis 0,1 Grad Rasterabweichung zaehlt als eingehalten).');
   hin.push('Ein Hinterschnitt laesst sich in einem Hoehenfeld nicht abbilden und waere hier stillschweigend verschwunden; senkrechte Stellen stehen oben in der Zahl.');
   // GEMESSEN am Testblister (Kavitaet 18 mm tief, 5 Grad Formschraege,
   // Kugelfraeser 8): mit dem Vorgabeband 5 bis 45 Grad entstehen 81
