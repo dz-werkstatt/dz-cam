@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 13:49 (9c21a3e5)";</script>
+<script>window.__DZ_STAND="20.09.2026 14:36 (1fe0a12b)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3865,8 +3865,8 @@ Ende (alles rechnen), Neu und der Regler auf der Zeitachse (Vorschubweg / F, Eil
 <p><b>Was sie zeigt und was nicht:</b> Sie f&auml;hrt die <b>eigene Bahnlogik</b> der App (Kap.&nbsp;6c). Die Zyklen ohne Einzelsatz-Ausgabe (Gewinde GS 207 und Spanbruch 209,
 Ausdrehen 202 mit Freifahren, R&uuml;ckw&auml;rts-Senken 204, Bohrfr&auml;sen 208, Einlippen-Bohren 241) fahren den <b>Ablauf des Zyklenhandbuchs</b> nach (Zustellungen,
 R&uuml;ckz&uuml;ge, Helix, Exzenter-Versatz, Freifahren 0,2&nbsp;mm) &mdash; nach dem Buch nachgebaut, nicht die Steuerung selbst. Beim R&uuml;ckw&auml;rts-Senken ist das Durchfahren
-ohne vorgebohrte Bohrung eine Kollision. Helix und Pendeln ohne ANGLE laufen senkrecht. Nicht dargestellt: Halter und Spannmittel. Der Programm-Test der Steuerung bleibt
-die Referenz vor dem ersten Lauf.</p>
+ohne vorgebohrte Bohrung eine Kollision. Helix und Pendeln ohne ANGLE laufen senkrecht. Der Programm-Test der Steuerung bleibt die Referenz vor dem ersten Lauf.</p>
+<p id="ba-fk06d-wzform"><b>Die Form des Werkzeugs kommt aus der Werkzeugtabelle</b> (20.09.2026) &mdash; und zwar aus den <b>Zahlen</b>, nie aus dem Namen. Ist der Eckenradius <b>R2 gleich dem halben Durchmesser</b>, ist es ein <b>Kugelfr&auml;ser</b> (Halbkugel); liegt R2 <b>dazwischen</b>, ein <b>Eckenradiusfr&auml;ser</b> (flache Mitte, aussen die Rundung); steht ein <b>Spitzenwinkel</b> in der Tabelle, ist es ein <b>Kegel</b> &mdash; beim Bohrer, beim Zentrierer und auch beim Fasenfr&auml;ser. Sonst ist die Stirn flach. Dieselbe Form nimmt der <b>Abtrag</b> und zeichnet das <b>3D-Bild</b>: was Du im Bild siehst, ist das, was das Material wegnimmt. Dar&uuml;ber folgt die Silhouette der Tabelle weiter &mdash; <b>Schneidenl&auml;nge LCUTS</b>, dann der Schaft bis zur <b>Auskragl&auml;nge</b> und der <b>Halter</b> mit seinem Durchmesser; was dort fehlt, wird nicht geraten: der letzte bekannte K&ouml;rper l&auml;uft als Zylinder weiter. Die <b>Spannbacken</b> stehen seit dem 16.09.2026 im Bild (flach in der Draufsicht, als Kl&ouml;tze in 3D). Nicht dargestellt sind die <b>Schneiden selbst</b> (Drall, Z&auml;hnezahl) &mdash; f&uuml;r den Abtrag und die Kollision z&auml;hlt die H&uuml;llform, und die ist ein Drehk&ouml;rper.</p>
 <p id="ba-fk06d-vollbild"><b>Am Laptop f&uuml;llt die Simulation den Bildschirm</b> (19.09.2026) &mdash; wie im Drehteil geh&ouml;rt die ganze Fl&auml;che dem Bild,
 die Bedienhinweise stehen hinter dem Knopf &#x24D8; in der Kopfleiste (auf beiden Ger&auml;ten), das Kreuz oben rechts schlie&szlig;t.</p>
 <p id="ba-fk06d-pipeline"><b>Zeit an die Werkstatt-Pipeline</b> (19.09.2026): der Knopf in der Kopfleiste der Simulation (und derselbe in der
@@ -11985,15 +11985,16 @@ var F_SIM_EILGANG = 6000;   // mm/min fuer FMAX in der Zeitachse (kein NC-Wort, 
 // Kegelmass der Werkzeugspitze: Hoehe je mm Radius (cot des halben
 // Spitzenwinkels). 0 = flach (Fraeser, Reibahle, Bohrstange).
 function fSimKegel(tool){
-  const art = tool && tool.art;
   // KUGELFRAESER: der Kopf ist eine Halbkugel, keine flache Scheibe und
   // kein Kegel. -1 ist die Marke dafuer - ein Kegel hat immer einen
-  // positiven Kotangens. Erkannt wird sie an den ZAHLEN der Tabelle:
-  // Eckenradius R2 = halber Durchmesser.
-  if(art === 'fraeser' && (+tool.d || 0) > 0 && (+tool.r2 || 0) >= (+tool.d || 0) / 2 - 0.01) return -1;
-  if(!(art === 'bohrer' || art === 'zentrierer' || art === 'gewindebohrer')) return 0;
-  let sw = +tool.spitze; if(!(sw > 0) || sw >= 180) sw = (art === 'zentrierer') ? 90 : 118;
-  return 1 / Math.tan(sw / 2 * Math.PI / 180);
+  // positiven Kotangens. Die Form kommt seit dem 20.09.2026 aus
+  // fWerkzeugStirn (EINE Quelle fuer Abtrag und Bild); ein TORUS laesst
+  // sich als Zahl nicht ausdruecken und faellt hier auf 0 - wer ihn
+  // braucht, fragt die Stirn selbst.
+  const st = fWerkzeugStirn(tool);
+  if(st.art === 'kugel') return -1;
+  if(st.art === 'kegel') return st.kegel;
+  return 0;
 }
 // Bahnen aller aktiven Schritte, mit dem Handbuch-Ablauf fuer Familien ohne
 // Einzelsatz-Ausgabe und Rueckfall (einfache Bohrung), falls auch der fehlt.
@@ -12046,7 +12047,10 @@ function fSimBahnen(prog){
     if(tool.art && tool.art !== 'fraeser' && (z.fraes || z.kontur)) hinweise.push('Schritt ' + (si + 1) + ': T' + s.t + ' ist kein Fraeser.');
     const moves = [{a:'eil', z:rz, m:null}].concat(b.bahn).concat([{a:'eil', z:rz}]);
     const kegel = fSimKegel(tool);
-    bahnen.push({schritt:si, art:s.art, t:s.t, rt:rt, kegel:kegel, spitze:kegel ? fRund(2 * Math.atan(1 / kegel) * 180 / Math.PI) : 0, wzArt:tool.art || 'fraeser', bohrer:(tool.art && tool.art !== 'fraeser'), moves:moves});
+    const stirn = fWerkzeugStirn(tool);
+    bahnen.push({schritt:si, art:s.art, t:s.t, rt:rt, kegel:kegel, stirn:stirn,
+                 spitze:(kegel > 0) ? fRund(2 * Math.atan(1 / kegel) * 180 / Math.PI) : 0,
+                 wzArt:tool.art || 'fraeser', bohrer:(tool.art && tool.art !== 'fraeser'), moves:moves});
   });
   return {bahnen:bahnen, hinweise:hinweise};
 }
@@ -12229,7 +12233,7 @@ function fSimZeitachse(bahnen, prog){
     else if(m.a === 'kreis'){ const sg = {x0:x, y0:y, x1:m.x, y1:m.y, cx:m.cx, cy:m.cy, dr:m.dr}; const r = Math.hypot(x - m.cx, y - m.cy); weg = Math.abs(fBogenWinkel(sg)) * r; if(m.z != null) weg = Math.hypot(weg, m.z - z); dauer = weg / Math.max(1, +m.f || 1) * 60; }
     else if(m.a === 'helix'){ const r = Math.hypot(x - m.cx, y - m.cy); weg = Math.hypot(2 * Math.PI * r * (+m.turns || 0), +m.dz || 0); z1 = (m.z != null) ? m.z : z + (+m.dz || 0); dauer = weg / Math.max(1, +m.f || 1) * 60; }
     else if(m.a === 'verweil'){ dauer = +m.t || 0; }
-    liste.push({schritt:bh.schritt, t:bh.t, rt:bh.rt, kegel:bh.kegel || 0, spitze:bh.spitze || 0, wzArt:bh.wzArt, m:m, p0:p0, p1:{x:x1, y:y1, z:z1}, weg:weg, t0:t, t1:t + dauer});
+    liste.push({schritt:bh.schritt, t:bh.t, rt:bh.rt, kegel:bh.kegel || 0, stirn:bh.stirn || null, spitze:bh.spitze || 0, wzArt:bh.wzArt, m:m, p0:p0, p1:{x:x1, y:y1, z:z1}, weg:weg, t0:t, t1:t + dauer});
     x = x1; y = y1; z = z1; t += dauer;
   }));
   return {liste:liste, gesamt:t};
@@ -12280,7 +12284,12 @@ function fSimStempel(F, x, y, z, r, nurPruefen, kegel){
   // neben der Achse). Der Stempel bekommt deshalb ein Millionstel Zugabe.
   // (Die Zugabe gilt nur fuer die FRAGE, welche Zelle dazugehoert - nicht fuer die
   // Kugelhoehe, die aus r2 gerechnet wird.)
-  const r2 = r * r, zu = nurPruefen ? 0 : 1e-6, kg = +kegel || 0; let traf = false;
+  // Die Stirn darf ein Objekt (fWerkzeugStirn) oder die alte Zahl sein.
+  // Ihr Radius wird auf den STEMPELRADIUS gesetzt: beim Durchfahren einer
+  // Bohrung (pruefR) ist das Werkzeug schmaler als seine Schneide.
+  const r2 = r * r, zu = nurPruefen ? 0 : 1e-6; let traf = false;
+  let stirn = (kegel && typeof kegel === 'object') ? kegel : fStirnAusZahl(kegel, r);
+  if(stirn.rt !== r) stirn = {art:stirn.art, rt:r, r2:(stirn.art === 'kugel') ? r : Math.min(stirn.r2, r), kegel:stirn.kegel, hoehe:stirn.hoehe};
   for(let j = j0; j <= j1; j++){
     const cy = F.y0 + (j + 0.5) * F.raster;
     for(let i = i0; i <= i1; i++){
@@ -12288,7 +12297,7 @@ function fSimStempel(F, x, y, z, r, nurPruefen, kegel){
       if(d2 > r2 + zu) continue;
       // kg < 0 = KUGEL mit Radius r (Spitze auf z), kg > 0 = Kegel,
       // 0 = flache Stirn.
-      const zc = (kg < 0) ? z + r - Math.sqrt(Math.max(0, r2 - d2)) : (kg ? z + Math.sqrt(d2) * kg : z);
+      const zc = z + fStirnHoehe(stirn, Math.sqrt(d2));
       const idx = j * F.nx + i;
       // Pruefung: eine Zelle unter der Unterkante ist kein Material mehr (Durchgangsbohrung mit Kegelspitze)
       if(F.h[idx] > zc + F_SIM_EPS && (!nurPruefen || F.h[idx] > F.unten + F_SIM_EPS)){ traf = true; if(nurPruefen) return true; F.h[idx] = zc; }
@@ -12347,7 +12356,7 @@ function fSimFahren(F, e, uA, uB){
   const schritt = Math.max(F.raster * 0.5, Math.min(e.rt * 0.5, 1)) / Math.max(e.weg, 1e-9);
   const N = Math.max(1, Math.ceil(1 / Math.max(schritt, 1e-6)));
   const kA = (uA <= 0) ? 0 : Math.floor(uA * N + 1e-9) + 1, kB = Math.min(N, Math.floor(uB * N + 1e-9));
-  const kegel = e.kegel || 0;
+  const kegel = e.stirn || e.kegel || 0;
   for(let k = kA; k <= kB; k++){
     const u = k / N, p = fSimPunkt(e, u);
     if(pruef){ const qx = (m.pruefX != null) ? m.pruefX : p.x, qy = (m.pruefY != null) ? m.pruefY : p.y;
@@ -12446,25 +12455,40 @@ function fSim3dQuader(x0, y0, z0, x1, y1, z1){
   flaeche(P100, P110, P111, P101, [1, 0, 0]);
   return new Float32Array(st);
 }
-function fSim3dWerkzeug(rt, kegel, laenge, segs){
-  segs = segs || 28; const st = []; const hK = (kegel > 0) ? rt * kegel : 0, L = Math.max(laenge || 0, hK + 1);
+// Das Werkzeug als DREHKOERPER aus seiner Silhouette (fWerkzeugProfil).
+// Eine Schleife fuer alles: Kugelkalotte, Eckenradius, Kegelspitze, flache
+// Stirn, Schneide, Schaft, Halter — jeder Abschnitt ist ein Stueck des
+// Profils, jeder Durchmessersprung zwei Punkte auf derselben Hoehe.
+// Die Normale steht senkrecht auf der Profiltangente: aus (dr, dz) wird
+// (cos*dz, sin*dz, -dr). Ein senkrechter Sprung nach aussen liefert damit
+// von selbst (0,0,-1) — die flache Stirn braucht keinen Sonderfall.
+function fSim3dWerkzeug(profil, segs){
+  segs = segs || 28;
+  const P = (profil && profil.punkte) ? profil.punkte : [[0, 0], [2.5, 0], [2.5, 40]];
+  const st = [];
   const p = (x, y, z, n) => st.push(x, y, z, n[0], n[1], n[2]);
   for(let s = 0; s < segs; s++){
     const a0 = s / segs * 2 * Math.PI, a1 = (s + 1) / segs * 2 * Math.PI;
-    const c0 = Math.cos(a0), s0 = Math.sin(a0), c1 = Math.cos(a1), s1 = Math.sin(a1), cm = Math.cos((a0 + a1) / 2), sm = Math.sin((a0 + a1) / 2);
-    if(hK > 0){
-      // Kegelmantel: Normale schraeg nach aussen/unten
-      const nl = Math.hypot(kegel, 1), n0 = [c0 * kegel / nl, s0 * kegel / nl, -1 / nl], n1 = [c1 * kegel / nl, s1 * kegel / nl, -1 / nl], nm = [cm * kegel / nl, sm * kegel / nl, -1 / nl];
-      p(0, 0, 0, nm); p(rt * c1, rt * s1, hK, n1); p(rt * c0, rt * s0, hK, n0);
-    } else {
-      p(0, 0, 0, [0, 0, -1]); p(rt * c1, rt * s1, 0, [0, 0, -1]); p(rt * c0, rt * s0, 0, [0, 0, -1]);
+    const c0 = Math.cos(a0), s0 = Math.sin(a0), c1 = Math.cos(a1), s1 = Math.sin(a1);
+    const cm = Math.cos((a0 + a1) / 2), sm = Math.sin((a0 + a1) / 2);
+    for(let k = 0; k + 1 < P.length; k++){
+      const rA = P[k][0], zA = P[k][1], rB = P[k + 1][0], zB = P[k + 1][1];
+      if(Math.abs(rA - rB) < 1e-12 && Math.abs(zA - zB) < 1e-12) continue;
+      const dr = rB - rA, dz = zB - zA, l = Math.hypot(dr, dz) || 1;
+      const n = (c, si) => [c * dz / l, si * dz / l, -dr / l];
+      const n0 = n(c0, s0), n1 = n(c1, s1), nm = n(cm, sm);
+      if(rA < 1e-9){            // Spitze: ein Dreieck statt eines Vierecks
+        p(0, 0, zA, nm); p(rB * c1, rB * s1, zB, n1); p(rB * c0, rB * s0, zB, n0);
+      }else if(rB < 1e-9){      // Deckel zur Achse hin
+        p(rA * c0, rA * s0, zA, n0); p(rA * c1, rA * s1, zA, n1); p(0, 0, zB, nm);
+      }else{
+        p(rA * c0, rA * s0, zA, n0); p(rA * c1, rA * s1, zA, n1); p(rB * c1, rB * s1, zB, n1);
+        p(rA * c0, rA * s0, zA, n0); p(rB * c1, rB * s1, zB, n1); p(rB * c0, rB * s0, zB, n0);
+      }
     }
-    // Zylindermantel
-    const n0 = [c0, s0, 0], n1 = [c1, s1, 0];
-    p(rt * c0, rt * s0, hK, n0); p(rt * c1, rt * s1, hK, n1); p(rt * c1, rt * s1, L, n1);
-    p(rt * c0, rt * s0, hK, n0); p(rt * c1, rt * s1, L, n1); p(rt * c0, rt * s0, L, n0);
-    // Deckel
-    p(0, 0, L, [0, 0, 1]); p(rt * c0, rt * s0, L, [0, 0, 1]); p(rt * c1, rt * s1, L, [0, 0, 1]);
+    // Deckel oben: das Werkzeug ist abgeschnitten, nicht offen.
+    const rE = P[P.length - 1][0], zE = P[P.length - 1][1];
+    if(rE > 1e-9){ p(0, 0, zE, [0, 0, 1]); p(rE * c0, rE * s0, zE, [0, 0, 1]); p(rE * c1, rE * s1, zE, [0, 0, 1]); }
   }
   return new Float32Array(st);
 }
@@ -12750,6 +12774,105 @@ function fWerkzeugKoerper(tool){
   if(!(hd > 0)){ fehlt.push('Halter-⌀'); return {teile:K, fehlt:fehlt}; }
   K.push({name:'Halter', r:hd / 2, von:au, bis:Infinity});
   return {teile:K, fehlt:fehlt};
+}
+
+// ---------------------------------------------------------------------
+// DIE FORM DES WERKZEUGS — EINE QUELLE FUER ABTRAG UND BILD
+// ---------------------------------------------------------------------
+// Daniels Befund (20.09.2026): "in der Fraessimulation werden die Werkzeuge
+// noch nicht ideal dargestellt. Kugelfraeser, Schaftfraeser ... Form aus
+// Werkzeugtabelle verwenden."
+//
+// Gemessen war es genau so, und zwar in BEIDE Richtungen:
+//   - der Kugelfraeser wurde im 3D-Bild als flache Scheibe gezeichnet
+//     (Silhouette bei z 0 sofort r 5), waehrend der Abtrag die Halbkugel
+//     richtig rechnete — Bild und Material widersprachen einander;
+//   - der Fasenfraeser (ein Kegel, Spitzenwinkel 90 in der Tabelle) wurde
+//     ueberall als flache Scheibe genommen, weil nur Bohrer, Zentrierer
+//     und Gewindebohrer nach ihrem Spitzenwinkel gefragt wurden;
+//   - ein Eckenradiusfraeser (Torus, R2 zwischen 0 und ⌀/2) haette
+//     ebenfalls flach gestempelt. In Daniels Tabelle steht heute keiner,
+//     die Tabelle kann ihn aber tragen.
+//
+// Seither gibt es EINE Quelle: die Silhouette aus den Werten der Tabelle.
+// Der Stempel fragt sie ueber fStirnHoehe, das 3D-Bild baut seinen
+// Drehkoerper aus denselben Punkten. Was die Tabelle nicht fuehrt, wird
+// nicht geraten — der Zylinder ist der Rueckfall, und der ist die
+// vorsichtige Seite (groesster Querschnitt).
+//
+// Die STIRN eines Werkzeugs, aus den ZAHLEN der Tabelle (nie aus dem Namen):
+//   kugel  R2 >= ⌀/2      Halbkugel, Radius = ⌀/2
+//   torus  0 < R2 < ⌀/2   flache Mitte, aussen der Eckenradius R2
+//   kegel  Spitzenwinkel  Bohrer/Zentrierer/Gewindebohrer (Vorgabe 118/90)
+//                         und jedes Werkzeug, das einen Winkel fuehrt
+//                         (Fasenfraeser, Anbohrer)
+//   flach  sonst
+function fWerkzeugStirn(tool){
+  const t = tool || {}, art = t.art, rt = (+t.d > 0) ? +t.d / 2 : 2.5;
+  const r2 = +t.r2 || 0;
+  if(art === 'fraeser' && rt > 0 && r2 >= rt - 0.01) return {art:'kugel', rt:rt, r2:rt, kegel:0, hoehe:rt};
+  if(art === 'fraeser' && r2 > 0.01) return {art:'torus', rt:rt, r2:r2, kegel:0, hoehe:r2};
+  let sw = +t.spitze;
+  const spitzArt = (art === 'bohrer' || art === 'zentrierer' || art === 'gewindebohrer');
+  if(!(sw > 0) || sw >= 180) sw = spitzArt ? ((art === 'zentrierer') ? 90 : 118) : 0;
+  if(sw > 0){
+    const kg = 1 / Math.tan(sw / 2 * Math.PI / 180);
+    return {art:'kegel', rt:rt, r2:0, kegel:kg, hoehe:rt * kg};
+  }
+  return {art:'flach', rt:rt, r2:0, kegel:0, hoehe:0};
+}
+// Wie hoch ueber der Spitze liegt die Schneide im Abstand rho von der Achse?
+// Das ist die eine Formel, mit der gestempelt und geprueft wird.
+function fStirnHoehe(st, rho){
+  if(!st) return 0;
+  const rt = st.rt;
+  if(st.art === 'kugel'){ const d = Math.max(0, rt * rt - rho * rho); return rt - Math.sqrt(d); }
+  if(st.art === 'torus'){
+    const e = rho - (rt - st.r2);
+    if(e <= 0) return 0;
+    const d = Math.max(0, st.r2 * st.r2 - e * e);
+    return st.r2 - Math.sqrt(d);
+  }
+  if(st.art === 'kegel') return rho * st.kegel;
+  return 0;
+}
+// Eine ZAHL als Stirn ist die alte Schreibweise: -1 Kugel, >0 Kegelmass,
+// 0 flach. So bleiben Aufrufer am Leben, die nur das Kegelmass kennen.
+function fStirnAusZahl(k, rt){
+  const kg = +k || 0;
+  if(kg < 0) return {art:'kugel', rt:rt, r2:rt, kegel:0, hoehe:rt};
+  if(kg > 0) return {art:'kegel', rt:rt, r2:0, kegel:kg, hoehe:rt * kg};
+  return {art:'flach', rt:rt, r2:0, kegel:0, hoehe:0};
+}
+// Die ganze Silhouette als Punktliste [r, z] von der Spitze nach oben:
+// Stirn, dann die Zylinder aus fWerkzeugKoerper (Schneide, Schaft, Halter).
+// Ein Durchmessersprung steht als zwei Punkte auf derselben Hoehe.
+function fWerkzeugProfil(tool, bisZ){
+  const st = fWerkzeugStirn(tool), rt = st.rt, P = [];
+  const N = 10;   // Stuetzstellen der Rundung; darueber sieht man nichts mehr
+  if(st.art === 'kugel' || st.art === 'torus'){
+    const flach = (st.art === 'torus') ? rt - st.r2 : 0;
+    if(flach > 0) P.push([0, 0], [flach, 0]); else P.push([0, 0]);
+    for(let i = 1; i <= N; i++){
+      const a = i / N * Math.PI / 2, r = flach + st.r2 * Math.sin(a), z = st.r2 * (1 - Math.cos(a));
+      P.push([r, z]);
+    }
+  }else if(st.art === 'kegel'){
+    P.push([0, 0], [rt, st.hoehe]);
+  }else{
+    P.push([0, 0], [rt, 0]);
+  }
+  const K = fWerkzeugKoerper(tool), ende = (bisZ > 0) ? bisZ : Math.max(40, 4 * (+tool.d || 5));
+  let zLetzt = P[P.length - 1][1], rLetzt = P[P.length - 1][0];
+  (K.teile || []).forEach(k => {
+    const von = Math.max(k.von, zLetzt), bis = Math.min(isFinite(k.bis) ? k.bis : ende, ende);
+    if(bis <= von + 1e-9) return;
+    if(Math.abs(k.r - rLetzt) > 1e-9) P.push([k.r, von]);    // Durchmessersprung
+    P.push([k.r, bis]);
+    zLetzt = bis; rLetzt = k.r;
+  });
+  if(zLetzt < ende - 1e-9) P.push([rLetzt, ende]);
+  return {stirn:st, punkte:P, teile:K.teile, fehlt:K.fehlt, hoehe:ende};
 }
 
 // Abstand eines Punktes zum Rechteck (0, wenn er darin liegt).
@@ -17155,8 +17278,14 @@ function fSim3dZeichnen(){
   const p = fSimPosition();
   if(p){
     // Laenge mindestens der Umkreisradius: ein Bohrer tief in der Bohrung muss oben herausragen (DZ6-Befund: 35 mm verschwanden im Loch)
-    const e = p.e, wk = e.rt + '|' + e.kegel + '|' + e.wzArt + '|' + key;
-    if(SIM3D.wzKey !== wk){ const laenge = Math.max(40, 4 * e.rt * 2, K.R); const m = fSim3dWerkzeug(e.rt, e.kegel || 0, laenge, 32); gl.bindBuffer(gl.ARRAY_BUFFER, b.wz); gl.bufferData(gl.ARRAY_BUFFER, m, gl.DYNAMIC_DRAW); SIM3D.wzN = m.length / 6; SIM3D.wzKey = wk; }
+    const e = p.e, stf = e.stirn || {art:'flach', r2:0};
+    const wk = e.rt + '|' + e.kegel + '|' + stf.art + '|' + stf.r2 + '|' + e.wzArt + '|' + key;
+    if(SIM3D.wzKey !== wk){ const laenge = Math.max(40, 4 * e.rt * 2, K.R);
+      // Die FORM kommt aus der Werkzeugtabelle (Daniels Ansage 20.09.2026):
+      // Kugel, Eckenradius, Kegelspitze, flache Stirn, dazu Schneide,
+      // Schaft und Halter als Durchmessersprunge.
+      const wzT = (fProg.werkzeuge || []).find(w => w.nr === e.t) || {d:2 * e.rt};
+      const m = fSim3dWerkzeug(fWerkzeugProfil(wzT, laenge), 32); gl.bindBuffer(gl.ARRAY_BUFFER, b.wz); gl.bufferData(gl.ARRAY_BUFFER, m, gl.DYNAMIC_DRAW); SIM3D.wzN = m.length / 6; SIM3D.wzKey = wk; }
     const col = (e.wzArt === 'fraeser') ? [0.90, 0.46, 0.14, 1] : [0.93, 0.58, 0.20, 1];
     koerper(b.wz, SIM3D.wzN, col, 1, [p.x, p.y, p.z]);
   }
