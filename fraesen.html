@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 14:36 (1fe0a12b)";</script>
+<script>window.__DZ_STAND="20.09.2026 14:40 (1e686683)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -7971,7 +7971,13 @@ function fPlanBohrSchritte(prog, A, F){
 // den Eckenradius r2 = halber Durchmesser, ein Werkzeug mit ANGLE > 0
 // darf wendelnd oder schraeg eintauchen. Eine eingelesene TOOL.T mit
 // fremden Namen faende sonst kein einziges Werkzeug.
-function fPlanIstKugel(w){ return (+w.r2 || 0) >= (+w.d || 0) / 2 - 0.01 && (+w.d || 0) > 0; }
+// EINE QUELLE fuer die Form (20.09.2026): die Frage "ist das eine Kugel?"
+// stand hier ein zweites Mal formuliert, mit derselben Bedingung wie
+// fWerkzeugStirn. Zwei Formulierungen derselben Regel driften, sobald
+// jemand eine Toleranz aendert - dann waehlt der Planer ein Werkzeug als
+// Kugel, das der Stempel als Torus rechnet. Also wird gelesen statt
+// wiederholt; der Name bleibt fuer die Aufrufer.
+function fPlanIstKugel(w){ return (+w.d || 0) > 0 && fWerkzeugStirn(w).art === 'kugel'; }
 function fPlanFraeser(prog, zweck){
   const wz = ((prog && prog.werkzeuge) || []).filter(w => w.art === 'fraeser' && (+w.d || 0) > 0);
   let f = [];
