@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 13:41 (48958549)";</script>
+<script>window.__DZ_STAND="20.09.2026 13:49 (9c21a3e5)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2884,6 +2884,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
                Nummer - wie Ansicht und einzeln. -->
           <div class="stufe" id="stufeForm"><span class="tit">Form aus Blister</span><span class="lbl">Rand</span><input type="number" id="formRand" step="any" value="15" title="Wieviel Platte um den Blister herum stehen bleibt, in mm je Seite. Hier wird gespannt und abgedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Boden</span><input type="number" id="formBoden" step="any" value="15" title="Wieviel Platte unter der tiefsten Stelle der Kavit&auml;t bleibt, in mm. Durch diesen Boden gehen sp&auml;ter die Vakuumbohrungen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Entformung</span><input type="number" id="formEntform" step="any" value="5" title="Geforderter Entformungswinkel in Grad, gemessen von der Senkrechten. Die App PR&Uuml;FT ihn nur und nennt jede Stelle, die steiler steht &mdash; die Formschr&auml;ge geh&ouml;rt ins CAD, nicht ins CAM." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Schr&auml;ge</span><select id="formKorr" title="Was tun, wenn eine Wand steiler steht, als der Entformungswinkel erlaubt? MELDEN (Vorgabe) l&auml;sst die Form wie das Modell und nennt die Stellen. BODEN VERJ&Uuml;NGEN neigt die W&auml;nde, indem der Boden kleiner wird. &Ouml;FFNUNG WEITEN neigt sie, indem die &Ouml;ffnung gr&ouml;&szlig;er wird &mdash; das frisst in den Flansch. Beides &auml;ndert das BAUTEIL; die Meldung nennt die Fl&auml;che vorher und nachher." style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:150px;"><option value="aus">nur melden</option><option value="boden">Boden verj&uuml;ngen</option><option value="oeffnung">&Ouml;ffnung weiten</option></select><button class="gcbtn" id="btnStepForm" title="Aus dem Modell des fertigen Blisters die Platte machen, in der er tiefgezogen wird: Kavit&auml;t = Au&szlig;enfl&auml;che des Blisters, Platte drumherum, Sollform ans Programm">Form ableiten</button></div>
           <div class="stufe" id="stufeVakuum"><span class="tit">Vakuumbohrungen</span><span class="lbl">&#x2300;</span><input type="number" id="vakD" step="any" value="1" title="Durchmesser der Vakuumbohrung in mm. Ueblich sind 0,5 bis 1 mm &mdash; gross genug fuer die Luft, klein genug, dass sich die Folie nicht hineinzieht und einen Pickel macht." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Abstand</span><input type="number" id="vakAbstand" step="any" value="30" title="Groesster Abstand zweier Bohrungen in mm. Die App setzt zuerst in die Ecken, dann fuellt sie auf, bis nirgends mehr als dieser Abstand bleibt." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Tiefe</span><input type="number" id="vakTiefe" step="any" value="0" title="Bohrtiefe ab der Kavitaetsflaeche in mm. 0 = durch die ganze Platte. Bei duennen Bohrungen ist das ueblicherweise nicht machbar: dann hier 1 bis 2 mm eintragen und die Kammer von der Rueckseite aufbohren (zweite Aufspannung, die plant die App nicht)." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepVakuum" title="Die Entlueftung setzen: in jede ebene Flaeche der Kavitaet, von der es nicht weiter nach unten geht, kommen Punkte in die Ecken und dazwischen. Daraus werden Bohrbilder und &mdash; wenn ein passender Bohrer in der Tabelle steht &mdash; Bohrschritte vor dem Schlichten.">Vakuumbohrungen setzen</button></div>
+          <div class="stufe" id="stufeRueck"><span class="tit">R&uuml;ckseite</span><span class="lbl">Wand</span><input type="number" id="rsWand" step="any" value="3" title="Restwandst&auml;rke zwischen dem tiefsten Punkt der Kavit&auml;t und der Decke der Absaugkammer, in mm. Sie bestimmt zugleich, wie tief die Vakuumbohrungen von oben noch sein m&uuml;ssen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Spannkante</span><input type="number" id="rsSpann" step="any" value="15" title="Breite des Randes, der ringsum stehen bleibt, in mm. Dort wird die Form eingebaut und gedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepRueck" title="Die zweite Aufspannung als eigenes Programm: die gewendete Platte als Rohteil und die Absaugkammer als Rechtecktasche. Das Programm der Vorderseite kommt vorher in die Ablage.">R&uuml;ckseite als Programm</button></div>
           <div class="stufe" id="stufeProgramm"><span class="nr">4</span><span class="tit">Programm</span><button class="gcbtn primary" id="btnStepPlan" title="Der ganze Vorschlag in einem Zug: planen, schruppen, bohren, schlichten &mdash; in dieser Reihenfolge und mit so wenig Werkzeugwechseln wie m&ouml;glich">Programm vorschlagen</button><button class="gcbtn" id="btnStepEinzeln" title="Nur Teile des Vorschlags: die Fl&auml;chen, die Bohrungen oder die Konturen einer Z-Ebene">einzeln &#x25BE;</button></div>
           <div class="stufe stufe-ansicht"><span class="tit">Ansicht</span><span style="display:inline-flex;gap:2px;"><button class="gcbtn primary" id="btnStepDraht" title="Drahtbild des Modells">Drahtbild</button><button class="gcbtn" id="btnStepSoll" title="Sollform von oben: die Höhe, auf die gefräst werden muss">Sollform</button><button class="gcbtn" id="btnStepRest" title="Materialstand nach dem letzten Schruppschritt des Arbeitsplans (Modell abspanen / Restmaterial abspanen) — rot, was über der Sollform samt Aufmaß steht: das Restmaterial für den nächsten Schritt">Reststand</button></span><button class="gcbtn" id="btnStepHilfe" title="Anleitung Kap. 5c: Aufspannung, Sollform, Raster, Genauigkeit">&#x24D8;</button></div>
           <div class="stufe stufe-einzeln" id="stepEinzeln" style="display:none;"><span class="tit">einzeln &uuml;bernehmen</span><button class="gcbtn" id="btnStepFlaechen" title="Nur die Fl&auml;chen: planen, Modell abspanen, Schr&auml;gen schlichten &mdash; die Schritte stehen danach VOR den Bohrungen">Fl&auml;chen übernehmen</button><button class="gcbtn" id="btnStepBohren" title="Die Bohrungen des Modells als Bohrbilder und Schritte anlegen: ein Zentrierschritt über alle Stellen, danach je Durchmesser einer — größter zuerst">Bohrungen übernehmen</button><span class="lbl">Z-Ebene</span><select id="stepEbene" style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:210px;"></select><button class="gcbtn" id="btnStepKonturen" title="Die Schleifen dieser Ebene als XY-Konturen in den Arbeitsplan legen">Konturen übernehmen</button></div>
@@ -3303,6 +3304,16 @@ Werkzeugtabelle steht, ein <b>Bohrschritt</b>. Fehlt er, bleiben die Bohrbilder 
 dazu. <b>Zentriert wird nicht:</b> der Boden ist frisch gefr&auml;st und eben, ein 1-mm-Bohrer braucht dort keine K&ouml;rnung, und ein NC-Anbohrer w&uuml;rde eine sichtbare Senkung in die
 Sichtfl&auml;che dr&uuml;cken. Die Schritte werden vor dem Schlichten einsortiert &mdash; wer erst schlichtet und dann bohrt, dr&uuml;ckt den Grat in die fertige Fl&auml;che. Hat die Kavit&auml;t
 durchgehend schr&auml;ge B&ouml;den, findet die Regel keine ebene Fl&auml;che; dann setzt die App je Mulde EINEN Punkt an der tiefsten Stelle und sagt es.</dd>
+<dt id="ba-fk05c-rueck">Die R&uuml;ckseite: Absaugkammer und Spannkante</dt><dd>Die Vakuumbohrungen m&uuml;ssen irgendwo hin. Der &uuml;bliche Bau ist eine <b>Absaugkammer</b> in der R&uuml;ckseite:
+eine flache Tasche, in die alle Bohrungen m&uuml;nden und an die der Schlauch kommt; ringsum bleibt die <b>Spannkante</b> stehen, dort wird eingebaut und gedichtet. Der Knopf
+<b>R&uuml;ckseite als Programm</b> rechnet sie aus der Kavit&auml;t: die Kammerdecke liegt um die eingestellte <i>Wand</i> unter der tiefsten Stelle der Kavit&auml;t, die Kammer f&uuml;llt die Platte
+abz&uuml;glich der <i>Spannkante</i>. Bleibt daf&uuml;r kein Platz, sagt die App es und nennt den Grund &mdash; dann braucht die Form mehr <i>Boden</i>.</dd>
+<dt id="ba-fk05c-rueck2">Das l&ouml;st die d&uuml;nne Bohrung</dt><dd>Mit einer Kammer muss die Vakuumbohrung von oben nur noch bis zur Kammerdecke reichen &mdash; bei 3 mm Restwand also
+4 mm statt durch die ganze Platte. Aus einem Verh&auml;ltnis von L&auml;nge zu Durchmesser von 15 werden 4, und das ist mit einem gew&ouml;hnlichen Bohrer zu machen. Der Knopf tr&auml;gt die
+passende Tiefe gleich in das Feld <i>Tiefe</i> der Zeile dar&uuml;ber ein.</dd>
+<dt id="ba-fk05c-rueck3">Zweite Aufspannung, zweites Programm</dt><dd>Die Platte wird <b>gewendet</b> &mdash; das ist eine eigene Aufspannung und deshalb ein eigenes Programm. Das Programm
+der Vorderseite geht dabei nicht verloren: es kommt vorher in die <b>Ablage</b>, unter seinem Namen. Was die App hier <b>nicht</b> plant: den Anschlu&szlig; f&uuml;r den Vakuumschlauch, die
+Befestigungsbohrungen der Maschine und das Planen der R&uuml;ckseite &mdash; welches Lochbild und welcher Anschlu&szlig; gebraucht wird, wei&szlig; nur der, der die Form einbaut.</dd>
 <dt id="ba-fk05c-stufen">Das Fenster in vier Stufen</dt><dd>Die Kopfleiste ist seit dem 19.09.2026 eine <b>Stufenleiste</b> in der Reihenfolge, in der die App
 die Angaben braucht: <b>1 Laden</b> (die STEP-Datei), <b>2 Ausrichten</b> (Werkzeugachse, Nullpunkt, <i>Aufspannung vorschlagen</i> bewertet die
 sechs Lagen), <b>3 Rohteil &amp; Sollform</b> (<i>Als Rohteil &uuml;bernehmen</i> schreibt den H&uuml;llquader in die BLK FORM &mdash; Aufma&szlig; von Hand dazu;
@@ -9140,6 +9151,79 @@ function fFormVakuumAnlegen(prog, V, F){
     prog.schritte.splice.apply(prog.schritte, [ein, 0].concat(neue));
   }
   return {schritte:nS, muster:nM, hinweise:hin};
+}
+
+// ---------------------------------------------------------------------
+// DIE RUECKSEITE DER FORM: ABSAUGKAMMER UND SPANNKANTE
+// ---------------------------------------------------------------------
+// Die Vakuumbohrungen muessen irgendwo hin. Der uebliche Bau ist eine
+// ABSAUGKAMMER in der Rueckseite der Platte: eine flache Tasche, in die
+// alle Bohrungen muenden und an die der Schlauch kommt. Ringsum bleibt
+// die SPANNKANTE stehen - dort wird die Platte eingebaut und gedichtet.
+//
+// Das loest zugleich das Problem der duennen Bohrung: bis in die Kammer
+// sind es nur noch die Restwandstaerke, nicht die ganze Plattenhoehe.
+// Aus einem Verhaeltnis Laenge zu Durchmesser von 15 werden 4.
+//
+// Das ist die ZWEITE AUFSPANNUNG: die Platte wird gewendet. Deshalb ein
+// eigenes Programm, und deshalb spiegelt X (gewendet wird um die
+// Laengsachse; y bleibt, z zaehlt von der neuen Oberseite nach unten).
+function fFormRueckseite(R, opt){
+  const o = opt || {};
+  if(!R || !R.ok || !R.F) return {ok:false, grund:'keine Form abgeleitet'};
+  const F = R.F;
+  const wand = (+o.wand > 0) ? +o.wand : 3;
+  const spann = (+o.spann > 0) ? +o.spann : 15;
+  const hoehe = fRund(F.oben - F.unten);
+  // Tiefste Stelle der Kavitaet - darunter muss die Restwandstaerke bleiben.
+  let tiefst = F.oben;
+  for(let c = 0; c < F.h.length; c++) if(F.h[c] < tiefst) tiefst = F.h[c];
+  const deckel = fRund(tiefst - wand);            // absolute Hoehe der Kammerdecke
+  const tiefe = fRund(deckel - F.unten);          // von der Rueckseite aus gemessen
+  const lx = fRund(F.x1 - F.x0 - 2 * spann), ly = fRund(F.y1 - F.y0 - 2 * spann);
+  const hin = [];
+  if(tiefe <= 0.5)
+    return {ok:false, grund:'Unter der Kavitaet bleiben nur ' + fRund(tiefst - F.unten) + ' mm Platte, ' +
+            'die Restwandstaerke soll ' + wand + ' mm sein — da ist keine Kammer mehr unterzubringen. ' +
+            'Leite die Form mit mehr BODEN ab.'};
+  if(lx <= 0 || ly <= 0)
+    return {ok:false, grund:'Die Spannkante von ' + spann + ' mm je Seite laesst keine Kammerflaeche uebrig.'};
+  hin.push('Die Kammer ist eine flache Tasche in der RUECKSEITE, in die alle Vakuumbohrungen muenden; ' +
+           'ringsum bleiben ' + spann + ' mm Spannkante stehen — dort wird eingebaut und gedichtet.');
+  hin.push('Unter der tiefsten Stelle der Kavitaet (' + fRund(tiefst) + ') bleiben ' + wand + ' mm Wand. ' +
+           'Damit brauchen die Vakuumbohrungen von oben nur noch ' + fRund(wand + 1) + ' mm Tiefe statt ' +
+           fRund(tiefst - F.unten) + ' — trag das im Feld Tiefe ein (der Knopf tut es von selbst).');
+  hin.push('ZWEITE AUFSPANNUNG: die Platte wird um die Laengsachse gewendet, X spiegelt. Wer die Kammer ' +
+           'nicht mittig will, ruecke sie in der Maske; die App setzt sie mittig zwischen die Spannkanten.');
+  hin.push('Was die App hier NICHT plant: der Anschluss fuer den Vakuumschlauch (Gewinde in der Kammer ' +
+           'oder seitlich), die Befestigungsbohrungen der Maschine und das Planen der Rueckseite — ' +
+           'welches Lochbild und welcher Anschluss, weiss nur der, der die Form einbaut.');
+  return {ok:true, wand:wand, spann:spann, hoehe:hoehe, tiefe:tiefe, deckel:deckel, tiefst:fRund(tiefst),
+          lx:lx, ly:ly, mitteX:fRund((F.x1 - F.x0) / 2), mitteY:fRund((F.y1 - F.y0) / 2),
+          vakTiefe:fRund(wand + 1), hinweise:hin};
+}
+
+// Aus der Rechnung ein eigenes Programm fuer die zweite Aufspannung: die
+// Platte als Rohteil, die Kammer als Rechtecktasche. Der Nullpunkt liegt
+// wieder in der Ecke, die Oberseite ist die alte Unterseite.
+function fFormRueckseiteProgramm(vorlage, RS, name){
+  const p = fProgrammNeu();
+  if(vorlage && vorlage.werkzeuge) p.werkzeuge = JSON.parse(JSON.stringify(vorlage.werkzeuge));
+  Object.assign(p.kopf, {
+    name:(name || 'RUECKSEITE'),
+    x0:0, y0:0, z0:-RS.hoehe, x1:fRund(RS.mitteX * 2), y1:fRund(RS.mitteY * 2), z1:0, oberflaeche:0,
+    werkstoff:(vorlage && vorlage.kopf) ? vorlage.kopf.werkstoff : 'baustahl'
+  });
+  const fr = fPlanFraeser(p, 'schruppen');
+  if(!fr) return {prog:p, schritte:0, grund:'kein Fraeser mit Eintauchwinkel in der Tabelle'};
+  const s = fSchrittNeu(p, 'tascheR', fr.nr, -1);
+  // Eine 160 x 120 mm grosse Tasche taucht man nicht senkrecht an: wenn das
+  // Werkzeug einen Eintauchwinkel fuehrt, geht es wendelnd hinein.
+  Object.assign(s, {eintauch:((+fr.angle > 0) ? 1 : 0), posArt:'xy', posX:RS.mitteX, posY:RS.mitteY,
+                    l1:RS.lx, l2:RS.ly, r:fRund(Math.max((+fr.d || 10) / 2, 5)),
+                    tiefe:-RS.tiefe, q203:0});
+  p.schritte = [s];
+  return {prog:p, schritte:1};
 }
 
 function fFormAnlegen(prog, R){
@@ -17792,6 +17876,43 @@ function fStepFeldUebernehmen(){
 // Die Vakuumbohrungen: Punkte suchen, Bohrbilder und Bohrschritte anlegen.
 // Sie brauchen die KAVITAET, also eine abgeleitete Form - auf einem
 // gewoehnlichen Modell waere jede ebene Flaeche ein Kandidat.
+// Die Rueckseite: Absaugkammer und Spannkante als EIGENES Programm (zweite
+// Aufspannung). Das aktuelle Programm wird dabei nicht weggeworfen, sondern
+// vorher in die Ablage gelegt - sonst waere ein Fehlklick teuer.
+function fStepRueckseite(){
+  if(!STEP.form || !STEP.form.ok){
+    melde('Erst die Form ableiten — die Rueckseite richtet sich nach der Kavitaet.');
+    return false;
+  }
+  const zahl = (id, vor) => { const e = document.getElementById(id);
+    const v = e ? parseFloat(String(e.value == null ? '' : e.value).replace(',', '.')) : NaN;
+    return isFinite(v) ? v : vor; };
+  const RS = fFormRueckseite(STEP.form, {wand:zahl('rsWand', 3), spann:zahl('rsSpann', 15)});
+  if(!RS.ok){ melde('Keine Rueckseite: ' + RS.grund); return false; }
+  const name = String((fProg.kopf.name || 'FORM')).slice(0, 8) + '-R';
+  // Das Programm der Vorderseite kommt in die Ablage, bevor die Rueckseite
+  // es ersetzt - ein Teil, zwei Aufspannungen, zwei Programme.
+  let abgelegt = '';
+  try{
+    const liste = fProgLesen();
+    const kopie = JSON.parse(JSON.stringify(fProg));
+    kopie.kopf.name = String(fProg.kopf.name || 'FORM');
+    const i = liste.findIndex(x => x && x.kopf && x.kopf.name === kopie.kopf.name);
+    if(i >= 0) liste[i] = kopie; else liste.push(kopie);
+    if(fProgSchreiben(liste)) abgelegt = 'Das Programm der Vorderseite liegt jetzt unter "' +
+      kopie.kopf.name + '" in der Ablage. ';
+  }catch(e){}
+  const bau = fFormRueckseiteProgramm(fProg, RS, name);
+  if(!bau.schritte){ melde('Keine Rueckseite: ' + (bau.grund || 'kein Schritt')); return false; }
+  fProgrammSetzen(bau.prog, 'rueckseite');
+  const vt = document.getElementById('vakTiefe');
+  if(vt) vt.value = String(RS.vakTiefe);
+  fSpeicherAkt(); fRender();
+  melde('Rueckseite als eigenes Programm "' + name + '": Kammer ' + RS.lx + ' x ' + RS.ly + ' mm, ' +
+        RS.tiefe + ' mm tief, Spannkante ' + RS.spann + ' mm. ' + abgelegt + RS.hinweise.join(' '));
+  return true;
+}
+
 function fStepVakuum(){
   if(!STEP.form || !STEP.form.ok || !STEP.form.F){
     melde('Erst die Form ableiten — die Vakuumbohrungen brauchen die Kavitaet, nicht das Modell des Blisters.');
@@ -18032,6 +18153,7 @@ function fStepRohUebernehmen(){
   on('btnStepFeld', fStepFeldUebernehmen);
   on('btnStepForm', fStepFormAbleiten);
   on('btnStepVakuum', fStepVakuum);
+  on('btnStepRueck', fStepRueckseite);
   on('btnStepPlan', fStepProgrammVorschlagen);
   on('btnStepBohren', fStepBohrUebernehmen);
   on('btnStepFlaechen', fStepFlaechenUebernehmen);
