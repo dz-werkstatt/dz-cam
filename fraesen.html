@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 11:08 (bb8f2cd6)";</script>
+<script>window.__DZ_STAND="20.09.2026 12:07 (fad7d9b8)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3276,6 +3276,10 @@ App (Kap.&nbsp;6c) &mdash; beide fahren dieselbe Kante.</div>
 Drahtbild. Die App liest die Fl&auml;chen des Volumenmodells &mdash; <b>Ebene, Zylinder, Kegel, Torus</b> mit ihren Randkurven (Geraden und Kreisb&ouml;gen) &mdash; und
 ordnet jede Fl&auml;che nach ihrer Lage zur <b>Werkzeugachse</b> ein: waagerecht (Boden oder Decke), senkrecht (Wand), Schr&auml;ge mit ihrer Neigung, Bohrung
 l&auml;ngs der Achse oder quer.</p>
+<p><b>Zum Ausprobieren liegen f&uuml;nf Modelle als Dateien im Projektordner</b> (<code>step-modelle/</code>, mit einem LIESMICH daneben): Rampenblock und
+T-Tasche sind dieselben Teile wie die Vorlagen DZ22 und DZ23, dazu eine <b>Winkelplatte</b> mit zwei Schr&auml;gen (22 und 55 Grad, die Bandgrenze des
+Kugelfr&auml;sers), eine <b>Konturplatte</b> mit zwei Tiefen, Eckenradien, runder Insel und vier M10 (daran zeigt der Planer die ganze Kette bis zum
+Gewinde) und eine <b>Blisterform</b> mit 5-Grad-Formschr&auml;gen und Vakuumbohrungen. Alle f&uuml;nf sind selbst gebaut, kein fremdes Teil.</p>
 <dl>
 <dt id="ba-fk05c-stufen">Das Fenster in vier Stufen</dt><dd>Die Kopfleiste ist seit dem 19.09.2026 eine <b>Stufenleiste</b> in der Reihenfolge, in der die App
 die Angaben braucht: <b>1 Laden</b> (die STEP-Datei), <b>2 Ausrichten</b> (Werkzeugachse, Nullpunkt, <i>Aufspannung vorschlagen</i> bewertet die
@@ -3510,7 +3514,11 @@ der Rasterweite. Die Bahn sagt die Rasterweite deines Teils nach jedem Lauf dazu
 ab &mdash; wer sie braucht, fertigt sie anders.</li>
 <li><b>&alpha;0 und &alpha;1</b> grenzen das Winkelband ein. Gearbeitet wird nur, was dazwischen liegt. Steileres bleibt stehen (es geh&ouml;rt der
 Z-konstanten Bahn), flacheres auch &mdash; eine waagerechte Fl&auml;che geh&ouml;rt dem Schaft- oder Messerkopf, nicht der Kugel. Beides wird
-<b>gez&auml;hlt und gemeldet</b>, nichts f&auml;llt stillschweigend aus. &alpha;0 = 0 schlichtet auch die Ebenen mit.</li>
+<b>gez&auml;hlt und gemeldet</b>, nichts f&auml;llt stillschweigend aus. &alpha;0 = 0 schlichtet auch die Ebenen mit.
+<b>Bei einer FORM geh&ouml;rt &alpha;0 auf 0</b> (Tiefziehform, Gesenk, Blisterkavit&auml;t): dort ist die Fl&auml;che der Form die Fl&auml;che des Produkts,
+Boden, Formschr&auml;ge und Auflage geh&ouml;ren in einen Zug. Gemessen an <code>step-modelle/blisterform-200x150.step</code>
+(5-Grad-Formschr&auml;gen): mit der Vorgabe &alpha;0 = 5 entsteht <b>keine</b> Bahn (2004 Rasterstellen steiler, 180540 flacher),
+mit &alpha;0 = 0 eine Bahn mit 11429 Punkten &uuml;ber die ganze Form.</li>
 <li><b>Z0 und Z1</b> w&auml;hlen den H&ouml;henbereich aus, in dem geschlichtet wird &mdash; sie sagen NICHT, wie tief gefahren wird; die H&ouml;he
 kommt aus dem Modell.</li>
 <li><b>T Sehnentoleranz</b> d&uuml;nnt die Punktfolge aus (Douglas-Peucker im Raum). Ohne sie w&auml;re jede Rasterzelle ein Satz; gemessen bleiben
@@ -12908,7 +12916,11 @@ function fDemoPlatte(){
   ];
   // 1. Planen mit dem grossen Messerkopf - vom Groben zum Feinen.
   const a = fSchrittNeu(p, 'planfraesen', 1);
-  Object.assign(a, {q389:0, px:-45, py:8, pz:0, q386:-0.5, l1:290, l2:104,
+  // strategie/zEnd hiessen bis zum Katalog-Umbau (12.09.2026) q389/q386. Die
+  // Vorlage trug die alten Namen weiter - tote Werte: gefahren wurde die
+  // Vorgabe zEnd -1 (so ist sie auch am Programmierplatz gelaufen), gemeint
+  // war einmal -0,5. Namen berichtigt, Werte auf dem gelaufenen Stand.
+  Object.assign(a, {strategie:0, px:-45, py:8, pz:0, zEnd:-1, l1:290, l2:104,
                     zust:0.5, aufTiefe:0, ueberl:0.8, f:950, fSchl:950, fVor:2000,
                     sc:2, scSeite:2, sc2:50, s:800});
   // 2. Tasche ausraeumen, Schaftfraeser 12, Helix (ANGLE 3 in der Tabelle).
@@ -12947,7 +12959,7 @@ function fDemoLagerbock(){
     {name:'Passbohrung 12 H7', typ:'punkte', ausgabe:'punkte', punkte:[{x:30, y:40}]}
   ];
   const a = fSchrittNeu(p, 'planfraesen', 2);
-  Object.assign(a, {q389:0, px:-35, py:8, pz:0, q386:-0.5, l1:190, l2:64,
+  Object.assign(a, {strategie:0, px:-35, py:8, pz:0, zEnd:-1, l1:190, l2:64,
                     zust:0.5, aufTiefe:0, ueberl:0.8, f:1000, fSchl:1000, fVor:2000,
                     sc:2, scSeite:2, sc2:50, s:1000});
   const b = fSchrittNeu(p, 'tascheK', 12);
