@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 12:55 (2fc4b46b)";</script>
+<script>window.__DZ_STAND="20.09.2026 13:24 (9e271df7)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2882,7 +2882,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
                Kette, sondern ein ANDERER Einstieg in Stufe 3: statt Huellquader und Sollform
                des Teils entsteht hier die PLATTE mit der Kavitaet. Deshalb eigene Zeile ohne
                Nummer - wie Ansicht und einzeln. -->
-          <div class="stufe" id="stufeForm"><span class="tit">Form aus Blister</span><span class="lbl">Rand</span><input type="number" id="formRand" step="any" value="15" title="Wieviel Platte um den Blister herum stehen bleibt, in mm je Seite. Hier wird gespannt und abgedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Boden</span><input type="number" id="formBoden" step="any" value="15" title="Wieviel Platte unter der tiefsten Stelle der Kavit&auml;t bleibt, in mm. Durch diesen Boden gehen sp&auml;ter die Vakuumbohrungen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Entformung</span><input type="number" id="formEntform" step="any" value="5" title="Geforderter Entformungswinkel in Grad, gemessen von der Senkrechten. Die App PR&Uuml;FT ihn nur und nennt jede Stelle, die steiler steht &mdash; die Formschr&auml;ge geh&ouml;rt ins CAD, nicht ins CAM." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepForm" title="Aus dem Modell des fertigen Blisters die Platte machen, in der er tiefgezogen wird: Kavit&auml;t = Au&szlig;enfl&auml;che des Blisters, Platte drumherum, Sollform ans Programm">Form ableiten</button></div>
+          <div class="stufe" id="stufeForm"><span class="tit">Form aus Blister</span><span class="lbl">Rand</span><input type="number" id="formRand" step="any" value="15" title="Wieviel Platte um den Blister herum stehen bleibt, in mm je Seite. Hier wird gespannt und abgedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Boden</span><input type="number" id="formBoden" step="any" value="15" title="Wieviel Platte unter der tiefsten Stelle der Kavit&auml;t bleibt, in mm. Durch diesen Boden gehen sp&auml;ter die Vakuumbohrungen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Entformung</span><input type="number" id="formEntform" step="any" value="5" title="Geforderter Entformungswinkel in Grad, gemessen von der Senkrechten. Die App PR&Uuml;FT ihn nur und nennt jede Stelle, die steiler steht &mdash; die Formschr&auml;ge geh&ouml;rt ins CAD, nicht ins CAM." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Schr&auml;ge</span><select id="formKorr" title="Was tun, wenn eine Wand steiler steht, als der Entformungswinkel erlaubt? MELDEN (Vorgabe) l&auml;sst die Form wie das Modell und nennt die Stellen. BODEN VERJ&Uuml;NGEN neigt die W&auml;nde, indem der Boden kleiner wird. &Ouml;FFNUNG WEITEN neigt sie, indem die &Ouml;ffnung gr&ouml;&szlig;er wird &mdash; das frisst in den Flansch. Beides &auml;ndert das BAUTEIL; die Meldung nennt die Fl&auml;che vorher und nachher." style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:150px;"><option value="aus">nur melden</option><option value="boden">Boden verj&uuml;ngen</option><option value="oeffnung">&Ouml;ffnung weiten</option></select><button class="gcbtn" id="btnStepForm" title="Aus dem Modell des fertigen Blisters die Platte machen, in der er tiefgezogen wird: Kavit&auml;t = Au&szlig;enfl&auml;che des Blisters, Platte drumherum, Sollform ans Programm">Form ableiten</button></div>
           <div class="stufe" id="stufeProgramm"><span class="nr">4</span><span class="tit">Programm</span><button class="gcbtn primary" id="btnStepPlan" title="Der ganze Vorschlag in einem Zug: planen, schruppen, bohren, schlichten &mdash; in dieser Reihenfolge und mit so wenig Werkzeugwechseln wie m&ouml;glich">Programm vorschlagen</button><button class="gcbtn" id="btnStepEinzeln" title="Nur Teile des Vorschlags: die Fl&auml;chen, die Bohrungen oder die Konturen einer Z-Ebene">einzeln &#x25BE;</button></div>
           <div class="stufe stufe-ansicht"><span class="tit">Ansicht</span><span style="display:inline-flex;gap:2px;"><button class="gcbtn primary" id="btnStepDraht" title="Drahtbild des Modells">Drahtbild</button><button class="gcbtn" id="btnStepSoll" title="Sollform von oben: die Höhe, auf die gefräst werden muss">Sollform</button><button class="gcbtn" id="btnStepRest" title="Materialstand nach dem letzten Schruppschritt des Arbeitsplans (Modell abspanen / Restmaterial abspanen) — rot, was über der Sollform samt Aufmaß steht: das Restmaterial für den nächsten Schritt">Reststand</button></span><button class="gcbtn" id="btnStepHilfe" title="Anleitung Kap. 5c: Aufspannung, Sollform, Raster, Genauigkeit">&#x24D8;</button></div>
           <div class="stufe stufe-einzeln" id="stepEinzeln" style="display:none;"><span class="tit">einzeln &uuml;bernehmen</span><button class="gcbtn" id="btnStepFlaechen" title="Nur die Fl&auml;chen: planen, Modell abspanen, Schr&auml;gen schlichten &mdash; die Schritte stehen danach VOR den Bohrungen">Fl&auml;chen übernehmen</button><button class="gcbtn" id="btnStepBohren" title="Die Bohrungen des Modells als Bohrbilder und Schritte anlegen: ein Zentrierschritt über alle Stellen, danach je Durchmesser einer — größter zuerst">Bohrungen übernehmen</button><span class="lbl">Z-Ebene</span><select id="stepEbene" style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:210px;"></select><button class="gcbtn" id="btnStepKonturen" title="Die Schleifen dieser Ebene als XY-Konturen in den Arbeitsplan legen">Konturen übernehmen</button></div>
@@ -3483,6 +3483,18 @@ schlichten, simulieren. <b>Die Lage dreht die App notfalls selbst:</b> die Bewer
 nach unten (f&uuml;r das Fr&auml;sen des Teils richtig, f&uuml;r die Form verkehrt &mdash; daraus entst&uuml;nde ein Positiv statt der Kavit&auml;t). Erkannt wird das
 daran, dass die Oberkante der Form den <b>Rand</b> des Teils nicht mehr ber&uuml;hrt: bei einer Tiefziehform ist die Oberkante der Flansch und liegt am Rand.
 Trifft das nicht zu, rechnet die App die Gegenlage und sagt es in der Meldung.</dd>
+<dt id="ba-fk05c-form-schraege">Die Formschr&auml;ge korrigieren (Feld <i>Schr&auml;ge</i>)</dt><dd>In der Vorgabe <b>nur melden</b> l&auml;sst die App die Form genau so, wie das Modell sie hergibt, und nennt jede
+Stelle, die steiler steht, als der Entformungswinkel erlaubt. Die beiden anderen Stellungen <b>&auml;ndern die Form</b>, bis keine Wand mehr zu steil steht &mdash; und damit das
+<b>Bauteil</b>, nicht nur die Form. Deshalb ist es eine Wahl und keine Vorgabe: in welche Richtung ge&auml;ndert werden darf, wei&szlig; nur der Auftraggeber.</dd>
+<dt id="ba-fk05c-form-schraege2">Boden verj&uuml;ngen oder &Ouml;ffnung weiten</dt><dd><b>Boden verj&uuml;ngen</b> legt die W&auml;nde in den geforderten Winkel, indem der Napfboden kleiner wird; die
+&Ouml;ffnung und der Flansch bleiben, wo sie sind. <b>&Ouml;ffnung weiten</b> macht es umgekehrt: der Boden bleibt, die &Ouml;ffnung wird gr&ouml;&szlig;er &mdash; und fri&szlig;t dabei in den Flansch, und
+der ist beim Tiefziehen die <b>Dichtfl&auml;che des Niederhalters</b>. Darum ist Verj&uuml;ngen die Vorgabe der beiden. Die Meldung nennt die <b>Fl&auml;che der betroffenen Ebene vorher und
+nachher</b> &mdash; das ist die Zahl, an der man die &Auml;nderung abliest; die senkrechte Abweichung sieht viel gr&ouml;&szlig;er aus, weil sie nur den wandernden &Uuml;bergang Wand/Boden mi&szlig;t.
+Am Musterteil nachmessen.</dd>
+<dt id="ba-fk05c-form-schraege3">Was die Korrektur kostet</dt><dd>Wo die App das Feld ge&auml;ndert hat, gelten die <b>exakten Kanten und Ebenen</b> des Modells nicht mehr: eine scharfe Kante,
+die weggeschr&auml;gt wurde, gibt es nicht mehr, und eine Bodenkontur, deren Rand verj&uuml;ngt wurde, liegt daneben. Beides wird dort weggelassen, und die Meldung sagt wieviel.
+Folge: an diesen Stellen schlichtet der <b>Kugelfr&auml;ser</b> &uuml;ber die Rautiefe (Winkelband 0 bis 90), und <i>B&ouml;den &amp; W&auml;nde schlichten</i> findet dort keine Wand mehr &mdash;
+auf der unver&auml;nderten Seite (beim Verj&uuml;ngen der Flansch, beim Weiten der Boden) bleibt alles, wie es war.</dd>
 <dt id="ba-fk05c-form-felder">Was die drei Felder bedeuten</dt><dd><b>Rand</b> ist die Platte, die rund um den Blister stehen bleibt (je Seite, in mm) &mdash; dort wird gespannt
 und abgedichtet. <b>Boden</b> ist das Material unter der tiefsten Stelle der Kavit&auml;t; durch ihn gehen sp&auml;ter die Vakuumbohrungen. <b>Entformung</b> ist der geforderte
 Entformungswinkel in Grad, von der Senkrechten gemessen. Die <b>Rasterweite</b> kommt aus dem Feld daneben in Stufe 3. Die Oberkante der Platte ist Z0; alles, was der
@@ -8626,6 +8638,86 @@ function fGegenAchse(a){
   const s = String(a || '+Z');
   return (s.charAt(0) === '+' ? '-' : '+') + s.slice(1);
 }
+// DIE FORMSCHRAEGE KORRIGIEREN [20.09.2026, Daniels Reihenfolge nach Stufe 1].
+// Bis hierher hat die App nur GEMELDET, wo eine Wand steiler steht, als der
+// Entformungswinkel erlaubt - mit dem Satz, die Formschraege gehoere ins CAD.
+// Der Satz bleibt richtig, und deshalb ist diese Korrektur eine WAHL und nicht
+// die Vorgabe: sie aendert das BAUTEIL, nicht nur die Form, und in welche
+// Richtung es geaendert werden darf, ist eine Frage an den Auftraggeber.
+//
+// Gerechnet wird eine Dilatation des Hoehenfelds mit einem KEGEL der Steigung
+// m = tan(Grenzwinkel):
+//   Boden verjuengen:   h'(p) = max ueber q von ( h(q) - m * Abstand(p,q) )
+//   Oeffnung weiten:    h'(p) = min ueber q von ( h(q) + m * Abstand(p,q) )
+// Das Ergebnis ist die KLEINSTE Funktion ueber h (bzw. groesste unter h), deren
+// Gefaelle nirgends steiler als m ist - genau die Forderung. Beim Verjuengen
+// bleibt Material stehen (die Kavitaet wird nach unten enger), beim Weiten wird
+// welches weggenommen (die Oeffnung wird oben groesser und frisst in den
+// Flansch - und der ist beim Tiefziehen die DICHTFLAECHE des Niederhalters;
+// darum ist Verjuengen die Vorgabe).
+//
+// REICHWEITE: ueber die volle Hoehenspanne wirkt der Kegel nur bis
+// R = Spanne / m. Weiter weg ist m*Abstand groesser als jede Hoehendifferenz,
+// dort kann sich nichts mehr aendern. Und geaendert wird ueberhaupt nur in
+// Reichweite einer zu steilen Stelle: wo h'(p) ueber h(p) liegt, muss auf der
+// Strecke von p zur massgeblichen Zelle das Gefaelle groesser als m sein, und
+// diese Stelle liegt hoechstens R entfernt. Deshalb genuegt die geweitete
+// Maske der steilen Zellen - derselbe Kniff wie in fBallFeld.
+function fFormEntformen(F, grenzGrad, art){
+  const leer = {geaendert:0, flaeche:0, maxAbw:0, zellen:null};
+  if(!F || !F.h || !(grenzGrad > 0) || grenzGrad >= 89.9) return leer;
+  const weiten = (art === 'oeffnung');
+  const m = Math.tan(grenzGrad * Math.PI / 180);
+  const nx = F.nx, ny = F.ny, r = F.raster, h = F.h;
+  let hMin = Infinity, hMax = -Infinity;
+  for(let c = 0; c < h.length; c++){ if(h[c] < hMin) hMin = h[c]; if(h[c] > hMax) hMax = h[c]; }
+  const R = (hMax - hMin) / m, kR = Math.ceil(R / r);
+  if(!(kR > 0) || !isFinite(kR)) return leer;
+  // Welche Zellen stehen zu steil? Toleranz wie im Winkelband: das Feld ist
+  // ein Float32Array, seine letzten Stellen rauschen (Paket S4, Fehler 1).
+  const NN = fNeigFeld(F);
+  const steil = new Uint8Array(nx * ny);
+  let nSteil = 0;
+  for(let c = 0; c < NN.length; c++) if(NN[c] > grenzGrad + F_WINKEL_TOL){ steil[c] = 1; nSteil++; }
+  if(!nSteil) return leer;
+  const gebiet = fMaskeWeiten(steil, nx, ny, kR);
+  const roh = Float32Array.from(h);
+  const R2 = R * R;
+  let geaendert = 0, maxAbw = 0;
+  const zellen = new Uint8Array(nx * ny);
+  const dz = new Float32Array(nx * ny);
+  for(let j = 0; j < ny; j++) for(let q = 0; q < nx; q++){
+    const c = j * nx + q;
+    if(!gebiet[c]) continue;
+    let best = roh[c];
+    const j0 = Math.max(0, j - kR), j1 = Math.min(ny - 1, j + kR);
+    const q0 = Math.max(0, q - kR), q1 = Math.min(nx - 1, q + kR);
+    for(let jj = j0; jj <= j1; jj++){
+      const dy = (jj - j) * r, dy2 = dy * dy;
+      for(let qq = q0; qq <= q1; qq++){
+        const dx = (qq - q) * r, d2 = dx * dx + dy2;
+        if(d2 > R2) continue;
+        const v = roh[jj * nx + qq] + (weiten ? 1 : -1) * m * Math.sqrt(d2);
+        if(weiten ? (v < best) : (v > best)) best = v;
+      }
+    }
+    const d = Math.abs(best - roh[c]);
+    if(d > 1e-6){ h[c] = best; geaendert++; zellen[c] = 1; dz[c] = d; if(d > maxAbw) maxAbw = d; }
+  }
+  // DIE FLAECHE DER TIEFSTEN (bzw. beim Weiten der hoechsten) EBENE ist die
+  // Zahl, an der man die Aenderung am BAUTEIL abliest: 8 mm senkrechte
+  // Abweichung klingen gewaltig, sind aber nur der Uebergang Wand/Boden, der
+  // sich verschiebt. Was wirklich kleiner wird, ist der Napfboden.
+  const zRef = weiten ? hMax : hMin;
+  let vorher = 0, nachher = 0;
+  for(let c = 0; c < h.length; c++){
+    if(Math.abs(roh[c] - zRef) < 0.01) vorher++;
+    if(Math.abs(h[c] - zRef) < 0.01) nachher++;
+  }
+  return {geaendert:geaendert, flaeche:fRund(geaendert * r * r), maxAbw:fRund(maxAbw),
+          zellen:geaendert ? zellen : null, dz:geaendert ? dz : null, reichweite:fRund(R),
+          ebeneVor:fRund(vorher * r * r), ebeneNach:fRund(nachher * r * r), ebeneZ:fRund(zRef)};
+}
 function fFormAusModell(M, opt){
   const o = opt || {}, hin = [];
   if(!M || !M.flaechen || !M.flaechen.length) return {ok:false, grund:'kein Modell gelesen', hinweise:hin};
@@ -8689,6 +8781,56 @@ function fFormAusModell(M, opt){
   // an den Ebenen das Schlichten der Waende.
   F.kanten = (FB.kanten || []).map(P => P.map(p => [p[0], p[1], zTop - (hMax - p[2])]));
   F.ebenen = (FB.ebenen || []).map(e => ({z:fRund(zTop - (hMax - e.z)), konturen:e.konturen}));
+  // DIE FORMSCHRAEGE KORRIGIEREN, wenn der Bediener es verlangt. Danach ist
+  // das Feld an den geaenderten Stellen NICHT mehr das Modell - und genau dort
+  // gelten seine exakten Kanten und Ebenen nicht mehr: eine scharfe Kante, die
+  // weggeschraegt wurde, wuerde die Versatzflaeche des Kugelfraesers um ihre
+  // volle Hoehe anheben (fBallFeld rechnet sie exakt mit), und eine
+  // Bodenkontur, deren Rand verjuengt wurde, liegt daneben. Beides wird
+  // deshalb VERWORFEN, wo es im geaenderten Gebiet liegt, und gezaehlt.
+  const ew0 = (+o.entform >= 0) ? +o.entform : 5;
+  const korr = (o.korrigieren === 'boden' || o.korrigieren === 'oeffnung') ? o.korrigieren : null;
+  const weitenArt = (korr === 'oeffnung');
+  let K = {geaendert:0, flaeche:0, maxAbw:0, zellen:null};
+  if(korr) K = fFormEntformen(F, 90 - ew0, korr);
+  let kantenWeg = 0, ebenenWeg = 0;
+  if(K.zellen){
+    // Eine OEFFNUNGSKANTE liegt genau auf der Grenze: innen ist geaendert,
+    // aussen nicht - und die Kante selbst bleibt, wo sie war (beim Verjuengen
+    // wandert nur der Boden). Deshalb entscheidet die KLEINSTE Aenderung der
+    // vier Nachbarzellen, nicht die der einen, in die der Punkt zufaellig
+    // faellt. Der erste Bau warf damit 76 von 100 Kanten weg, darunter jede
+    // Napfoeffnung.
+    const dzMin = (x, y) => {
+      const i = Math.floor((x - F.x0) / r - 0.5), j = Math.floor((y - F.y0) / r - 0.5);
+      let min = Infinity;
+      for(let b = 0; b < 2; b++) for(let a = 0; a < 2; a++){
+        const ii = i + a, jj = j + b;
+        if(ii < 0 || jj < 0 || ii >= F.nx || jj >= F.ny) return 0;
+        const v = K.dz[jj * F.nx + ii];
+        if(v < min) min = v;
+      }
+      return isFinite(min) ? min : 0;
+    };
+    const vor = F.kanten.length;
+    F.kanten = F.kanten.filter(Q => !Q.some(p => dzMin(p[0], p[1]) > 0.01));
+    kantenWeg = vor - F.kanten.length;
+    // EINE EBENE faellt weg, wenn ihre FLAECHE kleiner geworden ist - dann
+    // liegt ihre Kontur nicht mehr dort, wo sie im Modell stand, und die
+    // Wandbahn von 'Boeden & Waende schlichten' liefe daneben. Die
+    // Flanschebene beim Verjuengen behaelt ihre Flaeche und bleibt.
+    const flaeche = (z) => { let n = 0;
+      for(let c = 0; c < F.h.length; c++) if(Math.abs(F.h[c] - z) < 0.01) n++;
+      return n; };
+    const vorE = F.ebenen.length;
+    F.ebenen = F.ebenen.filter(e => {
+      const jetzt = flaeche(e.z);
+      let soll = 0;
+      for(let c = 0; c < F.h.length; c++) if(Math.abs((F.h[c] - K.dz[c] * (weitenArt ? -1 : 1)) - e.z) < 0.01) soll++;
+      return jetzt >= soll - 2;
+    });
+    ebenenWeg = vorE - F.ebenen.length;
+  }
   // DIE WANDSTAERKE wird GEMESSEN, nicht angenommen: ein Volumenmodell der
   // Folie hat seine waagerechten Flaechen paarweise (Aussen- und Innenseite)
   // im Abstand der Foliendicke. Der kleinste Abstand zweier Ebenen ist sie.
@@ -8710,13 +8852,26 @@ function fFormAusModell(M, opt){
   else hin.push('Keine Wandstaerke im Modell erkannt (kleinster Ebenenabstand ' + (wand == null ? 'keiner' : wand + ' mm') + '). Beschreibt das Modell nur die INNENkontur, fehlt der Form die Folienstaerke - dann im CAD die Aussenflaeche nehmen.');
   // ENTFORMUNGSWINKEL: jede Wand, die steiler steht als er erlaubt, haelt
   // das Teil in der Form fest. Gemessen wird am fertigen Formfeld.
-  const ew = (+o.entform >= 0) ? +o.entform : 5;
+  const ew = ew0;
   const grenz = 90 - ew;
   const NN = fNeigFeld(F);
   let steil = 0, steilst = 0;
-  for(let c = 0; c < NN.length; c++){ if(NN[c] > steilst) steilst = NN[c]; if(NN[c] > grenz + 0.1) steil++; }
+  // Nach einer Korrektur liegt am Knick zwischen dem gerechneten Kegel und dem
+  // unveraenderten Boden Rasterrauschen: gemessen 80,2 Grad gegen die Grenze
+  // 80 an 32 von 114000 Zellen. Unter einem halben Grad ist das keine Wand,
+  // die klemmt - es ist die Aufloesung des Feldes.
+  const wTol = (K.geaendert ? 0.5 : F_WINKEL_TOL);
+  for(let c = 0; c < NN.length; c++){ if(NN[c] > steilst) steilst = NN[c]; if(NN[c] > grenz + wTol) steil++; }
   steilst = Math.round(steilst * 10) / 10;
-  if(steil) hin.push(steil + ' Rasterstellen stehen steiler als ' + grenz + ' Grad (steilste ' + steilst + ' Grad) - bei ' + ew + ' Grad Entformungswinkel bleibt das Teil dort haengen. Die Formschraege gehoert ins CAD, nicht ins CAM.');
+  if(korr && K.geaendert) hin.push('FORMSCHRAEGE KORRIGIERT (' + (korr === 'boden' ? 'Boden verjuengt' : 'Oeffnung geweitet') +
+    '): ' + K.flaeche + ' mm2 der Form sind geaendert, senkrecht bis ' + K.maxAbw + ' mm (das ist der Uebergang Wand/Boden, der wandert). Entscheidend ist die Flaeche auf Z' +
+    K.ebeneZ + ': ' + K.ebeneVor + ' -> ' + K.ebeneNach + ' mm2. DAS IST EINE AENDERUNG AM BAUTEIL, nicht nur an der Form - ' +
+    (korr === 'boden' ? 'die Naepfe werden nach unten enger' : 'die Oeffnungen werden oben weiter und fressen in den Flansch, die Dichtflaeche des Niederhalters') +
+    '. Am Musterteil nachmessen.');
+  else if(korr) hin.push('Formschraege korrigieren war verlangt, es gab nichts zu tun: keine Stelle steht steiler als ' + grenz + ' Grad.');
+  if(kantenWeg || ebenenWeg) hin.push('Im geaenderten Gebiet gelten die exakten Kanten und Ebenen des Modells nicht mehr - ' +
+    kantenWeg + ' Kante(n) und ' + ebenenWeg + ' Ebene(n) sind darum weggelassen. Dort schlichtet der Kugelfraeser ueber die Rautiefe; Boeden und Waende schlichten findet dort keine Wand mehr.');
+  if(steil) hin.push(steil + ' Rasterstellen stehen steiler als ' + grenz + ' Grad (steilste ' + steilst + ' Grad) - bei ' + ew + ' Grad Entformungswinkel bleibt das Teil dort haengen. Die Formschraege gehoert ins CAD, nicht ins CAM' + (korr ? ' - die Korrektur hat sie nicht erreicht.' : '; die App kann sie auf Wunsch korrigieren (Feld Schraege).') + '');
   // WORTLAUT: die Messung laeuft auf dem Raster und darf um 0,1 Grad
   // danebenliegen - deshalb steht in der Zahl auch mal 85,1 gegen die Grenze
   // 85. "Keine Wand steht steiler als 85 Grad ... steilste Stelle 85,1 Grad"
@@ -8746,6 +8901,7 @@ function fFormAusModell(M, opt){
   return {ok:true, F:F, tiefe:tiefe, wand:wand, steil:steil, steilst:steilst, entform:ew,
           flaechen:M.flaechen.length, huellFlaechen:FB.huellFlaechen, modell:ersatz,
           kopfueber:kopfueber, randAnteil:fRund(randAnteil),
+          korrigiert:korr, korrFlaeche:K.flaeche, korrAbw:K.maxAbw, kantenWeg:kantenWeg, ebenenWeg:ebenenWeg,
           box:{x0:F.x0, y0:F.y0, z0:F.unten, x1:F.x1, y1:F.y1, z1:F.oben},
           hinweise:hin};
 }
@@ -17405,8 +17561,14 @@ function fStepFormAbleiten(){
     const v = e ? parseFloat(String(e.value == null ? '' : e.value).replace(',', '.')) : NaN;
     return isFinite(v) ? v : vor; };
   let R = null;
+  // Die Wahl der Schraegen-Korrektur wird einmal gelesen und in BEIDE
+  // Rechnungen gegeben - auch in die der Gegenlage, sonst rechnete der
+  // zweite Anlauf ohne sie.
+  const kEl = document.getElementById('formKorr');
+  const kWahl = (kEl && kEl.value) ? kEl.value : 'aus';
   try{ R = fFormAusModell(STEP.modell, {aus:STEP.aus, achse:STEP.achse, raster:STEP.raster || 0,
-        rand:zahl('formRand', 15), boden:zahl('formBoden', 15), entform:zahl('formEntform', 5)}); }
+        rand:zahl('formRand', 15), boden:zahl('formBoden', 15), entform:zahl('formEntform', 5),
+        korrigieren:kWahl}); }
   catch(e){ melde('FEHLER beim Ableiten der Form: ' + e.message); return false; }
   if(!R.ok){ melde('Keine Form abgeleitet: ' + R.grund); return false; }
   // STEHT DAS MODELL AUF DEM KOPF, wird EINMAL die Gegenlage probiert. Die
@@ -17421,7 +17583,8 @@ function fStepFormAbleiten(){
     STEP.achse = fGegenAchse(alt); fStepAusrichtenJetzt(); fStepAchseKnoepfe();
     let R2 = null;
     try{ R2 = fFormAusModell(STEP.modell, {aus:STEP.aus, achse:STEP.achse, raster:STEP.raster || 0,
-          rand:zahl('formRand', 15), boden:zahl('formBoden', 15), entform:zahl('formEntform', 5)}); }
+          rand:zahl('formRand', 15), boden:zahl('formBoden', 15), entform:zahl('formEntform', 5),
+          korrigieren:kWahl}); }
     catch(e){ R2 = null; }
     if(R2 && R2.ok && !R2.kopfueber){ R = R2; gedreht = 'Das Modell stand auf dem Kopf (Flansch unten) - die Form kommt aus der Gegenlage, Werkzeugachse jetzt ' + STEP.achse + '. '; }
     else { STEP.achse = alt; fStepAusrichtenJetzt(); fStepAchseKnoepfe(); }
