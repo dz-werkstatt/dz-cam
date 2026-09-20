@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 20:42 (19ea8f5f)";</script>
+<script>window.__DZ_STAND="20.09.2026 21:52 (ee3b67d7)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2768,7 +2768,8 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
         <div class="mask-body">
           <div class="msec">Programm</div>
           <div class="mrow"><label data-ba="ba-fk03-name">Name (= Datei <span id="fkEndung">.H</span>)</label><input type="text" id="fkName" value="DZ1" maxlength="25" autocapitalize="characters" style="width:150px;"></div>
-          <div class="mrow"><label data-ba="ba-fk03-masch">Zielmaschine</label><select id="fkProfil" class="tool-select" style="width:170px;"><option value="HEIDENHAIN_ITNC530" selected>Heidenhain iTNC 530</option><option value="SIEMENS_840D_PL">Sinumerik 840D powerline</option></select></div>
+          <div class="mrow" id="fkWzDefRow" style="display:none;"><label data-ba="ba-fk03-wzdef">Werkzeugdaten</label><select id="fkWzDef" class="tool-select" style="width:170px;"><option value="tabelle" selected>aus der Werkzeug-Tabelle</option><option value="def">TOOL DEF im Programm</option></select></div>
+          <div class="mrow"><label data-ba="ba-fk03-masch">Zielmaschine</label><select id="fkProfil" class="tool-select" style="width:170px;"><option value="HEIDENHAIN_ITNC530" selected>Heidenhain iTNC 530</option><option value="HEIDENHAIN_TNC410">Heidenhain TNC 410</option><option value="SIEMENS_840D_PL">Sinumerik 840D powerline</option></select></div>
           <div class="mrow" id="fkZykRow"><label data-ba="ba-fk03-zyk840">Zyklen der Steuerung</label><div class="radiobtns fwrap" id="fkZykBtns"><button data-v="aus" class="sel">aus (eigene Bahn, belegt)</button><button data-v="an">nutzen (spart Platz)</button></div></div>
           <div class="mrow"><label data-ba="ba-fk03-stand">Software-Stand</label><select id="fkStand" class="tool-select" style="width:170px;"><option value="07" selected>340 49x-06 / -07, 606 42x</option><option value="02">340 49x-02 / -03 (2006)</option></select></div>
           <!-- ZEITEN UND KALKULATION (19.09.2026): Werkstoff fuer Dichte und Preis je kg,
@@ -2945,7 +2946,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
         <div class="warn" id="warnBox" style="display:none;"></div>
         <div class="mrow" style="padding:4px 10px 6px 10px;flex-wrap:wrap;">
           <label style="width:auto;flex:0 0 auto;">Zielmaschine</label>
-          <select id="maschProfilSel" style="flex:1 1 auto;width:auto;min-width:150px;"><option value="HEIDENHAIN_ITNC530" selected>Heidenhain iTNC 530 (Klartext)</option><option value="SIEMENS_840D_PL">Sinumerik 840D powerline</option></select>
+          <select id="maschProfilSel" style="flex:1 1 auto;width:auto;min-width:150px;"><option value="HEIDENHAIN_ITNC530" selected>Heidenhain iTNC 530 (Klartext)</option><option value="HEIDENHAIN_TNC410">Heidenhain TNC 410 (Klartext)</option><option value="SIEMENS_840D_PL">Sinumerik 840D powerline</option></select>
           <div style="display:flex;gap:6px;margin-left:auto;flex:0 0 auto;"><button id="btnPpInfo" style="font-size:11px;padding:4px 8px;white-space:nowrap;">Merkmale ▸</button></div>
         </div>
         <div id="ppInfo" class="fmerk" style="display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;max-height:48vh;border-bottom:1px solid var(--line);"></div>
@@ -3176,9 +3177,20 @@ w&auml;ren sonst weg.</p>
 <dt id="ba-fk03-name">Programmname</dt><dd>Wird zu <code>BEGIN PGM NAME MM</code> und zum Dateinamen <code>NAME.H</code>. Nur A&ndash;Z, 0&ndash;9,
 Unterstrich und Bindestrich, h&ouml;chstens 25 Zeichen (Handbuch 670&nbsp;387-12, S.&nbsp;122: dar&uuml;ber zeigt die TNC den
 Namen nicht mehr vollst&auml;ndig an). Umlaute werden umgeschrieben.</dd>
-<dt id="ba-fk03-masch">Zielmaschine</dt><dd><b>Heidenhain iTNC&nbsp;530</b> (Klartext, Datei <b>.H</b>) oder <b>Sinumerik 840D powerline</b>
+<dt id="ba-fk03-masch">Zielmaschine</dt><dd><b>Heidenhain iTNC&nbsp;530</b> (Klartext, Datei <b>.H</b>),
+<b>Heidenhain TNC&nbsp;410</b> (Klartext, Datei <b>.H</b>) oder <b>Sinumerik 840D powerline</b>
 (Datei <b>.MPF</b>). Die Wahl &auml;ndert die ganze Ausgabe: S&auml;tze, Programmkopf, Programmende und die Pr&uuml;fungen.
-Was die 840D angeht, steht in <a href="#ba-fk07b">Kapitel 7b</a> &mdash; dort auch, was daran belegt ist und was nicht.<br>
+Was die 840D angeht, steht in <a href="#ba-fk07b">Kapitel 7b</a>, was die TNC&nbsp;410 angeht in
+<a href="#ba-fk07c">Kapitel 7c</a> &mdash; dort auch, was daran belegt ist und was nicht.<br></dd>
+<dt id="ba-fk03-wzdef">Werkzeugdaten</dt><dd>Nur bei der <b>TNC&nbsp;410</b>. Ein <b>TOOL CALL</b> setzt voraus, dass
+L&auml;nge und Radius des Werkzeugs bekannt sind &mdash; entweder aus der <b>Werkzeug-Tabelle der Steuerung</b> (so laufen
+die Programme, die an dieser Maschine schon gefahren sind) oder aus einem <b>TOOL&nbsp;DEF-Satz im Programm</b>.<br>
+<b>Vorgabe ist die Werkzeug-Tabelle.</b> Wer auf TOOL&nbsp;DEF umstellt, muss in der Werkzeugtabelle der App die Spalte
+<b>L</b> f&uuml;llen: die App tr&auml;gt dort von sich aus nichts ein, weil sie die L&auml;nge f&uuml;r die Bahn nicht braucht
+&mdash; sie rechnet in Werkst&uuml;ckkoordinaten. <b>Ein TOOL&nbsp;DEF mit L0 w&auml;re ein Crash:</b> die Steuerung rechnet
+dann mit der L&auml;nge des Null-Werkzeugs, und ein 75&nbsp;mm langer Fr&auml;ser f&auml;hrt 75&nbsp;mm zu tief. Deshalb
+sperrt die Ampel, solange eine L&auml;nge fehlt. H&ouml;chstens <b>20</b> verschiedene Werkzeuge &mdash; mehr TOOL&nbsp;DEF-S&auml;tze
+nimmt diese Steuerung nicht.<br>
 <b>Dasselbe Feld steht in der NC-Ausgabe</b>, gleich unter den Kn&ouml;pfen. Beide zeigen immer denselben Wert; wer dort
 umschaltet, &auml;ndert den Programmkopf mit, und das Programm wird sofort neu erzeugt. So l&auml;sst sich dieselbe
 Bearbeitung in beiden Dialekten nebeneinander ansehen.</dd>
@@ -4118,6 +4130,51 @@ die iTNC braucht daf&uuml;r zwei Halbb&ouml;gen. Eine <b>Schraubenlinie</b> ist 
 <b>TURN=</b>&lt;zus&auml;tzliche Uml&auml;ufe&gt;.</dd>
 </dl>
 
+<h2 id="ba-fk07c">7c &nbsp;Heidenhain TNC&nbsp;410 &mdash; die dritte Zielmaschine</h2>
+<dl>
+<dt id="ba-fk07c-stand">Woher das kommt</dt><dd>Zwei Quellen, und beide sind nachpr&uuml;fbar:
+das <b>Benutzer-Handbuch Klartext-Dialog</b> (286&nbsp;060-xx / 286&nbsp;080-xx, 6/2001) &mdash; daraus die Zyklusliste, die
+Parameter je Zyklus und die Bahnfunktionen; und <b>zw&ouml;lf NC-Dateien, die auf dieser Maschine gelaufen sind</b> &mdash;
+daraus die Satzform. Was in denen steht, hat die Steuerung genommen.<br>
+<b>Ehrlich offen:</b> durch <i>diese App</i> ist noch kein Programm auf dieser Maschine gelaufen. Der erste Lauf geh&ouml;rt
+im Einzelsatz gefahren.</dd>
+<dt id="ba-fk07c-satz">Was an den S&auml;tzen anders ist</dt><dd><b>F&nbsp;MAX</b> mit Leerzeichen (die iTNC schreibt FMAX);
+Programmnamen <b>h&ouml;chstens 8 Zeichen</b>; die Zyklus-Zeilen r&uuml;cken f&uuml;nf Stellen ein und tragen die Tilde direkt
+am Text. Hinter jedem <b>TOOL CALL</b> steht eine Kommentarzeile mit dem Werkzeugradius &mdash; stimmt der nicht mit der
+Werkzeug-Tabelle der Steuerung &uuml;berein, f&auml;llt es beim Lesen auf und nicht erst am Teil. Die Bahns&auml;tze selbst
+(L, CC, C, CR, CT, RND, CHF, CP) sind dieselben wie bei der iTNC.</dd>
+<dt id="ba-fk07c-zyklen">Weniger Zyklen &mdash; und andere</dt><dd>Die TNC&nbsp;410 kennt nur die Q-Parameter
+<b>Q1 bis Q255</b>. Das erkl&auml;rt fast alles: jeder Zyklus, dessen W&ouml;rter dar&uuml;ber liegen, ist auf dieser
+Steuerung gar nicht vorhanden.<br>
+<b>Dieselben Zyklen wie die iTNC:</b> Bohren&nbsp;200, Reiben&nbsp;201, Ausdrehen&nbsp;202, Universal-Bohren&nbsp;203,
+R&uuml;ckw&auml;rts-Senken&nbsp;204, Punktemuster&nbsp;220/221. Einzelne W&ouml;rter fehlen dort und werden weggelassen
+(beim 203 das Q256, beim 200 die Verweilzeit unten, bei den Mustern Q301/Q365) &mdash; ein Wort <i>zuviel</i> ist an der
+Steuerung ein Alarm, ein fehlendes am Ende nicht.<br>
+<b>Gewindebohren l&auml;uft &uuml;ber die alten Zyklen:</b> mit Ausgleichsfutter <b>Zyklus 2</b>, ohne (synchron)
+<b>Zyklus 17</b>. Die schreiben einen Satz je Parameter (<code>CYCL DEF 17.1 ABST&nbsp;2</code>) und haben <b>kein</b>
+Q203/Q204 &mdash; deshalb setzt die App die Z-Anfahrt selbst: je Bohrung drei S&auml;tze statt einem, genau wie in den
+gelaufenen Dateien.<br>
+<b>Alles andere f&auml;hrt die App als eigene Bahn</b> (Einzels&auml;tze): Zentrieren, Universal-Tiefbohren, Taschen,
+Nuten, Zapfen, Planfr&auml;sen, Konturzug und die SL-Zyklen. Die Steuerung hat daf&uuml;r eigene, &auml;ltere Zyklen
+(3/4/5/6/14/15/16/210&ndash;215/230/231) &mdash; die sind hier <b>nicht</b> gebaut; eine eigene Bahn ist die belegte
+Bahn.<br>
+<b>Gar nicht m&ouml;glich:</b> Bohrfr&auml;sen&nbsp;208, Gewindebohren mit Spanbruch&nbsp;209, Einlippenbohren&nbsp;241 und
+Gewindefr&auml;sen&nbsp;262&ndash;267. Diese Zyklen gibt es nicht, und die App hat daf&uuml;r keine Bahn. Die Ampel sagt
+es rot, statt einen Schritt zu schreiben, der nichts tut.</dd>
+<dt id="ba-fk07c-wz">Der Werkzeugaufruf</dt><dd>Ein <b>TOOL CALL</b> setzt voraus, dass L&auml;nge und Radius
+bekannt sind &mdash; aus der <b>Werkzeug-Tabelle der Steuerung</b> oder aus einem <b>TOOL&nbsp;DEF-Satz im Programm</b>
+(h&ouml;chstens 20 je Programm). Umgestellt wird das im <a href="#ba-fk03-wzdef">Programmkopf</a>; Vorgabe ist die
+Tabelle, so laufen auch die Programme, die an dieser Maschine schon gefahren sind.<br>
+<b>Ein TOOL&nbsp;DEF mit L0 w&auml;re ein Crash</b> &mdash; die Steuerung rechnet dann mit der L&auml;nge des
+Null-Werkzeugs, und ein 75&nbsp;mm langer Fr&auml;ser f&auml;hrt 75&nbsp;mm zu tief. Die App tr&auml;gt von sich aus
+keine L&auml;nge ein (f&uuml;r die Bahn braucht sie sie nicht), und die Ampel sperrt, solange eine fehlt.</dd>
+<dt id="ba-fk07c-abgeleitet">Der eine abgeleitete Satz</dt><dd>Beim <b>Zyklus 2</b> (Gewindebohren mit Ausgleichsfutter)
+ist die Bedeutung der vier Werte am Handbuch belegt &mdash; Sicherheits-Abstand, Bohrtiefe, Verweilzeit, Vorschub. Die
+<b>Wortlaute</b> der vier Zeilen sind aus der Zyklusfamilie abgeleitet, nicht belegt: In den gelaufenen Dateien kommt
+nur der Zyklus 17 vor. Die Meldung sagt es, und vor dem ersten Lauf geh&ouml;rt der Satz an der Steuerung in der
+Zyklusmaske ge&ouml;ffnet &mdash; dort steht jeder Wert mit seinem Namen.</dd>
+</dl>
+
 <h2 id="ba-fk08">8 &nbsp;Was fehlt (ehrlich)</h2>
 <ul>
 <li>Zylindermantel (27/28/29, braucht eine Rundachse) und die Schwenkfunktion PLANE &mdash; Gewindefr&auml;sen 262&ndash;267 ist seit dem 14.09.2026 da (Kap.&nbsp;6e), die SL-Zyklen 20&ndash;24 mit Tasche und Inseln sind seit dem 13.09.2026 da (Kap.&nbsp;6c), ebenso der Konturzug 14/25 mit XY-Kontureditor (Kap.&nbsp;5b). Taschen, Nuten und Zapfen (251&ndash;257), Planfr&auml;sen 232 und die Bohrzyklen 202/204/205/208/209/241 sind seit dem 12.09.2026 drin (Kap.&nbsp;6 und 6b).</li>
@@ -4276,6 +4333,11 @@ var F_STATUS = {
   // Titel sind an den Beispielsaetzen des Zyklenhandbuchs 670 388-12
   // geprueft, die Ausgabe 02 von 2006 schreibt dieselben Listen.
   handbuch : {txt:'am Klartext-Handbuch belegt (670 387/388, Staende 02 bis 07), an der Steuerung zu pruefen', cls:'ann', grp:'offen'},
+  // 20.09.2026, TNC 410: belegt an NC-Dateien, die auf DIESER Maschine
+  // gelaufen sind. Das ist staerker als ein Handbuch (was darin steht, hat
+  // die Steuerung genommen) und schwaecher als ein eigener Lauf (die
+  // Dateien kommen aus einem fremden Postprozessor, nicht aus dieser App).
+  gelaufen : {txt:'belegt an NC-Dateien, die auf dieser Maschine gelaufen sind', cls:'ok', grp:'belegt'},
   // Stufe 3 Teil B: fuer "Modell gegen Rohteil abspanen" gibt es an der
   // iTNC keinen Zyklus. Die App schreibt ihre eigenen Saetze — kein Handbuch
   // kann das belegen, nur ein Lauf.
@@ -4342,6 +4404,118 @@ var F_PROFILE = {
     },
     termine:'Programmierplatz 12.09.2026 (Demo 606 424, NC-SW 606 42x): DZ1, DZ2, DZ3 (Bohren, Muster), DZ4 (Taschen, Nuten, Zapfen 251-257) und DZ5 (Planfraesen 232, Bohrzyklen 202/204/205/208/209/241) im Programm-Test ohne Meldung durchgelaufen, Rueckexport Satz fuer Satz gleich; abends DZ6 (Einzelsaetze der eigenen Bahn, Paket C: 240/203/200/201 ohne Zyklus, 3:06 min) ebenso, nachts DZ7 (Kreistasche, Nut, Kreiszapfen als Ringbahnen mit CC/C, 1:55 min) und DZ8 (Planfraesen-Maeander, Rechtecktasche mit Helix CP IPA/IZ, 2:32 min), am 13.09.2026 DZ9 (Insel mit Nut als XY-Kontur: Zyklus 14/25 und dieselbe Kontur als eigene Bahn mit CC/C-Eckenboegen, 0:53 min) und DZ10 (Rundung, Fase, tangentialer Bogen, Vollkreis: natives LBL mit RND/CHF/CT und eigene Bahn, 1:00 min — erster Lauf fiel mit Kreis-Endpunkt falsch, MP7431: CC-Mitten seither auf der Mittelsenkrechten mit 0,0001); alles am selben Tag gebaut und an den Handbuechern 340 49x-02/-06/-07 geprueft. Befund 241: Q427 unter der Mindestdrehzahl der Demo (50 U/min) gibt Falsche Drehzahl, Q426 = 5 Undefinierter Programmstart',
     offen:'Modell abspanen: erster Lauf am Teil (senkrechtes Eintauchen, Restmaterial an den Waenden nachmessen). Schraegen schlichten: Programmierplatz-Lauf (DZ15) und erster Lauf am Teil — geprueft wird nur die Kugel, nicht Schaft und Halter; die Z-konstante Bahn fuer steile Flanken fehlt noch. Lauf an einer der drei Maschinen (Stand 340 49x): Softwarestand je Maschine (MOD), M13/M9 an der PLC, Option Synchron-Gewindebohren (207); danach Daniels eigene .H-Programme als Fixtures'
+  },
+
+  // -------------------------------------------------------------------
+  // HEIDENHAIN TNC 410 (Daniels Auftrag 20.09.2026: "diese vorgaengige
+  // Version der Heidenhain-Steuerung ... die hat im Klartext-Dialog
+  // natuerlich weniger Zyklen und sie
+  // braucht, glaube ich, irgendetwas zum Werkzeugaufruf noch").
+  //
+  // ZWEI UNABHAENGIGE QUELLEN, und beide liegen auf diesem Rechner:
+  //  1. Das Benutzer-Handbuch Klartext-Dialog 286 060-xx / 286 080-xx
+  //     (6/2001, 319 Seiten) — daraus die Zyklusliste, die Parameter je
+  //     Zyklus und die Bahnfunktionen.
+  //  2. ZWOELF NC-Dateien, die auf dieser Maschine GELAUFEN sind. Sie
+  //     tragen den Fingerabdruck der Postprozessor-Konfiguration, die sie
+  //     erzeugt hat (F MAX mit Leerzeichen, M30 am Ende, Werkzeugdaten als
+  //     Sternzeile) — was darin steht, hat die Steuerung genommen.
+  //
+  // DER SONDERFALL BEIM WERKZEUGAUFRUF, nach dem Daniel gefragt hat: ein
+  // TOOL CALL setzt voraus, dass das Werkzeug vorher bekannt ist — "in
+  // einem TOOL DEF-Satz oder in der Werkzeug-Tabelle" (Handbuch Kap. 5.2).
+  // Wer die Tabelle nutzt, trifft mit TOOL DEF nur die VORAUSWAHL fuers
+  // naechste Werkzeug; wer ohne Tabelle arbeitet, MUSS die Laenge und den
+  // Radius im Programm definieren (hoechstens 20 TOOL DEF je Programm), und
+  // die Fehlerliste des Handbuchs nennt als Abhilfe fuer "Undefinierter
+  // Programmstart" ausdruecklich: "Im Programm nur mit TOOL DEF-Satz
+  // beginnen". Daniels gelaufene Dateien arbeiten mit der Tabelle und
+  // schreiben KEIN TOOL DEF — deshalb ist es hier eine Einstellung
+  // (wzDef) und keine feste Regel.
+  //
+  // DIE ZYKLEN SIND EINE ANDERE FAMILIE, nicht nur eine kuerzere Liste.
+  // Die Faustregel, die fast alles erklaert: die TNC 410 kennt nur die
+  // Q-Parameter Q1 bis Q255 — jeder Zyklus, dessen Woerter darueber liegen
+  // (240 Zentrieren, 205, 208, 209, 241, 251-257, 232, 25, 20-24, 262-267),
+  // ist auf dieser Steuerung gar nicht vorhanden. Wo die App eine eigene
+  // Bahn hat, faehrt sie die; wo nicht, sagt sie es.
+  // -------------------------------------------------------------------
+  HEIDENHAIN_TNC410: {
+    id:'HEIDENHAIN_TNC410', name:'Heidenhain TNC 410 (Klartext)',
+    dialekt:'klartext', endung:'.H', zeilenende:'\r\n',
+    // Dateinamen der TNC 410: 8 Zeichen plus Endung (DOS-Form). Das
+    // Handbuch nennt fuer die Programmverwaltung "Name, max. 8 Zeichen".
+    nameMax:8, nameMuster:/^[A-Z0-9_-]{1,8}$/,
+    // F MAX MIT LEERZEICHEN: so steht es in allen zwoelf gelaufenen
+    // Dateien und so setzt es die Konfiguration, die sie erzeugt hat. Das
+    // Handbuch schreibt im Fliesstext FMAX; die Steuerung nimmt
+    // nachweislich beides, und hier gilt, was gelaufen ist.
+    fmax:'F MAX',
+    // Hoechste Q-Nummer, die diese Steuerung kennt (Handbuch, alle
+    // Zyklusabschnitte durchgezaehlt: Q200 bis Q255).
+    qMax:255,
+    // Die EINZIGE Ausnahme, die qMax nicht faengt: der Zyklus 200 der
+    // TNC 410 hat keine Verweilzeit UNTEN. Handbuch Kap. 8.3 zaehlt sieben
+    // Woerter auf (Q200 Q201 Q206 Q202 Q210 Q203 Q204), die iTNC hat acht.
+    // Ein Wort ZUVIEL ist an der Steuerung ein Alarm, ein fehlendes am
+    // Ende nicht - deshalb ist Weglassen die sichere Seite.
+    qWeg:{bohren:{Q211:1}},
+    // Die Werkzeugzeile hinter dem TOOL CALL: ein Kommentar mit Laenge und
+    // Radius, so wie ihn die gelaufenen Dateien tragen. Er sagt an der
+    // Maschine, mit welchen Massen die App gerechnet hat - stimmen sie mit
+    // der Werkzeug-Tabelle der Steuerung nicht ueberein, faellt es beim
+    // Lesen auf und nicht erst am Teil.
+    wzZeile:true,
+    // Hoechstens 20 TOOL DEF-Saetze je Programm (Handbuch Kap. 11).
+    wzDefMax:20,
+    // Die Zeilenform der Zyklen, Zeichen fuer Zeichen aus den gelaufenen
+    // Dateien: fuenf Leerzeichen Einrueckung, Wert und Text durch EIN
+    // Leerzeichen getrennt (nicht auf Spaltenbreite aufgefuellt), die
+    // Tilde direkt am Text ohne Leerzeichen davor.
+    qForm:{ein:'     ', breit:0, tilde:'~'},
+    // Familie -> was auf dieser Steuerung daraus wird.
+    //   Zahl      = derselbe Zyklus, Woerter ueber qMax fallen weg
+    //   'einzel'  = diesen Zyklus gibt es nicht; die App faehrt ihre Bahn
+    //   'alt'     = alte Satzform mit Punktnummern (siehe fZyklusAlt)
+    //   null      = gibt es nicht und die App hat keine Bahn dafuer
+    zyklusAbbild:{
+      // Bohrzyklen, am Handbuch Wort fuer Wort nachgezaehlt:
+      bohren:200, reiben:201, ausdrehen:202, tief:203, senkenRueck:204,
+      muster220:220, muster221:221,
+      // Zentrieren gibt es NICHT (Q343/Q344 liegen ueber Q255). Die App
+      // faehrt ihre eigene Zentrierbahn - dieselbe, die am
+      // Programmierplatz als DZ6 gelaufen ist.
+      zentrieren:'einzel',
+      // Gewindebohren: die alten Zyklen 2 und 17.
+      gewinde:'alt', gewindeGS:'alt',
+      // Kennt die Steuerung nicht, die App hat aber eine Bahn:
+      tiefUni:'einzel',
+      tascheR:'einzel', tascheK:'einzel', nut:'einzel', nutR:'einzel',
+      zapfenR:'einzel', zapfenK:'einzel', planfraesen:'einzel',
+      konturzug:'einzel', slRaeumen:'einzel', slVorbohren:'einzel',
+      // Kennt die Steuerung nicht UND die App hat keine Bahn:
+      bohrfraesen:null, gewindeSpan:null, einlippen:null,
+      gewFraesen:null, gewSenk:null, gewBohr:null, gewHelix:null, gewAussen:null
+    },
+    // Die alten Zyklen 2 und 17: Satz je Parameter mit Punktnummer statt
+    // Q-Liste. Der 17 steht Wort fuer Wort in Daniels gelaufenen Dateien;
+    // beim 2 ist die Bedeutung der vier Werte am Handbuch belegt, die
+    // WORTLAUTE sind aus der Familie abgeleitet (altAbgeleitet).
+    altAbgeleitet:{gewinde:1},
+    zyklen:{
+      bohren:'handbuch', reiben:'handbuch', ausdrehen:'handbuch',
+      tief:'handbuch', senkenRueck:'handbuch',
+      muster220:'handbuch', muster221:'handbuch',
+      gewindeGS:'gelaufen', gewinde:'abgeleitet',
+      zentrieren:'eigenbahn', tiefUni:'eigenbahn', lbl:'gelaufen',
+      tascheR:'eigenbahn', tascheK:'eigenbahn', nut:'eigenbahn', nutR:'eigenbahn',
+      zapfenR:'eigenbahn', zapfenK:'eigenbahn', planfraesen:'eigenbahn',
+      konturzug:'eigenbahn', slRaeumen:'eigenbahn', slVorbohren:'eigenbahn',
+      modellSchruppen:'eigenbahn', modellSchlichten:'eigenbahn',
+      modellRest:'eigenbahn', modellSchlichtenEben:'eigenbahn'
+    },
+    termine:'Kein Lauf durch diese App. Belegt sind: die Zyklusliste und die Parameter je Zyklus am Benutzer-Handbuch Klartext-Dialog 286 060-xx (6/2001), und die Satzform an zwoelf NC-Dateien, die auf dieser Maschine gelaufen sind (F MAX mit Leerzeichen, Kommentar mit Strichpunkt, Werkzeugdaten als Sternzeile, M-Wort als eigener L-Satz, M30 am Ende, Zyklus 17 Wort fuer Wort).',
+    offen:'Erster Lauf an der Maschine. Der Wortlaut der vier Zeilen des Zyklus 2 (GEWINDEBOHREN mit Ausgleichsfutter) ist aus der Familie abgeleitet, nicht belegt - vor dem ersten Lauf den Satz an der Steuerung in der Zyklusmaske oeffnen. Ungeprueft: ob die Steuerung FMAX ohne Leerzeichen ebenfalls nimmt, und ob die Programmnamen laenger als 8 Zeichen sein duerfen. Nicht gebaut: die alten Fraeszyklen 3/4/5/6/14/15/16/210-215/230/231 - dort faehrt die App ihre eigene Bahn.'
   },
 
   // -------------------------------------------------------------------
@@ -5740,27 +5914,104 @@ function fZyklusWerte(s, tool){
 // stand: Software-Stand der Zielsteuerung (F_STAENDE). Der 253 schreibt die
 // Drehlage in der Ausgabe 02 als Q224, ab -06 als Q374 — gleicher Wert,
 // anderes Wort. Ohne Angabe gilt '07'.
-function fZyklusDef(s, tool, stand){
+function fZyklusDef(s, tool, stand, P){
   const z = F_ZYKLEN[s.art]; if(!z) return null;
+  // TNC 410 (20.09.2026): die alten Zyklen 2 und 17 haben keine Q-Liste,
+  // sondern einen Satz je Parameter mit Punktnummer.
+  if(P && P.zyklusAbbild && P.zyklusAbbild[s.art] === 'alt') return fZyklusAlt(s, tool, P);
   const w = fZyklusWerte(s, tool);
-  const zeilen = ['CYCL DEF ' + z.nr + ' ' + z.titel + ' ~'];
+  const zeilen = ['CYCL DEF ' + z.nr + ' ' + z.titel + ' ~'];   // Tilde setzt F.tilde unten
   // Ausgabe 02: Woerter, die es dort noch nicht gab, fallen weg (208 Q351,
   // 209 Q403) — die Liste endet dann ein Wort frueher.
-  const liste = z.q.filter(q => !(stand === '02' && z.qStand02 && z.qStand02[q]));
+  // qMax: eine Steuerung, die nur bis Q255 reicht (TNC 410), bekommt die
+  // hoeheren Woerter gar nicht - ihre Zyklen haben sie nicht.
+  const weg = (P && P.qWeg && P.qWeg[s.art]) || null;
+  const liste = z.q.filter(q => !(stand === '02' && z.qStand02 && z.qStand02[q]))
+                   .filter(q => !(P && P.qMax && +q.slice(1) > P.qMax))
+                   .filter(q => !(weg && weg[q]));
+  const F = (P && P.qForm) || {ein:'    ', breit:11, tilde:' ~'};
+  zeilen[0] = 'CYCL DEF ' + z.nr + ' ' + z.titel + F.tilde;
   liste.forEach((q0, i) => {
     const q = (q0 === 'Q374' && stand === '02') ? 'Q224' : q0;
     const letzte = (i === liste.length - 1);
     const text = (z.qText && z.qText[q]) || F_Q[q];
-    zeilen.push('    ' + klQ(q, w[q], !!(z.qSigned && z.qSigned[q])).padEnd(11, ' ') + ';' + text + (letzte ? '' : ' ~'));
+    const wort = klQ(q, w[q], !!(z.qSigned && z.qSigned[q]));
+    zeilen.push(F.ein + (F.breit ? wort.padEnd(F.breit, ' ') : wort + ' ') + ';' + text + (letzte ? '' : F.tilde));
   });
   return zeilen;
 }
+
+// ---------------------------------------------------------------------
+// DIE ALTEN ZYKLEN DER TNC 410 (20.09.2026).
+//
+// Vor den Q-Zyklen hatte jeder Zyklus einen Satz JE PARAMETER, nummeriert
+// mit einem Punkt hinter der Zyklusnummer. So sieht das in Daniels
+// gelaufenen Dateien aus - Wort fuer Wort:
+//
+//     CYCL DEF 17.0 GEW.-BOHREN GS
+//     CYCL DEF 17.1 ABST 2
+//     CYCL DEF 17.2 TIEFE -14
+//     CYCL DEF 17.3 STEIG +1
+//
+// UND SIE HABEN KEIN Q203/Q204: der Sicherheits-Abstand ist inkremental
+// zur Werkstueck-Oberflaeche, aber WO die liegt und wohin zurueckgezogen
+// wird, sagt der Zyklus nicht. Das Handbuch verlangt deshalb ausdruecklich
+// "Positionier-Satz auf den Startpunkt in der Spindelachse (Sicherheits-
+// Abstand ueber Werkstueck-Oberflaeche) programmieren" - der Post schreibt
+// je Punkt drei Saetze statt einem, genau wie Daniels gelaufene Dateien:
+//
+//     L X.. Y.. R0 F MAX
+//     L Z<Oberflaeche + SC> F MAX M99
+//     L Z<Oberflaeche + SC2> F MAX
+// ---------------------------------------------------------------------
+function fZyklusAlt(s, tool, P){
+  const z = F_ZYKLEN[s.art]; if(!z) return null;
+  const w = fZyklusWerte(s, tool);
+  // ABST ist der Betrag des Sicherheits-Abstands, TIEFE traegt ihr
+  // Vorzeichen (es legt die Arbeitsrichtung fest, Handbuch Kap. 8.3).
+  const abst = Math.abs(fRund(w.Q200));
+  // alleSaetze: jede dieser Zeilen bekommt eine eigene Satznummer.
+  const mitNr = (a) => { a.alleSaetze = true; return a; };
+  if(s.art === 'gewindeGS'){
+    // Zyklus 17 GEWINDEBOHREN ohne Ausgleichsfutter GS. Die Steigung traegt
+    // ihr Vorzeichen: + Rechtsgewinde, - Linksgewinde.
+    return mitNr(['CYCL DEF 17.0 GEW.-BOHREN GS',
+            'CYCL DEF 17.1 ABST ' + abst,
+            'CYCL DEF 17.2 TIEFE ' + fRund(w.Q201),
+            'CYCL DEF 17.3 STEIG ' + klNum(w.Q239)]);
+  }
+  // Zyklus 2 GEWINDEBOHREN mit Ausgleichsfutter: vier Werte, am Handbuch
+  // belegt (Sicherheits-Abstand, Bohrtiefe, Verweilzeit 0..0,5 s, Vorschub
+  // F = S x Steigung). Die WORTLAUTE der vier Zeilen sind aus der Familie
+  // abgeleitet - deshalb steht die Familie im Profil unter altAbgeleitet
+  // und der Schreiber setzt eine Ansage daneben.
+  return mitNr(['CYCL DEF 2.0 GEWINDEBOHREN',
+          'CYCL DEF 2.1 ABST ' + abst,
+          'CYCL DEF 2.2 TIEFE ' + fRund(w.Q201),
+          'CYCL DEF 2.3 VERWEILZEIT ' + fRund(w.Q211),
+          'CYCL DEF 2.4 F ' + fRund(w.Q206)]);
+}
+// Die drei Saetze, mit denen ein alter Zyklus an EINEM Punkt gerufen wird.
+function fAltPunktSaetze(s, p, P){
+  const fm = (P && P.fmax) || 'FMAX';
+  const ob = +s.q203 || 0;
+  const zTief = ob + Math.abs(+s.sc || 0);
+  const zHoch = ob + Math.abs(+s.sc2 || 0);
+  // R0 in jedem der drei Saetze - Daniels Post laesst es beim Z-Satz mal
+  // weg und mal nicht; einheitlich ist es die Form des Klartext-Schreibers.
+  return ['L X' + klNum(p.x) + ' Y' + klNum(p.y) + ' R0 ' + fm,
+          'L Z' + klNum(zTief) + ' R0 ' + fm + ' M99',
+          'L Z' + klNum(zHoch) + ' R0 ' + fm];
+}
+
 // Musterzyklus 220 (Kreis) / 221 (Linien) — DEF-aktiv: die Steuerung
 // fuehrt ihn bei der Definition sofort aus und ruft dabei den zuletzt
 // definierten Bearbeitungszyklus an jedem Punkt. Deshalb steht er
 // direkt HINTER dem Bohrzyklus und braucht keinen CYCL CALL.
-function fMusterZyklusDef(m, s){
-  const Q = (q, v) => klQ(q, v).padEnd(11, ' ') + ';' + F_Q[q];
+function fMusterZyklusDef(m, s, P){
+  const F = (P && P.qForm) || {ein:'    ', breit:11, tilde:' ~'};
+  const qMax = (P && P.qMax) || 9999;
+  const Q = (q, v) => (F.breit ? klQ(q, v).padEnd(F.breit, ' ') : klQ(q, v) + ' ') + ';' + F_Q[q];
   if(m.typ === 'kreis'){
     const n = Math.max(1, Math.round(+m.n || 1));
     // VOLLKREIS in der Form des Handbuchs (670 388-12, S. 183/187):
@@ -5775,23 +6026,26 @@ function fMusterZyklusDef(m, s){
     if(+m.schritt){ schritt = +m.schritt; ende = start; }
     else if(start + 360 <= 360){ ende = start + 360; schritt = 0; }
     else { schritt = 360 / n; ende = start; }
-    const zeilen = ['CYCL DEF 220 MUSTER KREIS ~'];
-    [['Q216', +m.xm || 0], ['Q217', +m.ym || 0], ['Q244', +m.d || 0], ['Q245', start],
+    const zeilen = ['CYCL DEF 220 MUSTER KREIS' + F.tilde];
+    // qMax: die TNC 410 kennt Q301/Q365 nicht (sie reicht nur bis Q255).
+    const P220 = [['Q216', +m.xm || 0], ['Q217', +m.ym || 0], ['Q244', +m.d || 0], ['Q245', start],
      ['Q246', ende], ['Q247', schritt], ['Q241', n], ['Q200', +s.sc], ['Q203', +s.q203 || 0],
-     ['Q204', +s.sc2], ['Q301', 1], ['Q365', 0]].forEach((p, i, a) => {
-      zeilen.push('    ' + Q(p[0], p[1]) + (i === a.length - 1 ? '' : ' ~'));
+     ['Q204', +s.sc2], ['Q301', 1], ['Q365', 0]].filter(p => +p[0].slice(1) <= qMax);
+    P220.forEach((p, i, a) => {
+      zeilen.push(F.ein + Q(p[0], p[1]) + (i === a.length - 1 ? '' : F.tilde));
     });
     return zeilen;
   }
   if(m.typ === 'reihe'){
     // Titel wie im Beispielsatz S. 185 ("MUSTER LINIEN"), nicht wie die
     // Kapiteluerschrift ("PUNKTEMUSTER AUF LINIEN").
-    const zeilen = ['CYCL DEF 221 MUSTER LINIEN ~'];
-    [['Q225', +m.x0 || 0], ['Q226', +m.y0 || 0], ['Q237', +m.dx || 0], ['Q238', +m.dy || 0],
+    const zeilen = ['CYCL DEF 221 MUSTER LINIEN' + F.tilde];
+    const P221 = [['Q225', +m.x0 || 0], ['Q226', +m.y0 || 0], ['Q237', +m.dx || 0], ['Q238', +m.dy || 0],
      ['Q242', Math.max(1, Math.round(+m.nx || 1))], ['Q243', Math.max(1, Math.round(+m.ny || 1))],
      ['Q224', +m.winkel || 0], ['Q200', +s.sc], ['Q203', +s.q203 || 0], ['Q204', +s.sc2],
-     ['Q301', 1]].forEach((p, i, a) => {
-      zeilen.push('    ' + Q(p[0], p[1]) + (i === a.length - 1 ? '' : ' ~'));
+     ['Q301', 1]].filter(p => +p[0].slice(1) <= qMax);
+    P221.forEach((p, i, a) => {
+      zeilen.push(F.ein + Q(p[0], p[1]) + (i === a.length - 1 ? '' : F.tilde));
     });
     return zeilen;
   }
@@ -14096,6 +14350,7 @@ function fProgrammSchreiben(prog, opt){
   satz('; NACH HANDBUCH GEBAUT - PROGRAMM-TEST AN DER STEUERUNG VOR DEM ERSTEN LAUF');
 
   const schritte = (prog.schritte || []).filter(s => s && s.aktiv !== false);
+  const wzDefGetan = {};       // T-Nummer -> schon ein TOOL DEF geschrieben
   const lblNr = new Map();     // Musterindex -> LBL-Nummer, in Reihenfolge der ersten Nutzung
   const lblListe = [];
   // Paket D3: Kontur-LBLs merken sich Kontur UND Werkzeugseite — dieselbe
@@ -14113,7 +14368,25 @@ function fProgrammSchreiben(prog, opt){
     const letzter = (si === schritte.length - 1);
     const rz = +k.rz;
     satz('; SCHRITT ' + (si + 1) + ': ' + fAsciiText(z ? z.wort : s.art).replace(/[^A-Z0-9 ()\-,.]/g, '') + ' T' + s.t + (tool.name ? ' ' + fAsciiText(tool.name).replace(/[^A-Z0-9 .\-]/g, '') : ''));
+    // DER SONDERFALL DER TNC 410 (Daniels Frage 20.09.2026: "sie braucht,
+    // glaube ich, irgendetwas zum Werkzeugaufruf noch"): ein TOOL CALL
+    // setzt voraus, dass Laenge und Radius bekannt sind - "in einem TOOL
+    // DEF-Satz oder in der Werkzeug-Tabelle" (Handbuch Kap. 5.2). Wer ohne
+    // Tabelle arbeitet, MUSS sie im Programm definieren; die Fehlerliste
+    // nennt als Abhilfe fuer "Undefinierter Programmstart" ausdruecklich
+    // "Im Programm nur mit TOOL DEF-Satz beginnen". Daniels gelaufene
+    // Dateien arbeiten mit der Tabelle - deshalb ist das eine Einstellung
+    // im Programmkopf und keine feste Regel.
+    if(P.wzDefMax && k.wzDef === 'def' && !wzDefGetan[s.t]){
+      wzDefGetan[s.t] = 1;
+      if(Object.keys(wzDefGetan).length > P.wzDefMax) warn.push('Mehr als ' + P.wzDefMax + ' verschiedene Werkzeuge: so viele TOOL DEF-Saetze nimmt die ' + P.name + ' nicht. Werkzeug-Tabelle der Steuerung benutzen.');
+      satz('TOOL DEF ' + s.t + ' L' + klNum(+tool.l || 0) + ' R' + klNum((+tool.d || 0) / 2));
+    }
     satz('TOOL CALL ' + s.t + ' ' + (k.achse || 'Z') + ' S' + Math.round(+s.s || 0));
+    // Die Werkzeugzeile nennt den Radius immer (den kennt die App aus dem
+    // Durchmesser) und die Laenge nur, wenn eine eingetragen ist.
+    if(P.wzZeile) satz('*- ' + fAsciiText(tool.name || ('T' + s.t)).replace(/[^A-Z0-9 .\-]/g, '') + ' -'
+                       + (+tool.l ? ' L' + klNum(+tool.l) : '') + ' R' + klNum((+tool.d || 0) / 2));
     // M13 = Spindel rechts + Kuehlmittel EIN in einem Wort (Standard-M der
     // TNC); ohne Kuehlmittel nur M3.
     satz('L Z' + klNum(rz) + ' R0 FMAX ' + (s.kuehl === 'aus' ? 'M3' : 'M13'));
@@ -14127,7 +14400,20 @@ function fProgrammSchreiben(prog, opt){
     // gibt es keinen Rueckfall — dann sagt das Programm es im Klartext,
     // statt stumm einen Werkzeugaufruf ohne Bewegung zu hinterlassen.
     const nurEinzel = !!(z && z.nurEinzel);
-    if((s.ausgabe === 'einzel' || nurEinzel) && z && (z.eigenePosition || z.kontur || fPunkte(s, prog).length)){
+    // ZWEITE KLARTEXT-STEUERUNG (20.09.2026): das Profil sagt je Familie,
+    // was aus ihr auf DIESER Steuerung wird. 'einzel' = den Zyklus gibt es
+    // dort nicht, die App faehrt ihre eigene Bahn; null = es gibt weder
+    // Zyklus noch Bahn. Beides wird GESAGT - stumm etwas anderes zu
+    // schreiben, als in der Maske steht, waere die schlimmste Falle.
+    const abb = (P.zyklusAbbild && z) ? P.zyklusAbbild[s.art] : undefined;
+    const abbEinzel = (abb === 'einzel');
+    const abbNichts = (abb === null);
+    if(abbNichts){
+      warn.push('Schritt ' + (si + 1) + ': ' + (z.wort || s.art) + ' - diesen Zyklus hat die ' + P.name + ' nicht, und die App hat dafuer keine eigene Bahn. Der Schritt bleibt ohne Bearbeitung.');
+    } else if(abbEinzel && s.ausgabe !== 'einzel'){
+      warn.push('Schritt ' + (si + 1) + ': Zyklus ' + z.nr + ' gibt es auf der ' + P.name + ' nicht - die App faehrt ihre eigene Bahn (Einzelsaetze).');
+    }
+    if(!abbNichts && (s.ausgabe === 'einzel' || nurEinzel || abbEinzel) && z && (z.eigenePosition || z.kontur || fPunkte(s, prog).length)){
       const bh = fBahnSchritt(s, tool, prog, (z.eigenePosition || z.kontur) ? [] : fPunkte(s, prog));
       if(bh.ok) einzel = bh;
       else if(nurEinzel) warn.push('Schritt ' + (si + 1) + ': ' + bh.grund + ' — fuer ' + (z.wort || s.art) + ' gibt es KEINEN Steuerungszyklus, der Schritt bleibt ohne Bahn.');
@@ -14135,10 +14421,12 @@ function fProgrammSchreiben(prog, opt){
     }
     if(einzel){
       satz(nurEinzel ? '; ' + z.titel + ' - EIGENE BAHN DER APP, KEIN STEUERUNGSZYKLUS'
-                     : '; EINZELSAETZE STATT ZYKLUS ' + z.nr + ' - EIGENE BAHN DER APP');
+                     : (abbEinzel && s.ausgabe !== 'einzel'
+                        ? '; ZYKLUS ' + z.nr + ' GIBT ES HIER NICHT - EIGENE BAHN DER APP'
+                        : '; EINZELSAETZE STATT ZYKLUS ' + z.nr + ' - EIGENE BAHN DER APP'));
       einzel.warn.forEach(w => warn.push('Schritt ' + (si + 1) + ': ' + w));
       fBahnKlartext(einzel.bahn).forEach(l => satz(l));
-    } else if(nurEinzel){
+    } else if(nurEinzel || abbNichts){
       satz('; KEINE BAHN ERZEUGT - SIEHE MELDUNGEN');
     } else {
       if(z && z.sl){
@@ -14163,14 +14451,26 @@ function fProgrammSchreiben(prog, opt){
         const kt = (prog.konturen || [])[s.kontur];
         satz('CYCL DEF 14.0 KONTUR'); satz('CYCL DEF 14.1 KONTURLABEL ' + lblFuer(s.kontur, kt, fKonturSeite(s, kt)));
       }
-      const def = fZyklusDef(s, tool, k.stand || '07');
-      if(def){ satz(def[0]); for(let i = 1; i < def.length; i++) zeilen.push(def[i]); }
+      const def = fZyklusDef(s, tool, k.stand || '07', P);
+      // Q-Zyklus: nur die Kopfzeile ist ein Satz, die Q-Zeilen sind
+      // Fortsetzungen (Tilde). Alter Zyklus: jede Zeile ist ein Satz.
+      if(def){ if(def.alleSaetze) def.forEach(t => satz(t));
+               else { satz(def[0]); for(let i = 1; i < def.length; i++) zeilen.push(def[i]); } }
       if(z && z.kontur){
         satz('CYCL CALL');
       } else if(z && z.eigenePosition){
         // Planfraesen 232: Startpunkt steckt im Zyklus, kein Bohrbild — ein
         // CYCL CALL direkt hinter der Definition (CALL-aktiv).
         satz('CYCL CALL');
+      } else if(abb === 'alt'){
+        // Alter Zyklus (2/17): kein Q203/Q204, also schreibt der Post die
+        // Z-Anfahrt selbst - je Punkt drei Saetze. Das gilt auch fuer das
+        // Bohrbild; ein Musterzyklus 220/221 waere hier nicht belegt.
+        if(P.altAbgeleitet && P.altAbgeleitet[s.art]) warn.push('Schritt ' + (si + 1) + ': der Wortlaut der Zeilen von Zyklus ' + (s.art === 'gewinde' ? '2' : '17') + ' ist aus der Zyklusfamilie ABGELEITET, nicht belegt - den Satz vor dem ersten Lauf an der Steuerung in der Zyklusmaske oeffnen.');
+        const pkte = fPunkte(s, prog);
+        if(!pkte.length) warn.push('Schritt ' + (si + 1) + ': keine Position — der Zyklus steht da, wird aber nicht gerufen.');
+        if(m && m.ausgabe === 'zyklus') warn.push('Schritt ' + (si + 1) + ': der Musterzyklus faellt weg - ob er einen alten Zyklus richtig ruft, ist nicht belegt. Die Punkte stehen einzeln im Programm.');
+        pkte.forEach(p => fAltPunktSaetze(s, p, P).forEach(t => satz(t)));
       } else if(fPosArt(s) === 'xy'){
         // EIGENE POSITION: ein Satz mit M99 ruft den eben definierten
         // Zyklus an genau dieser Stelle - derselbe Satz, den das
@@ -14182,7 +14482,7 @@ function fProgrammSchreiben(prog, opt){
         if(pp) satz('L X' + klNum(pp.x) + ' Y' + klNum(pp.y) + ' R0 FMAX M99');
         else warn.push('Schritt ' + (si + 1) + ': keine Position — der Zyklus steht da, wird aber nicht gerufen.');
       } else if(m && m.ausgabe === 'zyklus' && (m.typ === 'kreis' || m.typ === 'reihe')){
-        const md = fMusterZyklusDef(m, s);
+        const md = fMusterZyklusDef(m, s, P);
         satz(md[0]); for(let i = 1; i < md.length; i++) zeilen.push(md[i]);
         warn.push('Schritt ' + (si + 1) + ': Musterzyklus ' + (m.typ === 'kreis' ? '220' : '221') + ' nach Handbuch (DEF-aktiv, ruft den Bohrzyklus selbst) — im Programm-Test die Punktfolge ansehen.');
       } else if(m){
@@ -14204,6 +14504,16 @@ function fProgrammSchreiben(prog, opt){
     satz('LBL 0');
   });
   satz('END PGM ' + name + ' MM');
+  // F MAX ODER FMAX: die TNC 410 bekommt das Wort mit Leerzeichen (so steht
+  // es in allen zwoelf gelaufenen Dateien). Eine Endstufe statt einer
+  // Fallunterscheidung an dreissig Stellen - der Klartext-Schreiber und
+  // fBahnKlartext bleiben damit Zeichen fuer Zeichen, was sie waren. Die
+  // BEGIN/END-PGM-Zeilen bleiben aussen vor: dort steht ein Programmname.
+  if(P.fmax && P.fmax !== 'FMAX'){
+    for(let i = 0; i < zeilen.length; i++){
+      if(!/\bPGM\b/.test(zeilen[i])) zeilen[i] = zeilen[i].replace(/\bFMAX\b/g, P.fmax);
+    }
+  }
   // saetze = nummerierte Saetze; zeilen enthaelt auch die Q-Zeilen der Zyklen.
   return {text: zeilen.join(P.zeilenende) + P.zeilenende, zeilen: zeilen, saetze: n, warnungen: warn, fehler: fehler, name: name, datei: name + P.endung};
 }
@@ -14564,12 +14874,42 @@ function fPruefen(prog){
   if(F_ROHFELD) gelb.push('Rohform aus einem Modell (' + (F_ROHFELD.name || 'Rohteil') + '): Modell abspanen, Restmaterial, Boeden & Waende und die Simulation rechnen mit ihrer Oberflaeche; die BLK FORM ist nur die Huelle, die Grafik der Steuerung zeigt den Quader.');
   if(+k.sc2 < +k.sc) gelb.push('2. Sicherheits-Abstand Q204 ist kleiner als Q200 — Rueckzug zwischen den Loechern unter dem Sicherheitsabstand.');
   const schritte = (prog.schritte || []).filter(s => s && s.aktiv !== false);
+  // ---- ZWEITE KLARTEXT-STEUERUNG (TNC 410, 20.09.2026) -------------
+  // EIN TOOL DEF OHNE LAENGE IST EIN CRASH: die Steuerung rechnet dann mit
+  // der Laenge des Null-Werkzeugs, und ein 75 mm langer Fraeser faehrt
+  // 75 mm zu tief. Die App fuellt die Spalte L in ihrer Werkzeugtabelle
+  // NICHT von sich aus - fuer die Bahn braucht sie sie nicht. Wer TOOL DEF
+  // waehlt, traegt sie ein (oder liest eine TOOL.T ein).
+  if(P.wzDefMax && k.wzDef === 'def'){
+    const ohne = [];
+    schritte.forEach(s2 => {
+      // Auch ein Werkzeug, das GAR NICHT in der Tabelle steht: dann kann
+      // die App den TOOL DEF nicht schreiben, und der TOOL CALL trifft
+      // auf nichts.
+      const t = (prog.werkzeuge || []).find(w => w.nr === s2.t);
+      if(!(t && +t.l) && ohne.indexOf(s2.t) < 0) ohne.push(s2.t);
+    });
+    if(ohne.length) rot.push('TOOL DEF im Programm verlangt die Werkzeug-LAENGE, und ' + (ohne.length === 1 ? 'T' + ohne[0] + ' hat keine' : ohne.length + ' Werkzeuge haben keine (T' + ohne.join(', T') + ')') + '. Trage sie in der Werkzeugtabelle ein - oder stelle die Werkzeugdaten im Programmkopf auf "aus der Werkzeug-Tabelle" (so laufen auch die Programme, die an dieser Maschine schon gefahren sind). Mit L0 wuerde die Steuerung mit der Laenge des Null-Werkzeugs rechnen.');
+    const wzn = {}; schritte.forEach(s2 => wzn[s2.t] = 1);
+    if(Object.keys(wzn).length > P.wzDefMax) rot.push('Mehr als ' + P.wzDefMax + ' verschiedene Werkzeuge: so viele TOOL DEF-Saetze nimmt die ' + P.name + ' nicht (Handbuch). Werkzeug-Tabelle der Steuerung benutzen.');
+  }
+  // Familien, die es auf dieser Steuerung weder als Zyklus noch als Bahn
+  // gibt: das ist ein roter Befund, kein Hinweis - der Schritt wuerde
+  // schlicht nichts tun.
+  if(P.zyklusAbbild){
+    schritte.forEach((s2, i) => {
+      if(P.zyklusAbbild[s2.art] === null){
+        const z2 = F_ZYKLEN[s2.art];
+        rot.push('Schritt ' + (i + 1) + ' (' + ((z2 && z2.wort) || s2.art) + '): diesen Zyklus hat die ' + P.name + ' nicht, und die App hat dafuer keine eigene Bahn. Der Schritt laesst sich auf dieser Maschine nicht fertigen.');
+      }
+    });
+  }
   if(!schritte.length) gelb.push('Kein aktiver Arbeitsschritt — das Programm enthaelt nur Kopf und Ende.');
   schritte.forEach((s, i) => {
     const nr = 'Schritt ' + (i + 1) + ' (' + ((F_ZYKLEN[s.art] || {}).wort || s.art) + '): ';
     const tool = (prog.werkzeuge || []).find(w => w.nr === s.t);
     if(!(+s.t > 0)) rot.push(nr + 'kein Werkzeug.');
-    else if(!tool) gelb.push(nr + 'T' + s.t + ' steht nicht in der Werkzeugtabelle der App — TOOL CALL wird trotzdem geschrieben.');
+    else if(!tool) gelb.push(nr + 'T' + s.t + ' steht nicht in der Werkzeugtabelle der App — TOOL CALL wird trotzdem geschrieben (die Steuerung hat ihre eigene Tabelle). Eine eigene Bahn der App rechnet dann allerdings mit Werkzeugradius 0.');
     if(!F_ZYKLEN[s.art]) rot.push(nr + 'unbekannte Bearbeitungsart.');
     const zyk = F_ZYKLEN[s.art] || {};
     const m = (prog.muster || [])[s.muster];
@@ -15484,6 +15824,27 @@ F_DEMOS.forEach(d => {
 function fMerkmale(profilId){
   const P = F_PROFILE[profilId || 'HEIDENHAIN_ITNC530'];
   const z = (key, t) => ({t:t, s:P.zyklen[key] || 'gesperrt'});
+  // Die TNC 410 hat eine eigene Liste: andere Zyklusfamilie, andere
+  // Satzform, anderer Belegstand.
+  if(P.id === 'HEIDENHAIN_TNC410') return [
+    {t:'Satzform, Zeichen fuer Zeichen aus zwoelf NC-Dateien, die auf dieser Maschine gelaufen sind: F MAX MIT Leerzeichen (die iTNC schreibt FMAX), Q-Zeilen fuenf Stellen eingerueckt mit der Tilde direkt am Text, Kommentar mit Strichpunkt, hinter jedem TOOL CALL eine Werkzeugzeile *- NAME - R<radius>, Programmende M30. Die Bahnsaetze selbst (L, CC, C, CR, CT, RND, CHF, CP) sind dieselben wie bei der iTNC 530 und dort am Programmierplatz Satz fuer Satz belegt.', s:'gelaufen'},
+    {t:'Programmnamen hoechstens 8 Zeichen (DOS-Form). Laengere kuerzt die App und sagt es.', s:'handbuch'},
+    {t:'Die Faustregel, die fast alles erklaert: diese Steuerung kennt nur die Q-Parameter Q1 bis Q255. Jeder Zyklus, dessen Woerter darueber liegen, ist auf ihr gar nicht vorhanden — Zentrieren 240, Universal-Tiefbohren 205, Bohrfraesen 208, Gewindebohren mit Spanbruch 209, Einlippenbohren 241, Taschen/Zapfen/Nuten 251-257, Planfraesen 232, Konturzug 25, SL 20-24, Gewindefraesen 262-267.', s:'handbuch'},
+    z('bohren',      'Bohren — Zyklus 200, aber OHNE Verweilzeit unten (Q200 Q201 Q206 Q202 Q210 Q203 Q204; die iTNC hat Q211 zusaetzlich)'),
+    z('reiben',      'Reiben — Zyklus 201, Wort fuer Wort derselbe wie bei der iTNC'),
+    z('ausdrehen',   'Ausdrehen — Zyklus 202 (ohne Q336 Spindelwinkel)'),
+    z('tief',        'Tieflochbohren — Zyklus 203 Universal-Bohren, ohne Q256 (Rueckzug bei Spanbruch)'),
+    z('senkenRueck', 'Rueckwaerts-Senken — Zyklus 204 (ohne Q336)'),
+    z('muster220',   'Bohrbild Kreis — Zyklus 220, ohne Q301/Q365'),
+    z('muster221',   'Bohrbild Reihe — Zyklus 221, ohne Q301'),
+    z('gewindeGS',   'Gewindebohren ohne Ausgleichsfutter — der ALTE Zyklus 17 (CYCL DEF 17.0/17.1 ABST/17.2 TIEFE/17.3 STEIG, je Zeile ein Satz). Steht Wort fuer Wort in den gelaufenen Dateien.'),
+    z('gewinde',     'Gewindebohren mit Ausgleichsfutter — der alte Zyklus 2. Die Bedeutung der vier Werte ist am Handbuch belegt (Abstand, Tiefe, Verweilzeit, Vorschub), die WORTLAUTE der Zeilen sind aus der Familie abgeleitet. Vor dem ersten Lauf den Satz an der Steuerung in der Zyklusmaske oeffnen.'),
+    {t:'Die alten Zyklen haben KEIN Q203/Q204: der Sicherheits-Abstand ist inkremental zur Werkstueck-Oberflaeche, aber wo die liegt und wohin zurueckgezogen wird, sagt der Zyklus nicht. Das Handbuch verlangt den Positionier-Satz in der Spindelachse ausdruecklich — die App schreibt je Bohrung DREI Saetze (X/Y anfahren, Z hinunter mit M99, Z hinauf), genau wie die gelaufenen Dateien. Ein Musterzyklus 220/221 faellt dabei weg: ob er einen alten Zyklus richtig ruft, ist nicht belegt.', s:'gelaufen'},
+    {t:'Alles, was diese Steuerung nicht hat, faehrt die App als EIGENE BAHN (Einzelsaetze): Zentrieren, Universal-Tiefbohren, Taschen, Nuten, Zapfen, Planfraesen, Konturzug, SL-Raeumen und Vorbohren. Die Steuerung hat dafuer eigene, aeltere Zyklen (3/4/5/6/14/15/16/210-215/230/231) — die sind NICHT gebaut; eine eigene Bahn ist die belegte Bahn.', s:'eigenbahn'},
+    {t:'Gar nicht moeglich, und die Ampel sagt es rot: Bohrfraesen 208, Gewindebohren mit Spanbruch 209, Einlippenbohren 241 und Gewindefraesen 262-267. Diese Zyklen gibt es nicht, und die App hat dafuer keine Bahn — ein Schritt, der nichts tut, waere die schlimmere Antwort.', s:'gesperrt'},
+    {t:'Der Werkzeugaufruf: ein TOOL CALL setzt voraus, dass Laenge und Radius bekannt sind — aus der Werkzeug-Tabelle der Steuerung (Vorgabe, so laufen die Programme, die an dieser Maschine schon gefahren sind) oder aus einem TOOL DEF im Programm (hoechstens 20). EIN TOOL DEF MIT L0 WAERE EIN CRASH: die Steuerung rechnet dann mit der Laenge des Null-Werkzeugs. Die App traegt von sich aus keine Laenge ein, und die Ampel sperrt, solange eine fehlt.', s:'handbuch'},
+    {t:'Stand: ' + P.termine, s:'gelaufen', offen:P.offen}
+  ];
   // Die 840D hat eine eigene Liste: ihre Saetze sehen anders aus, und vor
   // allem ist ihr Belegstand ein anderer (nichts gefahren, nichts gezogen).
   if(P.dialekt === 'siemens') return [
@@ -16673,6 +17034,7 @@ function fKopfOeffnen(){
   maskeMeldung('fkMeldung', '');
   const k = fProg.kopf;
   setVal('fkName', k.name); setVal('fkProfil', k.profil || 'HEIDENHAIN_ITNC530'); setVal('fkStand', k.stand || '07');
+  setVal('fkWzDef', k.wzDef || 'tabelle');
   fKopfEndungSync();
   setVal('fkWerkstoff', F_WERKSTOFFE[k.werkstoff] ? k.werkstoff : 'baustahl'); setVal('fkTw', (k.tw === 0 || +k.tw > 0) ? k.tw : F_TW_VORGABE);
   setVal('fkX0', k.x0); setVal('fkY0', k.y0); setVal('fkZ0', k.z0); setVal('fkX1', k.x1); setVal('fkY1', k.y1); setVal('fkZ1', k.z1);
@@ -16697,6 +17059,10 @@ function fKopfEndungSync(){
   const zr = document.getElementById('fkZykRow'); if(zr) zr.style.display = (P.dialekt === 'siemens') ? '' : 'none';
   const st = document.getElementById('fkStand');
   if(st && st.closest){ const row = st.closest('.mrow'); if(row) row.style.display = (P.dialekt === 'siemens') ? 'none' : ''; }
+  // Werkzeugdaten aus der Tabelle oder als TOOL DEF: das ist eine Frage der
+  // TNC 410. Die iTNC 530 fuehrt ihre Werkzeug-Tabelle immer, die 840D hat
+  // gar kein TOOL DEF - dort waere die Zeile ein Feld ohne Wirkung.
+  const wd = document.getElementById('fkWzDefRow'); if(wd) wd.style.display = P.wzDefMax ? '' : 'none';
 }
 function fKopfSpannSync(){
   const an = (selBtnVal('fkSpannBtns') || 'aus') === 'schraubstock';
@@ -16711,7 +17077,7 @@ function fKopfSpannSync(){
     // mit Ansage in der Maske, statt still in die Ampel zu wandern.
     const k = Object.assign({}, fProg.kopf);
     k.name = getStr('fkName').trim() || 'DZ1'; k.profil = getStr('fkProfil') || 'HEIDENHAIN_ITNC530'; k.stand = getStr('fkStand') || '07';
-    k.zyk840 = selBtnVal('fkZykBtns') || 'aus';
+    k.zyk840 = selBtnVal('fkZykBtns') || 'aus'; k.wzDef = getStr('fkWzDef') || 'tabelle';
     k.werkstoff = F_WERKSTOFFE[getStr('fkWerkstoff')] ? getStr('fkWerkstoff') : 'baustahl'; k.tw = Math.max(0, getNum('fkTw', F_TW_VORGABE));
     k.x0 = getNum('fkX0'); k.y0 = getNum('fkY0'); k.z0 = getNum('fkZ0', -20); k.x1 = getNum('fkX1', 100); k.y1 = getNum('fkY1', 80); k.z1 = getNum('fkZ1');
     k.sc = getNum('fkSc', 2); k.sc2 = getNum('fkSc2', 50); k.oberflaeche = getNum('fkOber'); k.rz = getNum('fkRz', 100);
@@ -16719,7 +17085,7 @@ function fKopfSpannSync(){
     k.spannZ = getNum('fkSpannZ'); k.spannBreite = getNum('fkSpannBreite', 40); k.spannLaenge = getNum('fkSpannLaenge', 150);
     k.spannLuft = getNum('fkSpannLuft', 1); k.spannMin = getNum('fkSpannMin', 8);
     const pk = Object.assign({}, fProg, {kopf:k}); const bereinigt = fName(pk);
-    if(bereinigt !== k.name.toUpperCase()) melde('Programmname wird als ' + bereinigt + ' geschrieben (nur A-Z 0-9 _ -, max. 16 Zeichen).');
+    if(bereinigt !== k.name.toUpperCase()) melde('Programmname wird als ' + bereinigt + ' geschrieben (nur A-Z 0-9 _ -, max. ' + ((F_PROFILE[k.profil] || F_PROFILE.HEIDENHAIN_ITNC530).nameMax || 16) + ' Zeichen).');
     k.name = bereinigt;
     const rotK = fPruefen(pk).rot.filter(t => t.indexOf('Schritt ') !== 0);
     if(rotK.length){ maskeMeldung('fkMeldung', 'FEHLER - nicht \u00fcbernommen. Bitte korrigieren:\n' + rotK.map(t => '\u2022 ' + t).join('\n')); return; }
