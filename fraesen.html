@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 14:40 (1e686683)";</script>
+<script>window.__DZ_STAND="20.09.2026 15:35 (98566832)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3200,7 +3200,7 @@ Helix und Pendeln (0 = nur senkrecht), T-ANGLE Spitzenwinkel des Bohrers, PITCH 
 sie werden nur f&uuml;r die Spannmittelpr&uuml;fung gebraucht (Kap.&nbsp;3) und stehen in keinem NC-Satz. Die
 <b>Auskragl&auml;nge</b> misst von der Werkzeugspitze bis zur Stirn des Halters (bei der Spannzange: bis zur Mutter), der
 <b>Halter-&empty;</b> ist sein gr&ouml;&szlig;ter Durchmesser in diesem Bereich. Beides am eingespannten Werkzeug messen &mdash;
-geraten n&uuml;tzt es nichts. <b>0 = keine Angabe:</b> dann pr&uuml;ft die App nur Schneide und Schaft und schreibt in die
+geraten n&uuml;tzt es nichts. <b>Die Werkstatt-Tabelle bringt ab Werk plausible Startwerte mit</b> (20.09.2026): Schaft = Nenndurchmesser beim VHM-Fr&auml;ser, Messerkopf-K&ouml;rper so dick wie der Fr&auml;ser selbst, Auskragl&auml;nge nach Bauform (Bohrer: Gesamtl&auml;nge DIN 338 minus Einspannteil), Halter = Mutter des Spannzangenfutters bzw. Dorn des Aufsteckfr&auml;sers. Die <b>Form</b> stimmt damit im Bild &mdash; die <b>Zahl</b> gilt erst, wenn Du sie am eingespannten Werkzeug nachgemessen hast. <b>0 = keine Angabe:</b> dann pr&uuml;ft die App nur Schneide und Schaft und schreibt in die
 Meldung, was sie NICHT gepr&uuml;ft hat. Eine Auskragl&auml;nge unter der Schneidenl&auml;nge weist sie zur&uuml;ck &mdash; dann
 steckte die Schneide im Halter.</dd>
 <dt id="ba-fk04-form">Formular als Klappgruppe</dt><dd>Das Formular <b>Werkzeug anlegen / &auml;ndern</b> ist zugeklappt, solange niemand es braucht &mdash;
@@ -4913,51 +4913,51 @@ function fSenkTiefe(dSenk, spitze){
 function fWerkzeugeVorgabe(){
   return [
     // --- Planen und ecken: Messerkoepfe mit Wendeschneidplatten -------
-    {nr:1,  name:'Planfraeser 80 (WSP)',   art:'fraeser', d:80, lcuts:6,  angle:0, s:800,  f:950},
-    {nr:2,  name:'Planfraeser 63 (WSP)',   art:'fraeser', d:63, lcuts:6,  angle:0, s:1000, f:1000},
-    {nr:3,  name:'Planfraeser 52 (WSP)',   art:'fraeser', d:52, lcuts:6,  angle:0, s:1200, f:980},
-    {nr:4,  name:'Eckfraeser 40 (WSP 90°)',art:'fraeser', d:40, lcuts:10, angle:0, s:1400, f:860},
+    {nr:1,  name:'Planfraeser 80 (WSP)',   art:'fraeser', d:80, lcuts:6,  angle:0, schaftD:80, auskrag:50, halterD:63, s:800,  f:950},
+    {nr:2,  name:'Planfraeser 63 (WSP)',   art:'fraeser', d:63, lcuts:6,  angle:0, schaftD:63, auskrag:45, halterD:50, s:1000, f:1000},
+    {nr:3,  name:'Planfraeser 52 (WSP)',   art:'fraeser', d:52, lcuts:6,  angle:0, schaftD:52, auskrag:40, halterD:40, s:1200, f:980},
+    {nr:4,  name:'Eckfraeser 40 (WSP 90°)',art:'fraeser', d:40, lcuts:10, angle:0, schaftD:32, auskrag:65, halterD:50, s:1400, f:860},
     // --- Schaftfraeser: Taschen, Konturen, Nuten ----------------------
-    {nr:10, name:'Schaftfraeser 6',   art:'fraeser', d:6,  lcuts:13, angle:3, s:6000, f:550},
-    {nr:11, name:'Schaftfraeser 8',   art:'fraeser', d:8,  lcuts:19, angle:3, s:4800, f:570},
-    {nr:12, name:'Schaftfraeser 10',  art:'fraeser', d:10, lcuts:22, angle:3, s:3800, f:570},
-    {nr:13, name:'Schaftfraeser 12',  art:'fraeser', d:12, lcuts:26, angle:3, s:3200, f:570},
-    {nr:14, name:'Schaftfraeser 14',  art:'fraeser', d:14, lcuts:26, angle:3, s:2700, f:570},
-    {nr:15, name:'Schaftfraeser 16',  art:'fraeser', d:16, lcuts:32, angle:3, s:2400, f:570},
-    {nr:16, name:'Schaftfraeser 20',  art:'fraeser', d:20, lcuts:38, angle:3, s:1900, f:520},
+    {nr:10, name:'Schaftfraeser 6',   art:'fraeser', d:6,  lcuts:13, angle:3, schaftD:6, auskrag:30, halterD:34, s:6000, f:550},
+    {nr:11, name:'Schaftfraeser 8',   art:'fraeser', d:8,  lcuts:19, angle:3, schaftD:8, auskrag:35, halterD:34, s:4800, f:570},
+    {nr:12, name:'Schaftfraeser 10',  art:'fraeser', d:10, lcuts:22, angle:3, schaftD:10, auskrag:42, halterD:42, s:3800, f:570},
+    {nr:13, name:'Schaftfraeser 12',  art:'fraeser', d:12, lcuts:26, angle:3, schaftD:12, auskrag:48, halterD:42, s:3200, f:570},
+    {nr:14, name:'Schaftfraeser 14',  art:'fraeser', d:14, lcuts:26, angle:3, schaftD:14, auskrag:48, halterD:42, s:2700, f:570},
+    {nr:15, name:'Schaftfraeser 16',  art:'fraeser', d:16, lcuts:32, angle:3, schaftD:16, auskrag:55, halterD:50, s:2400, f:570},
+    {nr:16, name:'Schaftfraeser 20',  art:'fraeser', d:20, lcuts:38, angle:3, schaftD:20, auskrag:62, halterD:50, s:1900, f:520},
     // Kugelfraeser: fuer das Schlichten von Schraegen ueber die
     // Rautiefe. r2 ist der Eckenradius - beim Kugelfraeser der halbe
     // Durchmesser, daran haengt die ganze Rautiefen-Rechnung.
-    {nr:17, name:'Kugelfraeser 8',    art:'fraeser', d:8,  r2:4, lcuts:16, angle:3, s:4800, f:600},
-    {nr:18, name:'Kugelfraeser 10',   art:'fraeser', d:10, r2:5, lcuts:20, angle:3, s:3800, f:600},
+    {nr:17, name:'Kugelfraeser 8',    art:'fraeser', d:8,  r2:4, lcuts:16, angle:3, schaftD:8, auskrag:35, halterD:34, s:4800, f:600},
+    {nr:18, name:'Kugelfraeser 10',   art:'fraeser', d:10, r2:5, lcuts:20, angle:3, schaftD:10, auskrag:42, halterD:42, s:3800, f:600},
     // --- Bohren: zentrieren, dann die Loecher -------------------------
     // Der NC-Anbohrer zentriert UND senkt: mit 90 Grad Spitze reicht er
     // fuer jede Senkung bis ⌀10 (Daniels Regel Nenn + 0,6 heisst: bis M8).
-    {nr:20, name:'NC-Anbohrer 90°',   art:'zentrierer', d:10,  lcuts:10, spitze:90,  s:2500, f:150},
+    {nr:20, name:'NC-Anbohrer 90°',   art:'zentrierer', d:10,  lcuts:10, spitze:90,  schaftD:10, auskrag:45, halterD:42, s:2500, f:150},
     // Die KERNLOCHBOHRER fuer M5 bis M20 (Daniels Ansage 15.09.2026: die
     // braucht man immer wieder). Reihenfolge der Plaetze: was vorher da
     // war, ist geblieben - die Testprogramme rufen ihre Nummern.
-    {nr:21, name:'Bohrer 5 (M6)',     art:'bohrer', d:5,    lcuts:52, spitze:118, s:2200, f:120},
-    {nr:22, name:'Bohrer 6.8 (M8)',   art:'bohrer', d:6.8,  lcuts:69, spitze:118, s:1800, f:150},
-    {nr:23, name:'Bohrer 8.5 (M10)',  art:'bohrer', d:8.5,  lcuts:75, spitze:118, s:1500, f:150},
-    {nr:24, name:'Bohrer 10.2 (M12)', art:'bohrer', d:10.2, lcuts:87, spitze:118, s:1250, f:150},
-    {nr:25, name:'Bohrer 11.8',       art:'bohrer', d:11.8, lcuts:94, spitze:118, s:1100, f:150},
-    {nr:26, name:'Bohrer 4.2 (M5)',   art:'bohrer', d:4.2,  lcuts:44, spitze:118, s:2600, f:110},
-    {nr:27, name:'Bohrer 12 (M14)',   art:'bohrer', d:12,   lcuts:96, spitze:118, s:1050, f:160},
-    {nr:28, name:'Bohrer 14 (M16)',   art:'bohrer', d:14,   lcuts:108, spitze:118, s:900, f:170},
-    {nr:29, name:'Bohrer 15.5 (M18)', art:'bohrer', d:15.5, lcuts:120, spitze:118, s:820, f:175},
+    {nr:21, name:'Bohrer 5 (M6)',     art:'bohrer', d:5,    lcuts:52, spitze:118, schaftD:5, auskrag:60, halterD:34, s:2200, f:120},
+    {nr:22, name:'Bohrer 6.8 (M8)',   art:'bohrer', d:6.8,  lcuts:69, spitze:118, schaftD:6.8, auskrag:80, halterD:34, s:1800, f:150},
+    {nr:23, name:'Bohrer 8.5 (M10)',  art:'bohrer', d:8.5,  lcuts:75, spitze:118, schaftD:8.5, auskrag:90, halterD:42, s:1500, f:150},
+    {nr:24, name:'Bohrer 10.2 (M12)', art:'bohrer', d:10.2, lcuts:87, spitze:118, schaftD:10.2, auskrag:100, halterD:42, s:1250, f:150},
+    {nr:25, name:'Bohrer 11.8',       art:'bohrer', d:11.8, lcuts:94, spitze:118, schaftD:11.8, auskrag:110, halterD:42, s:1100, f:150},
+    {nr:26, name:'Bohrer 4.2 (M5)',   art:'bohrer', d:4.2,  lcuts:44, spitze:118, schaftD:4.2, auskrag:55, halterD:34, s:2600, f:110},
+    {nr:27, name:'Bohrer 12 (M14)',   art:'bohrer', d:12,   lcuts:96, spitze:118, schaftD:12, auskrag:120, halterD:42, s:1050, f:160},
+    {nr:28, name:'Bohrer 14 (M16)',   art:'bohrer', d:14,   lcuts:108, spitze:118, schaftD:14, auskrag:130, halterD:50, s:900, f:170},
+    {nr:29, name:'Bohrer 15.5 (M18)', art:'bohrer', d:15.5, lcuts:120, spitze:118, schaftD:15.5, auskrag:145, halterD:50, s:820, f:175},
     // --- Senken, reiben und Gewinde -----------------------------------
-    {nr:30, name:'Reibahle 12 H7',    art:'reibahle', d:12, lcuts:26, s:300, f:90},
-    {nr:31, name:'Gewindebohrer M8',  art:'gewindebohrer', d:8,  lcuts:20, steigung:1.25, s:400, f:500},
-    {nr:32, name:'Gewindebohrer M10', art:'gewindebohrer', d:10, lcuts:22, steigung:1.5,  s:350, f:525},
-    {nr:33, name:'Gewindebohrer M12', art:'gewindebohrer', d:12, lcuts:26, steigung:1.75, s:300, f:525},
+    {nr:30, name:'Reibahle 12 H7',    art:'reibahle', d:12, lcuts:26, schaftD:12, auskrag:90, halterD:42, s:300, f:90},
+    {nr:31, name:'Gewindebohrer M8',  art:'gewindebohrer', d:8,  lcuts:20, steigung:1.25, schaftD:6.3, auskrag:55, halterD:48, s:400, f:500},
+    {nr:32, name:'Gewindebohrer M10', art:'gewindebohrer', d:10, lcuts:22, steigung:1.5,  schaftD:8, auskrag:60, halterD:48, s:350, f:525},
+    {nr:33, name:'Gewindebohrer M12', art:'gewindebohrer', d:12, lcuts:26, steigung:1.75, schaftD:9, auskrag:65, halterD:48, s:300, f:525},
     // Der ⌀17,5 fuer M20 und der grosse Senker passten nicht mehr in den
     // Bohrblock - sie stehen bei den grossen Werkzeugen. Der Kegelsenker
     // 90° ⌀20,5 deckt die Senkungen ab M10 (⌀10,6) bis M20 (⌀20,6) ab.
-    {nr:35, name:'Bohrer 17.5 (M20)', art:'bohrer', d:17.5, lcuts:130, spitze:118, s:730, f:180},
-    {nr:36, name:'Kegelsenker 90° 20.5', art:'zentrierer', d:20.5, lcuts:12, spitze:90, s:900, f:120},
+    {nr:35, name:'Bohrer 17.5 (M20)', art:'bohrer', d:17.5, lcuts:130, spitze:118, schaftD:17.5, auskrag:155, halterD:50, s:730, f:180},
+    {nr:36, name:'Kegelsenker 90° 20.5', art:'zentrierer', d:20.5, lcuts:12, spitze:90, schaftD:10, auskrag:45, halterD:42, s:900, f:120},
     // --- Zuletzt: Kanten brechen ---------------------------------------
-    {nr:40, name:'Fasenfraeser 90° 12', art:'fraeser', d:12, lcuts:6, angle:0, spitze:90, s:3000, f:400}
+    {nr:40, name:'Fasenfraeser 90° 12', art:'fraeser', d:12, lcuts:6, angle:0, spitze:90, schaftD:12, auskrag:45, halterD:42, s:3000, f:400}
   ];
 }
 var F_WERKZEUGARTEN = {zentrierer:'NC-Anbohrer / Zentrierer', bohrer:'Bohrer', gewindebohrer:'Gewindebohrer', reibahle:'Reibahle', fraeser:'Fraeser'};
@@ -17285,13 +17285,14 @@ function fSim3dZeichnen(){
   if(p){
     // Laenge mindestens der Umkreisradius: ein Bohrer tief in der Bohrung muss oben herausragen (DZ6-Befund: 35 mm verschwanden im Loch)
     const e = p.e, stf = e.stirn || {art:'flach', r2:0};
-    const wk = e.rt + '|' + e.kegel + '|' + stf.art + '|' + stf.r2 + '|' + e.wzArt + '|' + key;
-    if(SIM3D.wzKey !== wk){ const laenge = Math.max(40, 4 * e.rt * 2, K.R);
+    const wzT0 = (fProg.werkzeuge || []).find(w => w.nr === e.t) || {d:2 * e.rt};
+    const laenge = Math.max(40, 4 * e.rt * 2, K.R, (+wzT0.auskrag || 0) + 20);
+    const wk = e.rt + '|' + e.kegel + '|' + stf.art + '|' + stf.r2 + '|' + e.wzArt + '|' + fRund(laenge) + '|' + key;
+    if(SIM3D.wzKey !== wk){
       // Die FORM kommt aus der Werkzeugtabelle (Daniels Ansage 20.09.2026):
       // Kugel, Eckenradius, Kegelspitze, flache Stirn, dazu Schneide,
       // Schaft und Halter als Durchmessersprunge.
-      const wzT = (fProg.werkzeuge || []).find(w => w.nr === e.t) || {d:2 * e.rt};
-      const m = fSim3dWerkzeug(fWerkzeugProfil(wzT, laenge), 32); gl.bindBuffer(gl.ARRAY_BUFFER, b.wz); gl.bufferData(gl.ARRAY_BUFFER, m, gl.DYNAMIC_DRAW); SIM3D.wzN = m.length / 6; SIM3D.wzKey = wk; }
+      const m = fSim3dWerkzeug(fWerkzeugProfil(wzT0, laenge), 32); gl.bindBuffer(gl.ARRAY_BUFFER, b.wz); gl.bufferData(gl.ARRAY_BUFFER, m, gl.DYNAMIC_DRAW); SIM3D.wzN = m.length / 6; SIM3D.wzKey = wk; }
     const col = (e.wzArt === 'fraeser') ? [0.90, 0.46, 0.14, 1] : [0.93, 0.58, 0.20, 1];
     koerper(b.wz, SIM3D.wzN, col, 1, [p.x, p.y, p.z]);
   }
