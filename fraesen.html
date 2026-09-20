@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 16:02 (347bc599)";</script>
+<script>window.__DZ_STAND="20.09.2026 16:57 (bdb29220)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3740,7 +3740,9 @@ vorgeschruppt sein. Zapfen kennen keinen Umfang.</dd>
 unter dem Werkzeugradius wird von der TNC stillschweigend auf den Werkzeugradius gesetzt (Handbuch S.&nbsp;150). Nutbreite gleich
 Werkzeug-&empty; hei&szlig;t nur Schruppen (Langloch); mehr als der doppelte Werkzeug-&empty; geht beim Schruppen nicht (S.&nbsp;156).</dd>
 <dt id="ba-fk06b-roh">Rohteilma&szlig;e der Zapfen</dt><dd>Q424/Q425 bzw. Q222: das Material, das um den Zapfen steht. Ist der Unterschied zum
-Fertigma&szlig; gr&ouml;&szlig;er als Werkzeugradius &times; &Uuml;berlappung, fr&auml;st die TNC mehrere seitliche Zustellungen.</dd>
+Fertigma&szlig; gr&ouml;&szlig;er als Werkzeugradius &times; &Uuml;berlappung, fr&auml;st die TNC mehrere seitliche Zustellungen.
+<b>Das ist das Ma&szlig; des Zapfen-Rohlings, nicht das der Platte</b> &mdash; und es entscheidet, wie weit rings um den Zapfen abger&auml;umt wird. Wer den Kragen um einen Zapfen <b>ganz</b> wegnehmen will, tr&auml;gt hier das <b>echte Rohteilma&szlig;</b> ein (bei einem Zapfen mitten in einer Platte also deren L&auml;nge und Breite). Steht ein kleineres Ma&szlig; darin, bleibt au&szlig;en ein Kragen stehen &mdash; das ist so gewollt und kein Fehler. Die Bahn f&auml;hrt <b>Uml&auml;ufe um den Zapfen</b>, deren Seitenl&auml;ngen von innen nach au&szlig;en wachsen, w&auml;hrend der <b>Eckenradius klein bleibt</b>; der &auml;u&szlig;erste Umlauf l&auml;uft <b>auf</b> der Rohteilkontur, die Schneide reicht einen Werkzeugradius dar&uuml;ber hinaus. Eingetaucht wird <b>2 mm neben dem Rohteil</b>. Genau so rechnet es die Steuerung &mdash; am Programmierplatz Probe f&uuml;r Probe nachgemessen (20.09.2026).</dd>
+<dt id="ba-fk06b-ecken">Warum in den Ecken nichts stehen bleibt</dt><dd>Bis zum 20.09.2026 hat die App die Uml&auml;ufe als <b>Abstandskurven</b> der Zapfenkontur gefahren &mdash; dabei w&auml;chst der Eckenradius mit jedem Umlauf mit, und an einem <b>rechteckigen</b> Rohteil kommt die Bahn nicht mehr in die Ecken: bei einem Zapfen 30&times;20 in einer Platte 100&times;80 blieben vier T&uuml;rme von 3,2&nbsp;mm Tiefe und voller Zapfenh&ouml;he stehen. Die Steuerung r&auml;umt dieselbe Platte restlos ab; die Bahn der App tut es seither auch. Bleibt bei Dir trotzdem etwas stehen, ist fast immer das <b>Rohteilma&szlig; kleiner als das wirkliche Rohteil</b>.</dd>
 <dt id="ba-fk06b-lage">Drehlage und Lage</dt><dd>Die Drehlage (Q224; bei der Nut ab Stand -06 Q374) dreht die Form um die Werkzeugposition.
 Q367 Lage: Tasche und Zapfen 0 Werkzeugposition = Mitte, 1 links unten, 2 rechts unten, 3 rechts oben, 4 links oben; Nut 0 Mitte,
 1 linkes Nutende, 2 rechtes Nutende; Runde Nut 0 Teilkreis-Mitte aus Q216/Q217, 1 linker Nutkreis, 2 Mittelachse, 3 rechter Nutkreis.</dd>
@@ -5850,7 +5852,24 @@ function fBahnFormen(s, tool, prog, punkte){
       const ra = (+s.roh1 || 0) / 2, rb = (+s.roh2 || 0) / 2;
       if(!(ra >= a) || !(rb >= b)) return nein('Rohteilmass kleiner als das Fertigmass');
       aussenMax = Math.max(ra - a, rb - b);
-      ring = (d) => fRundRechteck(a + d, b + d, r0 + d);
+      // DIE UMLAEUFE SIND KEINE AEQUIDISTANTEN. Am Programmierplatz
+      // gemessen (20.09.2026, Belegprogramme DZECK..DZECK5): die Steuerung
+      // haelt den ECKENRADIUS klein und fuehrt JEDE ACHSE fuer sich bis zur
+      // Rohteilkontur. Eine Aequidistante (r0 + d) laesst an einem
+      // rechteckigen Rohteil die ECKEN stehen — bei Zapfen 30x20 in einer
+      // Platte 100x80 waren es 3,15 mm diagonal und 5 mm hoch (Daniels
+      // Befund am Bild vom 20.09.2026); die Steuerung raeumt dieselbe Platte
+      // restlos ab. Ab dem Aufmass nach aussen wird deshalb LINEAR
+      // interpoliert: Halbmasse je Achse von der Schruppkontur zur
+      // Rohteilkontur, Eckenradius von r0+uxy+rt auf r0+rt. Bis zum Aufmass
+      // (Schlicht- und Schruppkontur) bleibt es die echte Aequidistante —
+      // daran haengt das Mass am Zapfen.
+      const dR0 = uxy + rt, dAus = Math.max(dR0, aussenMax);
+      ring = (d) => {
+        if(d <= dR0 + 1e-9) return fRundRechteck(a + d, b + d, r0 + d);
+        const t = (dAus > dR0 + 1e-9) ? Math.min(1, (d - dR0) / (dAus - dR0)) : 1;
+        return fRundRechteck(a + dR0 + t * (ra - a - dR0), b + dR0 + t * (rb - b - dR0), r0 + dR0 + t * (rt - dR0));
+      };
     } else {
       innenMax = Math.min(a, b);
       ring = (d) => (d > Math.min(a, b) + 1e-9) ? null : fRundRechteck(a - d, b - d, Math.max(0, r0 - d));
@@ -5880,9 +5899,22 @@ function fBahnFormen(s, tool, prog, punkte){
   const dRoh = uxy + rt;                            // aeusserste Schruppkontur (Tasche) / innerste (Zapfen)
   let versaetze = [];
   if(zapfen){
-    const dMax = aussenMax + rt;                    // ausserhalb des Rohteils
-    const n = Math.max(1, Math.ceil((dMax - dRoh) / sMax));
-    for(let i = n; i >= 0; i--) versaetze.push(fRund(dRoh + (dMax - dRoh) * i / n));
+    // Der aeusserste Umlauf laeuft AUF der Rohteilkontur: dort endet das
+    // Material, die Schneide reicht ohnehin einen Werkzeugradius darueber
+    // hinaus. Bisher lag er rt weiter aussen — das war ein Umlauf mehr in
+    // der Luft und liess die Ecken trotzdem stehen. Gemessen an der
+    // Steuerung (Zapfen 30x20 r5, Rohteilmass 60x50, Fraeser 10): geraeumte
+    // Zone 70x60 mm mit Eckenradius 14,9 — das ist Rohteilmass plus
+    // Werkzeugdurchmesser, unsere alte Bahn ergab 80x70 mit Eckenradius 30.
+    // Nie unter die Schruppkontur: ist das Rohteilmass gleich dem
+    // Fertigmass, gibt es nichts zu schruppen (frueher fuhr der Schruppgang
+    // dann auf der Schlichtkontur und nahm das Aufmass vorweg).
+    const dMax = Math.max(dRoh, aussenMax);
+    if(dMax <= dRoh + 1e-9) versaetze.push(fRund(dRoh));
+    else {
+      const n = Math.max(1, Math.ceil((dMax - dRoh) / sMax));
+      for(let i = n; i >= 0; i--) versaetze.push(fRund(dRoh + (dMax - dRoh) * i / n));
+    }
   } else {
     const spanne = innenMax - dRoh;                 // Weg von der aeussersten Schruppkontur bis zur Mitte
     if(spanne < -1e-9) return nein('Form kleiner als Werkzeug plus Aufmass');
@@ -5929,7 +5961,17 @@ function fBahnFormen(s, tool, prog, punkte){
     const m = W({x:0, y:0});
     // Startpunkt der innersten Kontur (Tasche) / aeussersten (Zapfen)
     const erste = ring(versaetze[0]);
-    const startP = W(erste[erste.length - 1]);
+    // Der Zapfen taucht NEBEN dem Rohteil ein (Handbuch 670 388 Kap. 5.6:
+    // die Startposition liegt 2 mm neben dem Zapfenrohteil). Seit die
+    // aeusserste Bahn auf der Rohteilkontur laeuft, ist ihr Startpunkt
+    // selbst nicht mehr frei — der Eintauchpunkt rueckt deshalb radial um
+    // Werkzeugradius + 2 mm nach aussen, die letzten Millimeter bis zur
+    // Kontur laufen im Vorschub.
+    const eLok = erste[erste.length - 1];
+    const eLen = Math.hypot(eLok.x, eLok.y);
+    const startLok = (zapfen && eLen > 1e-9)
+      ? {x:eLok.x * (1 + (rt + 2) / eLen), y:eLok.y * (1 + (rt + 2) / eLen)} : eLok;
+    const startP = W(startLok);
     // EINTAUCHPUNKT. Bei Tasche und Kreistasche ist die FORMMITTE richtig:
     // dort muss das Material ohnehin weg, und die Gerade von dort zum
     // Konturanfang liegt ganz im spaeteren Hohlraum.
