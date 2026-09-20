@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 15:47 (ec999f24)";</script>
+<script>window.__DZ_STAND="20.09.2026 16:02 (347bc599)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3202,7 +3202,7 @@ sie werden nur f&uuml;r die Spannmittelpr&uuml;fung gebraucht (Kap.&nbsp;3) und 
 <b>Halter-&empty;</b> ist sein gr&ouml;&szlig;ter Durchmesser in diesem Bereich. Beides am eingespannten Werkzeug messen &mdash;
 geraten n&uuml;tzt es nichts. <b>Die Werkstatt-Tabelle bringt ab Werk plausible Startwerte mit</b> (20.09.2026): Schaft = Nenndurchmesser beim VHM-Fr&auml;ser, Messerkopf-K&ouml;rper so dick wie der Fr&auml;ser selbst, Auskragl&auml;nge nach Bauform (Bohrer: Gesamtl&auml;nge DIN 338 minus Einspannteil), Halter = Mutter des Spannzangenfutters bzw. Dorn des Aufsteckfr&auml;sers. Die <b>Form</b> stimmt damit im Bild &mdash; die <b>Zahl</b> gilt erst, wenn Du sie am eingespannten Werkzeug nachgemessen hast. <b>0 = keine Angabe:</b> dann pr&uuml;ft die App nur Schneide und Schaft und schreibt in die
 Meldung, was sie NICHT gepr&uuml;ft hat. Eine Auskragl&auml;nge unter der Schneidenl&auml;nge weist sie zur&uuml;ck &mdash; dann
-steckte die Schneide im Halter.</dd>
+steckte die Schneide im Halter. <b>Die Testvorlagen bekommen ihre Ma&szlig;e beim Laden</b> (20.09.2026): sie tragen die Werkzeuge der Demo-Tabelle des Programmierplatzes, und die f&uuml;hrt weder Schneidenl&auml;nge noch Halter. Erg&auml;nzt wird nach der Bauform &mdash; Bohrer nach DIN&nbsp;338, Fr&auml;ser in langer Ausf&uuml;hrung, Messerkopf als kurzer K&ouml;rper auf dem Dorn &mdash; und nur, <b>was fehlt</b>. Deine eigenen Werkzeuge und eine eingelesene TOOL.T r&uuml;hrt die App nicht an: dort bleibt 0 eine fehlende Angabe.</dd>
 <dt id="ba-fk04-form">Formular als Klappgruppe</dt><dd>Das Formular <b>Werkzeug anlegen / &auml;ndern</b> ist zugeklappt, solange niemand es braucht &mdash;
 die Liste bekommt den Platz. Der Stift &#x270E; an einer Zeile und der Knopf <b>Neues Werkzeug</b> &ouml;ffnen es mit den Werten; der Gruppenkopf
 klappt es von Hand auf und zu. <b>Speichern</b> schreibt die Zeile, <b>Vorgabe</b> stellt die Werkstatt-Tabelle wieder her (zweimal tippen).</dd>
@@ -4910,6 +4910,45 @@ function fSenkTiefe(dSenk, spitze){
   return fRund((+dSenk || 0) / 2 / t);
 }
 
+// Ein Werkzeug OHNE Masse bekommt sie nach seiner BAUFORM - damit die
+// Simulation Schneide, Schaft und Halter zeigen kann (Daniels Ansage
+// 20.09.2026: "dass die Werkzeuge richtig ausgefuellt sind und ich sie
+// mit Schneide, Schaft und Halter sehe"). Ergaenzt wird NUR, was fehlt:
+// die Werkstatt-Tabelle traegt Normwerte und bleibt unberuehrt.
+// Die Zahlen folgen denselben Bauformen wie dort: Bohrer nach DIN 338
+// Typ N (die Spirale wird mit wachsendem Durchmesser anteilig kuerzer),
+// Schaftfraeser gut zwei Durchmesser, Messerkopf ein kurzer Koerper auf
+// dem Dorn, Halter = Mutter des Spannzangenfutters.
+function fWzMasseErgaenzen(w){
+  if(!w || !(+w.d > 0)) return w;
+  const d = +w.d, art = w.art || 'fraeser', rund = Math.round;
+  const kopf = (art === 'fraeser') && d >= 40;          // Messerkopf auf dem Dorn
+  const fase = (art === 'fraeser') && (+w.spitze > 0);  // Fasenfraeser: kurze Kegelschneide
+  if(!(+w.lcuts > 0)){
+    w.lcuts = (kopf || fase) ? 6
+      : (art === 'bohrer') ? Math.max(12, rund(d * (11 - 0.2 * d)))
+      : (art === 'gewindebohrer') ? Math.max(10, rund(2.3 * d))
+      : (art === 'zentrierer') ? Math.min(15, Math.max(8, rund(d)))
+      : (art === 'reibahle') ? Math.max(12, rund(3.5 * d))
+      : Math.max(12, rund(2.6 * d));                    // Schaft- und Kugelfraeser
+  }
+  if(!(+w.schaftD > 0)) w.schaftD = kopf ? d : ((art === 'zentrierer' && d > 12) ? 10 : d);
+  if(!(+w.auskrag > 0)){
+    const lc = +w.lcuts;
+    w.auskrag = kopf ? Math.max(40, rund(0.6 * d))
+      : fase ? 45
+      : (art === 'zentrierer') ? 45
+      : (art === 'bohrer') ? lc + Math.max(8, rund(0.15 * lc))
+      : (art === 'gewindebohrer') ? lc + 35
+      : (art === 'reibahle') ? lc + Math.max(30, rund(3 * d))
+      : lc + Math.max(14, rund(d));
+  }
+  if(!(+w.halterD > 0)){
+    const sd = +w.schaftD || d;
+    w.halterD = kopf ? rund(0.8 * d) : (sd <= 8 ? 34 : (sd <= 14 ? 42 : 50));
+  }
+  return w;
+}
 function fWerkzeugeVorgabe(){
   return [
     // --- Planen und ecken: Messerkoepfe mit Wendeschneidplatten -------
@@ -13966,6 +14005,18 @@ var F_DEMOS = [
   {id:'vorbohr', nr:'DZ19', gruppe:'test', name:'SL-Vorbohren',
    was:'Zyklus 21 an einer Tasche mit Insel', lade:fDemoVorbohrenEinzel}
 ];
+// JEDE Vorlage liefert vollstaendige Werkzeuge: die Testprogramme tragen
+// die Werkzeuge der Demo-Tabelle des Programmierplatzes und fuehren dort
+// weder Schneidenlaenge noch Halter. Ergaenzt wird beim Laden, nicht in
+// den 17 Vorlagen einzeln - und nur, was fehlt.
+F_DEMOS.forEach(d => {
+  const roh = d.lade;
+  d.lade = function(){
+    const p = roh.apply(null, arguments);
+    if(p && p.werkzeuge) p.werkzeuge.forEach(fWzMasseErgaenzen);
+    return p;
+  };
+});
 
 // Merkmale der Fraesausgabe fuer die NC-Ansicht: Status je Zyklusfamilie.
 function fMerkmale(profilId){
