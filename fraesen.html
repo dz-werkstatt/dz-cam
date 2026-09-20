@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 16:57 (bdb29220)";</script>
+<script>window.__DZ_STAND="20.09.2026 17:35 (527352d9)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2734,8 +2734,9 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
         <div class="mask-head"><span class="mtitel">Programmkopf</span><button class="ansichtBtn" style="font-size:11px;padding:3px 7px;white-space:nowrap;" title="Kachel- oder Zeilenansicht">☰</button></div>
         <div class="mask-body">
           <div class="msec">Programm</div>
-          <div class="mrow"><label data-ba="ba-fk03-name">Name (= Datei .H)</label><input type="text" id="fkName" value="DZ1" maxlength="25" autocapitalize="characters" style="width:150px;"></div>
-          <div class="mrow"><label data-ba="ba-fk03-masch">Zielmaschine</label><select id="fkProfil" class="tool-select" style="width:170px;"><option value="HEIDENHAIN_ITNC530" selected>Heidenhain iTNC 530</option></select></div>
+          <div class="mrow"><label data-ba="ba-fk03-name">Name (= Datei <span id="fkEndung">.H</span>)</label><input type="text" id="fkName" value="DZ1" maxlength="25" autocapitalize="characters" style="width:150px;"></div>
+          <div class="mrow"><label data-ba="ba-fk03-masch">Zielmaschine</label><select id="fkProfil" class="tool-select" style="width:170px;"><option value="HEIDENHAIN_ITNC530" selected>Heidenhain iTNC 530</option><option value="SIEMENS_840D_PL">Sinumerik 840D powerline</option></select></div>
+          <div class="mrow" id="fkZykRow"><label data-ba="ba-fk03-zyk840">Zyklen der Steuerung</label><div class="radiobtns fwrap" id="fkZykBtns"><button data-v="aus" class="sel">aus (eigene Bahn, belegt)</button><button data-v="an">nutzen (spart Platz)</button></div></div>
           <div class="mrow"><label data-ba="ba-fk03-stand">Software-Stand</label><select id="fkStand" class="tool-select" style="width:170px;"><option value="07" selected>340 49x-06 / -07, 606 42x</option><option value="02">340 49x-02 / -03 (2006)</option></select></div>
           <!-- ZEITEN UND KALKULATION (19.09.2026): Werkstoff fuer Dichte und Preis je kg,
                Werkzeugwechsel als Pauschale je Wechsel (wie pkTw im Drehteil). -->
@@ -2749,7 +2750,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <!-- SPANNMITTEL (16.09.2026, Daniels Frage): die Backen stehen an
                den Rohteilkanten; alles unter der Backenoberkante ist Backe. -->
           <div class="msec">Spannmittel — Schraubstock</div>
-          <div class="mrow"><label data-ba="ba-fk03-spann">Spannmittel</label><div class="radiobtns fwrap" id="fkSpannBtns"><button data-v="aus" class="sel">keines (wird nicht geprüft)</button><button data-v="schraubstock">Schraubstock</button></div></div>
+          <div class="mrow"><label data-ba="ba-fk03-spann">Spannmittel</label><div class="radiobtns fwrap" id="fkSpannBtns"><button data-v="aus" class="sel">keines (wird nicht geprüft)</button><button data-v="schraubstock">Schraubstock</button><button data-v="vakuum">Vakuumplatte</button></div></div>
           <div class="mrow" id="fkSpR1"><label data-ba="ba-fk03-spann">Backen spannen in</label><div class="radiobtns fwrap" id="fkSpannRichtBtns"><button data-v="y" class="sel">Y (Backen vorn und hinten)</button><button data-v="x">X (Backen links und rechts)</button></div></div>
           <div class="mrow" id="fkSpR2"><label data-ba="ba-fk03-spann">Backenoberkante Z (abs)</label><input type="number" step="any" id="fkSpannZ" value="0"><span class="unit">mm</span></div>
           <div class="mrow" id="fkSpR3"><label data-ba="ba-fk03-spann">Backe: Überstand / Länge</label><input type="number" step="any" id="fkSpannBreite" value="40" style="width:51px;"><input type="number" step="any" id="fkSpannLaenge" value="150" style="width:51px;"><span class="unit unit2"><i>über</i><i>lang</i></span></div>
@@ -3135,8 +3136,16 @@ w&auml;ren sonst weg.</p>
 <dt id="ba-fk03-name">Programmname</dt><dd>Wird zu <code>BEGIN PGM NAME MM</code> und zum Dateinamen <code>NAME.H</code>. Nur A&ndash;Z, 0&ndash;9,
 Unterstrich und Bindestrich, h&ouml;chstens 25 Zeichen (Handbuch 670&nbsp;387-12, S.&nbsp;122: dar&uuml;ber zeigt die TNC den
 Namen nicht mehr vollst&auml;ndig an). Umlaute werden umgeschrieben.</dd>
-<dt id="ba-fk03-masch">Zielmaschine</dt><dd>Heute nur die iTNC&nbsp;530 (Klartext). Die Sinumerik 840D powerline kommt als zweites Profil,
-sobald echte MPF-Dateien dieser Maschine vorliegen.</dd>
+<dt id="ba-fk03-masch">Zielmaschine</dt><dd><b>Heidenhain iTNC&nbsp;530</b> (Klartext, Datei <b>.H</b>) oder <b>Sinumerik 840D powerline</b>
+(Datei <b>.MPF</b>). Die Wahl &auml;ndert die ganze Ausgabe: S&auml;tze, Programmkopf, Programmende und die Pr&uuml;fungen.
+Was die 840D angeht, steht in <a href="#ba-fk07b">Kapitel 7b</a> &mdash; dort auch, was daran belegt ist und was nicht.</dd>
+<dt id="ba-fk03-zyk840">Zyklen der Steuerung (nur 840D)</dt><dd><b>Aus</b> (Vorgabe): jede Bearbeitung wird als <b>eigene Bahn</b>
+geschrieben &mdash; dieselbe, die am Programmierplatz der iTNC Satz f&uuml;r Satz belegt ist. <b>Nutzen</b>: wo die 840D einen
+passenden Zyklus hat (Bohren, Tieflochbohren, Reiben, Gewindebohren, Rechteck- und Kreistasche, Lochkreis, Lochreihe),
+schreibt die App <b>einen Satz</b> statt hunderter. Gemessen spart das an einer Platte mit Taschen und Bohrbildern die
+H&auml;lfte der Datei, an einer reinen Bohrleiste zwei Drittel. <b>Der Preis:</b> die Reihenfolge der Zyklusparameter ist
+abgeleitet und an dieser Maschine nicht gepr&uuml;ft &mdash; &uuml;ber jedem Satz steht seine Parameterliste, und der Satz
+geh&ouml;rt an der Steuerung in der <b>Zyklusmaske</b> ge&ouml;ffnet und Wert f&uuml;r Wert verglichen.</dd>
 <dt id="ba-fk03-stand">Software-Stand</dt><dd>Welche iTNC-Software die Zielmaschine hat: <b>340&nbsp;49x-06 / -07</b> (Lagun 2012, VTEC 2015; auch die
 606&nbsp;42x des Programmierplatzes schreibt so) oder <b>340&nbsp;49x-02 / -03</b> (SHW UniForce 6 von 2006). Der Stand &auml;ndert
 heute zwei Dinge: die Nut 253 tr&auml;gt ihre Drehlage im alten Stand als Q224 statt Q374, und die Zapfen 256/257 gibt es dort
@@ -3958,6 +3967,46 @@ fotografieren; sie sind das Material, mit dem die App nachgezogen wird.</p>
 <div class="ba-merk">Was der Programm-Test NICHT sieht: falsche Vorsch&uuml;be, Verweilzeiten und ob die
 Tiefe zum Werkzeug passt. Das bleibt Handwerk am Teil.</div>
 
+<h2 id="ba-fk07b">7b &nbsp;Sinumerik 840D powerline &mdash; die zweite Zielmaschine</h2>
+<p>Seit dem 20.09.2026 schreibt die App auch f&uuml;r die <b>Sinumerik 840D powerline</b> (f&uuml;nfachsige Portalfr&auml;se).
+Die Bahnen sind dieselben wie bei der iTNC &mdash; neu ist nur die <b>Schreibweise</b>.</p>
+<dl>
+<dt id="ba-fk07b-beleg">Was daran belegt ist &mdash; und was nicht</dt><dd>F&uuml;r diese Maschine liegt <b>kein einziges gezogenes
+Programm</b> vor. Programmkopf, Programmende, die M-W&ouml;rter der Hersteller-PLC, die Kreisform <b>I=AC()/J=AC()</b> und die
+Grenzen (Vakuumplatte, Diskette) stehen Wort f&uuml;r Wort in einer Unterlage, die aus Bildschirmfotos und Praxiserfahrung
+erarbeitet wurde. Alles andere &mdash; Werkzeugwechsel mitten im Programm, die Schraubenlinie mit TURN=, die Verweilzeit
+G04, die Zyklusparameter &mdash; ist aus der Siemens-Grundsprache <b>abgeleitet</b>. Deshalb tr&auml;gt jedes Programm den
+Vorbehalt im Kopf: <b>vor dem ersten Lauf im Einzelsatz fahren und die Grafik ansehen</b>. Sobald eine echte .MPF dieser
+Maschine da ist, wird daraus ein Beleg.</dd>
+<dt id="ba-fk07b-kopf">Programmkopf und Programmende</dt><dd>Beides ist <b>fest</b> und wird nicht gerechnet: TRAFOOF,
+D0&nbsp;M1=56, G53&nbsp;G0&nbsp;Z0, G54&nbsp;B0&nbsp;C0, <b>TRAORI(1)</b>, T..&nbsp;D1, M3&nbsp;S..&nbsp;F..,
+G00&nbsp;G54&nbsp;X0&nbsp;Y0&nbsp;Z20 &mdash; am Ende der R&uuml;ckzug, die Parkposition und <b>=eof=</b>. TRAORI(1) steht auch
+bei reiner 3-Achs-Bearbeitung dort, so verlangt es die Unterlage. <b>G90 G17</b> erg&auml;nzt die App von sich aus
+(Absolutma&szlig;, Ebene XY) &mdash; zwei Kommentarzeilen im Kopf sagen, dass das nicht aus der Unterlage stammt.</dd>
+<dt id="ba-fk07b-fuenf">F&uuml;nfachsig?</dt><dd>Die Maschine ist es, die App noch nicht: sie rechnet dreiachsig mit der
+Werkzeugachse&nbsp;Z. B0&nbsp;C0 stellt die Schwenkachsen auf null, TRAORI(1) steht im Kopf, geschwenkt wird nicht.</dd>
+<dt id="ba-fk07b-grenzen">Die drei Grenzen dieser Maschine</dt><dd>Die App pr&uuml;ft sie und <b>sperrt</b>, wenn eine
+gerissen wird: h&ouml;chstens <b>zwei Werkzeuge</b> im Programm (mehr Pl&auml;tze hat die Maschine nicht), bei
+<b>Vakuumspannung</b> nicht tiefer als <b>Z&minus;49,9</b> (darunter steht die Platte selbst) und die Rohteil-Oberkante
+unter <b>Z20</b> (dorthin f&auml;hrt der feste Kopf). Die Vakuumplatte w&auml;hlst Du im Programmkopf unter Spannmittel.</dd>
+<dt id="ba-fk07b-diskette">Diskette: drei Stufen gegen die Gr&ouml;&szlig;e</dt><dd>Das Programm geht per 3,5-Zoll-Diskette zur
+Maschine; die Unterlage setzt die Grenze bei <b>1,0&nbsp;MB</b>. Passt es nicht, geht die App in drei Stufen vor:
+(1)&nbsp;mit Satznummern, (2)&nbsp;<b>ohne Satznummern</b> &mdash; an einer Formschlichtbahn ist das ein Viertel der Datei
+(am Blister gemessen: 109 von 420&nbsp;kB) &mdash;, (3)&nbsp;<b>aufgeteilt</b> an einer Schrittgrenze, jedes Teil mit eigenem
+Kopf und Ende und f&uuml;r sich abfahrbar. Jede Stufe steht in der Meldung, und &bdquo;NC sichern&ldquo; gibt alle Teile heraus.
+Ohne Satznummern gibt es an der Steuerung <b>keine Satzsuche</b> &uuml;ber N &mdash; deshalb erst die anderen Stufen.</dd>
+<dt id="ba-fk07b-zyklen">Zyklen der Steuerung</dt><dd>Siehe das Feld im Programmkopf. Gebaut sind <b>CYCLE82</b> (Bohren),
+<b>CYCLE83</b> (Tieflochbohren), <b>CYCLE85</b> (Reiben), <b>CYCLE840</b> (Gewindebohren mit Ausgleichsfutter),
+<b>POCKET3</b> und <b>POCKET4</b> (Rechteck- und Kreistasche) sowie <b>HOLES1/HOLES2</b> (Lochreihe, Lochkreis) unter
+<b>MCALL</b>. <b>Nicht</b> gebaut: Zapfen, Nuten, Planfr&auml;sen, Bahnfr&auml;sen, Gewindefr&auml;sen und Gewindebohren ohne
+Ausgleichsfutter &mdash; bei ihnen h&auml;ngt die Bedeutung an Parametern, die sich ohne Beleg nicht sicher zuordnen lassen;
+geraten w&auml;ren sie gef&auml;hrlicher als die belegten Einzels&auml;tze. Sie laufen als Bahn und sagen es in der Meldung.</dd>
+<dt id="ba-fk07b-kreis">Kreise und Schraubenlinien</dt><dd>Der Kreismittelpunkt steht <b>absolut</b>: I=AC() J=AC() &mdash; so
+verlangt es diese Steuerung, relative I/J w&auml;ren ein Fehler. Ein <b>Vollkreis</b> passt in einen Satz (Start gleich Ende);
+die iTNC braucht daf&uuml;r zwei Halbb&ouml;gen. Eine <b>Schraubenlinie</b> ist ein Kreissatz mit Z-Endpunkt und
+<b>TURN=</b>&lt;zus&auml;tzliche Uml&auml;ufe&gt;.</dd>
+</dl>
+
 <h2 id="ba-fk08">8 &nbsp;Was fehlt (ehrlich)</h2>
 <ul>
 <li>Zylindermantel (27/28/29, braucht eine Rundachse) und die Schwenkfunktion PLANE &mdash; Gewindefr&auml;sen 262&ndash;267 ist seit dem 14.09.2026 da (Kap.&nbsp;6e), die SL-Zyklen 20&ndash;24 mit Tasche und Inseln sind seit dem 13.09.2026 da (Kap.&nbsp;6c), ebenso der Konturzug 14/25 mit XY-Kontureditor (Kap.&nbsp;5b). Taschen, Nuten und Zapfen (251&ndash;257), Planfr&auml;sen 232 und die Bohrzyklen 202/204/205/208/209/241 sind seit dem 12.09.2026 drin (Kap.&nbsp;6 und 6b).</li>
@@ -3966,7 +4015,8 @@ Tiefe zum Werkzeug passt. Das bleibt Handwerk am Teil.</div>
 <li>DXF-Import: gebaut (Kap.&nbsp;5b), aber nur an handgeschriebenen DXF-Dateien gepr&uuml;ft &mdash; echte CAD-Exporte von Daniel fehlen noch als Fixtures; Bema&szlig;ung, Bl&ouml;cke und Ellipsen liest er nicht.</li>
 <li>Winkelkopf / gekippte Ebene (PLANE, Zyklus 19) &mdash; Stufe 3, erst nach Daniels echten Programmen.</li>
 <li>Simulation (Kap.&nbsp;6d): 3D und Draufsicht, Bohrerspitze, Handbuch-Abl&auml;ufe der Zyklen ohne Einzels&auml;tze, SL-Zyklen &uuml;ber die eigene Zeilenbahn &mdash; keine Halter/Spannmittel (bewusst).</li>
-<li>Sinumerik 840D powerline als zweites Profil &mdash; nach den MPF-Dateien vom Schwager.</li>
+<li>Sinumerik 840D powerline: <b>gebaut</b> (siehe <a href="#ba-fk07b">Kapitel 7b</a>) &mdash; aber an dieser Maschine
+nicht belegt. Es fehlt eine echte .MPF, ein Lauf und die f&uuml;nfachsige Bahn.</li>
 </ul>
     </div></div>
   </div>
@@ -4089,7 +4139,7 @@ window.__fehlerMelden = function(quelle, e){
 // Pruefstand ohne Browser), die Oberflaeche (F20) haengt nur Felder an
 // diese Objekte. Der Schreiber ist DIALEKTNEUTRAL angelegt
 // (F_PROFILE): Heidenhain Klartext ist der erste Dialekt, die Sinumerik
-// 840D powerline des Schwagers kommt als zweites Profil auf denselben
+// 840D powerline kommt als zweites Profil auf denselben
 // Generator, sobald echte MPF-Dateien dieser Maschine vorliegen.
 // =====================================================================
 
@@ -4119,6 +4169,14 @@ var F_STATUS = {
   // iTNC keinen Zyklus. Die App schreibt ihre eigenen Saetze — kein Handbuch
   // kann das belegen, nur ein Lauf.
   eigenbahn: {txt:'eigene Bahn der App — fuer diese Bearbeitung hat die Steuerung keinen Zyklus; im Programm-Test des Programmierplatzes durchgelaufen (Abspanen DZ14, Schlichten DZ15, 14.09.2026; Restmaterial abspanen ist dieselbe Bahnrechnung mit Bezug auf den Schritt davor, 19.09.2026), an der Maschine noch nicht', cls:'ann', grp:'offen'},
+  // 20.09.2026: die Sinumerik 840D powerline einer fuenfachsigen
+  // DIESE Maschine liegt KEIN einziges echtes Programm vor — die Unterlage
+  // im Ordner Siemens/ ist aus Bildschirmfotos und Praxiserfahrung
+  // erarbeitet worden, nicht aus einer gezogenen Datei. Das ist die
+  // schwaechste Belegstufe des Projekts, und sie heisst deshalb so:
+  // die Saetze sind plausibel, gesehen hat sie an dieser Steuerung
+  // niemand. Vor dem ersten Lauf: an der Maschine im EINZELSATZ fahren.
+  abgeleitet: {txt:'aus der Unterlage abgeleitet — an dieser Maschine NICHT belegt, vor dem ersten Lauf im Einzelsatz pruefen', cls:'ann', grp:'offen'},
   gesperrt : {txt:'nicht gebaut', cls:'sperr', grp:'offen'}
 };
 
@@ -4166,6 +4224,59 @@ var F_PROFILE = {
     },
     termine:'Programmierplatz 12.09.2026 (Demo 606 424, NC-SW 606 42x): DZ1, DZ2, DZ3 (Bohren, Muster), DZ4 (Taschen, Nuten, Zapfen 251-257) und DZ5 (Planfraesen 232, Bohrzyklen 202/204/205/208/209/241) im Programm-Test ohne Meldung durchgelaufen, Rueckexport Satz fuer Satz gleich; abends DZ6 (Einzelsaetze der eigenen Bahn, Paket C: 240/203/200/201 ohne Zyklus, 3:06 min) ebenso, nachts DZ7 (Kreistasche, Nut, Kreiszapfen als Ringbahnen mit CC/C, 1:55 min) und DZ8 (Planfraesen-Maeander, Rechtecktasche mit Helix CP IPA/IZ, 2:32 min), am 13.09.2026 DZ9 (Insel mit Nut als XY-Kontur: Zyklus 14/25 und dieselbe Kontur als eigene Bahn mit CC/C-Eckenboegen, 0:53 min) und DZ10 (Rundung, Fase, tangentialer Bogen, Vollkreis: natives LBL mit RND/CHF/CT und eigene Bahn, 1:00 min — erster Lauf fiel mit Kreis-Endpunkt falsch, MP7431: CC-Mitten seither auf der Mittelsenkrechten mit 0,0001); alles am selben Tag gebaut und an den Handbuechern 340 49x-02/-06/-07 geprueft. Befund 241: Q427 unter der Mindestdrehzahl der Demo (50 U/min) gibt Falsche Drehzahl, Q426 = 5 Undefinierter Programmstart',
     offen:'Modell abspanen: erster Lauf am Teil (senkrechtes Eintauchen, Restmaterial an den Waenden nachmessen). Schraegen schlichten: Programmierplatz-Lauf (DZ15) und erster Lauf am Teil — geprueft wird nur die Kugel, nicht Schaft und Halter; die Z-konstante Bahn fuer steile Flanken fehlt noch. Lauf an einer der drei Maschinen (Stand 340 49x): Softwarestand je Maschine (MOD), M13/M9 an der PLC, Option Synchron-Gewindebohren (207); danach Daniels eigene .H-Programme als Fixtures'
+  },
+
+  // -------------------------------------------------------------------
+  // SINUMERIK 840D POWERLINE (fuenfachsige Portalfraese).
+  //
+  // Daniels Auftrag vom 20.09.2026. Was hier steht, kommt aus der
+  // Unterlage in Siemens/ (Programmkopf und -ende Wort fuer Wort, die
+  // M-Woerter der Hersteller-PLC, die Kreisform I=AC/J=AC, die Grenzen
+  // der Vakuumplatte und der Diskette). Diese Unterlage ist aus
+  // Bildschirmfotos und Praxiserfahrung erarbeitet — NICHT aus einer
+  // gezogenen MPF-Datei. Deshalb traegt JEDE Familie dieses Profils die
+  // Stufe 'abgeleitet', und der Programmkopf sagt es im Klartext.
+  //
+  // DIE MASCHINE IST FUENFACHSIG, unsere Bahnen sind es nicht: die App
+  // rechnet dreiachsig (Werkzeugachse Z). TRAORI(1) steht trotzdem im
+  // Kopf — die Unterlage nennt es ausdruecklich Pflicht auch bei reiner
+  // 3-Achs-Bearbeitung, und B0 C0 im Satz davor stellt die Schwenkachsen
+  // auf null. Schwenksaetze kommen, wenn die Bahnrechnung sie kann.
+  // -------------------------------------------------------------------
+  SIEMENS_840D_PL: {
+    id:'SIEMENS_840D_PL', name:'Sinumerik 840D powerline (5 Achsen)',
+    dialekt:'siemens', endung:'.MPF', zeilenende:'\r\n',
+    // Siemens-Programmnamen: hoechstens 24 Zeichen, Buchstaben, Ziffern
+    // und Unterstrich; die ersten beiden Zeichen duerfen KEINE Ziffer
+    // sein. Der Bindestrich ist hier — anders als im Klartext — nicht
+    // erlaubt; fName ersetzt ihn durch einen Unterstrich.
+    nameMax:24, nameMuster:/^[A-Z_][A-Z_][A-Z0-9_]{0,22}$/,
+    plaetze:2,                 // die Maschine hat zwei Werkzeugplaetze
+    zVakuum:-49.9,             // tiefer nicht: die Vakuumplatte steht darunter
+    maxBytes:1024000,          // 1,0 MB — die Diskette hat 1,44, der Rest ist Dateisystem
+    // Kopf und Ende Wort fuer Wort aus der Unterlage. Die Platzhalter
+    // fuellt der Schreiber; alles andere bleibt Zeichen fuer Zeichen so.
+    kopf:['TRAFOOF', 'D0 M1=56', 'G53 G0 Z0', 'G54 B0 C0', 'TRAORI(1)'],
+    fuss:['G00 Z20', 'G00 Z200', 'G00 Z200 M5 S0 M91 M98', 'G00 Y450 X0 M99 M80 M821', 'M30'],
+    eof:'=eof=',
+    // Alle Familien 'abgeleitet' — s. oben. Was die App fuer diese
+    // Steuerung gar nicht schreiben kann, steht als 'gesperrt' und faellt
+    // MIT ANSAGE aus; stumm ein leeres Werkzeug zu hinterlassen waere
+    // die schlimmere Variante.
+    zyklen:{
+      zentrieren:'abgeleitet', bohren:'abgeleitet', tief:'abgeleitet',
+      reiben:'abgeleitet', gewinde:'abgeleitet', gewindeGS:'gesperrt',
+      muster220:'gesperrt', muster221:'gesperrt', lbl:'abgeleitet',
+      tascheR:'abgeleitet', tascheK:'abgeleitet', nut:'abgeleitet', nutR:'abgeleitet',
+      zapfenR:'abgeleitet', zapfenK:'abgeleitet',
+      konturzug:'abgeleitet', slRaeumen:'abgeleitet', slVorbohren:'abgeleitet',
+      gewFraesen:'gesperrt', gewSenk:'gesperrt', gewBohr:'gesperrt', gewHelix:'gesperrt', gewAussen:'gesperrt',
+      ausdrehen:'abgeleitet', senkenRueck:'gesperrt', tiefUni:'abgeleitet',
+      bohrfraesen:'abgeleitet', gewindeSpan:'gesperrt', einlippen:'abgeleitet', planfraesen:'abgeleitet',
+      modellSchruppen:'abgeleitet', modellSchlichten:'abgeleitet', modellRest:'abgeleitet', modellSchlichtenEben:'abgeleitet'
+    },
+    termine:'Kein einziger Lauf und kein gezogenes Programm dieser Maschine. Die Form stammt aus der Unterlage in Siemens/ (Programmkopf und -ende, M-Woerter der Hersteller-PLC, I=AC/J=AC, Vakuumgrenze Z-49,9, Diskettengrenze 1,0 MB), erarbeitet aus Bildschirmfotos und Praxiserfahrung — Stand 12.09.2026.',
+    offen:'Eine echte .MPF dieser Maschine als Fixture (Daniel beschafft sie) — daran erst ist der Kopf, das Ende und die Satzform wirklich belegt. Dann: erster Lauf im Einzelsatz mit Grafiksimulation an der Steuerung. Fuenfachsig rechnet die App noch nicht (B0 C0, TRAORI(1) steht im Kopf); Gewindefraesen, Rueckwaerts-Senken und Gewindebohren mit Spanbruch sind nicht gebaut.'
   }
 };
 
@@ -5802,6 +5913,25 @@ function fBahnKurz(B){
 // Strategie 2 zeilenweise mit Ruecklauf im Eilgang auf SC; Tiefen in
 // Schritten DZ von Z0 auf Z1 (+UZ), bei UZ > 0 der letzte Schnitt mit FS.
 // ---------------------------------------------------------------------
+// Bezugspunkt (Feld lage) -> Mitte der Form. Die Bahn braucht sie, und
+// der Siemens-Zyklus POCKET3/POCKET4 traegt sie als PA/PO — deshalb steht
+// sie an EINER Stelle. Zwei Formulierungen derselben Regel driften, sobald
+// jemand eine Lage ergaenzt (dieselbe Lehre wie bei fPlanIstKugel).
+function fFormMitte(s, p){
+  const art = s.art, lage = Math.round(+s.lage || 0);
+  const dreh = ((+s.dreh || 0) * Math.PI / 180), cD = Math.cos(dreh), sD = Math.sin(dreh);
+  if(art === 'nutR'){
+    const Rt = (+s.teilkreis || 0) / 2, a1 = (+s.start || 0) * Math.PI / 180, oe = (+s.oeffnung || 0) * Math.PI / 180;
+    if(lage === 0) return {x:+s.xm || 0, y:+s.ym || 0};
+    const w = lage === 1 ? a1 : (lage === 3 ? a1 + oe : a1 + oe / 2);
+    return {x:p.x - Rt * Math.cos(w), y:p.y - Rt * Math.sin(w)};
+  }
+  let o = {x:0, y:0};
+  if(art === 'tascheR' || art === 'zapfenR'){ const a = (+s.l1 || 0) / 2, b = (+s.l2 || 0) / 2; o = ({1:{x:a, y:b}, 2:{x:-a, y:b}, 3:{x:-a, y:-b}, 4:{x:a, y:-b}})[lage] || o; }
+  if(art === 'nut'){ const a = (+s.l1 || 0) / 2 - (+s.l2 || 0) / 2; o = ({1:{x:a, y:0}, 2:{x:-a, y:0}})[lage] || o; }
+  return {x:p.x + (o.x * cD - o.y * sD), y:p.y + (o.x * sD + o.y * cD)};
+}
+
 function fBahnFormen(s, tool, prog, punkte){
   const art = s.art, warn = [], B = [];
   const nein = (g) => ({ok:false, grund:g, bahn:[], warn:warn});
@@ -5924,18 +6054,7 @@ function fBahnFormen(s, tool, prog, punkte){
   // Bezugspunkt (Lage) -> Formmitte je Position; Drehlage um die Mitte.
   const lage = Math.round(+s.lage || 0);
   const rotP = (p) => ({x:p.x * cD - p.y * sD, y:p.x * sD + p.y * cD});
-  const mittePunkt = (p) => {
-    if(art === 'nutR'){
-      const Rt = (+s.teilkreis || 0) / 2, a1 = (+s.start || 0) * Math.PI / 180, oe = (+s.oeffnung || 0) * Math.PI / 180;
-      if(lage === 0) return {x:+s.xm || 0, y:+s.ym || 0};
-      const w = lage === 1 ? a1 : (lage === 3 ? a1 + oe : a1 + oe / 2);
-      return {x:p.x - Rt * Math.cos(w), y:p.y - Rt * Math.sin(w)};
-    }
-    let o = {x:0, y:0};
-    if(art === 'tascheR' || art === 'zapfenR'){ const a = (+s.l1 || 0) / 2, b = (+s.l2 || 0) / 2; o = ({1:{x:a, y:b}, 2:{x:-a, y:b}, 3:{x:-a, y:-b}, 4:{x:a, y:-b}})[lage] || o; }
-    if(art === 'nut'){ const a = (+s.l1 || 0) / 2 - (+s.l2 || 0) / 2; o = ({1:{x:a, y:0}, 2:{x:-a, y:0}})[lage] || o; }
-    const ro = rotP(o); return {x:p.x + ro.x, y:p.y + ro.y};
-  };
+  const mittePunkt = (p) => fFormMitte(s, p);
   // Runde Nut mit N Wiederholungen um den Winkelschritt: je Nut eigene Positionen
   const positionen = [];
   punkte.forEach(p => {
@@ -12656,11 +12775,478 @@ function fAsciiText(s){
 // ---------------------------------------------------------------------
 function fName(prog){
   const P = F_PROFILE[(prog.kopf && prog.kopf.profil) || 'HEIDENHAIN_ITNC530'];
+  const si = P.dialekt === 'siemens';
   let n = String((prog.kopf && prog.kopf.name) || 'DZ1').trim().toUpperCase()
     .replace(/[ÄÖÜ]/g, c => ({'Ä':'AE','Ö':'OE','Ü':'UE'})[c]).replace(/ß/g, 'SS')
-    .replace(/[^A-Z0-9_\-]/g, '_');
+    .replace(si ? /[^A-Z0-9_]/g : /[^A-Z0-9_\-]/g, '_');
   if(!n) n = 'DZ1';
+  // Siemens: die ersten beiden Zeichen duerfen keine Ziffer sein. Ein Name
+  // wie 4KANT laesst sich an der Steuerung nicht anlegen — die App stellt
+  // einen Unterstrich davor und sagt es (der Schreiber meldet jede
+  // Bereinigung des Namens).
+  if(si) while(n.length < 2 || /^[0-9]/.test(n) || /^.[0-9]/.test(n)) n = '_' + n;
   return n.slice(0, P.nameMax);
+}
+
+// ---------------------------------------------------------------------
+// SINUMERIK 840D POWERLINE: DER ZWEITE DIALEKT (20.09.2026, Daniels Auftrag)
+//
+// Daniels Auftrag: die App soll auch fuer eine fuenfachsige Portalfraese
+// mit Sinumerik 840D powerline ausgeben koennen.
+//
+// WAS BELEGT IST UND WAS NICHT — unverbluemt: fuer diese Maschine liegt
+// KEINE einzige gezogene Datei vor. Die Unterlage in Siemens/ ist aus
+// Bildschirmfotos und Praxiserfahrung erarbeitet. Programmkopf, -ende,
+// die M-Woerter der Hersteller-PLC, die Kreisform I=AC/J=AC und die
+// Grenzen (Vakuumplatte Z-49,9, Diskette 1,0 MB) stehen dort Wort fuer
+// Wort; alles andere — Werkzeugwechsel mitten im Programm, die
+// Schraubenlinie mit TURN=, die Verweilzeit G04 — ist aus der
+// Siemens-Grundsprache abgeleitet. Deshalb traegt jedes Programm dieses
+// Profils seinen Vorbehalt im Kopf, und die Merkmale sagen es auch.
+//
+// DIE BAHN IST DIESELBE wie beim Klartext. fBahnSchritt liefert ein
+// dialektfreies Modell (eil/vor/kreis/helix/verweil/kom) — der Klartext
+// macht daraus L/C/CP-Saetze, hier werden es G00/G01/G02/G03. Dass die
+// Geometrie stimmt, ist am Programmierplatz der iTNC belegt (DZ4 bis
+// DZ24); was hier neu ist, ist ausschliesslich die SCHREIBWEISE.
+// ---------------------------------------------------------------------
+
+// Zahl im Siemens-Stil: Punkt als Komma, keine fuehrenden Nullen, kein
+// Pluszeichen. -0 gibt es nicht.
+function siNum(v){
+  const r = fRund(v);
+  return (Object.is(r, -0) ? 0 : r).toString();
+}
+
+// Welche M-Woerter duerfen aus der Bahn in ein Siemens-Programm? Nur die,
+// die dort dasselbe bedeuten wie an der TNC. M13 (Spindel + Kuehlung in
+// einem Wort) und M99 (Zyklusaufruf) sind HEIDENHAIN-Woerter und haetten
+// an der 840D eine voellig andere Wirkung — sie kommen aus dem
+// Schrittkopf und den LBL-Saetzen, also nie aus der Bahn; die Wache
+// steht trotzdem, weil eine neue Familie sie einschleppen koennte.
+var SI_M_ERLAUBT = [0, 1, 3, 4, 5, 8, 9];
+
+// Bahn -> Siemens-Saetze (ohne N-Nummern; die vergibt der Schreiber).
+// Modal geschrieben wie an der Steuerung ueblich: eine Achse steht nur
+// im Satz, wenn sie sich aendert, F nur bei Wechsel. Die G-Funktion
+// steht dagegen in JEDEM Fahrsatz — das kostet drei Zeichen und macht
+// die Datei am Bildschirm der Maschine lesbar.
+function fBahnSiemens(B, warn){
+  const out = []; const pos = {x:null, y:null, z:null}; let ff = null;
+  const ach = (m) => ['x', 'y', 'z'].map(k => (m[k] != null && (pos[k] == null || Math.abs(pos[k] - m[k]) > 1e-9)) ? ' ' + k.toUpperCase() + siNum(m[k]) : '').join('');
+  const merk = (m) => ['x', 'y', 'z'].forEach(k => { if(m[k] != null) pos[k] = m[k]; });
+  const fw = (v) => { const r = fRund(v); if(ff != null && Math.abs(ff - r) < 1e-9) return ''; ff = r; return ' F' + siNum(r); };
+  const mw = (m) => {
+    if(!m.m) return '';
+    if(SI_M_ERLAUBT.indexOf(+m.m) < 0){ if(warn) warn.push('M' + m.m + ' ist ein Heidenhain-Wort und wurde NICHT geschrieben — an der 840D hat es eine andere Bedeutung.'); return ''; }
+    return ' M' + m.m;
+  };
+  for(let bi = 0; bi < B.length; bi++){
+    let m = B[bi];
+    // VOLLKREIS: der Klartext zerlegt ihn in zwei Halbboegen (ein C-Satz
+    // kann dort keinen vollen Umlauf). Siemens kann ihn in EINEM Satz —
+    // Start gleich Ende, Mitte absolut. Zwei Boegen um dieselbe Mitte, in
+    // derselben Richtung, deren zweiter genau am Startpunkt des ersten
+    // endet, sind so ein Vollkreis und werden zusammengezogen.
+    const nx = B[bi + 1];
+    if(m.a === 'kreis' && nx && nx.a === 'kreis' && pos.x != null &&
+       Math.abs(m.cx - nx.cx) < 1e-9 && Math.abs(m.cy - nx.cy) < 1e-9 &&
+       (m.dr > 0) === (nx.dr > 0) && Math.abs(m.f - nx.f) < 1e-9 &&
+       Math.abs(nx.x - pos.x) < 1e-6 && Math.abs(nx.y - pos.y) < 1e-6){
+      m = nx; bi++;
+    }
+    // Drehzahlwechsel ohne Werkzeugwechsel (Zyklus 241): bei Siemens ein
+    // S-Wort im Satz, kein eigener Werkzeugaufruf.
+    if(m.s) out.push('S' + Math.round(m.s));
+    if(m.a === 'eil' || m.a === 'vor'){
+      let a = ach(m);
+      // continue, NICHT return: in der for-Schleife (wegen des Vollkreis-
+      // Zusammenzugs) wuerde ein return die ganze Bahn abbrechen. Genau das
+      // ist beim ersten Lauf passiert — steprest kam ohne einen Satz zurueck.
+      if(!a){ if(!m.m) continue; a = ' Z' + siNum(pos.z == null ? (m.z || 0) : pos.z); }
+      out.push((m.a === 'eil' ? 'G00' : 'G01') + a + (m.a === 'vor' ? fw(m.f) : '') + mw(m)); merk(m);
+    } else if(m.a === 'kreis'){
+      // dr +1 = gegen den Uhrzeigersinn = G03. Der Mittelpunkt steht
+      // ABSOLUT: I=AC() J=AC() ist auf dieser Steuerung Pflicht
+      // (Unterlage Abschnitt 4), relative I/J waeren ein Fehler.
+      out.push((m.dr > 0 ? 'G03' : 'G02') + ' X' + siNum(m.x) + ' Y' + siNum(m.y) +
+               ' I=AC(' + siNum(m.cx) + ') J=AC(' + siNum(m.cy) + ')' + fw(m.f)); merk(m);
+    } else if(m.a === 'helix'){
+      // SCHRAUBENLINIE. Siemens faehrt sie als Kreissatz mit Z-Endpunkt
+      // und TURN=<zusaetzliche Vollumlaeufe>. Ein Satz statt vieler
+      // Teilboegen — das spart Platz, und Platz ist hier knapp (Diskette).
+      // Bei GANZEN Umlaeufen ist der Endpunkt gleich dem Startpunkt, der
+      // Satz selbst faehrt dann bereits einen vollen Kreis: TURN ist um
+      // eins kleiner. Bei gebrochenen Umlaeufen rechnet die App den
+      // Endpunkt aus dem Restwinkel.
+      if(pos.x == null || pos.y == null){ if(warn) warn.push('Schraubenlinie ohne bekannte Startlage — Satz ausgelassen.'); continue; }
+      const cx = m.cx, cy = m.cy;
+      const r = Math.hypot(pos.x - cx, pos.y - cy);
+      const a0 = Math.atan2(pos.y - cy, pos.x - cx);
+      const t = Math.abs(+m.turns || 0), vor = Math.floor(t + 1e-9), rest = t - vor;
+      const zE = (m.z != null) ? m.z : ((pos.z == null ? 0 : pos.z) + (+m.dz || 0));
+      let ex = pos.x, ey = pos.y, turn = Math.max(0, vor - 1);
+      if(rest > 1e-9){
+        const a1 = a0 + (m.dr > 0 ? 1 : -1) * rest * 2 * Math.PI;
+        ex = cx + r * Math.cos(a1); ey = cy + r * Math.sin(a1); turn = vor;
+      }
+      out.push((m.dr > 0 ? 'G03' : 'G02') + ' X' + siNum(ex) + ' Y' + siNum(ey) + ' Z' + siNum(zE) +
+               ' I=AC(' + siNum(cx) + ') J=AC(' + siNum(cy) + ') TURN=' + turn + fw(m.f));
+      pos.x = fRund(ex); pos.y = fRund(ey); pos.z = fRund(zE);
+    } else if(m.a === 'verweil'){
+      // G04 in einem EIGENEN Satz, F = Sekunden (S waeren Umdrehungen).
+      out.push('G04 F' + siNum(m.t));
+    } else if(m.a === 'kom') out.push('; ' + fAsciiText(m.text).replace(/[^A-Z0-9 .,\-:=+]/g, ''));
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------
+// DIE ZYKLEN DER 840D (20.09.2026, Daniels Nachtrag)
+//
+// Seine Worte: "Wenn es geht, kannst du ja auch die Zyklen der 840D
+// verwenden ... Das spart Platz, weil die Steuerung noch ueber ein
+// Diskettenlaufwerk funktioniert."
+//
+// DER PLATZ IST GEMESSEN. Eine Blister-Schlichtbahn (160 x 120, Raster
+// 0,3, Rautiefe 0,01) sind 15980 Saetze und 420 kB — bei 1,0 MB Grenze.
+// Fuer eine solche Freiformbahn gibt es KEINEN Zyklus, dort helfen nur
+// die drei Stufen des Schreibers (Satznummern weg, dann teilen). Wo es
+// dagegen einen Zyklus gibt — Bohren, Bohrbilder, Taschen —, wird aus
+// hunderten Saetzen einer.
+//
+// WIE SICHER IST DAS? Weniger als alles andere in dieser Datei. Die
+// Reihenfolge der Zyklusparameter ist aus der Siemens-Grundsprache
+// abgeleitet; an DIESER Steuerung ist kein einziger Satz geprueft.
+// Deshalb:
+//   - Vorgabe AUS. Wer nichts einstellt, bekommt Einzelsaetze, und die
+//     sind geometrisch am Programmierplatz der iTNC belegt.
+//   - Ueber jedem Zyklussatz steht seine Parameterliste im Klartext.
+//     Der Bediener oeffnet den Satz in der Zyklusmaske der Steuerung und
+//     sieht jeden Wert mit seinem Namen — genau dort faellt ein
+//     verrutschter Parameter auf, bevor die Maschine laeuft.
+//   - Jedes Programm mit Zyklen traegt die Warnung im Kopf.
+// Kommt eine echte MPF mit einem dieser Zyklen (oder ein Foto der
+// Zyklusmaske), wird aus der Ableitung ein Beleg.
+//
+// NICHT GEBAUT, mit Grund: Zapfen (CYCLE76/77), Nuten (SLOT1/SLOT2/
+// LONGHOLE), Planfraesen (CYCLE71) und Bahnfraesen (CYCLE72). Bei ihnen
+// haengt die Bedeutung an Parametern, die ich nicht sicher genug
+// zuordnen kann (Rohteilmass, Bearbeitungsart, Zustellrichtung); geraten
+// waeren sie gefaehrlicher als die belegten Einzelsaetze. Sie laufen
+// weiter als Bahn und sagen es in der Meldung.
+// ---------------------------------------------------------------------
+var F_ZYK_840D = {
+  // --- Bohren ---------------------------------------------------------
+  zentrieren:{zy:'CYCLE82', par:'RTP,RFP,SDIS,DP,DPR,DTB', bohr:true},
+  bohren:    {zy:'CYCLE82', par:'RTP,RFP,SDIS,DP,DPR,DTB', bohr:true, tief:'CYCLE83'},
+  tief:      {zy:'CYCLE83', par:'RTP,RFP,SDIS,DP,DPR,FDEP,FDPR,DAM,DTB,DTS,FRF,VARI', bohr:true},
+  tiefUni:   {zy:'CYCLE83', par:'RTP,RFP,SDIS,DP,DPR,FDEP,FDPR,DAM,DTB,DTS,FRF,VARI', bohr:true},
+  reiben:    {zy:'CYCLE85', par:'RTP,RFP,SDIS,DP,DPR,DTB,FFR,RFF', bohr:true},
+  gewinde:   {zy:'CYCLE840', par:'RTP,RFP,SDIS,DP,DPR,DTB,SDR,SDAC,ENC,MPIT,PIT', bohr:true},
+  // --- Taschen --------------------------------------------------------
+  tascheR:   {zy:'POCKET3', par:'RTP,RFP,SDIS,DP,LENG,WID,CRAD,PA,PO,STA,MID,FAL,FALD,FFP1,FFD,CDIR,VARI,MIDA,AP1,AP2,AD,RAD1,DP1'},
+  tascheK:   {zy:'POCKET4', par:'RTP,RFP,SDIS,DP,PRAD,PA,PO,MID,FAL,FALD,FFP1,FFD,CDIR,VARI,MIDA,AP1,AD,RAD1,DP1'}
+};
+
+// Parameterliste als Satz: leere Werte bleiben leer (die Steuerung nimmt
+// dann ihren Vorgabewert), hintere leere Werte fallen ganz weg.
+function fZykSatz(name, werte){
+  const w = werte.map(v => (v === null || v === undefined || v === '') ? '' : siNum(v));
+  while(w.length && w[w.length - 1] === '') w.pop();
+  return name + '(' + w.join(',') + ')';
+}
+
+// Ein Schritt als Siemens-Zyklus. Liefert {zeilen, warn} oder null, wenn
+// es fuer diese Familie keinen gibt oder ein Wert fehlt.
+function fZyk840(s, tool, prog, punkte){
+  const Z = F_ZYK_840D[s.art]; if(!Z) return null;
+  const z0 = +s.q203 || 0, sc = +s.sc || 0, sc2 = Math.max(+s.sc2 || 0, sc);
+  if(!(sc > 0)) return null;
+  const RTP = fRund(z0 + sc2), RFP = fRund(z0), DP = fRund(z0 + (+s.tiefe || 0));
+  const warn = [], zeilen = [];
+  const rt = (tool && +tool.d > 0) ? +tool.d / 2 : 0;
+
+  if(Z.bohr){
+    if(!(+s.tiefe < 0)) return null;
+    let name = Z.zy, par = Z.par, werte;
+    const tiefeBetrag = Math.abs(+s.tiefe || 0), zust = +s.zust || 0;
+    // Zyklus 200 der TNC bohrt mit Zustellung: reicht eine Zustellung bis
+    // zum Grund, ist es ein einfacher Bohrzyklus, sonst Tieflochbohren.
+    const mitZustellung = (s.art === 'tief' || s.art === 'tiefUni' || (zust > 0 && zust < tiefeBetrag - 1e-9));
+    if(s.art === 'reiben'){
+      werte = [RTP, RFP, sc, DP, '', +s.vUnten || 0, +s.f || 0, (+s.fRueck > 0) ? +s.fRueck : (+s.f || 0)];
+    } else if(s.art === 'gewinde'){
+      // Gewindebohren mit Ausgleichsfutter: SDR 0 = Drehrichtung fuer den
+      // Rueckzug automatisch umkehren, SDAC 3 = danach wieder M3, ENC 1 =
+      // ohne Geber (Ausgleichsfutter), PIT = Steigung in mm.
+      const p = +s.steigung || 0;
+      if(!(p > 0)) return null;
+      werte = [RTP, RFP, sc, DP, '', +s.vUnten || 0, 0, 3, 1, '', p];
+    } else if(mitZustellung){
+      name = 'CYCLE83'; par = F_ZYK_840D.tief.par;
+      const erste = (zust > 0) ? fRund(z0 - zust) : DP;
+      // DAM: Degressionsbetrag in mm (unser Abnahmebetrag), 0 = jede
+      // Zustellung gleich. VARI 0 = Spanbrechen (kurz zurueck), 1 =
+      // Entspaenen (ganz heraus) — wie Q256 der TNC.
+      const vari = (+s.rzSpan > 0) ? 0 : 1;
+      werte = [RTP, RFP, sc, DP, '', erste, '', +s.abnahme || 0, +s.vUnten || 0, +s.vOben || 0, 1, vari];
+    } else {
+      werte = [RTP, RFP, sc, DP, '', +s.vUnten || 0];
+    }
+    zeilen.push({kom:'; ' + name + '(' + par + ')'});
+    zeilen.push({satz:'MCALL ' + fZykSatz(name, werte)});
+    // Die Positionen: ein Lochkreis und eine einzelne Lochreihe haben
+    // eigene Zyklen (das sind zwei Saetze statt N), alles andere faehrt
+    // die Punkte an — unter MCALL loest jeder Positioniersatz den Zyklus.
+    const m = (prog.muster || [])[s.muster];
+    if(m && m.typ === 'kreis' && fPosArt(s) === 'muster'){
+      const n = Math.max(1, Math.round(+m.anzahl || 1));
+      zeilen.push({kom:'; HOLES2(CPA,CPO,RAD,STA1,INDA,NUM)'});
+      zeilen.push({satz:fZykSatz('HOLES2', [+m.xm || 0, +m.ym || 0, (+m.dm || 0) / 2, +m.start || 0, (+m.wschritt || 0) || fRund(360 / n), n])});
+    } else if(m && m.typ === 'reihe' && Math.round(+m.ny || 1) === 1 && fPosArt(s) === 'muster'){
+      const n = Math.max(1, Math.round(+m.nx || 1));
+      zeilen.push({kom:'; HOLES1(SPCA,SPCO,STA1,FDIS,DBH,NUM)'});
+      zeilen.push({satz:fZykSatz('HOLES1', [+m.x0 || 0, +m.y0 || 0, +m.winkel || 0, 0, +m.dx || 0, n])});
+    } else {
+      (punkte || []).forEach((p, i) => zeilen.push({satz:(i === 0 ? 'G00 ' : '') + 'X' + siNum(p.x) + ' Y' + siNum(p.y)}));
+    }
+    zeilen.push({satz:'MCALL'});
+    return {zeilen:zeilen, warn:warn};
+  }
+
+  // --- Taschen ---------------------------------------------------------
+  if(!(+s.tiefe < 0) || !(rt > 0)) return null;
+  const pt = (punkte || [])[0]; if(!pt) return null;
+  if((punkte || []).length > 1) warn.push('Der Zyklus ' + Z.zy + ' fraest EINE Tasche; die weiteren Positionen des Bohrbilds bleiben unbearbeitet.');
+  const M = fFormMitte(s, pt);
+  const k = (+s.ueberl > 0) ? Math.min(+s.ueberl, 1.414) : 1;
+  const CDIR = (+s.fraesart < 0) ? 1 : 0;         // 0 Gleichlauf, 1 Gegenlauf
+  const eint = Math.round(+s.eintauch || 0);      // 0 senkrecht, 1 Helix, 2 Pendeln
+  const umfang = Math.round(+s.umfang || 0);      // 0 beides, 1 Schruppen, 2 Schlichten
+  const MID = (+s.zust > 0) ? +s.zust : '';
+  const gemein = (vari) => (s.art === 'tascheR')
+    ? [RTP, RFP, sc, DP, +s.l1 || 0, +s.l2 || 0, Math.max(0, +s.r || 0), fRund(M.x), fRund(M.y), +s.dreh || 0,
+       MID, +s.aufSeite || 0, +s.aufTiefe || 0, +s.f || 0, (+s.fTief > 0) ? +s.fTief : (+s.f || 0), CDIR, vari, fRund(k * rt), '', '', '', rt, '']
+    : [RTP, RFP, sc, DP, (+s.dm || 0) / 2, fRund(M.x), fRund(M.y),
+       MID, +s.aufSeite || 0, +s.aufTiefe || 0, +s.f || 0, (+s.fTief > 0) ? +s.fTief : (+s.f || 0), CDIR, vari, fRund(k * rt), '', '', rt, ''];
+  zeilen.push({kom:'; ' + Z.zy + '(' + Z.par + ')'});
+  // VARI: Einerstelle 1 = Schruppen, 2 = Schlichten; Zehnerstelle 0 =
+  // senkrecht, 1 = Helix, 2 = pendelnd eintauchen. "Beides" kennt der
+  // Zyklus nicht — dafuer wird er zweimal gerufen, wie an der Maschine.
+  if(umfang === 0){
+    zeilen.push({satz:fZykSatz(Z.zy, gemein(eint * 10 + 1))});
+    zeilen.push({satz:fZykSatz(Z.zy, gemein(eint * 10 + 2))});
+  } else zeilen.push({satz:fZykSatz(Z.zy, gemein(eint * 10 + umfang))});
+  if(eint > 0 && !(tool && +tool.angle > 0)) warn.push('Helix- oder Pendel-Eintauchen im Zyklus braucht den Eintauchwinkel des Werkzeugs in der Tabelle der Steuerung.');
+  return {zeilen:zeilen, warn:warn};
+}
+
+// Die tiefste Stelle, die das Programm anfaehrt — aus den FELDERN, nicht
+// aus den Bahnen (die Ampel laeuft bei jeder Eingabe, die Bahnen kosten
+// Sekunden). Beim Planfraesen ist es die Endhoehe, sonst Bezugsebene plus
+// Tiefe; die Modell-Familien tragen ihre Tiefe im selben Feld.
+function fTiefsteStelle(prog){
+  let z = null;
+  (prog.schritte || []).filter(s => s && s.aktiv !== false).forEach(s => {
+    const zy = F_ZYKLEN[s.art] || {};
+    const g = (zy.ohneTiefe) ? null
+            : (s.zEnd !== undefined && s.zEnd !== '' && isFinite(+s.zEnd)) ? +s.zEnd
+            : (isFinite(+s.tiefe) ? (+s.q203 || 0) + (+s.tiefe || 0) : null);
+    if(g != null && (z == null || g < z)) z = fRund(g);
+  });
+  return z;
+}
+
+// ---------------------------------------------------------------------
+// DER SIEMENS-SCHREIBER. Liefert dieselbe Auskunft wie der Klartext-
+// Schreiber ({text, zeilen, warnungen, fehler, name, datei}) und
+// zusaetzlich teile[] — die Diskette fasst 1,44 MB, ein Programm darf
+// nach der Unterlage hoechstens 1,0 MB haben.
+//
+// KOPF UND ENDE stehen Wort fuer Wort in der Unterlage und werden nicht
+// gerechnet. Was der Schreiber einsetzt, sind nur Name, Werkzeug,
+// Drehzahl und Vorschub des ersten Schritts.
+// ---------------------------------------------------------------------
+function fProgrammSchreibenSiemens(prog, opt){
+  opt = opt || {};
+  const P = F_PROFILE.SIEMENS_840D_PL;
+  const k = prog.kopf, warn = [], fehler = [];
+  const name = fName(prog);
+  if(name !== String(k.name || '').trim().toUpperCase()) warn.push('Programmname auf "' + name + '" bereinigt (Siemens: hoechstens ' + P.nameMax + ' Zeichen, nur A-Z, 0-9 und _, die ersten beiden Zeichen keine Ziffer).');
+
+  const pruef = fPruefen(prog);
+  pruef.rot.forEach(x => fehler.push(x));
+  pruef.gelb.forEach(x => warn.push(x));
+  if(fehler.length && !opt.trotzdem) return {text:null, zeilen:[], warnungen:warn, fehler:fehler, name:name};
+
+  const datum = opt.datum || (function(){ const d = new Date(); return d.getDate() + '.' + (d.getMonth() + 1) + '.' + d.getFullYear(); })();
+  const schritte = (prog.schritte || []).filter(s => s && s.aktiv !== false);
+  const wz = [];                       // Werkzeuge in Reihenfolge ihres ersten Aufrufs
+  schritte.forEach(s => { if(wz.indexOf(s.t) < 0) wz.push(s.t); });
+
+  // --- die Bloecke je Schritt (fuers Aufteilen einzeln gehalten) ------
+  const bloecke = [];
+  schritte.forEach((s, si) => {
+    const tool = (prog.werkzeuge || []).find(w => w.nr === s.t) || {};
+    const z = F_ZYKLEN[s.art];
+    const B = [];
+    const stat = (P.zyklen[s.art] || 'gesperrt');
+    B.push('; SCHRITT ' + (si + 1) + ': ' + fAsciiText(z ? z.wort : s.art).replace(/[^A-Z0-9 ()\-,.]/g, '') + ' T' + s.t + (tool.name ? ' ' + fAsciiText(tool.name).replace(/[^A-Z0-9 .\-]/g, '') : ''));
+    if(stat === 'gesperrt'){
+      B.push('; FUER DIESE STEUERUNG NICHT GEBAUT - SIEHE MELDUNGEN');
+      warn.push('Schritt ' + (si + 1) + ': ' + ((z && z.wort) || s.art) + ' ist fuer die 840D nicht gebaut — der Schritt steht als Kommentar im Programm und faehrt nichts.');
+      bloecke.push({t:s.t, zeilen:B}); return;
+    }
+    // ZYKLUS ODER BAHN. Auf Wunsch (Kopffeld) schreibt die App den
+    // Steuerungszyklus — ein Satz statt hunderter, und an der Maschine in
+    // der Zyklusmaske lesbar. Vorgabe ist die eigene Bahn: die ist
+    // geometrisch belegt, die Parameterreihenfolge der Zyklen nicht.
+    if(String(k.zyk840 || 'aus') === 'an'){
+      const zk = fZyk840(s, tool, prog, (z && (z.eigenePosition || z.kontur)) ? [] : fPunkte(s, prog));
+      if(zk){
+        zk.warn.forEach(w => warn.push('Schritt ' + (si + 1) + ': ' + w));
+        zk.zeilen.forEach(e => B.push(e.kom !== undefined ? e.kom : e.satz));
+        bloecke.push({t:s.t, zeilen:B, zyklus:true}); return;
+      }
+      warn.push('Schritt ' + (si + 1) + ': fuer ' + ((z && z.wort) || s.art) + ' gibt es in der App keinen 840D-Zyklus — als Einzelsaetze geschrieben.');
+    }
+    // Die 840D kennt unsere Zyklusnummern nicht. Alles Uebrige laeuft ueber
+    // die eigene Bahn — dieselbe, die der Programmierplatz der iTNC Satz
+    // fuer Satz bestaetigt hat. Wo es keine Bahn gibt, sagt es das Programm.
+    const bh = fBahnSchritt(Object.assign({}, s, {ausgabe:'einzel', __orig:s.__orig || s}), tool, prog,
+                            (z && (z.eigenePosition || z.kontur)) ? [] : fPunkte(s, prog));
+    if(!bh.ok){
+      B.push('; KEINE BAHN ERZEUGT - SIEHE MELDUNGEN');
+      warn.push('Schritt ' + (si + 1) + ': ' + bh.grund + ' — fuer die 840D gibt es keinen Rueckfall auf einen Steuerungszyklus, der Schritt bleibt ohne Bahn.');
+      bloecke.push({t:s.t, zeilen:B}); return;
+    }
+    bh.warn.forEach(w => warn.push('Schritt ' + (si + 1) + ': ' + w));
+    fBahnSiemens(bh.bahn, warn).forEach(l => B.push(l));
+    bloecke.push({t:s.t, zeilen:B});
+  });
+
+  // --- Kopf, Werkzeugwechsel, Ende -----------------------------------
+  if(bloecke.some(b => b.zyklus))
+    warn.push('ZYKLEN DER STEUERUNG: die Reihenfolge der Zyklusparameter ist aus der Siemens-Grundsprache ABGELEITET und an dieser Maschine nicht geprueft. Ueber jedem Satz steht seine Parameterliste — den Satz an der Steuerung in der ZYKLUSMASKE oeffnen und Wert fuer Wert vergleichen, bevor etwas laeuft.');
+  const erst = schritte[0] || {};
+  const kopfZeilen = (tNr, sDz, vor) => {
+    const L = [];
+    P.kopf.forEach(z => L.push(z));
+    L.push('G90 G17');
+    L.push('T' + tNr + ' D1');
+    L.push('M3 S' + Math.round(+sDz || 0) + ' F' + siNum(+vor || 0));
+    L.push('G00 G54 X0 Y0 Z20');
+    return L;
+  };
+  // Werkzeugwechsel mitten im Programm steht in KEINER Unterlage. So
+  // gebaut: hoch auf die Parkhoehe, Spindel aus, T.. D1, Spindel an.
+  // Beim ersten Lauf ansehen — deshalb die Warnung.
+  const wechselZeilen = (tNr, sDz, vor) => ['G00 Z200', 'M5', 'T' + tNr + ' D1', 'M3 S' + Math.round(+sDz || 0) + ' F' + siNum(+vor || 0)];
+  if(wz.length > 1) warn.push('Werkzeugwechsel mitten im Programm: die Unterlage sagt dazu nichts. Die App schreibt G00 Z200 / M5 / T.. D1 / M3 — beim ersten Lauf im Einzelsatz ansehen.');
+
+  // --- ein Teilprogramm zusammensetzen --------------------------------
+  const bauen = (teilName, von, bis, teilNr, teile, mitN) => {
+    const zeilen = []; let n = 0;
+    const roh = (t) => zeilen.push(t);
+    // N-Nummern sind bei Siemens nur Satzmarken — die Steuerung braucht
+    // sie nicht. An der Maschine sind sie trotzdem wertvoll (Satzsuche,
+    // Wiedereinstieg), deshalb stehen sie, solange das Programm auf die
+    // Diskette passt. Bei einer Formschlichtbahn machen sie ein Viertel
+    // der Datei aus (am Blister gemessen: 109 von 420 kB) — dann fallen
+    // sie weg, bevor die App das Programm teilt.
+    const satz = mitN ? (t) => { n += 5; zeilen.push('N' + n + ' ' + t); } : (t) => { zeilen.push(t); };
+    roh(';SETUP (' + teilName + ')');
+    roh('; DZ CAM FRAESEN ' + datum + ' - SINUMERIK 840D POWERLINE');
+    roh('; AUS DER UNTERLAGE ABGELEITET - AN DIESER MASCHINE NICHT BELEGT.');
+    if(bloecke.some(b => b.zyklus)) roh('; MIT ZYKLEN DER STEUERUNG - PARAMETER IN DER ZYKLUSMASKE PRUEFEN.');
+    roh('; VOR DEM ERSTEN LAUF IM EINZELSATZ FAHREN UND DIE GRAFIK ANSEHEN.');
+    roh('; ROHTEIL X' + siNum(k.x0) + ' Y' + siNum(k.y0) + ' Z' + siNum(k.z0) +
+        ' BIS X' + siNum(k.x1) + ' Y' + siNum(k.y1) + ' Z' + siNum(k.z1));
+    if(teile > 1) roh('; TEIL ' + teilNr + ' VON ' + teile + ' - DIE TEILE NACHEINANDER ABFAHREN');
+    roh('; G90 G17 STEHT NICHT IN DER UNTERLAGE - VON DER APP ERGAENZT:');
+    roh('; ABSOLUTMASS UND EBENE XY (DARAN HAENGEN I=AC UND J=AC).');
+    let aktT = null;
+    let kuehl = null;
+    for(let i = von; i < bis; i++){
+      const b = bloecke[i], s = schritte[i];
+      if(aktT === null){
+        kopfZeilen(b.t, s.s, s.f).forEach(z => satz(z));
+        // Der Kopf faehrt Z20 an (Unterlage). Liegt die sichere Hoehe des
+        // Programms darueber, wird sie nachgezogen — sonst nicht: hoeher
+        // ist immer sicher.
+        if(+k.rz > 20) satz('G00 Z' + siNum(+k.rz));
+        roh(b.zeilen[0]);
+      }
+      else if(b.t !== aktT){ roh(b.zeilen[0]); wechselZeilen(b.t, s.s, s.f).forEach(z => satz(z)); }
+      else roh(b.zeilen[0]);
+      if(aktT !== null && b.t === aktT)
+        if(Math.round(+s.s || 0) !== Math.round(+schritte[i - 1].s || 0) || fRund(+s.f || 0) !== fRund(+schritte[i - 1].f || 0)) satz('M3 S' + Math.round(+s.s || 0) + ' F' + siNum(+s.f || 0));
+      aktT = b.t;
+      // Kuehlmittel: an der TNC ein Wort (M13), hier getrennt — und nur,
+      // wenn es sich aendert. Jeder Satz kostet Platz auf der Diskette.
+      const kw = (s.kuehl === 'aus') ? 'M9' : 'M8';
+      if(kw !== kuehl){ satz(kw); kuehl = kw; }
+      for(let zi = 1; zi < b.zeilen.length; zi++){ const z = b.zeilen[zi]; (z.charAt(0) === ';') ? roh(z) : satz(z); }
+    }
+    if(aktT === null) kopfZeilen(wz[0] || 1, erst.s, erst.f).forEach(z => satz(z));
+    P.fuss.forEach(z => satz(z));
+    roh(P.eof);
+    return zeilen;
+  };
+
+  // --- Groesse pruefen, notfalls aufteilen -----------------------------
+  // Die Diskette fasst 1,44 MB, die Unterlage setzt die Grenze bei 1,0 MB.
+  // Geteilt wird NUR an einer Schrittgrenze: jedes Teil bekommt den
+  // vollen Kopf und das volle Ende und ist fuer sich abfahrbar.
+  const bytes = (zn) => zn.join(P.zeilenende).length + P.zeilenende.length;
+  const kb = (n) => (n / 1000).toFixed(n < 10000 ? 1 : 0) + ' kB';
+  const packen = (zn, nm) => ({name:nm, datei:nm + P.endung, zeilen:zn, text:zn.join(P.zeilenende) + P.zeilenende});
+
+  // STUFE 1: so, wie es an der Maschine am besten zu lesen ist.
+  let mitN = true;
+  let zeilen = bauen(name, 0, bloecke.length, 1, 1, mitN);
+  let teile = [packen(zeilen, name)];
+
+  // STUFE 2: passt es nicht, fallen die N-Nummern weg — eine Datei ist
+  // an der Maschine immer besser als zwei.
+  if(bytes(zeilen) > P.maxBytes){
+    const ohne = bauen(name, 0, bloecke.length, 1, 1, false);
+    if(bytes(ohne) <= P.maxBytes){
+      warn.push('Mit Satznummern waere das Programm ' + kb(bytes(zeilen)) + ' gross und passte nicht auf die Diskette (' + kb(P.maxBytes) + '). Es ist OHNE Satznummern geschrieben — ' + kb(bytes(ohne)) + ' — und passt damit in eine Datei. An der Steuerung gibt es dafuer keine Satzsuche ueber N-Nummern.');
+      mitN = false; zeilen = ohne; teile = [packen(zeilen, name)];
+    }
+  }
+
+  // STUFE 3: auch ohne Nummern zu gross — teilen. Geschnitten wird NUR an
+  // einer Schrittgrenze; jedes Teil bekommt den vollen Kopf und das volle
+  // Ende und ist fuer sich abfahrbar.
+  if(bytes(zeilen) > P.maxBytes && bloecke.length > 1){
+    mitN = false;
+    const basis = name.slice(0, P.nameMax - 3);
+    const gruppen = []; let von = 0;
+    for(let i = 0; i < bloecke.length; i++){
+      const versuch = bauen(basis + '_T9', von, i + 1, 1, 2, mitN);
+      if(bytes(versuch) > P.maxBytes && i > von){ gruppen.push([von, i]); von = i; }
+    }
+    gruppen.push([von, bloecke.length]);
+    teile = gruppen.map((g, gi) => {
+      const nm = basis + '_T' + (gi + 1);
+      return packen(bauen(nm, g[0], g[1], gi + 1, gruppen.length, mitN), nm);
+    });
+    const zuGross = teile.filter(t => t.text.length > P.maxBytes);
+    warn.push('Das Programm passt auch ohne Satznummern nicht auf eine Diskette (' + kb(P.maxBytes) + ') — aufgeteilt in ' +
+              teile.length + ' Teile (' + teile.map(t => t.datei).join(', ') + '), jedes mit eigenem Kopf und Ende. Nacheinander abfahren.');
+    if(zuGross.length) warn.push('ACHTUNG: ' + zuGross.map(t => t.datei).join(', ') + ' bleibt/bleiben ueber der Grenze — ein einzelner Schritt ist zu gross zum Teilen. Zustellung oder Rautiefe vergroebern, oder den Schritt im Arbeitsplan aufteilen.');
+    zeilen = teile[0].zeilen;
+  } else if(bytes(zeilen) > P.maxBytes){
+    warn.push('Das Programm ist ' + kb(bytes(zeilen)) + ' gross (Grenze ' + kb(P.maxBytes) + ') und besteht aus einem einzigen Schritt — es laesst sich nicht aufteilen. Rautiefe oder Raster vergroebern.');
+  }
+
+  const haupt = teile[0];
+  return {text:haupt.text, zeilen:haupt.zeilen, saetze:haupt.zeilen.filter(z => z.charAt(0) !== ';' && z !== P.eof).length, ohneNummern:!mitN,
+          warnungen:warn, fehler:fehler, name:name, datei:haupt.datei, teile:teile,
+          bytes:haupt.text.length, maxBytes:P.maxBytes};
 }
 
 // ---------------------------------------------------------------------
@@ -12680,6 +13266,11 @@ function fName(prog){
 function fProgrammSchreiben(prog, opt){
   opt = opt || {};
   const P = F_PROFILE[(prog.kopf && prog.kopf.profil) || 'HEIDENHAIN_ITNC530'];
+  // Zweiter Dialekt (20.09.2026): die 840D powerline hat einen eigenen
+  // Schreiber. Die Weiche steht ganz vorn — der Klartext-Schreiber bleibt
+  // damit Zeichen fuer Zeichen, was er war (21 Baselines und die Belege
+  // des Programmierplatzes haengen an ihm).
+  if(P.dialekt === 'siemens') return fProgrammSchreibenSiemens(prog, opt);
   const k = prog.kopf, warn = [], fehler = [];
   const zeilen = []; let n = 0;
   const satz = (t) => { zeilen.push((n++) + ' ' + t); };
@@ -13417,6 +14008,29 @@ function fPruefen(prog){
     const V = R ? fSpannVorschlag(prog, R) : {ok:false};
     if(V.ok && !V.reicht) gelb.push('Spannmittel: ' + V.hinweise.filter(h => /Einspanntiefe/.test(h))[0]);
   }
+  // -------------------------------------------------------------------
+  // DIE GRENZEN DER 840D-MASCHINE (20.09.2026). Alle drei stehen in der
+  // Unterlage, und alle drei haben einen Preis, wenn man sie uebergeht:
+  // ein drittes Werkzeug gibt es an der Maschine nicht, unter der
+  // Vakuumplatte steht die Platte selbst, und was nicht auf die Diskette
+  // passt, kommt nicht zur Maschine.
+  // -------------------------------------------------------------------
+  if(P.dialekt === 'siemens'){
+    const wz = [];
+    schritte.forEach(s => { if(+s.t > 0 && wz.indexOf(s.t) < 0) wz.push(s.t); });
+    if(P.plaetze && wz.length > P.plaetze)
+      rot.push('Die Maschine hat ' + P.plaetze + ' Werkzeugplaetze, das Programm ruft ' + wz.length + ' Werkzeuge (T' + wz.join(', T') + '). Das Programm in Teile aufteilen und zwischen den Teilen umruesten.');
+    const tief = fTiefsteStelle(prog);
+    if(String(k.spann || 'aus') === 'vakuum' && tief != null && P.zVakuum != null && tief < P.zVakuum - 1e-9)
+      rot.push('Vakuumplatte: die tiefste Stelle liegt bei Z' + tief + ', erlaubt ist bis Z' + P.zVakuum + '. Tiefer wird die Platte selbst gefraest.');
+    // Der Programmkopf faehrt X0 Y0 Z20 an — das steht Wort fuer Wort in
+    // der Unterlage und wird nicht gerechnet. Ragt das Rohteil darueber
+    // hinaus, faehrt diese Anfahrt hinein.
+    if(+k.z1 > 20 - 1e-9)
+      rot.push('Der feste Programmkopf faehrt X0 Y0 Z20 an; die Rohteil-Oberkante liegt bei Z' + fRund(+k.z1) + '. Nullpunkt tiefer legen oder den Kopf an der Maschine anpassen.');
+    if(String(k.spann || 'aus') === 'aus')
+      gelb.push('Kein Spannmittel im Programmkopf: die App kann die Vakuumgrenze Z' + P.zVakuum + ' nicht pruefen. Bei Vakuumspannung im Kopf Vakuumplatte waehlen.');
+  }
   return {rot:rot, gelb:gelb};
 }
 
@@ -14064,6 +14678,21 @@ F_DEMOS.forEach(d => {
 function fMerkmale(profilId){
   const P = F_PROFILE[profilId || 'HEIDENHAIN_ITNC530'];
   const z = (key, t) => ({t:t, s:P.zyklen[key] || 'gesperrt'});
+  // Die 840D hat eine eigene Liste: ihre Saetze sehen anders aus, und vor
+  // allem ist ihr Belegstand ein anderer (nichts gefahren, nichts gezogen).
+  if(P.dialekt === 'siemens') return [
+    {t:'Programmrahmen: ;SETUP (Name), TRAFOOF, D0 M1=56, G53 G0 Z0, G54 B0 C0, TRAORI(1), T.. D1, M3 S.. F.., G00 G54 X0 Y0 Z20 — und am Ende G00 Z20 / Z200 / Z200 M5 S0 M91 M98 / Y450 X0 M99 M80 M821 / M30 / =eof=. Wort fuer Wort aus der Unterlage; die App setzt nur Name, Werkzeug, Drehzahl und Vorschub ein.', s:'abgeleitet'},
+    {t:'G90 G17 schreibt die App zusaetzlich (Absolutmass, Ebene XY) — das steht NICHT in der Unterlage, aber ohne beides faehrt das Programm falsch, wenn ein Vorgaenger G91 oder G18 hinterlassen hat, und I=AC/J=AC sind die Kreismitten der XY-Ebene. Zwei Kommentarzeilen im Kopf sagen es.', s:'abgeleitet'},
+    {t:'Bahnsaetze: G00 Eilgang, G01 mit F, Kreis G02/G03 mit ABSOLUTER Mitte I=AC() J=AC() (Pflicht auf dieser Steuerung), Vollkreis in EINEM Satz (Start gleich Ende), Schraubenlinie als Kreissatz mit Z-Endpunkt und TURN=<zusaetzliche Umlaeufe>, Verweilzeit G04 F<Sekunden>. Achsen und F modal — ein Wort steht nur, wenn es sich aendert.', s:'abgeleitet'},
+    {t:'Werkzeugwechsel mitten im Programm: G00 Z200 / M5 / T.. D1 / M3 S.. F.. — dazu sagt die Unterlage nichts, das ist der plausible Weg. Kuehlmittel getrennt als M8/M9 (die TNC hat dafuer ein Wort, M13).', s:'abgeleitet'},
+    {t:'Zyklen der Steuerung (Kopffeld, Vorgabe AUS): Bohren CYCLE82, Tieflochbohren CYCLE83, Reiben CYCLE85, Gewindebohren mit Ausgleichsfutter CYCLE840, Rechtecktasche POCKET3, Kreistasche POCKET4, Lochkreis HOLES2 und Lochreihe HOLES1 unter MCALL. Ueber jedem Satz steht seine Parameterliste. Gemessen spart das an einer Platte mit Taschen und Bohrbildern die Haelfte der Datei, an einer reinen Bohrleiste zwei Drittel.', s:'abgeleitet'},
+    {t:'Ohne Zyklus (Vorgabe): jede Bearbeitung laeuft als eigene Bahn der App — dieselbe, die am Programmierplatz der iTNC 530 Satz fuer Satz belegt ist (DZ4 bis DZ24). Neu ist nur die Schreibweise, nicht die Geometrie.', s:'abgeleitet'},
+    {t:'Grenzen der Maschine, von der App geprueft: hoechstens ' + (P.plaetze || 2) + ' Werkzeuge im Programm (rot), bei Vakuumspannung nicht tiefer als Z' + P.zVakuum + ' (rot), Rohteil-Oberkante unter Z20 (rot — der feste Kopf faehrt dort hin).', s:'abgeleitet'},
+    {t:'Diskette: die Unterlage setzt die Grenze bei ' + Math.round(P.maxBytes / 1000) + ' kB. Die App geht in drei Stufen — mit Satznummern, ohne Satznummern (an einer Formschlichtbahn ein Viertel der Datei), dann aufgeteilt an einer Schrittgrenze, jedes Teil mit eigenem Kopf und Ende.', s:'abgeleitet'},
+    {t:'Fuenfachsig: die Maschine ist es, die Bahnen der App sind es nicht. TRAORI(1) und B0 C0 stehen im Kopf (die Unterlage nennt TRAORI Pflicht auch bei 3-Achs-Bearbeitung), geschwenkt wird nicht.', s:'gesperrt'},
+    {t:'Nicht gebaut: Zapfen (CYCLE76/77), Nuten (SLOT1/SLOT2/LONGHOLE), Planfraesen (CYCLE71), Bahnfraesen (CYCLE72), Gewindefraesen (CYCLE90), Gewindebohren synchron (CYCLE84), Rueckwaerts-Senken. Bei ihnen haengt die Bedeutung an Parametern, die sich ohne Beleg nicht sicher zuordnen lassen — sie laufen als Bahn und sagen es.', s:'gesperrt'},
+    {t:'Stand: ' + P.termine, s:'abgeleitet', offen:P.offen}
+  ];
   return [
     z('zentrieren', 'Zentrieren — Zyklus 240 (Q200 Q343 Q201 Q344 Q206 Q211 Q203 Q204)'),
     z('bohren',     'Bohren — Zyklus 200 (Q200 Q201 Q206 Q202 Q210 Q203 Q204 Q211)'),
@@ -15190,9 +15819,11 @@ function fKopfOeffnen(){
   maskeMeldung('fkMeldung', '');
   const k = fProg.kopf;
   setVal('fkName', k.name); setVal('fkProfil', k.profil || 'HEIDENHAIN_ITNC530'); setVal('fkStand', k.stand || '07');
+  fKopfEndungSync();
   setVal('fkWerkstoff', F_WERKSTOFFE[k.werkstoff] ? k.werkstoff : 'baustahl'); setVal('fkTw', (k.tw === 0 || +k.tw > 0) ? k.tw : F_TW_VORGABE);
   setVal('fkX0', k.x0); setVal('fkY0', k.y0); setVal('fkZ0', k.z0); setVal('fkX1', k.x1); setVal('fkY1', k.y1); setVal('fkZ1', k.z1);
   setVal('fkSc', k.sc); setVal('fkSc2', k.sc2); setVal('fkOber', k.oberflaeche); setVal('fkRz', k.rz);
+  setRadio('fkZykBtns', k.zyk840 || 'aus');
   setRadio('fkSpannBtns', k.spann || 'aus'); setRadio('fkSpannRichtBtns', k.spannRichtung || 'y');
   setVal('fkSpannZ', (k.spannZ === 0 || k.spannZ) ? k.spannZ : fRund((+k.z0 || 0) + 10));
   setVal('fkSpannBreite', k.spannBreite || 40); setVal('fkSpannLaenge', k.spannLaenge || 150);
@@ -15204,6 +15835,15 @@ function fKopfOeffnen(){
 // Die Spannmittelzeilen gibt es nur, wenn eines gefuehrt wird - eine
 // Ueberschrift ueber lauter wirkungslosen Feldern ist eine Falle
 // (dieselbe Regel wie leereBereicheAusblenden im Drehteil).
+// Die Dateiendung und der Software-Stand haengen an der Zielmaschine:
+// die 840D schreibt .MPF und kennt die Heidenhain-Staende nicht.
+function fKopfEndungSync(){
+  const P = F_PROFILE[getStr('fkProfil') || 'HEIDENHAIN_ITNC530'] || F_PROFILE.HEIDENHAIN_ITNC530;
+  const e = document.getElementById('fkEndung'); if(e) e.textContent = P.endung;
+  const zr = document.getElementById('fkZykRow'); if(zr) zr.style.display = (P.dialekt === 'siemens') ? '' : 'none';
+  const st = document.getElementById('fkStand');
+  if(st && st.closest){ const row = st.closest('.mrow'); if(row) row.style.display = (P.dialekt === 'siemens') ? 'none' : ''; }
+}
 function fKopfSpannSync(){
   const an = (selBtnVal('fkSpannBtns') || 'aus') === 'schraubstock';
   ['fkSpR1', 'fkSpR2', 'fkSpR3', 'fkSpR4', 'fkSpR5'].forEach(id => {
@@ -15217,6 +15857,7 @@ function fKopfSpannSync(){
     // mit Ansage in der Maske, statt still in die Ampel zu wandern.
     const k = Object.assign({}, fProg.kopf);
     k.name = getStr('fkName').trim() || 'DZ1'; k.profil = getStr('fkProfil') || 'HEIDENHAIN_ITNC530'; k.stand = getStr('fkStand') || '07';
+    k.zyk840 = selBtnVal('fkZykBtns') || 'aus';
     k.werkstoff = F_WERKSTOFFE[getStr('fkWerkstoff')] ? getStr('fkWerkstoff') : 'baustahl'; k.tw = Math.max(0, getNum('fkTw', F_TW_VORGABE));
     k.x0 = getNum('fkX0'); k.y0 = getNum('fkY0'); k.z0 = getNum('fkZ0', -20); k.x1 = getNum('fkX1', 100); k.y1 = getNum('fkY1', 80); k.z1 = getNum('fkZ1');
     k.sc = getNum('fkSc', 2); k.sc2 = getNum('fkSc2', 50); k.oberflaeche = getNum('fkOber'); k.rz = getNum('fkRz', 100);
@@ -15235,6 +15876,10 @@ function fKopfSpannSync(){
   };
   const ab = document.getElementById('btnFkCancel'); if(ab) ab.onclick = ()=>maskZu('maskKopf');
   wireRadioGroup('fkSpannBtns', fKopfSpannSync); wireRadioGroup('fkSpannRichtBtns', fKopfSpannSync);
+  // Die Zielmaschine entscheidet ueber Dateiendung und Software-Stand —
+  // beides muss sofort umschalten, nicht erst beim naechsten Oeffnen.
+  { const pr = document.getElementById('fkProfil'); if(pr && pr.addEventListener) pr.addEventListener('change', fKopfEndungSync); }
+  wireRadioGroup('fkZykBtns', ()=>{});
   { const mk = document.getElementById('maskKopf'); if(mk && mk.addEventListener){ ['input', 'change'].forEach(t => mk.addEventListener(t, ()=>maskeMeldung('fkMeldung', ''))); } }
   // AUFSPANNTIEFE VORSCHLAGEN: die Backenoberkante folgt aus der tiefsten
   // Bearbeitung, die Einspanntiefe aus der Rohteilhoehe darunter. Der
@@ -15916,6 +16561,12 @@ let fEditKontur = -1;
 function fNcFaerben(text){
   return text.split('\n').map(z => {
     const e = esc(z);
+    // Siemens-Saetze: Kommentar mit Semikolon am Zeilenanfang, Kopf- und
+    // Endewoerter, Zyklen und Transformationen, Eilgang G00.
+    if(/^;/.test(z)) return '<span class="nc-kom">' + e + '</span>';
+    if(/^N\d+ (T\d+ D1|M3 |M30|TRAFOOF|TRAORI|D0 |G53 |G54 |G90 )/.test(z) || z === '=eof=') return '<span class="nc-kopf">' + e + '</span>';
+    if(/^N\d+ (CYCLE|POCKET|SLOT|LONGHOLE|HOLES|MCALL)/.test(z)) return '<span class="nc-fkt">' + e + '</span>';
+    if(/^N\d+ G00/.test(z)) return '<span class="nc-eil">' + e + '</span>';
     if(/^\d+ ;/.test(z)) return '<span class="nc-kom">' + e + '</span>';
     if(/^\d+ (BEGIN|END) PGM/.test(z) || /^\d+ TOOL CALL/.test(z)) return '<span class="nc-kopf">' + e + '</span>';
     if(/^\d+ CYCL DEF/.test(z) || /^\s+Q\d+=/.test(z)) return '<span class="nc-fkt">' + e + '</span>';
@@ -15937,7 +16588,17 @@ function fNcErzeugen(){
   }
   if(out) out.value = r.text;
   if(view) view.innerHTML = fNcFaerben(r.text.replace(/\r\n/g, '\n'));
-  if(st) st.textContent = r.saetze + ' Saetze · ' + r.datei;
+  if(st){
+    // Bei der 840D zaehlt die GROESSE mit: das Programm geht per Diskette
+    // zur Maschine, und die Unterlage setzt die Grenze bei 1,0 MB.
+    let t = r.saetze + ' Saetze · ' + r.datei;
+    if(r.maxBytes){
+      const kb = (n) => (n / 1000).toFixed(n < 10000 ? 1 : 0) + ' kB';
+      t += ' · ' + kb(r.bytes) + ' von ' + kb(r.maxBytes);
+      if(r.teile && r.teile.length > 1) t += ' · ' + r.teile.length + ' Teile: ' + r.teile.map(x => x.datei).join(', ');
+    }
+    st.textContent = t;
+  }
   if(wb){
     if(r.warnungen.length){ wb.style.display = 'block'; wb.innerHTML = r.warnungen.map(w => '• ' + esc(w)).join('<br>'); }
     else { wb.style.display = 'none'; wb.innerHTML = ''; }
@@ -15949,7 +16610,11 @@ function fAmpelZeigen(){
   const p = fPruefen(fProg);
   // Ehrlicher Stand (Regel 6): nach Handbuch gebaut, am Programmierplatz
   // durchgelaufen (12.09.2026: DZ1-DZ4), an der Maschine noch nie gefahren.
-  const hinweis = ['Bohren, Muster, Taschen, Nuten und Zapfen sind nach Handbuch gebaut und im Programm-Test des iTNC-530-Programmierplatzes durchgelaufen (12.09.2026); an einer Maschine ist noch kein Programm gelaufen — Programm-Test an der Steuerung vor dem ersten Lauf.'];
+  const si = (F_PROFILE[fProg.kopf.profil] || {}).dialekt === 'siemens';
+  const hinweis = si
+    ? ['Sinumerik 840D powerline: fuer diese Maschine liegt KEIN gezogenes Programm vor. Programmkopf, Programmende, die M-Woerter der Hersteller-PLC, I=AC/J=AC und die Grenzen (Vakuumplatte, Diskette) stehen in der Unterlage; alles andere ist aus der Siemens-Grundsprache abgeleitet. Vor dem ersten Lauf im EINZELSATZ fahren und die Grafik ansehen.',
+       'Die Maschine ist fuenfachsig, die Bahnen der App sind dreiachsig (Werkzeugachse Z). TRAORI(1) und B0 C0 stehen im Kopf, geschwenkt wird nicht.']
+    : ['Bohren, Muster, Taschen, Nuten und Zapfen sind nach Handbuch gebaut und im Programm-Test des iTNC-530-Programmierplatzes durchgelaufen (12.09.2026); an einer Maschine ist noch kein Programm gelaufen — Programm-Test an der Steuerung vor dem ersten Lauf.'];
   const liste = (titel, e, kl) => e.length ? '<div class="ampel-kopf">' + titel + '</div><div class="ampel-liste">' + e.map(x => '<div class="' + kl + '">' + esc(x) + '</div>').join('') + '</div>' : '';
   const urteil = p.rot.length ? ['z-rot', 'NICHT an die Maschine geben — ' + p.rot.length + (p.rot.length === 1 ? ' Befund' : ' Befunde')]
     : (p.gelb.length ? ['z-gelb', 'Keine Sperre, aber ' + p.gelb.length + (p.gelb.length === 1 ? ' Meldung' : ' Meldungen') + ' ansehen'] : ['z-gruen', 'Kein Befund im geprueften Umfang — Programm-Test an der Steuerung bleibt Pflicht']);
@@ -15964,7 +16629,18 @@ function fAmpelZeigen(){
   on('btnGen', fNcErzeugen);
   on('btnAmpel', ()=>{ const b = document.getElementById('ampelBox'); if(b && b.style.display !== 'none' && b.innerHTML){ b.style.display = 'none'; b.innerHTML = ''; return; } fAmpelZeigen(); });
   on('btnCopy', async ()=>{ const r = fLetztes || fNcErzeugen(); if(!r.text){ melde('FEHLER: kein Programm.'); return; } melde((await copyText(r.text)) ? 'Klartext kopiert (' + r.saetze + ' Saetze).' : 'Kopieren nicht moeglich.'); });
-  on('btnDownload', ()=>{ const r = fLetztes || fNcErzeugen(); if(!r.text){ melde('FEHLER: kein Programm.'); return; } exportiereDatei(r.datei, r.text, 'Klartext'); });
+  on('btnDownload', ()=>{
+    const r = fLetztes || fNcErzeugen(); if(!r.text){ melde('FEHLER: kein Programm.'); return; }
+    // Passt das Programm nicht auf eine Diskette, hat der Schreiber es an
+    // Schrittgrenzen geteilt — dann muessen ALLE Teile heraus, sonst
+    // fehlt an der Maschine die zweite Haelfte.
+    if(r.teile && r.teile.length > 1){
+      r.teile.forEach((t, i) => setTimeout(() => exportiereDatei(t.datei, t.text, 'Teil ' + (i + 1) + ' von ' + r.teile.length), i * 400));
+      melde(r.teile.length + ' Teildateien: ' + r.teile.map(t => t.datei).join(', ') + ' — nacheinander abfahren.');
+      return;
+    }
+    exportiereDatei(r.datei, r.text, 'NC-Programm');
+  });
   on('btnCloseGcode', ()=>maskZu('maskGcode'));
   on('btnPpInfo', ()=>{
     const p = document.getElementById('ppInfo'); if(!p) return;
