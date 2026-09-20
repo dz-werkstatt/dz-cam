@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 19:54 (956420c8)";</script>
+<script>window.__DZ_STAND="20.09.2026 20:42 (19ea8f5f)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -131,7 +131,10 @@
   #splash.weg{opacity:0;pointer-events:none;}
   #splash svg{width:96px;height:96px;color:var(--text);}
   #splash .sname{font-size:30px;font-weight:700;font-style:italic;letter-spacing:1px;color:var(--blue);}
-  #splash .ssub{font-size:12.5px;color:var(--text-dim);letter-spacing:.4px;}
+  /* Rand und Breite: ohne beides lief der Untertitel am Handy bis an die
+     Bildraender und war nicht mehr zu lesen (Daniels Foto 20.09.2026). */
+  #splash .ssub{font-size:12.5px;color:var(--text-dim);letter-spacing:.4px;
+    max-width:min(320px, 86vw);line-height:1.45;padding:0 16px;}
   /* Dunkelmodus-Schalter [30.08.2026]: flach wie alle Knoepfe. */
   #dunkelBtn{width:30px;border:1px solid var(--line);border-radius:4px;
     background:var(--panel);color:var(--text-dim);font-size:14px;}
@@ -148,8 +151,11 @@
   .ba-kopf{display:flex;align-items:center;gap:8px;padding:8px 12px;
     border-bottom:2px solid var(--blue);background:hsl(var(--ton), 45%, 96.5%);flex-shrink:0;}
   .ba-kopf b{font-size:15px;color:hsl(var(--ton), 60%, 25%);flex:1;}
+  /* Polster und Breite nach INHALT: mit min-width 38 und 6 px Polster war
+     "Inhalt" abgeschnitten (gemessen 36 sichtbar / 40 noetig, 390 px). */
   .ba-kopf button{min-width:38px;min-height:34px;border:1px solid var(--line);
-    border-radius:4px;background:#fff;font-size:14px;}
+    border-radius:4px;background:#fff;font-size:14px;padding:0 12px;
+    width:auto;flex:0 0 auto;white-space:nowrap;}
   .ba-inhalt{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 60px;}
   .ba-inhalt>div{max-width:720px;margin:0 auto;}
   .ba-inhalt h2{font-size:16.5px;color:hsl(var(--ton), 60%, 25%);

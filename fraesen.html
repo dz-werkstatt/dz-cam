@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 19:54 (956420c8)";</script>
+<script>window.__DZ_STAND="20.09.2026 20:42 (19ea8f5f)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -131,7 +131,10 @@
   #splash.weg{opacity:0;pointer-events:none;}
   #splash svg{width:96px;height:96px;color:var(--text);}
   #splash .sname{font-size:30px;font-weight:700;font-style:italic;letter-spacing:1px;color:var(--blue);}
-  #splash .ssub{font-size:12.5px;color:var(--text-dim);letter-spacing:.4px;}
+  /* Rand und Breite: ohne beides lief der Untertitel am Handy bis an die
+     Bildraender und war nicht mehr zu lesen (Daniels Foto 20.09.2026). */
+  #splash .ssub{font-size:12.5px;color:var(--text-dim);letter-spacing:.4px;
+    max-width:min(320px, 86vw);line-height:1.45;padding:0 16px;}
   /* Dunkelmodus-Schalter [30.08.2026]: flach wie alle Knoepfe. */
   #dunkelBtn{width:30px;border:1px solid var(--line);border-radius:4px;
     background:var(--panel);color:var(--text-dim);font-size:14px;}
@@ -148,8 +151,11 @@
   .ba-kopf{display:flex;align-items:center;gap:8px;padding:8px 12px;
     border-bottom:2px solid var(--blue);background:hsl(var(--ton), 45%, 96.5%);flex-shrink:0;}
   .ba-kopf b{font-size:15px;color:hsl(var(--ton), 60%, 25%);flex:1;}
+  /* Polster und Breite nach INHALT: mit min-width 38 und 6 px Polster war
+     "Inhalt" abgeschnitten (gemessen 36 sichtbar / 40 noetig, 390 px). */
   .ba-kopf button{min-width:38px;min-height:34px;border:1px solid var(--line);
-    border-radius:4px;background:#fff;font-size:14px;}
+    border-radius:4px;background:#fff;font-size:14px;padding:0 12px;
+    width:auto;flex:0 0 auto;white-space:nowrap;}
   .ba-inhalt{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 60px;}
   .ba-inhalt>div{max-width:720px;margin:0 auto;}
   .ba-inhalt h2{font-size:16.5px;color:hsl(var(--ton), 60%, 25%);
@@ -2576,6 +2582,20 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
   body.dunkel .sk.sk-zyk{background:var(--key);}
   .fmerk .ppoffen{color:#b35c00;}
   #fdKlein{font-size:10.5px;color:var(--text-dim);padding:0 13px 6px;line-height:1.4;}
+  /* STARTAUSWAHL im leeren Arbeitsplan [Daniels Ansage 20.09.2026: die App
+     soll ohne Programm starten und fragen, was man vorhat]. Am Handy
+     untereinander, am Laptop nebeneinander (Regel in der Query darunter). */
+  .leerstart{display:flex;flex-direction:column;gap:7px;padding:10px 12px;}
+  .lskarte{display:flex;flex-direction:column;align-items:flex-start;gap:1px;
+    text-align:left;padding:8px 12px;border:1px solid var(--line);border-radius:9px;
+    background:#fff;cursor:pointer;width:100%;}
+  .lskarte .lstitel{font-size:14.5px;font-weight:600;color:var(--blue);}
+  .lskarte .lstext{font-size:11.5px;color:var(--text-dim);line-height:1.35;white-space:normal;}
+  /* Die erste Karte ist die, die man am haeufigsten will - sie traegt den Akzent. */
+  .lskarte.lsweiter{border-color:var(--blue);border-width:2px;background:hsl(var(--ton), 45%, 97%);}
+  body.dunkel .lskarte{background:hsl(var(--ton), 15%, 17%);border-color:hsl(var(--ton), 12%, 30%);}
+  body.dunkel .lskarte.lsweiter{background:hsl(var(--ton), 30%, 20%);}
+
   @media(min-width:900px){
     /* NC-ANSICHT: EIN SATZ JE ZEILE. Das gemeinsame Stylesheet stellt
        #gcodeView am Laptop auf white-space:normal (Design-Paket 20.09.2026,
@@ -2586,6 +2606,10 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
        Spezifitaet, spaeter im Dokument - dieselbe Mechanik wie bei
        #maskBohren (12.09.2026). Das Drehteil bleibt unberuehrt. */
     #gcodeView{white-space:pre;}
+    /* Startauswahl am Laptop: die Karten stehen nebeneinander statt als
+       schmale Spalte in einer breiten Flaeche. */
+    .leerstart{flex-direction:row;flex-wrap:wrap;gap:12px;padding:18px;}
+    .lskarte{width:auto;flex:1 1 220px;min-height:78px;}
     .arbeitsplan{order:0;}
     .fdrauf{order:1;flex:1 1 auto;height:auto;border-top:none;border-left:1px solid var(--line);}
     /* Das gemeinsame Stylesheet zwingt #arbeitsplanPanel im Arbeitsplan-Modus
@@ -2716,7 +2740,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     <button id="dunkelBtn" title="Dunkelmodus ein/aus" type="button">☾</button>
   </div>
 
-  <div id="splash"><div class="sname">DZ CAM</div><div class="ssub">Fräsen · Heidenhain iTNC 530 · Bohren, Muster, Taschen, Nuten, Zapfen, Planfräsen (Programmierplatz-Test 12.09.2026)</div><noscript><div style="max-width:340px;margin-top:18px;padding:12px 16px;border:1px solid #c8a24a;background:#fff6e0;color:#6b5320;font-size:14px;line-height:1.5;border-radius:6px;">Das ist nur die VORSCHAU &mdash; sie kann die App nicht ausf&uuml;hren.<br><b>Am Computer:</b> Datei speichern und per Doppelklick im Browser &ouml;ffnen.</div></noscript></div>
+  <div id="splash"><div class="sname">DZ CAM</div><div class="ssub">Fräsen · Heidenhain iTNC 530 · Sinumerik 840D powerline</div><noscript><div style="max-width:340px;margin-top:18px;padding:12px 16px;border:1px solid #c8a24a;background:#fff6e0;color:#6b5320;font-size:14px;line-height:1.5;border-radius:6px;">Das ist nur die VORSCHAU &mdash; sie kann die App nicht ausf&uuml;hren.<br><b>Am Computer:</b> Datei speichern und per Doppelklick im Browser &ouml;ffnen.</div></noscript></div>
 
   <div class="main">
     <div class="stage">
@@ -2915,7 +2939,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <button class="gcbtn" id="btnAmpel" title="Programm prüfen">🚦 Prüfen</button>
           <button class="gcbtn" id="btnCopy" title="Kompletten Text in die Zwischenablage">Kopieren</button>
           <button class="gcbtn" id="btnDownload" title="Als Datei NAME.H sichern — Rechner: Download, iPhone: Teilen-Blatt">📤 NC sichern</button>
-          <label class="gcbtn" id="lblWandeln" style="padding:7px 10px;cursor:pointer;" title="Ein fertiges Heidenhain-Klartext-Programm (.H) einlesen und als .MPF der 840D wieder herausgeben. Die Bahn wird UEBERSETZT, nicht nachgerechnet — im Einzelsatz fahren.">&#x2B06; .H &rarr; 840D<input type="file" id="ncWandelFile" accept=".H,.h,.txt,.TXT" style="display:none;"></label>
+          <label class="gcbtn" id="lblWandeln" style="padding:7px 10px;cursor:pointer;" title="Ein fertiges NC-Programm einlesen und in den anderen Dialekt wandeln — Heidenhain-Klartext (.H) wird zu .MPF der 840D, ein 840D-Programm (.MPF) wird zu Klartext. Die Richtung erkennt die App an der Datei. Die Bahn wird UEBERSETZT, nicht nachgerechnet — im Einzelsatz fahren.">&#x21C4; Programm wandeln<input type="file" id="ncWandelFile" accept=".H,.h,.MPF,.mpf,.SPF,.spf,.txt,.TXT" style="display:none;"></label>
         </div>
         <div id="ampelBox" style="display:none;"></div>
         <div class="warn" id="warnBox" style="display:none;"></div>
@@ -3103,6 +3127,9 @@ dann der Zyklus &mdash; jede Kachel &ouml;ffnet genau eine Maske mit den Feldern
 stehen die Zyklen als Kacheln untereinander. Sie zus&auml;tzlich in die Leiste zu schreiben hie&szlig;e nur, an derselben Liste
 vorbeizuwischen, aus der man gerade w&auml;hlt. <b>Am Laptop</b> ist die Leiste eine senkrechte Spalte &mdash; dort klappt die
 angetippte Gruppe ihre Zyklen gleich darunter auf.</li>
+<li><b>Start</b>: die App startet <b>ohne Programm</b> und fragt, was Du vorhast &mdash; <i>Weitermachen</i> mit dem
+zuletzt bearbeiteten Teil (es bleibt im Speicher, auch wenn Du erst etwas anderes ansiehst), eine <i>Testvorlage</i>,
+ein <i>STEP-Modell</i> oder ein <i>neues Teil von Hand</i> (dann zuerst das Rohteil im Programmkopf).</li>
 <li><b>NC-Ausgabe</b>: Erzeugen, Pr&uuml;fen, sichern &mdash; als <code>NAME.H</code> f&uuml;r die iTNC&nbsp;530, als
 <code>NAME.MPF</code> f&uuml;r die 840D. <b>Die Zielmaschine steht in dieser Maske selbst</b> (Feld <i>Zielmaschine</i>) und
 l&auml;sst sich dort umschalten, ohne den Programmkopf zu &ouml;ffnen: das Programm wird sofort neu erzeugt, und der
@@ -4028,11 +4055,14 @@ einer Zeilenbahn bis 13&nbsp;% &mdash; und Platz ist hier der Engpass, weil das 
 <b>Ausgeschrieben</b> bleibt das Wort im festen Kopf und Ende und bei jedem R&uuml;ckzug zum Werkzeugwechsel: dort will
 man sich auf keinen modalen Zustand verlassen. Wer mitten im Programm einsteigt, l&auml;sst die Steuerung mit
 <b>Satzsuche mit Berechnung</b> anfahren &mdash; sie rechnet die modalen Zust&auml;nde dabei mit.</dd>
-<dt id="ba-fk07b-wandler">Ein Klartext-Programm f&uuml;r die 840D umschreiben</dt><dd>Der Knopf
-<b>&#x2B06; .H &rarr; 840D</b> in der NC-Ausgabe liest ein fertiges Heidenhain-Klartext-Programm und gibt es als
-<b>.MPF</b> wieder heraus &mdash; auch eines, das nicht aus dieser App stammt. Die Datei wird sofort gesichert; das
-offene Programm bleibt unber&uuml;hrt.<br>
-<b>Die Bahn wird &uuml;bersetzt, nicht nachgerechnet.</b> Geraden, Kreise, Schraubenlinien, Verweilzeiten, Werkzeug-
+<dt id="ba-fk07b-wandler">Ein NC-Programm in den anderen Dialekt wandeln</dt><dd>Der Knopf
+<b>&#x21C4; Programm wandeln</b> in der NC-Ausgabe liest ein fertiges NC-Programm und gibt es im <b>anderen</b>
+Dialekt wieder heraus: aus Heidenhain-Klartext (<b>.H</b>) wird eine <b>.MPF</b> der 840D, aus einem 840D-Programm
+wird Klartext. <b>Die Richtung erkennt die App an der Datei</b>, nicht am Knopf &mdash; sie z&auml;hlt die
+Kennzeichen beider Dialekte und sagt in der Meldung, was sie gewandelt hat. Auch ein Programm, das nicht aus dieser
+App stammt, l&auml;uft durch. Die Datei wird sofort gesichert; das offene Programm bleibt unber&uuml;hrt.<br>
+<b>In beiden Richtungen gilt: die Bahn wird &uuml;bersetzt, nicht nachgerechnet.</b><br>
+<b>Klartext &rarr; 840D.</b> Geraden, Kreise, Schraubenlinien, Verweilzeiten, Werkzeug-
 und Drehzahlaufrufe, die Bohrzyklen 200/201/203/206/240 und die Bohrbilder &mdash; alles andere steht als Kommentar
 <code>; NICHT UEBERSETZT</code> im Programm, und die Meldung z&auml;hlt es auf. <b>Die App r&auml;t dort nichts.</b>
 Das betrifft vor allem die <b>Taschen-, Nut-, Zapfen- und SL-Zyklen</b>: um daraus eine Siemens-Bahn zu machen,
@@ -4047,6 +4077,20 @@ dieser Maschine: die H&ouml;he des Zielprofils einzusetzen w&auml;re eine &Auml;
 <b>M-W&ouml;rter sind die Falle</b>, und der Wandler kennt sie: <code>M13</code> (Spindel rechts <i>und</i>
 K&uuml;hlmittel) wird zu <b>M3 M8</b>, weil Siemens daf&uuml;r zwei W&ouml;rter hat; <code>M99</code> und
 <code>M91</code> hei&szlig;en an den beiden Steuerungen <b>nicht dasselbe</b> und werden nicht &uuml;bernommen.<br>
+<b>840D &rarr; Klartext.</b> Dieselbe Regel r&uuml;ckw&auml;rts: Geraden, Kreise (auch der Vollkreis, den der
+Klartext in zwei Halbb&ouml;gen fahren muss), Schraubenlinien (<code>TURN=</code> wird zu <code>CP IPA/IZ</code>),
+Verweilzeiten, Werkzeug- und Drehzahlaufrufe. Ein <b>Zyklusaufruf der Steuerung</b> (<code>CYCLE82</code>,
+<code>POCKET3</code>&nbsp;&hellip;) wird mit seinem Namen <b>gemeldet</b> und steht als <code>; NICHT UEBERSETZT</code>
+im Programm &mdash; die Parameterreihenfolge der 840D ist bei uns abgeleitet und nicht belegt; daraus einen
+iTNC-Zyklus zu machen hie&szlig;e, <b>zweimal zu raten</b>.<br>
+<b>Drei Dinge, die ein 840D-Programm nicht hergibt.</b> (1) Das <b>Rohteil</b>: die 840D f&uuml;hrt keines, also
+wird die <code>BLK FORM</code> aus den Bahnkoordinaten <b>gesch&auml;tzt</b> &mdash; die Meldung nennt die Zahlen,
+und sie geh&ouml;ren vor dem Lauf gepr&uuml;ft. (2) Der <b>feste Rahmen</b> der Maschine (<code>TRAORI</code>,
+<code>G53/G54</code>, <code>TRAFOOF</code>) bleibt drau&szlig;en; der Klartext hat daf&uuml;r BEGIN&nbsp;PGM,
+BLK&nbsp;FORM und END&nbsp;PGM. (3) Die <b>M-W&ouml;rter der Maschinen-PLC</b> (<code>M99</code>, <code>M91</code>,
+<code>M98</code>, <code>M80</code>, <code>M82</code>) hei&szlig;en im Klartext etwas anderes und werden nicht
+&uuml;bernommen &mdash; die <b>Fahrt</b> des Satzes bleibt, nur die PLC-Funktion f&auml;llt weg. Alles drei steht in
+der Meldung, keines wird verschwiegen.<br>
 Alles, was f&uuml;r die eigene Ausgabe gilt, gilt auch hier: derselbe Rahmen, dieselbe Wache auf die
 Zyklusparameter, dieselbe Vollkreis-Regel &mdash; und derselbe Vorbehalt, <b>vor dem ersten Lauf im Einzelsatz
 zu fahren</b>.</dd>
@@ -13769,6 +13813,262 @@ function fKlartext840(text, opt){
 // Satznummern zaehlen nur ganze Saetze; die Q-Zeilen einer CYCL DEF
 // gehoeren zum Satz davor (Tilde am Zeilenende).
 // ---------------------------------------------------------------------
+// ============================================================================
+// DER WANDLER 840D -> KLARTEXT (20.09.2026, Daniels Wunsch: "Ich kann ja
+// genauso gut ein Heidenhain-Programm laden und das in 840D konvertieren
+// wollen oder ein 840D-Programm laden und das in Heidenhain konvertieren").
+//
+// Er liest die Saetze der 840D in dasselbe dialektfreie Bahnmodell, das auch
+// die eigene Ausgabe fuellt, und laesst fBahnKlartext daraus die .H-Saetze
+// schreiben. Damit gilt fuer die Geometrie, was am Programmierplatz belegt
+// ist - es gibt keinen zweiten Klartext-Schreiber.
+//
+// ER UEBERSETZT, ER RECHNET NICHT NACH: ein Zyklusaufruf der Steuerung
+// (CYCLE82, POCKET3 ...) wird GEMELDET, nicht in einen iTNC-Zyklus geraten.
+// Die Parameterreihenfolge der 840D ist bei uns abgeleitet, nicht belegt -
+// daraus einen Heidenhain-Zyklus zu machen hiesse, zweimal zu raten.
+// ============================================================================
+
+// Dieselbe Meldung mehrfach nennen hilft niemandem: jeder Werkzeugwechsel
+// traegt dieselben PLC-Woerter, jeder Schritt denselben Zyklus. Gleiche
+// Meldungen (gleicher Text bis auf den zitierten Satz) werden zu EINER
+// zusammengezogen, die Anzahl steht dahinter.
+function fOffenFassen(liste){
+  const idx = {}, raus = [];
+  (liste || []).forEach(t => {
+    const k = String(t).replace(/im Satz "[^"]*"/, 'im Satz *').replace(/\(Satz: [^)]*\)/, '(Satz *)');
+    if(idx[k] == null){ idx[k] = raus.length; raus.push({t:t, n:1}); }
+    else raus[idx[k]].n++;
+  });
+  return raus.map(e => e.n > 1 ? e.t + ' (' + e.n + 'x im Programm)' : e.t);
+}
+
+// M-Woerter heissen nicht dasselbe. Die gefaehrlichen zuerst: M99 ruft im
+// Klartext den Zyklus satzweise auf, an der 840D ist es eine PLC-Funktion;
+// M80/M82/M91/M98 ebenso. Sie werden NICHT uebernommen, sondern genannt.
+const SI_KL_M = {3:'M3', 4:'M4', 5:'M5', 6:'M6', 7:'M7', 8:'M8', 9:'M9', 30:null,
+                 1:'?', 80:'?', 82:'?', 91:'?', 98:'?', 99:'?', 821:'?'};
+// Woerter des festen Rahmens: sie gehoeren zur Maschine, nicht zur Bahn. Im
+// Klartext steht dafuer BEGIN PGM / BLK FORM / END PGM.
+const SI_RAHMEN = /^(TRAFOOF|TRAORI|D0\b|G53\b|G54\b|G17\b|G90\b|G500\b|SUPA\b)/;
+
+function fSiWort(z, w){
+  const m = String(z).match(new RegExp('(?:^|\\s)' + w + '\\s*=?\\s*([+-]?[0-9]*\\.?[0-9]+)'));
+  return m ? parseFloat(m[1]) : null;
+}
+function fSiAc(z, w){          // I=AC(123.45) / J=AC(-2.5)
+  const m = String(z).match(new RegExp('(?:^|\\s)' + w + '\\s*=\\s*AC\\(\\s*([+-]?[0-9]*\\.?[0-9]+)\\s*\\)'));
+  return m ? parseFloat(m[1]) : null;
+}
+
+// Welchen Dialekt hat diese Datei? Gezaehlt wird, nicht geraten - eine einzelne
+// Zeile kann in beiden Dialekten vorkommen (ein Kommentar zum Beispiel).
+function fDialektErkennen(text){
+  const t = String(text || '');
+  const kl = (t.match(/^\s*\d+\s+(BEGIN PGM|END PGM|BLK FORM|TOOL CALL|CYCL DEF|L\s|LP\s|C\s|CC\s|CR\s|CP\s|CALL LBL|LBL\s)/gm) || []).length +
+             (/BEGIN PGM/.test(t) ? 5 : 0);
+  const si = (t.match(/^\s*(N\d+\s+)?(G0[0-3]?\b|G[0-3]\b|TRAORI|TRAFOOF|MCALL|CYCLE\d+|POCKET[34]|HOLES[12]|M30)/gm) || []).length +
+             (/;%_N_/.test(t) ? 5 : 0) + (/=eof=/.test(t) ? 3 : 0) + (/I=AC\(/.test(t) ? 3 : 0);
+  if(kl === 0 && si === 0) return {dialekt:null, kl:kl, si:si};
+  return {dialekt:(kl >= si ? 'klartext' : 'siemens'), kl:kl, si:si};
+}
+
+function f840Klartext(text, opt){
+  opt = opt || {};
+  const warn = [], offen = [], B = [];       // B = dialektfreies Bahnmodell
+  const pos = {x:null, y:null, z:null};
+  let g = 0, ff = null, sAkt = null, tAkt = null, cc = null, name = '';
+  let saetze = 0, rahmen = 0;
+  const werkzeuge = [];                       // Reihenfolge der T-Aufrufe
+
+  const zeilen = String(text || '').replace(/\r/g, '').split('\n');
+  for(let i = 0; i < zeilen.length; i++){
+    let z = zeilen[i].trim();
+    if(!z || z === '=eof=') continue;
+
+    // --- Kommentare ---------------------------------------------------
+    if(/^;/.test(z)){
+      const t = z.replace(/^;\s*/, '');
+      if(/^%_N_(\S+)_MPF/.test(t)){ name = (t.match(/^%_N_(\S+)_MPF/) || [])[1] || name; continue; }
+      if(/^\$PATH/.test(t) || /^SETUP/.test(t)) continue;      // Ablage und Aufspannzeile der Maschine
+      if(t) B.push({a:'kom', text:t});
+      continue;
+    }
+    z = z.replace(/^N\d+\s*/, '').trim();                       // Satznummer weg
+    if(!z || z === '=eof=') continue;
+
+    // --- Programmende -------------------------------------------------
+    if(/^M30\b/.test(z)) break;
+
+    // --- Werkzeug und Drehzahl ----------------------------------------
+    let m;
+    if((m = z.match(/^T\s*(\d+)\s*(D\d+)?\s*$/))){ tAkt = +m[1]; continue; }
+    if(/^M0?[34]\b/.test(z) && /\bS\d/.test(z)){
+      sAkt = fSiWort(z, 'S');
+      const f = fSiWort(z, 'F'); if(f != null) ff = f;
+      if(tAkt != null){ werkzeuge.push({t:tAkt, s:sAkt, f:ff}); B.push({a:'werkzeug', t:tAkt, s:sAkt, f:ff}); tAkt = null; }
+      else if(sAkt != null) B.push({a:'drehzahl', s:sAkt});
+      continue;
+    }
+
+    // --- Verweilzeit ---------------------------------------------------
+    if((m = z.match(/^G0?4\b/))){
+      const t = fSiWort(z, 'F'); if(t != null) B.push({a:'verweil', t:t});
+      continue;
+    }
+
+    // --- Rahmen der Maschine -------------------------------------------
+    const ohneG = z.replace(/^G0?[0-3]\s*/, '');
+    if(SI_RAHMEN.test(z) || (SI_RAHMEN.test(ohneG) && !/[XYZ]\s*[-+0-9]/.test(ohneG))){
+      // G53 G0 Z0 / G54 B0 C0 / TRAORI(1) ... - der Klartext hat dafuer
+      // seinen eigenen Rahmen. Genannt, damit niemand es uebersieht.
+      rahmen++;
+      continue;
+    }
+
+    // --- Zyklen der Steuerung: gemeldet, nicht geraten ------------------
+    if(/^MCALL/.test(z) || /^[A-Z_][A-Z0-9_]*\s*\(/.test(z)){
+      const nm = (z.match(/^(MCALL\s+)?([A-Z_][A-Z0-9_]*)/) || [])[2] || z;
+      if(/^MCALL\s*$/.test(z)) continue;                        // MCALL allein hebt nur auf
+      offen.push(nm + ' - Zyklus der Steuerung, nicht uebersetzt (Satz: ' + z + ')');
+      B.push({a:'kom', text:'NICHT UEBERSETZT: ' + z});
+      continue;
+    }
+
+    // --- Bahnsaetze -----------------------------------------------------
+    if((m = z.match(/^G0?([0-3])\b/))) g = +m[1];
+    const hatAchse = /[XYZ]\s*[-+0-9.]/.test(z);
+    // Ein Satz kann MEHRERE M-Woerter tragen - der feste Fusssatz der 840D
+    // hat drei (M99 M80 M82). Jedes wird einzeln beurteilt; der erste Bau
+    // sah nur das erste, die anderen fielen STILL weg.
+    const mWorte = (z.match(/(?:^|\s)M0?\d+\b/g) || []).map(w => +w.trim().slice(1));
+    if(!hatAchse && !mWorte.length) continue;
+
+    let mTeil = null;
+    mWorte.forEach(mw => {
+      const u = SI_KL_M[mw];
+      if(u === undefined){ warn.push('M' + mw + ' ist der App unbekannt und wurde NICHT geschrieben (Satz: ' + z + ').'); }
+      else if(u === '?'){ offen.push('M' + mw + ' im Satz "' + z + '" - an der 840D eine Funktion der Maschinen-PLC, im Klartext etwas anderes. NICHT uebernommen.'); }
+      else if(u && mTeil == null) mTeil = mw;      // der Klartext traegt EIN M-Wort je Satz
+      else if(u) offen.push('M' + mw + ' im Satz "' + z + '" - ein Klartext-Satz traegt nur EIN M-Wort. NICHT uebernommen.');
+    });
+
+    const p = {x:fSiWort(z, 'X'), y:fSiWort(z, 'Y'), z:fSiWort(z, 'Z')};
+    const f = fSiWort(z, 'F'); if(f != null) ff = f;
+
+    if(g === 2 || g === 3){
+      const turn = fSiWort(z, 'TURN');
+      const cx = fSiAc(z, 'I'), cy = fSiAc(z, 'J');
+      const ix = fSiWort(z, 'I'), iy = fSiWort(z, 'J');
+      let mx = cx, my = cy;
+      if(mx == null && ix != null && pos.x != null) mx = pos.x + ix;    // Kettenmass, falls jemand es so schreibt
+      if(my == null && iy != null && pos.y != null) my = pos.y + iy;
+      const ex = (p.x != null ? p.x : pos.x), ey = (p.y != null ? p.y : pos.y);
+      if(mx == null || my == null || ex == null || ey == null){
+        offen.push('Kreissatz ohne Mittelpunkt: "' + z + '"');
+        B.push({a:'kom', text:'NICHT UEBERSETZT: ' + z});
+        continue;
+      }
+      const dr = (g === 3 ? 1 : -1);
+      // SCHRAUBENLINIE: TURN=n plus der Bogen des Satzes selbst. Der Klartext
+      // fuehrt sie in Polarkoordinaten (CP IPA=Winkel IZ=Hub), also wird der
+      // ueberstrichene Winkel zurueckgerechnet.
+      if(turn != null && p.z != null && pos.z != null){
+        const a0 = Math.atan2(pos.y - my, pos.x - mx), a1 = Math.atan2(ey - my, ex - mx);
+        let d = (a1 - a0) * dr; while(d <= 1e-9) d += 2 * Math.PI;   // 0 < d <= 2pi
+        const turns = turn + d / (2 * Math.PI);
+        B.push({a:'helix', cx:mx, cy:my, dr:dr, turns:turns, dz:(p.z - pos.z), z:p.z, f:ff});
+        pos.x = ex; pos.y = ey; pos.z = p.z; cc = {x:mx, y:my}; saetze++;
+        continue;
+      }
+      // Ein Vollkreis (Start gleich Ende) laesst sich im Klartext nicht in
+      // EINEM Satz fahren - er wird in zwei Halbboegen geteilt, wie ihn der
+      // Klartext-Leser der Gegenrichtung auch wieder zusammenzieht.
+      const voll = (Math.abs(ex - pos.x) < 1e-6 && Math.abs(ey - pos.y) < 1e-6);
+      if(voll){
+        const gx = 2 * mx - pos.x, gy = 2 * my - pos.y;
+        B.push({a:'kreis', x:gx, y:gy, cx:mx, cy:my, dr:dr, f:ff});
+        B.push({a:'kreis', x:ex, y:ey, cx:mx, cy:my, dr:dr, f:ff});
+      } else {
+        B.push({a:'kreis', x:ex, y:ey, cx:mx, cy:my, dr:dr, f:ff});
+      }
+      pos.x = ex; pos.y = ey; if(p.z != null) pos.z = p.z;
+      cc = {x:mx, y:my}; saetze++;
+      continue;
+    }
+
+    const e = {a:(g === 0 ? 'eil' : 'vor'), f:ff};
+    if(p.x != null) e.x = p.x; if(p.y != null) e.y = p.y; if(p.z != null) e.z = p.z;
+    if(mTeil != null) e.m = mTeil;
+    if(e.x == null && e.y == null && e.z == null && e.m == null) continue;
+    B.push(e);
+    ['x', 'y', 'z'].forEach(k => { if(p[k] != null) pos[k] = p[k]; });
+    saetze++;
+  }
+
+  if(rahmen) warn.push(rahmen + ' Saetze des festen Rahmens der 840D (TRAFOOF, G53/G54, TRAORI, G90 G17) sind NICHT uebersetzt - der Klartext hat dafuer BEGIN PGM, BLK FORM und END PGM.');
+  if(!saetze) return {text:null, warnungen:warn, offen:fOffenFassen(offen), saetze:0, datei:null,
+                      fehler:'In dieser Datei steht kein Bahnsatz der 840D.'};
+
+  // --- Rohteil: im Siemens-Programm steht keines --------------------------
+  const gr = {x0:Infinity, y0:Infinity, z0:Infinity, x1:-Infinity, y1:-Infinity, z1:-Infinity};
+  let px = null, py = null, pz = null;
+  B.forEach(e => {
+    if(e.x != null) px = e.x; if(e.y != null) py = e.y; if(e.z != null) pz = e.z;
+    if(e.a === 'kreis'){ px = e.x; py = e.y; }
+    if(px != null){ gr.x0 = Math.min(gr.x0, px); gr.x1 = Math.max(gr.x1, px); }
+    if(py != null){ gr.y0 = Math.min(gr.y0, py); gr.y1 = Math.max(gr.y1, py); }
+    if(pz != null){ gr.z0 = Math.min(gr.z0, pz); gr.z1 = Math.max(gr.z1, pz); }
+  });
+  const blk = {
+    x0:(isFinite(gr.x0) ? Math.floor(gr.x0) : 0), y0:(isFinite(gr.y0) ? Math.floor(gr.y0) : 0),
+    z0:(isFinite(gr.z0) ? Math.floor(gr.z0) : -10),
+    x1:(isFinite(gr.x1) ? Math.ceil(gr.x1) : 100), y1:(isFinite(gr.y1) ? Math.ceil(gr.y1) : 100), z1:0
+  };
+  warn.push('Das Rohteil (BLK FORM) steht in keinem 840D-Programm - es ist aus den Bahnkoordinaten GESCHAETZT (X' +
+            blk.x0 + '..' + blk.x1 + ' Y' + blk.y0 + '..' + blk.y1 + ' Z' + blk.z0 + '..0). Vor dem Lauf pruefen.');
+
+  // --- Klartext schreiben --------------------------------------------------
+  const nm = fName({kopf:{name:(opt.name || name || 'GEWANDELT')}});
+  const L = [];
+  L.push('BEGIN PGM ' + nm + ' MM');
+  // Der Klartext schreibt das Vorzeichen IMMER mit - ein fest gesetztes '+'
+  // vor einem negativen Wert ergaebe 'X+-47' (im Browser am gewandelten "plan"
+  // gesehen, dessen Rohteil links der Nullpunkts liegt).
+  const vz = (v) => (v < 0 ? '' : '+') + v;
+  L.push('BLK FORM 0.1 Z X' + vz(blk.x0) + ' Y' + vz(blk.y0) + ' Z' + vz(blk.z0));
+  L.push('BLK FORM 0.2 X' + vz(blk.x1) + ' Y' + vz(blk.y1) + ' Z' + vz(blk.z1));
+  L.push('; GEWANDELT AUS EINEM SINUMERIK-840D-PROGRAMM - NICHT NACHGERECHNET.');
+  L.push('; ROHTEIL AUS DEN BAHNKOORDINATEN GESCHAETZT.');
+  L.push('; VOR DEM ERSTEN LAUF IM EINZELSATZ FAHREN.');
+
+  // Der Bahnschreiber kennt keinen Werkzeugwechsel - der steht im Rahmen.
+  let teil = [];
+  const spuelen = () => { if(teil.length){ fBahnKlartext(teil).forEach(s => L.push(s)); teil = []; } };
+  B.forEach(e => {
+    if(e.a === 'werkzeug'){ spuelen(); L.push('TOOL CALL ' + e.t + ' Z S' + Math.round(e.s || 0)); return; }
+    if(e.a === 'drehzahl'){ spuelen(); L.push('TOOL CALL S' + Math.round(e.s || 0)); return; }
+    teil.push(e);
+  });
+  spuelen();
+  L.push('END PGM ' + nm + ' MM');
+
+  const txt = L.map((s, i) => i + ' ' + s).join('\r\n') + '\r\n';
+  return {text:txt, zeilen:L, warnungen:warn, offen:fOffenFassen(offen), saetze:L.length, datei:nm + '.H', name:nm};
+}
+
+// Ein Knopf fuer beide Richtungen: der Dialekt entscheidet, wohin gewandelt
+// wird [Daniels Ansage 20.09.2026].
+function fNcWandeln(text, opt){
+  opt = opt || {};
+  const d = fDialektErkennen(text);
+  if(!d.dialekt) return {text:null, saetze:0, warnungen:[], offen:[],
+    fehler:'Diese Datei ist weder ein Heidenhain-Klartext- noch ein 840D-Programm.'};
+  const r = (d.dialekt === 'klartext') ? fKlartext840(text, opt) : f840Klartext(text, opt);
+  r.von = d.dialekt; r.nach = (d.dialekt === 'klartext') ? 'siemens' : 'klartext';
+  return r;
+}
+
 function fProgrammSchreiben(prog, opt){
   opt = opt || {};
   const P = F_PROFILE[(prog.kopf && prog.kopf.profil) || 'HEIDENHAIN_ITNC530'];
@@ -15198,7 +15498,7 @@ function fMerkmale(profilId){
     {t:'Ohne Zyklus (Vorgabe): jede Bearbeitung laeuft als eigene Bahn der App — dieselbe, die am Programmierplatz der iTNC 530 Satz fuer Satz belegt ist (DZ4 bis DZ24). Neu ist nur die Schreibweise, nicht die Geometrie.', s:'abgeleitet'},
     {t:'Grenzen der Maschine, von der App geprueft: hoechstens ' + (P.plaetze || 2) + ' Werkzeuge im Programm (rot), bei Vakuumspannung nicht tiefer als Z' + P.zVakuum + ' (rot), Rohteil-Oberkante unter Z20 (rot — der feste Kopf faehrt dort hin).', s:'abgeleitet'},
     {t:'Diskette: die Unterlage setzt die Grenze bei ' + Math.round(P.maxBytes / 1000) + ' kB. Die App geht in drei Stufen — mit Satznummern, ohne Satznummern (an einer Formschlichtbahn ein Viertel der Datei), dann aufgeteilt an einer Schrittgrenze, jedes Teil mit eigenem Kopf und Ende.', s:'abgeleitet'},
-    {t:'Wandler .H -> .MPF (Knopf in der NC-Ausgabe): ein fertiges Klartext-Programm wird UEBERSETZT, nicht nachgerechnet. Geraden, Kreise, Schraubenlinien, Verweilzeiten, Werkzeug- und Drehzahlaufrufe, die Bohrzyklen 200/201/203/206/240 und die Bohrbilder; Taschen-, Nut-, Zapfen- und SL-Zyklen werden GEMELDET statt geraten. Ein CR-Satz traegt nur den Radius — die Mitte wird aus den gerundeten Endpunkten zurueckgerechnet und kann ein Tausendstel danebenliegen. M13 wird M3 und M8; M99 und M91 heissen hier etwas anderes und werden nicht uebernommen. Gemessen am Umweg (derselbe Plan direkt als 840D gegen Klartext-dann-gewandelt): jeder Bahnsatz kommt wieder, die Reihenfolge weicht nur an den Rueckzuegen zum Werkzeugwechsel ab.', s:'abgeleitet'},
+    {t:'Wandler in BEIDE Richtungen (Knopf "Programm wandeln" in der NC-Ausgabe; die Richtung erkennt die App an der Datei): ein fertiges Programm wird UEBERSETZT, nicht nachgerechnet. Klartext -> 840D: Geraden, Kreise, Schraubenlinien, Verweilzeiten, Werkzeug- und Drehzahlaufrufe, die Bohrzyklen 200/201/203/206/240 und die Bohrbilder; Taschen-, Nut-, Zapfen- und SL-Zyklen werden GEMELDET statt geraten. Ein CR-Satz traegt nur den Radius — die Mitte wird aus den gerundeten Endpunkten zurueckgerechnet und kann ein Tausendstel danebenliegen. M13 wird M3 und M8; M99 und M91 heissen hier etwas anderes und werden nicht uebernommen. 840D -> Klartext: dieselbe Regel rueckwaerts (Vollkreis wird zu zwei Halbboegen, TURN= zu CP IPA/IZ); ein CYCLE/POCKET der Steuerung wird mit Namen gemeldet, das Rohteil (BLK FORM) aus den Bahnkoordinaten GESCHAETZT, der feste Rahmen (TRAORI, G53/G54) und die PLC-Woerter M99/M91/M98/M80/M82 bleiben draussen — alles drei steht in der Meldung. Gemessen am Rundlauf ueber fuenf Vorlagen (derselbe Plan direkt als Klartext gegen 840D-dann-gewandelt): jeder Bahnsatz kommt zurueck, zusaetzlich nur der feste Rahmen der 840D.', s:'abgeleitet'},
     {t:'Fuenfachsig: die Maschine ist es, die Bahnen der App sind es nicht. TRAORI(1) und B0 C0 stehen im Kopf (die Unterlage nennt TRAORI Pflicht auch bei 3-Achs-Bearbeitung), geschwenkt wird nicht.', s:'gesperrt'},
     {t:'Nicht gebaut: Zapfen (CYCLE76/77), Nuten (SLOT1/SLOT2/LONGHOLE), Planfraesen (CYCLE71), Bahnfraesen (CYCLE72), Gewindefraesen (CYCLE90), Gewindebohren synchron (CYCLE84), Rueckwaerts-Senken. Bei ihnen haengt die Bedeutung an Parametern, die sich ohne Beleg nicht sicher zuordnen lassen — sie laufen als Bahn und sagen es.', s:'gesperrt'},
     {t:'Stand: ' + P.termine, s:'bildschirm', offen:P.offen}
@@ -15580,7 +15880,16 @@ var fEditMuster = -1;
 var fMusterTmp = null;      // Punkte-Tabelle waehrend der Bearbeitung
 const F_SLOT_AKT = 'dzf_aktuell', F_SLOT_PROG = 'dzf_programme';
 
-function fSpeicherAkt(){ try{ localStorage.setItem(F_SLOT_AKT, JSON.stringify(fProg)); }catch(e){} }
+function fIstLeer(p){ return !!p && !(p.schritte || []).length && !(p.muster || []).length && !(p.konturen || []).length; }
+function fSpeicherAkt(){
+  if(fIstLeer(fProg)) return;   // s. Kommentar am Startaufruf: der letzte Stand bleibt stehen
+  try{ localStorage.setItem(F_SLOT_AKT, JSON.stringify(fProg)); }catch(e){}
+}
+// Was liegt im Speicher, ohne es zu laden? (fuer die Karte "Weitermachen")
+function fLetzterStand(){
+  const p = fLadeAkt(); if(!p || fIstLeer(p)) return null;
+  return {name:(p.kopf && p.kopf.name) || '?', schritte:p.schritte.length, muster:p.muster.length, prog:p};
+}
 function fLadeAkt(){
   try{ const r = localStorage.getItem(F_SLOT_AKT); if(r){ const p = JSON.parse(r); if(p && p.kopf && Array.isArray(p.schritte) && Array.isArray(p.muster)) return p; } }catch(e){}
   return null;
@@ -15625,7 +15934,12 @@ function fRender(){
   // Die Zeit steht VORN: der Chip ist am Handy rund 95 px breit und schneidet
   // hinten ab (Aufnahme 19.09.2026: "6 Bohrbilder · ..." - die Zeit war genau
   // das, was fehlte). Am Laptop steht alles.
-  const sp = document.getElementById('statPts'); if(sp) sp.textContent = ((hz && hz.gesamt > 0) ? '\u23F1 ' + fZeitText(hz.komplett) + ' · ' : '') + fProg.schritte.length + ' Schritt' + (fProg.schritte.length === 1 ? '' : 'e') + ' · ' + fProg.muster.length + ' Bohrbild' + (fProg.muster.length === 1 ? '' : 'er');
+  const sp = document.getElementById('statPts');
+  // Bei leerem Programm hat der Chip nichts zu sagen; ausgeblendet wird der
+  // RAHMEN (.msgline), sonst bleibt ein leerer weisser Kasten stehen.
+  { const ml = document.getElementById('msgLine');
+    if(ml) ml.style.display = fIstLeer(fProg) ? 'none' : ''; }
+  if(sp && !fIstLeer(fProg)) sp.textContent = ((hz && hz.gesamt > 0) ? '\u23F1 ' + fZeitText(hz.komplett) + ' · ' : '') + fProg.schritte.length + ' Schritt' + (fProg.schritte.length === 1 ? '' : 'e') + ' · ' + fProg.muster.length + ' Bohrbild' + (fProg.muster.length === 1 ? '' : 'er');
   const t1 = document.getElementById('tfsXY'); if(t1) t1.textContent = (k.x1 - k.x0) + ' × ' + (k.y1 - k.y0);
   const t2 = document.getElementById('tfsZ'); if(t2) t2.textContent = k.z1 + ' ← ' + k.z0;
   const t3 = document.getElementById('tfsMasch'); if(t3) t3.textContent = (F_PROFILE[k.profil] || F_PROFILE.HEIDENHAIN_ITNC530).name;
@@ -15707,7 +16021,23 @@ function fArbeitsplanRender(){
          '<button class="ap-edit" data-es="' + i + '">✎</button><button class="ap-del" data-ds="' + i + '">✕</button></div>';
   });
   if(!fProg.schritte.length && !fProg.muster.length){
-    h += '<div style="padding:14px 12px;font-size:12.5px;color:var(--text-dim);line-height:1.5;">Noch leer. Rechts <b>Positionen</b> f&uuml;r ein Bohrbild anlegen, dann <b>Zentrieren</b>, <b>Bohren</b> oder <b>Gewinde</b> darauf setzen. Unter <b>Programme</b> liegen ' + F_DEMOS.length + ' Testvorlagen.</div>';
+    // STARTAUSWAHL statt Hinweistext [Daniels Ansage 20.09.2026]. Die erste
+    // Karte gibt es nur, wenn wirklich ein Stand im Speicher liegt.
+    const L = fLetzterStand();
+    h += '<div class="leerstart">';
+    if(L) h += '<button class="lskarte lsweiter" data-start="weiter">' +
+      '<span class="lstitel">Weitermachen: ' + esc(L.name) + '</span>' +
+      '<span class="lstext">' + L.schritte + ' Schritt' + (L.schritte === 1 ? '' : 'e') + ', ' + L.muster + ' Bohrbild' + (L.muster === 1 ? '' : 'er') + ' — zuletzt bearbeitet</span></button>';
+    h += '<button class="lskarte" data-start="vorlagen">' +
+      '<span class="lstitel">Testvorlage öffnen</span>' +
+      '<span class="lstext">' + F_DEMOS.length + ' fertige Programme zum Ansehen und Abwandeln</span></button>';
+    h += '<button class="lskarte" data-start="step">' +
+      '<span class="lstitel">STEP-Modell laden</span>' +
+      '<span class="lstext">Aufspannung, Rohteil und Programmvorschlag aus dem 3D-Modell</span></button>';
+    h += '<button class="lskarte" data-start="kopf">' +
+      '<span class="lstitel">Neues Teil von Hand</span>' +
+      '<span class="lstext">Erst das Rohteil im Programmkopf, dann Positionen und Zyklen</span></button>';
+    h += '</div>';
   }
   body.innerHTML = h;
 }
@@ -15717,6 +16047,13 @@ function fArbeitsplanRender(){
     const b = e.target.closest ? e.target.closest('button') : null;
     if(b){
       const d = b.dataset;
+      if(d.start){
+        if(d.start === 'weiter'){ const L = fLetzterStand(); if(L){ fProgrammSetzen(L.prog); melde('Weiter mit ' + L.prog.kopf.name + '.'); } }
+        else if(d.start === 'vorlagen'){ fProgListe(); fVorlagenListe(); setVal('pmSaveName', fProg.kopf.name); maskZeigen('maskProgramme'); }
+        else if(d.start === 'step'){ maskZeigen('maskStep'); setTimeout(()=>{ try{ fStepBericht(); fStepPlanMalen(); fStepZeichnen(); }catch(e){} }, 0); }
+        else if(d.start === 'kopf'){ fKopfOeffnen(); }
+        return;
+      }
       if(d.ek){ fKopfOeffnen(); return; }
       if(d.em !== undefined){ fMusterOeffnen(+d.em); return; }
       if(d.ekt !== undefined){ fKonturOeffnen(+d.ekt); return; }
@@ -17172,7 +17509,10 @@ function fAmpelZeigen(){
   }
   on('btnAmpel', ()=>{ const b = document.getElementById('ampelBox'); if(b && b.style.display !== 'none' && b.innerHTML){ b.style.display = 'none'; b.innerHTML = ''; return; } fAmpelZeigen(); });
   on('btnCopy', async ()=>{ const r = fLetztes || fNcErzeugen(); if(!r.text){ melde('FEHLER: kein Programm.'); return; } melde((await copyText(r.text)) ? 'Klartext kopiert (' + r.saetze + ' Saetze).' : 'Kopieren nicht moeglich.'); });
-  // WANDLER .H -> .MPF (Daniels zweiter Wunsch zum 840D-Auftrag).
+  // WANDLER IN BEIDE RICHTUNGEN [Daniels Ansage 20.09.2026: "ich kann ja
+  // genauso gut ein Heidenhain-Programm laden und das in 840D konvertieren
+  // wollen oder ein 840D-Programm laden und das in Heidenhain konvertieren"].
+  // Welche Richtung, entscheidet die DATEI (fDialektErkennen), nicht der Knopf.
   // Die Ausgabe ist ein ANDERES Programm als das offene - sie gehoert
   // deshalb nicht in die Textflaeche, sondern direkt in eine Datei. Was
   // nicht uebersetzt werden konnte, steht als Kommentar IM Programm und
@@ -17184,11 +17524,12 @@ function fAmpelZeigen(){
       r.onload = () => {
         this.value = '';
         let R;
-        try{ R = fKlartext840(String(r.result || ''), {name:f.name.replace(/\.[^.]*$/, '')}); }
+        try{ R = fNcWandeln(String(r.result || ''), {name:f.name.replace(/\.[^.]*$/, '')}); }
         catch(err){ melde('Der Wandler ist an dieser Datei gescheitert: ' + err.message); return; }
-        if(!R.saetze){ melde('In dieser Datei steht kein Klartext-Programm, das sich wandeln liesse.'); return; }
+        if(!R.saetze || !R.text){ melde(R.fehler || 'In dieser Datei steht kein Programm, das sich wandeln liesse.'); return; }
         exportiereDatei(R.datei, R.text, 'gewandelt aus ' + f.name);
-        melde(R.saetze + ' Saetze gewandelt' + (R.zyklen ? ', darunter ' + R.zyklen + ' Zyklusaufruf(e)' : '') + ' -> ' + R.datei + '.' +
+        const richtung = (R.von === 'siemens') ? 'Sinumerik 840D \u2192 Heidenhain-Klartext' : 'Heidenhain-Klartext \u2192 Sinumerik 840D';
+        melde(richtung + ': ' + R.saetze + ' Saetze gewandelt' + (R.zyklen ? ', darunter ' + R.zyklen + ' Zyklusaufruf(e)' : '') + ' -> ' + R.datei + '.' +
               '\n\nDie Bahn ist UEBERSETZT, nicht nachgerechnet: vor dem ersten Lauf im Einzelsatz fahren.' +
               (R.warnungen.length ? '\n\n' + R.warnungen.join('\n') : ''));
       };
@@ -18982,7 +19323,8 @@ function fStepKonturenUebernehmen(){
 // jetzt steht sie im Kopf der Anleitung.
 function fStandMalen(){
   const el = document.getElementById('baStand'); if(!el) return;
-  el.textContent = window.__DZ_STAND ? ('Stand ' + window.__DZ_STAND) : 'Arbeitskopie (nicht über die Werkstatt-Adresse geladen)';
+  el.textContent = window.__DZ_STAND ? ('Stand ' + window.__DZ_STAND) : 'Arbeitskopie';
+  el.title = window.__DZ_STAND ? 'Stand dieser Fassung' : 'Nicht über die Werkstatt-Adresse geladen — eine Arbeitskopie.';
 }
 try{ fStandMalen(); }catch(e){}
 
@@ -19782,7 +20124,11 @@ try{
   if(sp) sp.addEventListener('click', splashWeg);
   setTimeout(splashWeg, 2200);
 }catch(e){}
-fProg = fLadeAkt() || fDemoFlansch();
+// DIE APP STARTET OHNE PROGRAMM [Daniels Ansage 20.09.2026]: vorher kam der
+// zuletzt bearbeitete Stand oder die Flansch-Vorlage - man sass sofort in
+// einem fremden Teil. Jetzt steht die Auswahl da; der letzte Stand ist nicht
+// verloren, er liegt weiter im Speicher und steht als erste Karte zur Wahl.
+fProg = fProgrammNeu();
 fRender();
 setVal('pmSaveName', fProg.kopf.name);
 </script>
