@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 12:07 (fad7d9b8)";</script>
+<script>window.__DZ_STAND="20.09.2026 12:52 (5a42cc28)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2878,6 +2878,11 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <div class="stufe" id="stufeLaden"><span class="nr">1</span><span class="tit">Laden</span><label class="gcbtn primary" style="padding:8px 12px;cursor:pointer;" title="STEP-Datei (.stp oder .step) laden">&#x2B06; Modell laden<input type="file" id="stepFile" accept=".stp,.step,.STP,.STEP" style="display:none;"></label></div>
           <div class="stufe" id="stufeAusrichten"><span class="nr">2</span><span class="tit">Ausrichten</span><span class="lbl">Werkzeugachse</span><span class="radiobtns" id="stepAchseBtns"><button data-v="+X">+X</button><button data-v="-X">-X</button><button data-v="+Y">+Y</button><button data-v="-Y">-Y</button><button data-v="+Z" class="sel">+Z</button><button data-v="-Z">-Z</button></span><span class="lbl">Nullpunkt</span><span class="radiobtns" id="stepNullBtns"><button data-v="ecke" class="sel">Ecke, Oberkante</button><button data-v="mitte">Mitte, Oberkante</button></span><button class="gcbtn" id="btnStepVorschlag" title="Alle sechs Aufspannlagen bewerten: gr&ouml;&szlig;te Auflage nach unten, dann m&ouml;glichst viel in dieser Aufspannung fertig">Aufspannung vorschlagen</button></div>
           <div class="stufe" id="stufeRohteil"><span class="nr">3</span><span class="tit">Rohteil &amp; Sollform</span><button class="gcbtn" id="btnStepRoh" title="Huellquader des Modells als BLK FORM in den Programmkopf">Als Rohteil übernehmen</button><label class="gcbtn" style="padding:8px 10px;cursor:pointer;" title="Ein zweites STEP-Modell als ROHTEIL (Gussteil, Schmiedeteil, Vorbearbeitung): Modell abspanen, Restmaterial, Böden &amp; Wände und die Simulation rechnen dann mit seiner Oberfläche statt mit dem Quader">&#x2B06; Rohteil-Modell<input type="file" id="stepRohFile" accept=".stp,.step,.STP,.STEP" style="display:none;"></label><button class="gcbtn" id="btnStepRohWeg" style="display:none;" title="Rohform entfernen: es gilt wieder der Quader der BLK FORM">Rohform weg</button><span class="lbl">Raster</span><input type="number" id="stepRaster" step="any" placeholder="auto" title="Rasterweite der Sollform in mm. Leer = automatisch nach Teilgröße (0,3 bis 2 mm). Feiner rechnen kostet Zeit und Speicher (die Zellzahl wächst quadratisch) und bringt zweierlei: den Bahnabstand, den die Rautiefe verlangt, UND die Genauigkeit auf den Flächen. Die KANTEN des Modells gehen seit 17.09.2026 exakt ein; an einer scharfen konvexen Kante bleiben rund ein Vierzigstel der Rasterweite (gemessen 0,0174 mm bei 0,60, 0,0066 bei 0,30, 0,0024 bei 0,15)." style="width:62px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepFeld" title="Die Sollform an das Programm geben — danach rechnen die Zyklen Modell abspanen, Restmaterial abspanen und Schrägen schlichten damit">Sollform ans Programm</button></div>
+          <!-- FORM AUS DEM BLISTER (20.09.2026, Daniels Auftrag). Kein Schritt der normalen
+               Kette, sondern ein ANDERER Einstieg in Stufe 3: statt Huellquader und Sollform
+               des Teils entsteht hier die PLATTE mit der Kavitaet. Deshalb eigene Zeile ohne
+               Nummer - wie Ansicht und einzeln. -->
+          <div class="stufe" id="stufeForm"><span class="tit">Form aus Blister</span><span class="lbl">Rand</span><input type="number" id="formRand" step="any" value="15" title="Wieviel Platte um den Blister herum stehen bleibt, in mm je Seite. Hier wird gespannt und abgedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Boden</span><input type="number" id="formBoden" step="any" value="15" title="Wieviel Platte unter der tiefsten Stelle der Kavit&auml;t bleibt, in mm. Durch diesen Boden gehen sp&auml;ter die Vakuumbohrungen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Entformung</span><input type="number" id="formEntform" step="any" value="5" title="Geforderter Entformungswinkel in Grad, gemessen von der Senkrechten. Die App PR&Uuml;FT ihn nur und nennt jede Stelle, die steiler steht &mdash; die Formschr&auml;ge geh&ouml;rt ins CAD, nicht ins CAM." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepForm" title="Aus dem Modell des fertigen Blisters die Platte machen, in der er tiefgezogen wird: Kavit&auml;t = Au&szlig;enfl&auml;che des Blisters, Platte drumherum, Sollform ans Programm">Form ableiten</button></div>
           <div class="stufe" id="stufeProgramm"><span class="nr">4</span><span class="tit">Programm</span><button class="gcbtn primary" id="btnStepPlan" title="Der ganze Vorschlag in einem Zug: planen, schruppen, bohren, schlichten &mdash; in dieser Reihenfolge und mit so wenig Werkzeugwechseln wie m&ouml;glich">Programm vorschlagen</button><button class="gcbtn" id="btnStepEinzeln" title="Nur Teile des Vorschlags: die Fl&auml;chen, die Bohrungen oder die Konturen einer Z-Ebene">einzeln &#x25BE;</button></div>
           <div class="stufe stufe-ansicht"><span class="tit">Ansicht</span><span style="display:inline-flex;gap:2px;"><button class="gcbtn primary" id="btnStepDraht" title="Drahtbild des Modells">Drahtbild</button><button class="gcbtn" id="btnStepSoll" title="Sollform von oben: die Höhe, auf die gefräst werden muss">Sollform</button><button class="gcbtn" id="btnStepRest" title="Materialstand nach dem letzten Schruppschritt des Arbeitsplans (Modell abspanen / Restmaterial abspanen) — rot, was über der Sollform samt Aufmaß steht: das Restmaterial für den nächsten Schritt">Reststand</button></span><button class="gcbtn" id="btnStepHilfe" title="Anleitung Kap. 5c: Aufspannung, Sollform, Raster, Genauigkeit">&#x24D8;</button></div>
           <div class="stufe stufe-einzeln" id="stepEinzeln" style="display:none;"><span class="tit">einzeln &uuml;bernehmen</span><button class="gcbtn" id="btnStepFlaechen" title="Nur die Fl&auml;chen: planen, Modell abspanen, Schr&auml;gen schlichten &mdash; die Schritte stehen danach VOR den Bohrungen">Fl&auml;chen übernehmen</button><button class="gcbtn" id="btnStepBohren" title="Die Bohrungen des Modells als Bohrbilder und Schritte anlegen: ein Zentrierschritt über alle Stellen, danach je Durchmesser einer — größter zuerst">Bohrungen übernehmen</button><span class="lbl">Z-Ebene</span><select id="stepEbene" style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:210px;"></select><button class="gcbtn" id="btnStepKonturen" title="Die Schleifen dieser Ebene als XY-Konturen in den Arbeitsplan legen">Konturen übernehmen</button></div>
@@ -3276,10 +3281,11 @@ App (Kap.&nbsp;6c) &mdash; beide fahren dieselbe Kante.</div>
 Drahtbild. Die App liest die Fl&auml;chen des Volumenmodells &mdash; <b>Ebene, Zylinder, Kegel, Torus</b> mit ihren Randkurven (Geraden und Kreisb&ouml;gen) &mdash; und
 ordnet jede Fl&auml;che nach ihrer Lage zur <b>Werkzeugachse</b> ein: waagerecht (Boden oder Decke), senkrecht (Wand), Schr&auml;ge mit ihrer Neigung, Bohrung
 l&auml;ngs der Achse oder quer.</p>
-<p><b>Zum Ausprobieren liegen f&uuml;nf Modelle als Dateien im Projektordner</b> (<code>step-modelle/</code>, mit einem LIESMICH daneben): Rampenblock und
+<p><b>Zum Ausprobieren liegen sechs Modelle als Dateien im Projektordner</b> (<code>step-modelle/</code>, mit einem LIESMICH daneben): Rampenblock und
 T-Tasche sind dieselben Teile wie die Vorlagen DZ22 und DZ23, dazu eine <b>Winkelplatte</b> mit zwei Schr&auml;gen (22 und 55 Grad, die Bandgrenze des
 Kugelfr&auml;sers), eine <b>Konturplatte</b> mit zwei Tiefen, Eckenradien, runder Insel und vier M10 (daran zeigt der Planer die ganze Kette bis zum
-Gewinde) und eine <b>Blisterform</b> mit 5-Grad-Formschr&auml;gen und Vakuumbohrungen. Alle f&uuml;nf sind selbst gebaut, kein fremdes Teil.</p>
+Gewinde) eine <b>Blisterform</b> mit 5-Grad-Formschr&auml;gen und Vakuumbohrungen und ein <b>Blister-Teil</b> mit vier unsymmetrischen N&auml;pfen und 0,4 mm Folie,
+aus dem <i>Form ableiten</i> die Form macht. Alle sechs sind selbst gebaut, kein fremdes Teil.</p>
 <dl>
 <dt id="ba-fk05c-stufen">Das Fenster in vier Stufen</dt><dd>Die Kopfleiste ist seit dem 19.09.2026 eine <b>Stufenleiste</b> in der Reihenfolge, in der die App
 die Angaben braucht: <b>1 Laden</b> (die STEP-Datei), <b>2 Ausrichten</b> (Werkzeugachse, Nullpunkt, <i>Aufspannung vorschlagen</i> bewertet die
@@ -3288,7 +3294,8 @@ sechs Lagen), <b>3 Rohteil &amp; Sollform</b> (<i>Als Rohteil &uuml;bernehmen</i
 Zug; hinter <i>einzeln</i> liegen Fl&auml;chen, Bohrungen und die Konturen einer Z-Ebene). Rohteil und Sollform stehen VOR dem Vorschlag, weil der
 Vorschlag das Rohteil gegen das Modell pr&uuml;ft und ohne Sollform keine Bahn rechnen kann. Rechts <b>Ansicht</b> (Drahtbild / Sollform / Reststand) und der
 Knopf &#x24D8;, der diese Anleitung an dieser Stelle &ouml;ffnet. Unter dem Bild steht nur noch die Farblegende; was Sollform, Raster und
-Genauigkeit bedeuten, steht in den Abs&auml;tzen darunter.</dd>
+Genauigkeit bedeuten, steht in den Abs&auml;tzen darunter. Die Zeile <b>Form aus Blister</b> ist keine f&uuml;nfte Stufe, sondern ein ANDERER Einstieg in
+Stufe 3: statt H&uuml;llquader und Sollform des Teils entsteht dort die Platte mit der Kavit&auml;t (Absatz <i>Form aus dem Blister</i> weiter unten).</dd>
 <dt id="ba-fk05c-aufspannung">Aufspannung &mdash; welche Seite nach unten</dt><dd>Beim Drehen gibt es zwei Lagen, beim Fr&auml;sen sechs. Die App bewertet alle
 sechs, sobald ein Modell geladen ist, und zeigt sie als Tafel unter dem Bild. Die Regel dahinter ist die aus der Werkstatt: <b>die gr&ouml;&szlig;te ebene Fl&auml;che
 zeigt nach unten</b>, damit das Teil satt aufliegt und nicht federt &mdash; und in dieser ersten Aufspannung soll m&ouml;glichst viel fertig werden. Die Spalten
@@ -3467,6 +3474,29 @@ die Simulation nehmen dann diese Oberfl&auml;che als Material: gefr&auml;st wird
 nichts. Die BLK FORM im Programmkopf wird die H&uuml;lle aus Teil und Rohform &mdash; die Steuerung braucht den Quader, ihre Grafik zeigt ihn auch. <b>Rohform weg</b> stellt den Quader wieder
 her. Wie die Sollform wird die Rohform nicht mit dem Programm gespeichert; nach dem Neuladen ist sie neu zu &uuml;bergeben. Nicht ber&uuml;cksichtigt wird sie bei Taschen, Nuten,
 Zapfen, Bohrungen und den Steuerungszyklen &mdash; die kennen nur die BLK FORM.</dd>
+<dt id="ba-fk05c-form">Form aus dem Blister &mdash; die Tiefziehform aus dem Modell des Teils (20.09.2026)</dt><dd>Eine Blisterverpackung wird in einer
+Platte tiefgezogen. Das Modell, das vom Auftraggeber kommt, ist meist das <b>fertige Teil</b> und nicht die Form &mdash; die muss man selbst herstellen. Genau das macht der Knopf
+<b>Form ableiten</b> in der Zeile <i>Form aus Blister</i>: das Teil wird nach unten in die Form gezogen, also ist die Kavit&auml;t genau die <b>Au&szlig;enfl&auml;che</b> des Blisters.
+Die App nimmt daf&uuml;r die <b>untere H&uuml;lle</b> des Modells (f&uuml;r jeden Rasterpunkt die tiefste Fl&auml;che, die dar&uuml;ber liegt), legt sie in eine Platte und gibt beides
+an das Programm: die Platte wird die BLK FORM, die Kavit&auml;t die Sollform. Danach l&auml;uft der ganze &uuml;brige Weg wie bei jedem Modell &mdash; <i>Programm vorschlagen</i>, abspanen,
+schlichten, simulieren. <b>Die Lage dreht die App notfalls selbst:</b> die Bewertung der Aufspannung stellt einen Blister von sich aus mit dem Flansch
+nach unten (f&uuml;r das Fr&auml;sen des Teils richtig, f&uuml;r die Form verkehrt &mdash; daraus entst&uuml;nde ein Positiv statt der Kavit&auml;t). Erkannt wird das
+daran, dass die Oberkante der Form den <b>Rand</b> des Teils nicht mehr ber&uuml;hrt: bei einer Tiefziehform ist die Oberkante der Flansch und liegt am Rand.
+Trifft das nicht zu, rechnet die App die Gegenlage und sagt es in der Meldung.</dd>
+<dt id="ba-fk05c-form-felder">Was die drei Felder bedeuten</dt><dd><b>Rand</b> ist die Platte, die rund um den Blister stehen bleibt (je Seite, in mm) &mdash; dort wird gespannt
+und abgedichtet. <b>Boden</b> ist das Material unter der tiefsten Stelle der Kavit&auml;t; durch ihn gehen sp&auml;ter die Vakuumbohrungen. <b>Entformung</b> ist der geforderte
+Entformungswinkel in Grad, von der Senkrechten gemessen. Die <b>Rasterweite</b> kommt aus dem Feld daneben in Stufe 3. Die Oberkante der Platte ist Z0; alles, was der
+Blister nach unten ausbaucht, liegt darunter.</dd>
+<dt id="ba-fk05c-form-grenzen">Was die App pr&uuml;ft &mdash; und was sie nicht kann</dt><dd>Sie <b>misst die Wandst&auml;rke</b> aus dem Modell (den kleinsten Abstand zweier
+waagerechter Fl&auml;chen) und sagt sie an. Beim Ziehen <i>in</i> die Form legt sich die Folie an die Kavit&auml;t &mdash; die Au&szlig;enfl&auml;che ist die Formfl&auml;che, es kommt
+<b>kein Aufma&szlig;</b> dazu. Sie <b>pr&uuml;ft den Entformungswinkel</b> und nennt jede Stelle, die steiler steht, als er erlaubt. Die Formschr&auml;ge selbst <b>erzeugt sie
+nicht</b>: die geh&ouml;rt ins CAD, nicht ins CAM. Ein <b>Hinterschnitt</b> l&auml;sst sich in einem H&ouml;henfeld nicht abbilden und w&auml;re stillschweigend verschwunden;
+senkrechte Stellen stehen in derselben Zahl. Der <b>kleinste Radius</b> der Form ist der Radius des Schlichtwerkzeugs &mdash; wer 1 mm Kantenradius braucht, schlichtet mit &#8960;2.
+<b>Vakuumbohrungen</b> setzt die App nicht; sie kommen ins Modell oder von Hand als Bohrbild dazu.</dd>
+<dt id="ba-fk05c-form-schlichten">Winkelband 0 bis 90 beim Schlichten der Kavit&auml;t</dt><dd>Der Boden einer Kavit&auml;t ist <b>waagerecht</b> und ihre Wand steht bei
+5 Grad Formschr&auml;ge mit <b>85 Grad</b> &mdash; beide liegen au&szlig;erhalb der Vorgabe 5 bis 45 Grad von <i>Schr&auml;gen schlichten</i>, und die Bahn w&auml;re fast leer, ohne
+dass es auff&auml;llt. Am Testblister gemessen: mit 5 bis 45 Grad entstehen 81 Bahnpunkte, mit <b>0 bis 90 Grad</b> 5584 &mdash; die ganze Kavit&auml;t. F&uuml;r eine Form geh&ouml;rt
+das Band also auf 0 bis 90.</dd>
 <dt id="ba-fk05c-rest">Restmaterial abspanen &mdash; der n&auml;chste Schritt mit dem kleineren Werkzeug</dt><dd>Der zweite Zyklus der Gruppe STEP-Modell (seit 19.09.2026).
 Er rechnet wie <i>Modell abspanen</i>, aber mit einem <b>Bezug</b>: dem <b>letzten Schruppschritt davor im Arbeitsplan</b> (Modell abspanen oder ein weiteres
 Restmaterial abspanen). Das ist kein Feld &mdash; die Schritte werden nacheinander abgearbeitet, also ist der Bezug immer der Schritt davor, und der Maskenkopf nennt ihn.
@@ -8395,7 +8425,7 @@ function fStepEbeneKonturen(ebene, basis){
 // Der erste Bau prueffte jede Zelle einzeln gegen jede Kante; bei der
 // Grundplatte mit 182 Bohrungen im Rand der Deckflaeche waren das 2,9 s fuer
 // EIN Feld. Zeilenweise sind es Zeilen mal Kanten statt Zellen mal Kanten.
-function fStepFuellen(F, G, eben, n, o, r){
+function fStepFuellen(F, G, eben, n, o, r, welche){
   const xs = [];
   for(let j = 0; j < F.ny; j++){
     const cy = F.y0 + (j + 0.5) * r;
@@ -8418,7 +8448,13 @@ function fStepFuellen(F, G, eben, n, o, r){
         const cx = F.x0 + (i + 0.5) * r;
         const z = eben ? (o[2] - (n[0] * (cx - o[0]) + n[1] * (cy - o[1])) / n[2]) : G.zMax;
         const idx = j * F.nx + i;
-        if(z > F.h[idx]){ F.h[idx] = z; F.quelle[idx] = eben ? 1 : 2; }
+        // UNTERE HUELLE [20.09.2026, fuer die Form aus dem Blister]: dasselbe
+        // Fuellen, nur das Vorzeichen des Vergleichs. Gekruemmte Flaechen
+        // behalten ihre HOECHSTE Randhoehe - bei der oberen Huelle heisst das
+        // "beim Schruppen bleibt mehr stehen", bei der unteren "die Kavitaet
+        // wird eher zu flach als zu tief". Beide Male die sichere Seite.
+        const besser = F.huelleUnten ? (z < F.h[idx]) : (z > F.h[idx]);
+        if(besser){ F.h[idx] = z; F.quelle[idx] = eben ? 1 : 2; if(F.wer) F.wer[idx] = welche; }
       }
     }
   }
@@ -8440,38 +8476,39 @@ function fStepFlaechePoly(f){
   });
   return {polys:polys, x0:x0, y0:y0, x1:x1, y1:y1, zMax:zMax};
 }
-function fStepSollfeld(A, raster){
+function fStepSollfeld(A, raster, opt){
   const B = A.box;
+  const unten = !!(opt && opt.unten);     // untere statt obere Huelle (Form aus dem Blister)
   const bw = Math.max(1, B.x1 - B.x0), bh = Math.max(1, B.y1 - B.y0);
   const r = raster || Math.max(0.3, Math.min(2, Math.max(bw, bh) / 300));
   const nx = Math.max(1, Math.ceil(bw / r)), ny = Math.max(1, Math.ceil(bh / r));
-  const h = new Float32Array(nx * ny); h.fill(B.z0);
+  // DIE SAAT der unteren Huelle liegt eine Einheit UEBER dem Quader, nicht
+  // auf seiner Oberkante: verglichen wird mit <, und eine Flaeche, die GENAU
+  // auf der Oberkante liegt, gewaenne sonst nie eine Zelle (an einem flachen
+  // Modell meldete die Form darum 'keine Flaeche in der Draufsicht' statt
+  // 'das Modell ist flach'). Nach dem Fuellen bekommen die unberuehrten
+  // Zellen die Oberkante zurueck. Die OBERE Huelle bleibt bewusst, wie sie
+  // ist: dort steht dasselbe an der Unterkante, die Zelle traegt aber
+  // ohnehin schon genau diesen Wert - geaendert wuerde nur die Zaehlung
+  // exakt/geschaetzt/leer, und daran haengen Messwerte ueber 145 Modelle.
+  const h = new Float32Array(nx * ny); h.fill(unten ? B.z1 + 1 : B.z0);
   const quelle = new Uint8Array(nx * ny);          // 0 = leer, 1 = Ebene, 2 = geschaetzt
   // x1/y1: die Kante des Huellquaders. nx/ny sind aufgerundet, die Mitte der
   // letzten Zelle liegt darum oft AUSSERHALB (40 mm bei Raster 0,3: 40,05);
   // wer einen Punkt IM Quader abfragt, der in diese Zelle faellt, bekommt
   // ueber fStepSollIdx die innere Nachbarin (siehe dort).
-  const F = {x0:B.x0, y0:B.y0, x1:B.x1, y1:B.y1, nx:nx, ny:ny, raster:r, h:h, quelle:quelle, oben:B.z1, unten:B.z0};
-  // DIE KANTEN DES MODELLS kommen mit [17.09.2026]. Im Hoehenfeld gehen
-  // sie verloren - eine scharfe Kante liegt zwischen den Zellenmitten -,
-  // und genau das kostet die Schlichtbahn knapp die halbe Rasterweite
-  // (gemessen 0,142 mm bei Raster 0,30). Die Versatzflaeche der Kugel
-  // rechnet sie deshalb EXAKT dazu; hier werden sie nur eingesammelt.
-  // Jede Kante gehoert zu zwei Flaechen - doppelte werden weggelassen.
-  const kanten = [], gesehen = {};
-  (A.flaechen || []).forEach(fl => (fl.rand || []).forEach(lo => (lo.kanten || []).forEach(k => {
-    const P = k && k.p;
-    if(!P || P.length < 2) return;
-    const e = P[P.length - 1];
-    const s1 = fRund(P[0][0]) + ',' + fRund(P[0][1]) + ',' + fRund(P[0][2]);
-    const s2 = fRund(e[0]) + ',' + fRund(e[1]) + ',' + fRund(e[2]);
-    const kk = (s1 < s2) ? (s1 + '|' + s2 + '|' + P.length) : (s2 + '|' + s1 + '|' + P.length);
-    if(gesehen[kk]) return;
-    gesehen[kk] = 1; kanten.push(P);
-  })));
-  F.kanten = kanten;
+  const F = {x0:B.x0, y0:B.y0, x1:B.x1, y1:B.y1, nx:nx, ny:ny, raster:r, h:h, quelle:quelle, oben:B.z1, unten:B.z0, huelleUnten:unten};
+  // WER BILDET DIE HUELLE? Nur bei der unteren gefragt, und dort ist die
+  // Frage wesentlich: ein Blister hat zu jeder Aussenflaeche eine INNEN-
+  // flaeche eine Folienstaerke darueber. Die gewinnt die untere Huelle nie,
+  // ihre KANTEN und EBENEN wuerden aber mitwandern - und die Kanten hebt
+  // die Versatzflaeche des Kugelfraesers exakt an (siehe fBallFeld). Die
+  // Schlichtbahn laege dann um die Folienstaerke zu hoch. Deshalb wird hier
+  // je Zelle vermerkt, welche Flaeche gewonnen hat, und weiter unten
+  // wandern nur die Kanten und Ebenen genau dieser Flaechen mit.
+  if(unten){ F.wer = new Int32Array(nx * ny); F.wer.fill(-1); }
   let exakt = 0, geschaetzt = 0;
-  A.flaechen.forEach(f => {
+  A.flaechen.forEach((f, fi) => {
     const G = fStepFlaechePoly(f);
     if(!G.polys.length || !isFinite(G.x0)) return;
     // Der einzige Waechter, der hier etwas Echtes verhindert: die Division
@@ -8484,14 +8521,44 @@ function fStepSollfeld(A, raster){
     // allen 143 echten Teilen ohne jede Wirkung gemessen, also toter Code.
     const eben = (f.art === 'ebene' && f.achse && Math.abs(f.achse[2]) > 1e-9 && f.ort);
     if(!eben && !isFinite(G.zMax)) return;
-    fStepFuellen(F, G, eben, f.achse, f.ort, r);
+    fStepFuellen(F, G, eben, f.achse, f.ort, r, fi);
   });
-  for(let q = 0; q < quelle.length; q++){ if(quelle[q] === 1) exakt++; else if(quelle[q] === 2) geschaetzt++; }
+  for(let q = 0; q < quelle.length; q++){
+    if(quelle[q] === 1) exakt++; else if(quelle[q] === 2) geschaetzt++; else if(unten) h[q] = B.z1;
+  }
   F.exakt = exakt; F.geschaetzt = geschaetzt; F.leer = nx * ny - exakt - geschaetzt;
+  // WELCHE FLAECHEN zaehlen ab hier? Bei der oberen Huelle alle (nichts
+  // aendert sich gegenueber dem Bestand), bei der unteren nur die, die
+  // wirklich eine Zelle gewonnen haben.
+  let FL = A.flaechen || [];
+  if(F.wer){
+    const drin = {};
+    for(let q = 0; q < F.wer.length; q++) if(F.wer[q] >= 0) drin[F.wer[q]] = 1;
+    FL = FL.filter((f, fi) => drin[fi]);
+    F.huellFlaechen = FL.length;
+  }
+  // DIE KANTEN DES MODELLS kommen mit [17.09.2026]. Im Hoehenfeld gehen
+  // sie verloren - eine scharfe Kante liegt zwischen den Zellenmitten -,
+  // und genau das kostet die Schlichtbahn knapp die halbe Rasterweite
+  // (gemessen 0,142 mm bei Raster 0,30). Die Versatzflaeche der Kugel
+  // rechnet sie deshalb EXAKT dazu; hier werden sie nur eingesammelt.
+  // Jede Kante gehoert zu zwei Flaechen - doppelte werden weggelassen.
+  const kanten = [], gesehen = {};
+  FL.forEach(fl => (fl.rand || []).forEach(lo => (lo.kanten || []).forEach(k => {
+    const P = k && k.p;
+    if(!P || P.length < 2) return;
+    const e = P[P.length - 1];
+    const s1 = fRund(P[0][0]) + ',' + fRund(P[0][1]) + ',' + fRund(P[0][2]);
+    const s2 = fRund(e[0]) + ',' + fRund(e[1]) + ',' + fRund(e[2]);
+    const kk = (s1 < s2) ? (s1 + '|' + s2 + '|' + P.length) : (s2 + '|' + s1 + '|' + P.length);
+    if(gesehen[kk]) return;
+    gesehen[kk] = 1; kanten.push(P);
+  })));
+  F.kanten = kanten;
   // DIE EXAKTEN KONTUREN DER WAAGERECHTEN FLAECHEN [20.09.2026] wandern mit
   // der Sollform: "Boeden und Waende schlichten" folgt den Waenden exakt
   // (Kontur mit Werkzeugradius-Versatz), nicht den Raster-Ringen.
-  try{ F.ebenen = fStepEbenen(A).map(e => ({z:e.z, konturen:fStepEbeneKonturen(e, 'Boden').konturen})); }catch(e){ F.ebenen = []; }
+  try{ F.ebenen = fStepEbenen({flaechen:FL}).map(e => ({z:e.z, konturen:fStepEbeneKonturen(e, 'Boden').konturen})); }catch(e){ F.ebenen = []; }
   return F;
 }
 // Sollhoehe an einer Stelle (fuer Proben und spaeter fuer die Bahn).
@@ -8517,6 +8584,178 @@ function fStepSollIdx(F, x, y){
 function fStepSollHoehe(F, x, y){
   const c = fStepSollIdx(F, x, y);
   return c < 0 ? F.unten : F.h[c];
+}
+
+// ---------------------------------------------------------------------
+// DIE FORM AUS DEM BLISTER [20.09.2026, Daniels Auftrag]
+// ---------------------------------------------------------------------
+// Daniels Lage, woertlich: "manchmal haben wir das STEP vom Bauteil vom
+// Hersteller, also von seinem fertigen Teil, nicht von der Form. Das von
+// der Form muessen wir immer selber herstellen. Und es wird nach unten in
+// die Form gezogen."
+//
+// Damit steht die ganze Rechnung fest, und sie ist kurz:
+//
+//  1. Beim Vakuum-Tiefziehen in eine NEGATIVform legt sich die Folie an die
+//     Kavitaetenwand. Die AUSSENFLAECHE des fertigen Blisters IST deshalb
+//     die Formflaeche - kein Aufmass, kein Offset. Die Wandstaerke geht
+//     nach innen, ins Teil, nicht in die Form.
+//  2. Von oben sieht die App die INNENseite der Naepfe. Gebraucht wird die
+//     Aussenseite - also die UNTERE Huelle des Blisters. Dafuer fuellt die
+//     Sollform mit umgekehrtem Vergleich (opt.unten).
+//     ERST GEBAUT WAR DAS UMDREHEN des Modells, und das war FALSCH: die
+//     Drehung auf die Gegenachse spiegelt die y-Achse (fStepDrehung '-Z'),
+//     die Kavitaeten laegen seitenverkehrt zur Draufsicht auf den Blister.
+//     Gemessen am Testkoerper, bevor eine Zeile Bahn entstand.
+//  3. Das Negativ ist eine Spiegelung in Z: liegt der Flansch (die hoechste
+//     Stelle der Aussenflaeche) auf hMax, wird daraus die Plattenoberkante,
+//     und ein 18 mm tief gezogener Napf zu einer 18 mm tiefen Kavitaet.
+//        zForm(x,y) = Plattenoberkante - ( hMax - h(x,y) )
+//  4. Wo die Folie nicht liegt (neben dem Blister, in einem Ausschnitt),
+//     bleibt die Plattenoberkante stehen.
+//
+// Das Ergebnis ist ein gewoehnliches Hoehenfeld - eine SOLLFORM. Danach
+// laeuft der ganze vorhandene Weg: planen, abspanen, Restmaterial, Boeden
+// und Waende, Schraegen ueber die Rautiefe, Simulation, Restmaterial-
+// bericht. Es entsteht KEIN neuer Bahnapparat.
+//
+// WAS DAS HOEHENFELD NICHT KANN: einen Hinterschnitt. Fuer eine Kavitaet
+// mit Formschraege ist das kein Verlust - sie hat keinen; steht eine Wand
+// senkrecht oder ueberhaengend, sagt die Rechnung es mit der Zahl.
+function fGegenAchse(a){
+  const s = String(a || '+Z');
+  return (s.charAt(0) === '+' ? '-' : '+') + s.slice(1);
+}
+function fFormAusModell(M, opt){
+  const o = opt || {}, hin = [];
+  if(!M || !M.flaechen || !M.flaechen.length) return {ok:false, grund:'kein Modell gelesen', hinweise:hin};
+  // In GENAU der uebergebenen Lage entsteht die Form, damit die Kavitaeten
+  // in der Draufsicht dort liegen, wo die Naepfe liegen. Ob die Lage die
+  // richtige ist, sagt kopfueber weiter unten - das Drehen selbst macht die
+  // Oberflaeche (fStepFormAbleiten), weil dort die Werkzeugachse haengt.
+  // o.aus: die SCHON ausgerichtete Lage aus dem STEP-Fenster. Sie traegt
+  // auch den gewaehlten Nullpunkt (Ecke oder Mitte); wer hier neu ausrichtet,
+  // verliert ihn und die Form laege gegen das Modell verschoben.
+  const A = o.aus || fStepAusrichten(M, {achse:o.achse});
+  const FB = fStepSollfeld(A, (+o.raster > 0) ? +o.raster : null, {unten:true});
+  let hMin = Infinity, hMax = -Infinity, n = 0;
+  for(let c = 0; c < FB.h.length; c++){
+    if(!FB.quelle[c]) continue;
+    n++; if(FB.h[c] < hMin) hMin = FB.h[c]; if(FB.h[c] > hMax) hMax = FB.h[c];
+  }
+  if(!n) return {ok:false, grund:'das Modell hat in der Draufsicht keine Flaeche', hinweise:hin};
+  const tiefe = fRund(hMax - hMin);
+  if(tiefe < 0.05) return {ok:false, grund:'das Modell ist flach (' + tiefe + ' mm tief) - daraus entsteht keine Kavitaet', hinweise:hin};
+  // STEHT DAS MODELL AUF DEM KOPF? Die Frage ist nicht akademisch: die
+  // Aufspannungs-Bewertung waehlt fuer einen Blister von sich aus die Lage
+  // mit dem Flansch NACH UNTEN (gemessen: -Z) - fuer das Fraesen des TEILS
+  // die richtige, fuer die FORM die verkehrte. Aus ihr entstuende eine Platte,
+  // in der die Naepfe stehen statt liegen: ein Positiv statt der Kavitaet.
+  // DER TEST: bei einer Tiefziehform ist die Oberkante der FLANSCH, und der
+  // liegt am RAND des Teils. Steht das Modell auf dem Kopf, sind oben die
+  // Napfboeden - Inseln in der Mitte, die den Rand nicht beruehren.
+  // Gemessen am Testblister: +Z 100 % des Randes auf der Oberkante, -Z 0 %.
+  let randAlle = 0, randOben = 0;
+  const randZelle = (i, j) => { const c = j * FB.nx + i;
+    if(!FB.quelle[c]) return; randAlle++; if(FB.h[c] >= hMax - 0.01) randOben++; };
+  for(let i = 0; i < FB.nx; i++){ randZelle(i, 0); randZelle(i, FB.ny - 1); }
+  for(let j = 0; j < FB.ny; j++){ randZelle(0, j); randZelle(FB.nx - 1, j); }
+  const randAnteil = randAlle ? randOben / randAlle : 1;
+  // Unter acht Randzellen mit Flaeche ist der Test nichts wert - dann wird
+  // nichts behauptet.
+  const kopfueber = (randAlle >= 8 && randAnteil < 0.5);
+  const r = FB.raster;
+  // Der Rand waechst in GANZEN Zellen, damit die Zellenmitten von Blister
+  // und Form deckungsgleich bleiben - dann ist das Umkopieren ein reiner
+  // Indexversatz und kostet keine Interpolation.
+  const k = Math.max(0, Math.ceil(((+o.rand >= 0) ? +o.rand : 15) / r));
+  const unten = (+o.boden > 0) ? +o.boden : 15;
+  const nx = FB.nx + 2 * k, ny = FB.ny + 2 * k;
+  const x0 = FB.x0 - k * r, y0 = FB.y0 - k * r;
+  const zTop = 0;
+  const h = new Float32Array(nx * ny), quelle = new Uint8Array(nx * ny);
+  h.fill(zTop); quelle.fill(1);          // die Form ist ein Vollkoerper: ueberall Flaeche
+  for(let j = 0; j < FB.ny; j++) for(let i = 0; i < FB.nx; i++){
+    const cb = j * FB.nx + i;
+    if(!FB.quelle[cb]) continue;
+    h[(j + k) * nx + (i + k)] = zTop - (hMax - FB.h[cb]);
+  }
+  const F = {x0:x0, y0:y0, x1:x0 + nx * r, y1:y0 + ny * r, nx:nx, ny:ny, raster:r,
+             h:h, quelle:quelle, oben:zTop, unten:fRund(zTop - tiefe - unten),
+             exakt:nx * ny, geschaetzt:0, leer:0};
+  // Kanten und Ebenen wandern mit - nur in Z versetzt, nicht gespiegelt:
+  // die Form IST die Aussenflaeche des Blisters, sie steht nur tiefer in der
+  // Platte. An den Kanten haengt die exakte Versatzflaeche des Kugelfraesers,
+  // an den Ebenen das Schlichten der Waende.
+  F.kanten = (FB.kanten || []).map(P => P.map(p => [p[0], p[1], zTop - (hMax - p[2])]));
+  F.ebenen = (FB.ebenen || []).map(e => ({z:fRund(zTop - (hMax - e.z)), konturen:e.konturen}));
+  // DIE WANDSTAERKE wird GEMESSEN, nicht angenommen: ein Volumenmodell der
+  // Folie hat seine waagerechten Flaechen paarweise (Aussen- und Innenseite)
+  // im Abstand der Foliendicke. Der kleinste Abstand zweier Ebenen ist sie.
+  // ALLE waagerechten Flaechen, nicht die gefilterten der Huelle: gemessen
+  // wird der Abstand einer Aussenflaeche zu IHRER Innenflaeche, und die
+  // Innenflaeche gewinnt die untere Huelle nie - in FB.ebenen steht sie
+  // deshalb gar nicht mehr (erster Anlauf mass daraus 18 mm Wandstaerke).
+  let ez = [];
+  try{ ez = fStepEbenen(A).map(e => e.z).sort((a, b) => b - a); }catch(e){ ez = []; }
+  let wand = null;
+  for(let i = 1; i < ez.length; i++){
+    const d = fRund(ez[i - 1] - ez[i]);
+    if(d > 0.005 && (wand == null || d < wand)) wand = d;
+  }
+  if(kopfueber) hin.push('DAS MODELL STEHT VERMUTLICH AUF DEM KOPF: die Oberkante der Form beruehrt den Rand des Teils nur zu ' +
+    Math.round(randAnteil * 100) + ' Prozent. Bei einer Tiefziehform ist die Oberkante der FLANSCH und liegt am Rand; oben liegen hier die Napfboeden. Werkzeugachse auf ' +
+    fGegenAchse(o.achse || '+Z') + ' stellen - sonst entsteht ein Positiv statt der Kavitaet.');
+  if(wand != null && wand <= 3) hin.push('Im Modell gemessene Wandstaerke ' + wand + ' mm. Beim Ziehen IN die Form legt sich die Folie an die Kavitaet - die Aussenflaeche des Blisters ist die Formflaeche, es kommt kein Aufmass dazu.');
+  else hin.push('Keine Wandstaerke im Modell erkannt (kleinster Ebenenabstand ' + (wand == null ? 'keiner' : wand + ' mm') + '). Beschreibt das Modell nur die INNENkontur, fehlt der Form die Folienstaerke - dann im CAD die Aussenflaeche nehmen.');
+  // ENTFORMUNGSWINKEL: jede Wand, die steiler steht als er erlaubt, haelt
+  // das Teil in der Form fest. Gemessen wird am fertigen Formfeld.
+  const ew = (+o.entform >= 0) ? +o.entform : 5;
+  const grenz = 90 - ew;
+  const NN = fNeigFeld(F);
+  let steil = 0, steilst = 0;
+  for(let c = 0; c < NN.length; c++){ if(NN[c] > steilst) steilst = NN[c]; if(NN[c] > grenz + 0.1) steil++; }
+  steilst = Math.round(steilst * 10) / 10;
+  if(steil) hin.push(steil + ' Rasterstellen stehen steiler als ' + grenz + ' Grad (steilste ' + steilst + ' Grad) - bei ' + ew + ' Grad Entformungswinkel bleibt das Teil dort haengen. Die Formschraege gehoert ins CAD, nicht ins CAM.');
+  else hin.push('Der Entformungswinkel von ' + ew + ' Grad ist eingehalten: keine Wand steht steiler als ' + grenz + ' Grad, die steilste Stelle misst ' + steilst + ' Grad.');
+  hin.push('Ein Hinterschnitt laesst sich in einem Hoehenfeld nicht abbilden und waere hier stillschweigend verschwunden; senkrechte Stellen stehen oben in der Zahl.');
+  // GEMESSEN am Testblister (Kavitaet 18 mm tief, 5 Grad Formschraege,
+  // Kugelfraeser 8): mit dem Vorgabeband 5 bis 45 Grad entstehen 81
+  // Bahnpunkte, mit 0 bis 90 Grad 5584. Der Boden ist WAAGERECHT und die
+  // Wand steht mit 85 Grad - beide liegen ausserhalb der Vorgabe, und die
+  // Bahn waere damit fast leer, ohne dass es jemandem auffiele.
+  hin.push('Zum Schlichten der Kavitaet gehoert das Winkelband auf 0 bis 90 Grad: die Vorgabe 5 bis 45 laesst den waagerechten Boden UND die stehende Wand aus.');
+  hin.push('Der kleinste Radius der Form ist der Radius des Schlichtwerkzeugs - wer 1 mm Kantenradius braucht, schlichtet mit ' + String.fromCharCode(8960) + '2.');
+  // EIN ERSATZMODELL FUER DEN PLANER. Die Form ist ein FELD, keine B-Rep -
+  // Flaechen hat sie keine. Der Planer braucht von einem Modell genau zwei
+  // Dinge: den HUELLQUADER (Bezugshoehe oben, tiefste Stelle unten) und die
+  // FLAECHEN (Bohrungen, Einordnung). Der Quader ist der der PLATTE; Flaechen
+  // gibt es keine, denn eine Form hat keine Bohrung, bis jemand die
+  // Vakuumloecher setzt.
+  // MIT DEM MODELL DES BLISTERS ZU PLANEN WAERE FALSCH, und zwar messbar:
+  // sein Quader endet eine Folienstaerke unter dem Kavitaetsgrund, und die
+  // Klemme "tiefste Zellenmitte liegt innerhalb einer Rasterweite ueber dem
+  // Quaderboden, also ist der Boden gemeint" zog den Schruppzug genau um
+  // diese Folienstaerke zu tief (gemessen: bis -18,4 statt bis -18).
+  const ersatz = {flaechen:[], box:{x0:F.x0, y0:F.y0, z0:F.unten, x1:F.x1, y1:F.y1, z1:F.oben},
+                  bericht:{flaechen:0}, warnungen:[]};
+  return {ok:true, F:F, tiefe:tiefe, wand:wand, steil:steil, steilst:steilst, entform:ew,
+          flaechen:M.flaechen.length, huellFlaechen:FB.huellFlaechen, modell:ersatz,
+          kopfueber:kopfueber, randAnteil:fRund(randAnteil),
+          box:{x0:F.x0, y0:F.y0, z0:F.unten, x1:F.x1, y1:F.y1, z1:F.oben},
+          hinweise:hin};
+}
+// Das Ergebnis ins Programm: die Platte wird die BLK FORM, die Kavitaet die
+// Sollform. Eine Rohform (zweites STEP) waere hier falsch - die Platte ist
+// ein Quader.
+function fFormAnlegen(prog, R){
+  if(!prog || !R || !R.ok) return false;
+  const F = R.F;
+  Object.assign(prog.kopf, {x0:fRund(F.x0), y0:fRund(F.y0), z0:fRund(F.unten),
+                            x1:fRund(F.x1), y1:fRund(F.y1), z1:fRund(F.oben), oberflaeche:fRund(F.oben)});
+  fStepFeldSetzen(F, prog);
+  fRohformSetzen(null, prog);
+  return true;
 }
 
 // ---------------------------------------------------------------------
@@ -16693,7 +16932,7 @@ const STEP = {modell:null, aus:null, name:'', achse:'+Z', nullp:'ecke',
   // raster 0 = automatisch nach Teilgroesse (0,3 bis 2 mm). Von Hand feiner
   // gestellt wird es fuers Schlichten: der Bahnabstand kann nur ein Vielfaches
   // der Rasterweite sein, und die Rautiefe haengt am Bahnabstand.
-  ansicht:'draht', feld:null, bild:null, raster:0, restBild:null,
+  ansicht:'draht', feld:null, bild:null, raster:0, restBild:null, form:null,
   // plan: das Ergebnis von fPlanAufspannung - alle sechs Lagen mit ihren
   // Zahlen. Wird beim Laden einmal gerechnet und bleibt stehen; die
   // Achsenknoepfe aendern danach die ANSICHT, nicht die Bewertung.
@@ -16714,7 +16953,7 @@ function fStepAusrichtenJetzt(){
   STEP.mitte = [(A.box.x0 + A.box.x1) / 2, (A.box.y0 + A.box.y1) / 2, (A.box.z0 + A.box.z1) / 2];
   STEP.ebenen = fStepEbenen(A);
   STEP.ebene = STEP.ebenen.length ? 0 : -1;
-  STEP.feld = null; STEP.bild = null;                 // Sollform wird bei Bedarf gerechnet
+  STEP.feld = null; STEP.bild = null; STEP.form = null;   // Sollform (und eine abgeleitete Form) wird bei Bedarf neu gerechnet
   fStepEbenenFuellen();
   fStepBericht(); fStepZeichnen();
 }
@@ -17149,12 +17388,66 @@ function fStepFeldUebernehmen(){
     + ' mm. Die Zyklen Modell abspanen, Restmaterial abspanen und Schraegen schlichten rechnen jetzt damit — sie wird NICHT mit dem Programm gespeichert.');
   return true;
 }
+// ===== FORM AUS DEM BLISTER (20.09.2026, Daniels Auftrag) =====
+// Der Bediener laedt das Modell des fertigen BLISTERS und bekommt daraus die
+// PLATTE, in der er tiefgezogen wird. Gerechnet wird in F10 (fFormAusModell,
+// DOM-frei); hier wird nur gelesen, gemeldet und gezeichnet. Die Form wird
+// gleich zur Sollform des Fensters - damit zeigt der Knopf Sollform die
+// Kavitaet, und ein spaeteres "Sollform ans Programm" gibt wieder SIE und
+// nicht die Oberflaeche des Blisters (das waere die Falle).
+function fStepFormAbleiten(){
+  if(!STEP.aus){ melde('FEHLER: kein Modell geladen.'); return false; }
+  const zahl = (id, vor) => { const e = document.getElementById(id);
+    const v = e ? parseFloat(String(e.value == null ? '' : e.value).replace(',', '.')) : NaN;
+    return isFinite(v) ? v : vor; };
+  let R = null;
+  try{ R = fFormAusModell(STEP.modell, {aus:STEP.aus, achse:STEP.achse, raster:STEP.raster || 0,
+        rand:zahl('formRand', 15), boden:zahl('formBoden', 15), entform:zahl('formEntform', 5)}); }
+  catch(e){ melde('FEHLER beim Ableiten der Form: ' + e.message); return false; }
+  if(!R.ok){ melde('Keine Form abgeleitet: ' + R.grund); return false; }
+  // STEHT DAS MODELL AUF DEM KOPF, wird EINMAL die Gegenlage probiert. Die
+  // Aufspannungs-Bewertung waehlt fuer einen Blister von sich aus den Flansch
+  // nach unten - fuer das Teil richtig, fuer die Form verkehrt; aus der Lage
+  // entstuende ein Positiv statt der Kavitaet. Geaendert wird dabei auch die
+  // Werkzeugachse des Fensters, sonst zeigte das Drahtbild eine andere Lage
+  // als die Form.
+  let gedreht = '';
+  if(R.kopfueber){
+    const alt = STEP.achse;
+    STEP.achse = fGegenAchse(alt); fStepAusrichtenJetzt(); fStepAchseKnoepfe();
+    let R2 = null;
+    try{ R2 = fFormAusModell(STEP.modell, {aus:STEP.aus, achse:STEP.achse, raster:STEP.raster || 0,
+          rand:zahl('formRand', 15), boden:zahl('formBoden', 15), entform:zahl('formEntform', 5)}); }
+    catch(e){ R2 = null; }
+    if(R2 && R2.ok && !R2.kopfueber){ R = R2; gedreht = 'Das Modell stand auf dem Kopf (Flansch unten) - die Form kommt aus der Gegenlage, Werkzeugachse jetzt ' + STEP.achse + '. '; }
+    else { STEP.achse = alt; fStepAusrichtenJetzt(); fStepAchseKnoepfe(); }
+  }
+  STEP.form = R; STEP.feld = R.F; STEP.bild = null; STEP.restBild = null;
+  fFormAnlegen(fProg, R);
+  fStepAnsicht('soll');
+  fStepBericht(); fRender();
+  const F = R.F;
+  melde('Form abgeleitet: Platte ' + fRund(F.x1 - F.x0) + ' x ' + fRund(F.y1 - F.y0) + ' x '
+    + fRund(F.oben - F.unten) + ' mm, Kavitaet ' + R.tiefe + ' mm tief, Raster ' + fRund(F.raster)
+    + ' mm. Platte als BLK FORM und Kavitaet als Sollform ans Programm gegeben. ' + gedreht
+    + R.hinweise.join(' '));
+  return true;
+}
+// WELCHES MODELL BEKOMMT DER PLANER? Normalerweise das geladene Teil. Ist
+// eine FORM abgeleitet, ist das geladene Teil aber der BLISTER und nicht
+// das, was gefraest wird: sein Huellquader endet eine Folienstaerke unter
+// dem Kavitaetsgrund, und der Schruppzug ginge genau so tief zu weit
+// (gemessen: bis -18,4 statt bis -18). Dann gilt das Ersatzmodell der Form -
+// der Quader der Platte, ohne Flaechen.
+function fStepPlanModell(){
+  return (STEP.form && STEP.form.ok && STEP.form.modell) ? STEP.form.modell : STEP.aus;
+}
 // DIE BOHRUNGEN INS PROGRAMM. Der Planer rechnet (fPlanBohrSchritte, F10,
 // DOM-frei), hier wird angelegt und gemeldet - samt allem, was NICHT
 // angelegt wurde: eine verschwiegene Luecke ist an der Maschine teurer
 // als eine genannte.
 function fStepBohrUebernehmen(){
-  const A = STEP.aus;
+  const A = fStepPlanModell();
   if(!A){ melde('FEHLER: kein Modell geladen.'); return false; }
   if(!STEP.feld){ try{ STEP.feld = fStepSollfeld(A, STEP.raster || 0); STEP.bild = null; }catch(e){ STEP.feld = null; } }
   let plan = null;
@@ -17185,7 +17478,7 @@ function fStepBohrUebernehmen(){
 // Programm stillschweigend zu ersetzen waere eine Falle.
 var STEP_PLAN_FRAGE = 0;
 function fStepProgrammVorschlagen(){
-  const A = STEP.aus;
+  const A = fStepPlanModell();
   if(!A){ melde('FEHLER: kein Modell geladen.'); return false; }
   if(!STEP.feld){ try{ STEP.feld = fStepSollfeld(A, STEP.raster || 0); STEP.bild = null; }catch(e){ STEP.feld = null; } }
   const hatte = (fProg.schritte || []).length;
@@ -17213,7 +17506,7 @@ function fStepProgrammVorschlagen(){
   return n > 0;
 }
 function fStepFlaechenUebernehmen(){
-  const A = STEP.aus;
+  const A = fStepPlanModell();
   if(!A){ melde('FEHLER: kein Modell geladen.'); return false; }
   if(!STEP.feld){ try{ STEP.feld = fStepSollfeld(A, STEP.raster || 0); STEP.bild = null; }catch(e){ STEP.feld = null; } }
   let plan = null;
@@ -17313,6 +17606,7 @@ function fStepRohUebernehmen(){
   }
   on('btnStepRoh', fStepRohUebernehmen);
   on('btnStepFeld', fStepFeldUebernehmen);
+  on('btnStepForm', fStepFormAbleiten);
   on('btnStepPlan', fStepProgrammVorschlagen);
   on('btnStepBohren', fStepBohrUebernehmen);
   on('btnStepFlaechen', fStepFlaechenUebernehmen);
