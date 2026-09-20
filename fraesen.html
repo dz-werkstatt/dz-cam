@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 13:24 (9e271df7)";</script>
+<script>window.__DZ_STAND="20.09.2026 13:41 (48958549)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2883,6 +2883,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
                des Teils entsteht hier die PLATTE mit der Kavitaet. Deshalb eigene Zeile ohne
                Nummer - wie Ansicht und einzeln. -->
           <div class="stufe" id="stufeForm"><span class="tit">Form aus Blister</span><span class="lbl">Rand</span><input type="number" id="formRand" step="any" value="15" title="Wieviel Platte um den Blister herum stehen bleibt, in mm je Seite. Hier wird gespannt und abgedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Boden</span><input type="number" id="formBoden" step="any" value="15" title="Wieviel Platte unter der tiefsten Stelle der Kavit&auml;t bleibt, in mm. Durch diesen Boden gehen sp&auml;ter die Vakuumbohrungen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Entformung</span><input type="number" id="formEntform" step="any" value="5" title="Geforderter Entformungswinkel in Grad, gemessen von der Senkrechten. Die App PR&Uuml;FT ihn nur und nennt jede Stelle, die steiler steht &mdash; die Formschr&auml;ge geh&ouml;rt ins CAD, nicht ins CAM." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Schr&auml;ge</span><select id="formKorr" title="Was tun, wenn eine Wand steiler steht, als der Entformungswinkel erlaubt? MELDEN (Vorgabe) l&auml;sst die Form wie das Modell und nennt die Stellen. BODEN VERJ&Uuml;NGEN neigt die W&auml;nde, indem der Boden kleiner wird. &Ouml;FFNUNG WEITEN neigt sie, indem die &Ouml;ffnung gr&ouml;&szlig;er wird &mdash; das frisst in den Flansch. Beides &auml;ndert das BAUTEIL; die Meldung nennt die Fl&auml;che vorher und nachher." style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:150px;"><option value="aus">nur melden</option><option value="boden">Boden verj&uuml;ngen</option><option value="oeffnung">&Ouml;ffnung weiten</option></select><button class="gcbtn" id="btnStepForm" title="Aus dem Modell des fertigen Blisters die Platte machen, in der er tiefgezogen wird: Kavit&auml;t = Au&szlig;enfl&auml;che des Blisters, Platte drumherum, Sollform ans Programm">Form ableiten</button></div>
+          <div class="stufe" id="stufeVakuum"><span class="tit">Vakuumbohrungen</span><span class="lbl">&#x2300;</span><input type="number" id="vakD" step="any" value="1" title="Durchmesser der Vakuumbohrung in mm. Ueblich sind 0,5 bis 1 mm &mdash; gross genug fuer die Luft, klein genug, dass sich die Folie nicht hineinzieht und einen Pickel macht." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Abstand</span><input type="number" id="vakAbstand" step="any" value="30" title="Groesster Abstand zweier Bohrungen in mm. Die App setzt zuerst in die Ecken, dann fuellt sie auf, bis nirgends mehr als dieser Abstand bleibt." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Tiefe</span><input type="number" id="vakTiefe" step="any" value="0" title="Bohrtiefe ab der Kavitaetsflaeche in mm. 0 = durch die ganze Platte. Bei duennen Bohrungen ist das ueblicherweise nicht machbar: dann hier 1 bis 2 mm eintragen und die Kammer von der Rueckseite aufbohren (zweite Aufspannung, die plant die App nicht)." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepVakuum" title="Die Entlueftung setzen: in jede ebene Flaeche der Kavitaet, von der es nicht weiter nach unten geht, kommen Punkte in die Ecken und dazwischen. Daraus werden Bohrbilder und &mdash; wenn ein passender Bohrer in der Tabelle steht &mdash; Bohrschritte vor dem Schlichten.">Vakuumbohrungen setzen</button></div>
           <div class="stufe" id="stufeProgramm"><span class="nr">4</span><span class="tit">Programm</span><button class="gcbtn primary" id="btnStepPlan" title="Der ganze Vorschlag in einem Zug: planen, schruppen, bohren, schlichten &mdash; in dieser Reihenfolge und mit so wenig Werkzeugwechseln wie m&ouml;glich">Programm vorschlagen</button><button class="gcbtn" id="btnStepEinzeln" title="Nur Teile des Vorschlags: die Fl&auml;chen, die Bohrungen oder die Konturen einer Z-Ebene">einzeln &#x25BE;</button></div>
           <div class="stufe stufe-ansicht"><span class="tit">Ansicht</span><span style="display:inline-flex;gap:2px;"><button class="gcbtn primary" id="btnStepDraht" title="Drahtbild des Modells">Drahtbild</button><button class="gcbtn" id="btnStepSoll" title="Sollform von oben: die Höhe, auf die gefräst werden muss">Sollform</button><button class="gcbtn" id="btnStepRest" title="Materialstand nach dem letzten Schruppschritt des Arbeitsplans (Modell abspanen / Restmaterial abspanen) — rot, was über der Sollform samt Aufmaß steht: das Restmaterial für den nächsten Schritt">Reststand</button></span><button class="gcbtn" id="btnStepHilfe" title="Anleitung Kap. 5c: Aufspannung, Sollform, Raster, Genauigkeit">&#x24D8;</button></div>
           <div class="stufe stufe-einzeln" id="stepEinzeln" style="display:none;"><span class="tit">einzeln &uuml;bernehmen</span><button class="gcbtn" id="btnStepFlaechen" title="Nur die Fl&auml;chen: planen, Modell abspanen, Schr&auml;gen schlichten &mdash; die Schritte stehen danach VOR den Bohrungen">Fl&auml;chen übernehmen</button><button class="gcbtn" id="btnStepBohren" title="Die Bohrungen des Modells als Bohrbilder und Schritte anlegen: ein Zentrierschritt über alle Stellen, danach je Durchmesser einer — größter zuerst">Bohrungen übernehmen</button><span class="lbl">Z-Ebene</span><select id="stepEbene" style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:210px;"></select><button class="gcbtn" id="btnStepKonturen" title="Die Schleifen dieser Ebene als XY-Konturen in den Arbeitsplan legen">Konturen übernehmen</button></div>
@@ -3287,6 +3288,21 @@ Kugelfr&auml;sers), eine <b>Konturplatte</b> mit zwei Tiefen, Eckenradien, runde
 Gewinde) eine <b>Blisterform</b> mit 5-Grad-Formschr&auml;gen und Vakuumbohrungen und ein <b>Blister-Teil</b> mit vier unsymmetrischen N&auml;pfen und 0,4 mm Folie,
 aus dem <i>Form ableiten</i> die Form macht. Alle sechs sind selbst gebaut, kein fremdes Teil.</p>
 <dl>
+<dt id="ba-fk05c-vakuum">Vakuumbohrungen</dt><dd>Beim Tiefziehen wird die Folie durch Unterdruck in die Kavit&auml;t gezogen; die Luft dazwischen mu&szlig; heraus.
+Der Knopf <b>Vakuumbohrungen setzen</b> sucht die Stellen daf&uuml;r und legt Bohrbilder an. Gesucht wird nach EINER Regel: <b>jede ebene Fl&auml;che der Kavit&auml;t, von der es nicht weiter
+nach unten geht</b>, braucht Entl&uuml;ftung. Eine Terrasse, neben der es tiefer weitergeht, bekommt keine &mdash; dort entweicht die Luft in die n&auml;chste Mulde. In jeder solchen Fl&auml;che
+sitzen die Punkte zuerst in den <b>Ecken</b> (dort kommt die Folie zuletzt an, dort steht die Luft), danach f&uuml;llt die App auf, bis nirgends mehr als der eingestellte <i>Abstand</i> bleibt.
+Von der Wand halten sie mindestens das Anderthalbfache des Bohrerdurchmessers Abstand &mdash; direkt in der Kehle l&auml;uft der Bohrer weg, und die Folie rei&szlig;t dort.</dd>
+<dt id="ba-fk05c-vakuum2">Durchmesser, Abstand, Tiefe</dt><dd>&Uuml;blich sind <b>&#x2300;0,5 bis 1 mm</b>: gro&szlig; genug f&uuml;r die Luft, klein genug, da&szlig; sich die Folie nicht hineinzieht und
+einen Pickel macht. Der <i>Abstand</i> ist der gr&ouml;&szlig;te Abstand zweier Bohrungen (Vorgabe 30 mm). Die <i>Tiefe</i> 0 hei&szlig;t <b>durch die ganze Platte</b> &mdash; das geht bei einer d&uuml;nnen
+Bohrung meist nicht: ein &#x2300;1 durch 15 mm Platte ist ein L&auml;ngen-Durchmesser-Verh&auml;ltnis von 15. &Uuml;blich ist, von der <b>R&uuml;ckseite</b> auf &#x2300;4 bis 6 aufzubohren und nur die letzten
+1 bis 2 mm d&uuml;nn stehen zu lassen; dann setzen sie auch nicht zu. Das ist eine <b>zweite Aufspannung</b> &mdash; die plant die App nicht: trag hier die d&uuml;nne Tiefe ein und bohre die
+Kammer von unten. Die App sagt es von sich aus, wenn das Verh&auml;ltnis &uuml;ber 10 liegt.</dd>
+<dt id="ba-fk05c-vakuum3">Was angelegt wird</dt><dd>Je H&ouml;henebene ein <b>Bohrbild</b> (ein Bohrschritt hat eine Bezugsebene) und, wenn ein Bohrer mit diesem Durchmesser in der
+Werkzeugtabelle steht, ein <b>Bohrschritt</b>. Fehlt er, bleiben die Bohrbilder trotzdem stehen &mdash; die eigentliche Arbeit ist, die Stellen zu finden; den Schritt stellst Du dann selbst
+dazu. <b>Zentriert wird nicht:</b> der Boden ist frisch gefr&auml;st und eben, ein 1-mm-Bohrer braucht dort keine K&ouml;rnung, und ein NC-Anbohrer w&uuml;rde eine sichtbare Senkung in die
+Sichtfl&auml;che dr&uuml;cken. Die Schritte werden vor dem Schlichten einsortiert &mdash; wer erst schlichtet und dann bohrt, dr&uuml;ckt den Grat in die fertige Fl&auml;che. Hat die Kavit&auml;t
+durchgehend schr&auml;ge B&ouml;den, findet die Regel keine ebene Fl&auml;che; dann setzt die App je Mulde EINEN Punkt an der tiefsten Stelle und sagt es.</dd>
 <dt id="ba-fk05c-stufen">Das Fenster in vier Stufen</dt><dd>Die Kopfleiste ist seit dem 19.09.2026 eine <b>Stufenleiste</b> in der Reihenfolge, in der die App
 die Angaben braucht: <b>1 Laden</b> (die STEP-Datei), <b>2 Ausrichten</b> (Werkzeugachse, Nullpunkt, <i>Aufspannung vorschlagen</i> bewertet die
 sechs Lagen), <b>3 Rohteil &amp; Sollform</b> (<i>Als Rohteil &uuml;bernehmen</i> schreibt den H&uuml;llquader in die BLK FORM &mdash; Aufma&szlig; von Hand dazu;
@@ -8877,6 +8893,7 @@ function fFormAusModell(M, opt){
   // 85. "Keine Wand steht steiler als 85 Grad ... steilste Stelle 85,1 Grad"
   // war ein Widerspruch im selben Satz.
   else hin.push('Der Entformungswinkel von ' + ew + ' Grad ist eingehalten: die steilste Stelle misst ' + steilst + ' Grad gegen die Grenze ' + grenz + ' Grad (bis 0,1 Grad Rasterabweichung zaehlt als eingehalten).');
+  hin.push('Die Vakuumbohrungen setzt der Knopf daneben \u2014 ohne Entlueftung zieht sich die Folie nicht an, und das sieht man erst am fertigen Teil.');
   hin.push('Ein Hinterschnitt laesst sich in einem Hoehenfeld nicht abbilden und waere hier stillschweigend verschwunden; senkrechte Stellen stehen oben in der Zahl.');
   // GEMESSEN am Testblister (Kavitaet 18 mm tief, 5 Grad Formschraege,
   // Kugelfraeser 8): mit dem Vorgabeband 5 bis 45 Grad entstehen 81
@@ -8908,6 +8925,223 @@ function fFormAusModell(M, opt){
 // Das Ergebnis ins Programm: die Platte wird die BLK FORM, die Kavitaet die
 // Sollform. Eine Rohform (zweites STEP) waere hier falsch - die Platte ist
 // ein Quader.
+// ---------------------------------------------------------------------
+// VAKUUMBOHRUNGEN
+// ---------------------------------------------------------------------
+// Beim Tiefziehen wird die Folie durch Unterdruck in die Kavitaet gezogen;
+// die Luft dazwischen muss raus. Wo sie zuletzt steht, sagt die Form
+// selbst: in jeder ebenen Flaeche, von der es NICHT weiter nach unten
+// geht. Eine Terrasse, neben der es tiefer weitergeht, braucht keine
+// Bohrung - dort entweicht die Luft in die naechste Mulde.
+//
+// Das ist die Stelle, an der die App wirklich Arbeit abnimmt: die Punkte
+// von Hand zu setzen ist muehsam, und vergessene Entlueftung sieht man
+// erst am fertigen Teil.
+//
+// fFormPlateaus zerlegt die Kavitaet in Flaechen gleicher Hoehe (die
+// Treppe einer Wand liefert dabei viele kleine, die alle als "offen"
+// herausfallen - das kostet nichts und ist einfacher als eine
+// Senkenanalyse).
+function fFormPlateaus(F, tol, minFl){
+  const nx = F.nx, ny = F.ny, h = F.h, r = F.raster, n = nx * ny;
+  const kav = new Uint8Array(n);
+  for(let c = 0; c < n; c++) if(h[c] < F.oben - 0.05) kav[c] = 1;
+  const marke = new Int32Array(n).fill(-1);
+  const zonen = [];
+  const stapel = [];
+  for(let c0 = 0; c0 < n; c0++){
+    if(marke[c0] >= 0 || !kav[c0]) continue;
+    const id = zonen.length, zellen = [];
+    let offen = false, amRand = false;
+    marke[c0] = id; stapel.length = 0; stapel.push(c0);
+    while(stapel.length){
+      const c = stapel.pop(); zellen.push(c);
+      const i = c % nx, j = (c - i) / nx;
+      if(i === 0 || j === 0 || i === nx - 1 || j === ny - 1) amRand = true;
+      for(let k = 0; k < 4; k++){
+        const ii = i + (k === 0 ? 1 : k === 1 ? -1 : 0), jj = j + (k === 2 ? 1 : k === 3 ? -1 : 0);
+        if(ii < 0 || jj < 0 || ii >= nx || jj >= ny) continue;
+        const q = jj * nx + ii;
+        if(!kav[q]) continue;
+        if(Math.abs(h[q] - h[c0]) <= tol){
+          if(marke[q] < 0){ marke[q] = id; stapel.push(q); }
+        }else if(h[q] < h[c0] - tol) offen = true;
+      }
+    }
+    const fl = zellen.length * r * r;
+    if(fl >= minFl) zonen.push({z:h[c0], flaeche:fl, zellen:zellen, offen:offen || amRand});
+  }
+  return zonen;
+}
+
+// Die Punkte in einer Flaeche: erst die Ecken, dann aufgefuellt. Der erste
+// Punkt ist der am weitesten vom Schwerpunkt entfernte - bei einem Rechteck
+// eine Ecke -, jeder weitere der, der am weitesten von allen bisherigen
+// liegt (Farthest Point). Das trifft die Reihenfolge, in der sich die Folie
+// anlegt: zuletzt kommt sie in den Ecken an.
+// randAb haelt die Bohrung von der Wand weg - direkt in der Kehle laeuft
+// der Bohrer weg, und die Folie reisst dort.
+function fFormVakuumPunkte(F, zone, randAb, abst){
+  const nx = F.nx, r = F.raster, n = F.nx * F.ny;
+  const drin = new Uint8Array(n);
+  zone.zellen.forEach(c => { drin[c] = 1; });
+  const roh = new Uint8Array(n);
+  for(let c = 0; c < n; c++) roh[c] = drin[c] ? 0 : 1;
+  const D = new Float32Array(n);
+  fEdt(roh, F.nx, F.ny, D);
+  const kand = zone.zellen.filter(c => Math.sqrt(D[c]) * r >= randAb + r / 2);
+  if(!kand.length) return [];
+  const px = [], py = [];
+  kand.forEach(c => { const i = c % nx, j = (c - i) / nx;
+                      px.push(F.x0 + (i + 0.5) * r); py.push(F.y0 + (j + 0.5) * r); });
+  let sx = 0, sy = 0;
+  for(let k = 0; k < px.length; k++){ sx += px[k]; sy += py[k]; }
+  sx /= px.length; sy /= py.length;
+  let erst = 0, best = -1;
+  for(let k = 0; k < px.length; k++){
+    const d = (px[k] - sx) * (px[k] - sx) + (py[k] - sy) * (py[k] - sy);
+    if(d > best){ best = d; erst = k; }
+  }
+  const gew = [erst];
+  const dMin = new Float64Array(px.length).fill(Infinity);
+  for(;;){
+    const g = gew[gew.length - 1];
+    let kBest = -1, dBest = -1;
+    for(let k = 0; k < px.length; k++){
+      const d = (px[k] - px[g]) * (px[k] - px[g]) + (py[k] - py[g]) * (py[k] - py[g]);
+      if(d < dMin[k]) dMin[k] = d;
+      if(dMin[k] > dBest){ dBest = dMin[k]; kBest = k; }
+    }
+    if(kBest < 0 || Math.sqrt(dBest) < abst || gew.length > 400) break;
+    gew.push(kBest);
+  }
+  return gew.map(k => [fRund(px[k]), fRund(py[k])]);
+}
+
+// Je Kavitaetsmulde die tiefste Zelle - der Rueckfall fuer schraege Boeden.
+function fFormTiefpunkte(F){
+  const nx = F.nx, ny = F.ny, h = F.h, r = F.raster, n = nx * ny;
+  const kav = new Uint8Array(n);
+  for(let c = 0; c < n; c++) if(h[c] < F.oben - 0.05) kav[c] = 1;
+  const gesehen = new Uint8Array(n), stapel = [], aus = [];
+  for(let c0 = 0; c0 < n; c0++){
+    if(gesehen[c0] || !kav[c0]) continue;
+    let bestC = c0, bestZ = h[c0], zahl = 0, amRand = false, obenAn = h[c0];
+    gesehen[c0] = 1; stapel.length = 0; stapel.push(c0);
+    while(stapel.length){
+      const c = stapel.pop(); zahl++;
+      if(h[c] < bestZ){ bestZ = h[c]; bestC = c; }
+      if(h[c] > obenAn) obenAn = h[c];
+      const i = c % nx, j = (c - i) / nx;
+      if(i === 0 || j === 0 || i === nx - 1 || j === ny - 1) amRand = true;
+      for(let k = 0; k < 4; k++){
+        const ii = i + (k === 0 ? 1 : k === 1 ? -1 : 0), jj = j + (k === 2 ? 1 : k === 3 ? -1 : 0);
+        if(ii < 0 || jj < 0 || ii >= nx || jj >= ny) continue;
+        const q = jj * nx + ii;
+        if(kav[q] && !gesehen[q]){ gesehen[q] = 1; stapel.push(q); }
+      }
+    }
+    // Am Feldrand laeuft die Luft seitlich heraus, und eine Mulde ohne
+    // echte Tiefe ist keine - beides waere ein Punkt ins Blaue.
+    if(zahl * r * r < 4 || amRand || obenAn - bestZ < 0.5) continue;
+    const i = bestC % nx, j = (bestC - i) / nx;
+    aus.push({x:fRund(F.x0 + (i + 0.5) * r), y:fRund(F.y0 + (j + 0.5) * r), z:fRund(bestZ),
+              flaeche:fRund(zahl * r * r)});
+  }
+  return aus;
+}
+
+// Die Stellen samt Bewertung. Ohne eine abgeleitete Form gibt es keine
+// Aussage - das Feld eines gewoehnlichen Modells ist keine Kavitaet.
+function fFormVakuum(F, opt){
+  const o = opt || {};
+  if(!F || !F.h) return {ok:false, grund:'keine Form'};
+  const d = (+o.d > 0) ? +o.d : 1;
+  const abst = (+o.abstand > 0) ? +o.abstand : 30;
+  const randAb = Math.max(1.5, 1.5 * d);
+  const tol = Math.max(0.1, F.raster / 2);
+  const hinweise = [];
+  const Z = fFormPlateaus(F, tol, Math.max(1, randAb * randAb)).filter(z => !z.offen);
+  let punkte = [], zonen = 0;
+  Z.sort((a, b) => b.flaeche - a.flaeche).forEach(z => {
+    const P = fFormVakuumPunkte(F, z, randAb, abst);
+    if(!P.length) return;
+    zonen++;
+    P.forEach(p => punkte.push({x:p[0], y:p[1], z:fRund(z.z), flaeche:fRund(z.flaeche)}));
+  });
+  // Rueckfall: eine Kavitaet mit durchgehend schraegem Boden hat keine ebene
+  // Flaeche - dann sitzt die Entlueftung an der tiefsten Stelle.
+  let rueckfall = false;
+  if(!punkte.length){
+    const tief = fFormTiefpunkte(F);
+    if(tief.length){
+      rueckfall = true; zonen = tief.length; punkte = tief;
+      hinweise.push('Keine ebene, nach unten geschlossene Flaeche gefunden — die Kavitaet hat offenbar ' +
+                    'durchgehend schraege Boeden. Gesetzt ist deshalb je Mulde EIN Punkt an der tiefsten ' +
+                    'Stelle; sieh am Teil nach, ob das reicht.');
+    }
+  }
+  if(!punkte.length)
+    return {ok:false, grund:'keine Stelle fuer eine Vakuumbohrung gefunden — ist das ueberhaupt eine Kavitaet?'};
+  const tiefeFeld = (+o.tiefe > 0) ? +o.tiefe : 0;
+  const zTiefst = punkte.reduce((a, p) => Math.min(a, p.z), 0);
+  const durch = fRund(zTiefst - F.unten);
+  const ld = (tiefeFeld ? tiefeFeld : durch) / d;
+  if(!tiefeFeld && ld > 10)
+    hinweise.push('Die Bohrung geht durch ' + durch + ' mm Platte bei ⌀' + d + ' — ein Verhaeltnis von ' +
+                  'Laenge zu Durchmesser von ' + Math.round(ld) + ', mit einem gewoehnlichen Bohrer nicht zu ' +
+                  'machen. Ueblich ist, von der RUECKSEITE auf ⌀4 bis 6 aufzubohren und nur die letzten 1 bis ' +
+                  '2 mm duenn stehen zu lassen (dann setzen sie auch nicht zu). Das ist eine zweite Aufspannung ' +
+                  '— die plant die App nicht: trag hier die duenne Tiefe ein und bohre die Kammer von unten.');
+  hinweise.push('Die Punkte sitzen in den ECKEN und Tiefpunkten der Kavitaet, ' + fRund(randAb) +
+                ' mm von der Wand weg und hoechstens ' + abst + ' mm auseinander. Wo die Folie zuletzt ankommt, ' +
+                'steht die Luft — das ist der Grund fuer die Ecken.');
+  return {ok:true, punkte:punkte, zonen:zonen, d:d, abstand:abst, randAb:fRund(randAb),
+          tiefe:tiefeFeld, durch:durch, rueckfall:rueckfall, hinweise:hinweise};
+}
+
+// Die Punkte als Bohrbild und Bohrschritt ins Programm. Je Hoehenebene ein
+// Bohrbild - ein Bohrschritt hat EINE Bezugsebene.
+// ZENTRIERT WIRD NICHT: der Boden ist frisch gefraest und eben, ein
+// 1-mm-Bohrer braucht dort keine Koernung, und ein NC-Anbohrer wuerde eine
+// sichtbare Senkung in die Sichtflaeche des Blisters druecken.
+function fFormVakuumAnlegen(prog, V, F){
+  if(!prog || !V || !V.ok) return {schritte:0, muster:0, hinweise:['keine Punkte']};
+  const hin = [];
+  const gruppen = {};
+  V.punkte.forEach(p => { const k = p.z.toFixed(2); (gruppen[k] = gruppen[k] || []).push([p.x, p.y]); });
+  const bohrer = (prog.werkzeuge || []).filter(w => w.art === 'bohrer' && Math.abs((+w.d || 0) - V.d) <= 0.05)
+    .sort((a, b) => (+a.nr || 0) - (+b.nr || 0))[0];
+  if(!bohrer) hin.push('Fuer ⌀' + V.d + ' steht kein Bohrer in der Werkzeugtabelle — die Bohrbilder sind ' +
+                       'angelegt, den Bohrschritt musst Du selbst dazustellen (Zyklus Bohren, Bezugsebene = ' +
+                       'Tiefe der Mulde).');
+  const m0 = (prog.muster || []).length;
+  prog.muster = prog.muster || [];
+  let nM = 0, nS = 0;
+  const neue = [];
+  Object.keys(gruppen).sort((a, b) => (+b) - (+a)).forEach(k => {
+    const z = +k, P = gruppen[k];
+    prog.muster.push({name:'Vakuum z' + fRund(z), typ:'punkte', punkte:P.slice()});
+    nM++;
+    if(!bohrer) return;
+    const unten = (F && F.unten !== undefined) ? F.unten : (prog.kopf.z0 || 0);
+    const tiefe = V.tiefe ? V.tiefe : fRund(z - unten + 1);
+    const s = fSchrittNeu(prog, 'bohren', bohrer.nr, m0 + nM - 1);
+    Object.assign(s, {q203:fRund(z), tiefe:-tiefe, kuehl:'an'});
+    neue.push(s); nS++;
+  });
+  // Die Vakuumbohrungen gehoeren in die Bohrphase: in die fertig gefraeste
+  // Flaeche, aber VOR dem Schlichten - wer erst schlichtet und dann bohrt,
+  // drueckt den Grat in die Sichtflaeche.
+  if(neue.length){
+    let ein = prog.schritte.length;
+    for(let i = 0; i < prog.schritte.length; i++)
+      if(fPlanPhase(prog.schritte[i].art) >= 4){ ein = i; break; }
+    prog.schritte.splice.apply(prog.schritte, [ein, 0].concat(neue));
+  }
+  return {schritte:nS, muster:nM, hinweise:hin};
+}
+
 function fFormAnlegen(prog, R){
   if(!prog || !R || !R.ok) return false;
   const F = R.F;
@@ -17555,6 +17789,29 @@ function fStepFeldUebernehmen(){
 // gleich zur Sollform des Fensters - damit zeigt der Knopf Sollform die
 // Kavitaet, und ein spaeteres "Sollform ans Programm" gibt wieder SIE und
 // nicht die Oberflaeche des Blisters (das waere die Falle).
+// Die Vakuumbohrungen: Punkte suchen, Bohrbilder und Bohrschritte anlegen.
+// Sie brauchen die KAVITAET, also eine abgeleitete Form - auf einem
+// gewoehnlichen Modell waere jede ebene Flaeche ein Kandidat.
+function fStepVakuum(){
+  if(!STEP.form || !STEP.form.ok || !STEP.form.F){
+    melde('Erst die Form ableiten — die Vakuumbohrungen brauchen die Kavitaet, nicht das Modell des Blisters.');
+    return false;
+  }
+  const zahl = (id, vor) => { const e = document.getElementById(id);
+    const v = e ? parseFloat(String(e.value == null ? '' : e.value).replace(',', '.')) : NaN;
+    return isFinite(v) ? v : vor; };
+  const F = STEP.form.F;
+  const V = fFormVakuum(F, {d:zahl('vakD', 1), abstand:zahl('vakAbstand', 30), tiefe:zahl('vakTiefe', 0)});
+  if(!V.ok){ melde('Keine Vakuumbohrung angelegt: ' + V.grund); return false; }
+  const A = fFormVakuumAnlegen(fProg, V, F);
+  fSpeicherAkt(); fRender();
+  melde('Vakuumbohrungen: ' + V.punkte.length + ' Stellen in ' + V.zonen + ' Mulde(n), ⌀' + V.d +
+        ', Tiefe ' + (V.tiefe ? V.tiefe + ' mm' : 'durch die Platte (' + V.durch + ' mm)') + '. ' +
+        A.muster + ' Bohrbild(er)' + (A.schritte ? ' und ' + A.schritte + ' Bohrschritt(e) angelegt' : ' angelegt') +
+        '. ' + V.hinweise.concat(A.hinweise).join(' '));
+  return true;
+}
+
 function fStepFormAbleiten(){
   if(!STEP.aus){ melde('FEHLER: kein Modell geladen.'); return false; }
   const zahl = (id, vor) => { const e = document.getElementById(id);
@@ -17774,6 +18031,7 @@ function fStepRohUebernehmen(){
   on('btnStepRoh', fStepRohUebernehmen);
   on('btnStepFeld', fStepFeldUebernehmen);
   on('btnStepForm', fStepFormAbleiten);
+  on('btnStepVakuum', fStepVakuum);
   on('btnStepPlan', fStepProgrammVorschlagen);
   on('btnStepBohren', fStepBohrUebernehmen);
   on('btnStepFlaechen', fStepFlaechenUebernehmen);
