@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 19:21 (0516bd19)";</script>
+<script>window.__DZ_STAND="20.09.2026 19:54 (956420c8)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2577,6 +2577,15 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
   .fmerk .ppoffen{color:#b35c00;}
   #fdKlein{font-size:10.5px;color:var(--text-dim);padding:0 13px 6px;line-height:1.4;}
   @media(min-width:900px){
+    /* NC-ANSICHT: EIN SATZ JE ZEILE. Das gemeinsame Stylesheet stellt
+       #gcodeView am Laptop auf white-space:normal (Design-Paket 20.09.2026,
+       Idee 10) - dort haelt jede Zeile ihr eigenes span.nc-z mit eigenem
+       pre. Der Maler dieser App (fNcFaerben) schreibt diese Spans NICHT:
+       ohne Gegenregel kollabieren die Zeilenenden, und 79 Saetze stehen als
+       ein Absatz. Ein NC-Programm liest man Satz fuer Satz. Gleiche
+       Spezifitaet, spaeter im Dokument - dieselbe Mechanik wie bei
+       #maskBohren (12.09.2026). Das Drehteil bleibt unberuehrt. */
+    #gcodeView{white-space:pre;}
     .arbeitsplan{order:0;}
     .fdrauf{order:1;flex:1 1 auto;height:auto;border-top:none;border-left:1px solid var(--line);}
     /* Das gemeinsame Stylesheet zwingt #arbeitsplanPanel im Arbeitsplan-Modus
@@ -2900,7 +2909,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
 
       <!-- ===== NC-AUSGABE ===== -->
       <div class="mask" id="maskGcode" style="position:fixed;z-index:30;">
-        <div class="mask-head"><span class="mtitel">NC-AUSGABE (KLARTEXT .H)</span><span id="gcodeStat" style="font-size:10.5px;color:var(--text-dim);font-weight:400;margin-left:8px;"></span><button class="gcbtn" id="btnCloseGcode" style="margin-left:auto;min-width:40px;">✕</button></div>
+        <div class="mask-head"><span class="mtitel" id="gcodeTitel">NC-AUSGABE (KLARTEXT .H)</span><span id="gcodeStat" style="font-size:10.5px;color:var(--text-dim);font-weight:400;margin-left:8px;"></span><button class="gcbtn" id="btnCloseGcode" style="margin-left:auto;min-width:40px;">✕</button></div>
         <div class="gcode-head">
           <button class="gcbtn primary" id="btnGen" title="Klartext erzeugen">⟳ Erzeugen</button>
           <button class="gcbtn" id="btnAmpel" title="Programm prüfen">🚦 Prüfen</button>
@@ -2912,7 +2921,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
         <div class="warn" id="warnBox" style="display:none;"></div>
         <div class="mrow" style="padding:4px 10px 6px 10px;flex-wrap:wrap;">
           <label style="width:auto;flex:0 0 auto;">Zielmaschine</label>
-          <select id="maschProfilSel" style="flex:1 1 auto;width:auto;min-width:150px;"><option value="HEIDENHAIN_ITNC530" selected>Heidenhain iTNC 530 (Klartext)</option></select>
+          <select id="maschProfilSel" style="flex:1 1 auto;width:auto;min-width:150px;"><option value="HEIDENHAIN_ITNC530" selected>Heidenhain iTNC 530 (Klartext)</option><option value="SIEMENS_840D_PL">Sinumerik 840D powerline</option></select>
           <div style="display:flex;gap:6px;margin-left:auto;flex:0 0 auto;"><button id="btnPpInfo" style="font-size:11px;padding:4px 8px;white-space:nowrap;">Merkmale ▸</button></div>
         </div>
         <div id="ppInfo" class="fmerk" style="display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;max-height:48vh;border-bottom:1px solid var(--line);"></div>
@@ -3094,8 +3103,11 @@ dann der Zyklus &mdash; jede Kachel &ouml;ffnet genau eine Maske mit den Feldern
 stehen die Zyklen als Kacheln untereinander. Sie zus&auml;tzlich in die Leiste zu schreiben hie&szlig;e nur, an derselben Liste
 vorbeizuwischen, aus der man gerade w&auml;hlt. <b>Am Laptop</b> ist die Leiste eine senkrechte Spalte &mdash; dort klappt die
 angetippte Gruppe ihre Zyklen gleich darunter auf.</li>
-<li><b>NC-Ausgabe</b>: Erzeugen, Pr&uuml;fen, als <code>NAME.H</code> sichern. An der Steuerung: Datei laden,
-<b>Programm-Test</b> laufen lassen, jede Meldung fotografieren.</li>
+<li><b>NC-Ausgabe</b>: Erzeugen, Pr&uuml;fen, sichern &mdash; als <code>NAME.H</code> f&uuml;r die iTNC&nbsp;530, als
+<code>NAME.MPF</code> f&uuml;r die 840D. <b>Die Zielmaschine steht in dieser Maske selbst</b> (Feld <i>Zielmaschine</i>) und
+l&auml;sst sich dort umschalten, ohne den Programmkopf zu &ouml;ffnen: das Programm wird sofort neu erzeugt, und der
+Titel der Maske nennt den Dialekt. An der Steuerung: Datei laden, <b>Programm-Test</b> laufen lassen, jede Meldung
+fotografieren.</li>
 <li><b>Zeiten und Kalkulation</b>: der Arbeitsplan zeigt je Schritt die gesch&auml;tzte Laufzeit und in der Kopfzeile die
 Komplettzeit mit Werkzeugwechseln; der Knopf <b>Kalkulation</b> in der unteren Leiste rechnet daraus mit Rohteil und
 Betriebswerten einen St&uuml;ckpreis (Kap.&nbsp;6f). Den Angebotspreis macht die Werkstatt-Pipeline.</li>
@@ -3139,7 +3151,10 @@ Unterstrich und Bindestrich, h&ouml;chstens 25 Zeichen (Handbuch 670&nbsp;387-12
 Namen nicht mehr vollst&auml;ndig an). Umlaute werden umgeschrieben.</dd>
 <dt id="ba-fk03-masch">Zielmaschine</dt><dd><b>Heidenhain iTNC&nbsp;530</b> (Klartext, Datei <b>.H</b>) oder <b>Sinumerik 840D powerline</b>
 (Datei <b>.MPF</b>). Die Wahl &auml;ndert die ganze Ausgabe: S&auml;tze, Programmkopf, Programmende und die Pr&uuml;fungen.
-Was die 840D angeht, steht in <a href="#ba-fk07b">Kapitel 7b</a> &mdash; dort auch, was daran belegt ist und was nicht.</dd>
+Was die 840D angeht, steht in <a href="#ba-fk07b">Kapitel 7b</a> &mdash; dort auch, was daran belegt ist und was nicht.<br>
+<b>Dasselbe Feld steht in der NC-Ausgabe</b>, gleich unter den Kn&ouml;pfen. Beide zeigen immer denselben Wert; wer dort
+umschaltet, &auml;ndert den Programmkopf mit, und das Programm wird sofort neu erzeugt. So l&auml;sst sich dieselbe
+Bearbeitung in beiden Dialekten nebeneinander ansehen.</dd>
 <dt id="ba-fk03-zyk840">Zyklen der Steuerung (nur 840D)</dt><dd><b>Aus</b> (Vorgabe): jede Bearbeitung wird als <b>eigene Bahn</b>
 geschrieben &mdash; dieselbe, die am Programmierplatz der iTNC Satz f&uuml;r Satz belegt ist. <b>Nutzen</b>: wo die 840D einen
 passenden Zyklus hat (Bohren, Tieflochbohren, Reiben, Gewindebohren, Rechteck- und Kreistasche, Lochkreis, Lochreihe),
@@ -15593,12 +15608,19 @@ function fProgrammSetzen(p, quelle){
 // ARBEITSPLAN, KOPFZEILE, DRAUFSICHT
 // =====================================================================
 function fWerkzeug(nr){ return (fProg.werkzeuge || []).find(w => w.nr === nr); }
+// Dateiendung und Maskentitel der NC-Ausgabe kommen aus dem Profil der
+// Zielmaschine - sie stehen an mehreren Stellen und wuerden sonst driften.
+function fProfilVon(k){ return F_PROFILE[(k || {}).profil] || F_PROFILE.HEIDENHAIN_ITNC530; }
+function fEndung(k){ return fProfilVon(k).endung; }
+function fNcTitel(k){ const P = fProfilVon(k); return 'NC-AUSGABE (' + (P.dialekt === 'siemens' ? 'SIEMENS' : 'KLARTEXT') + ' ' + P.endung + ')'; }
 function fRender(){
   if(!Array.isArray(fProg.konturen)) fProg.konturen = [];
   const k = fProg.kopf;
   const name = fName(fProg);
   const hn = document.getElementById('hdrName'); if(hn) hn.textContent = k.name || name;
-  const pb = document.getElementById('progBox'); if(pb) pb.textContent = name + '.H';
+  // Die Endung haengt an der Zielmaschine (.H oder .MPF) - fest war sie
+  // bis zum 20.09.2026 und zeigte bei der 840D einen falschen Dateinamen.
+  const pb = document.getElementById('progBox'); if(pb) pb.textContent = name + fEndung(k);
   const hz = fHzSofort();
   // Die Zeit steht VORN: der Chip ist am Handy rund 95 px breit und schneidet
   // hinten ab (Aufnahme 19.09.2026: "6 Bohrbilder · ..." - die Zeit war genau
@@ -17070,7 +17092,23 @@ function fNcFaerben(text){
     return e;
   }).join('\n');
 }
+function fNcProfilSync(){
+  const s = document.getElementById('maschProfilSel'); if(s) s.value = fProfilVon(fProg.kopf).id;
+  const t = document.getElementById('gcodeTitel'); if(t) t.textContent = fNcTitel(fProg.kopf);
+}
+// ZIELMASCHINE UMSTELLEN, ohne den Programmkopf zu oeffnen [Daniels Wunsch
+// 20.09.2026: "dann sehe ich das sofort in der App"]. Der Wert gehoert dem
+// Programmkopf; fkProfil und seine Endungszeile ziehen mit, sonst schriebe
+// ein spaeteres Uebernehmen im Kopf die Wahl wieder um.
+function fNcProfilWechsel(id){
+  if(!F_PROFILE[id] || fProg.kopf.profil === id) return null;
+  fProg.kopf.profil = id;
+  setVal('fkProfil', id); fKopfEndungSync();
+  fRender();
+  return fNcErzeugen();
+}
 function fNcErzeugen(){
+  fNcProfilSync();
   const r = fProgrammSchreiben(fProg);
   fLetztes = r;
   const out = document.getElementById('gcodeOut'), view = document.getElementById('gcodeView'), wb = document.getElementById('warnBox'), st = document.getElementById('gcodeStat');
@@ -17122,6 +17160,16 @@ function fAmpelZeigen(){
 {
   const on = (id, fn) => { const e = document.getElementById(id); if(e) e.onclick = fn; };
   on('btnGen', fNcErzeugen);
+  // Die Regel steht in fNcProfilWechsel - hier haengt sie nur am Ereignis.
+  { const s = document.getElementById('maschProfilSel');
+    if(s && s.addEventListener) s.addEventListener('change', ()=>{
+      const id = String(s.value || '');
+      const r = fNcProfilWechsel(id);
+      if(!r) return;
+      melde('Zielmaschine: ' + F_PROFILE[id].name + '. Die Wahl steht jetzt im Programmkopf' +
+        (r.text === null ? ' \u2014 dieses Programm laesst sich dort NICHT fahren, der Grund steht im Feld.' : '.'));
+    });
+  }
   on('btnAmpel', ()=>{ const b = document.getElementById('ampelBox'); if(b && b.style.display !== 'none' && b.innerHTML){ b.style.display = 'none'; b.innerHTML = ''; return; } fAmpelZeigen(); });
   on('btnCopy', async ()=>{ const r = fLetztes || fNcErzeugen(); if(!r.text){ melde('FEHLER: kein Programm.'); return; } melde((await copyText(r.text)) ? 'Klartext kopiert (' + r.saetze + ' Saetze).' : 'Kopieren nicht moeglich.'); });
   // WANDLER .H -> .MPF (Daniels zweiter Wunsch zum 840D-Auftrag).
