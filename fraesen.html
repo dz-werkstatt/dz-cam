@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 17:35 (527352d9)";</script>
+<script>window.__DZ_STAND="20.09.2026 19:21 (0516bd19)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2906,6 +2906,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <button class="gcbtn" id="btnAmpel" title="Programm prüfen">🚦 Prüfen</button>
           <button class="gcbtn" id="btnCopy" title="Kompletten Text in die Zwischenablage">Kopieren</button>
           <button class="gcbtn" id="btnDownload" title="Als Datei NAME.H sichern — Rechner: Download, iPhone: Teilen-Blatt">📤 NC sichern</button>
+          <label class="gcbtn" id="lblWandeln" style="padding:7px 10px;cursor:pointer;" title="Ein fertiges Heidenhain-Klartext-Programm (.H) einlesen und als .MPF der 840D wieder herausgeben. Die Bahn wird UEBERSETZT, nicht nachgerechnet — im Einzelsatz fahren.">&#x2B06; .H &rarr; 840D<input type="file" id="ncWandelFile" accept=".H,.h,.txt,.TXT" style="display:none;"></label>
         </div>
         <div id="ampelBox" style="display:none;"></div>
         <div class="warn" id="warnBox" style="display:none;"></div>
@@ -3971,18 +3972,69 @@ Tiefe zum Werkzeug passt. Das bleibt Handwerk am Teil.</div>
 <p>Seit dem 20.09.2026 schreibt die App auch f&uuml;r die <b>Sinumerik 840D powerline</b> (f&uuml;nfachsige Portalfr&auml;se).
 Die Bahnen sind dieselben wie bei der iTNC &mdash; neu ist nur die <b>Schreibweise</b>.</p>
 <dl>
-<dt id="ba-fk07b-beleg">Was daran belegt ist &mdash; und was nicht</dt><dd>F&uuml;r diese Maschine liegt <b>kein einziges gezogenes
-Programm</b> vor. Programmkopf, Programmende, die M-W&ouml;rter der Hersteller-PLC, die Kreisform <b>I=AC()/J=AC()</b> und die
-Grenzen (Vakuumplatte, Diskette) stehen Wort f&uuml;r Wort in einer Unterlage, die aus Bildschirmfotos und Praxiserfahrung
-erarbeitet wurde. Alles andere &mdash; Werkzeugwechsel mitten im Programm, die Schraubenlinie mit TURN=, die Verweilzeit
-G04, die Zyklusparameter &mdash; ist aus der Siemens-Grundsprache <b>abgeleitet</b>. Deshalb tr&auml;gt jedes Programm den
-Vorbehalt im Kopf: <b>vor dem ersten Lauf im Einzelsatz fahren und die Grafik ansehen</b>. Sobald eine echte .MPF dieser
-Maschine da ist, wird daraus ein Beleg.</dd>
-<dt id="ba-fk07b-kopf">Programmkopf und Programmende</dt><dd>Beides ist <b>fest</b> und wird nicht gerechnet: TRAFOOF,
+<dt id="ba-fk07b-beleg">Was daran belegt ist &mdash; und was nicht</dt><dd>Ein Programm der App ist an dieser Maschine
+<b>noch nicht gelaufen</b>. Aber der <b>Rahmen</b> &mdash; Programmkopf, Programmende, die M-W&ouml;rter der Hersteller-PLC,
+die Kreisform <b>I=AC()/J=AC()</b>, die Schreibweise der S&auml;tze &mdash; ist seit dem 20.09.2026 <b>am Bildschirm der
+Maschine abgelesen</b>: zwei Fotos von Anfang und Ende eines Programms, das dort wirklich gelaufen ist. Das hat drei
+Annahmen <b>widerlegt</b>, alle berichtigt: die <code>;SETUP</code>-Zeile tr&auml;gt <b>drei Zahlen</b> und nicht den
+Programmnamen; am Ende steht <b>M82</b> und nicht M821; und das <code>G00 Z20</code>, das die Unterlage als ersten
+Schlusssatz nennt, gibt es dort <b>nicht</b> &mdash; es w&auml;re eine Abw&auml;rtsfahrt im Eilgang nach der Bearbeitung.
+Die <b>Zyklusparameter</b> sind davon <b>nicht</b> gedeckt, und das ist keine Vorsicht, sondern gemessen: ein &auml;lteres
+Postprozessor-Paket zu dieser Maschine f&uuml;hrt falsche Listen &mdash; CYCLE83 mit 15 statt 12 Parametern, und im Reibzyklus
+CYCLE85 stehen die Parameter des Gewindebohrers. Deshalb schreibt die App nur den <b>klassischen Zyklenstand</b>
+(siehe unten) und tr&auml;gt den Vorbehalt im Kopf jedes Programms: <b>vor dem ersten Lauf im Einzelsatz fahren und die
+Grafik ansehen</b>.</dd>
+<dt id="ba-fk07b-powerline">Powerline, nicht Solution Line</dt><dd>Die beiden Steuerungsgenerationen schreiben
+&auml;hnliche, aber nicht gleiche S&auml;tze: neuere Zyklenpakete haben <b>mehr Parameter</b> je Zyklus. Die App nimmt die
+<b>kurze, klassische</b> Liste &mdash; CYCLE82 sechs, CYCLE83 zw&ouml;lf, CYCLE85 acht, CYCLE840 elf, POCKET3 23, POCKET4 19,
+HOLES1/2 je sechs. Das ist die sichere Seite: hintere Parameter d&uuml;rfen fehlen, die Steuerung nimmt dann ihren
+Vorgabewert &mdash; <b>mehr</b> Parameter, als die Zyklusdefinition kennt, sind ein Alarm. Eine kurze Liste l&auml;uft also
+auf jedem Stand, eine lange nur auf dem neuen. Eine Wache pr&uuml;ft jeden fertigen Satz dagegen; schl&auml;gt sie an, entsteht
+<b>kein Programm</b> &mdash; wie beim NaN-W&auml;chter, denn bei 600&nbsp;Zeilen sieht den Alarm vorher niemand.</dd>
+<dt id="ba-fk07b-kopf">Programmkopf und Programmende</dt><dd>Ganz oben stehen zwei Zeilen als <b>Kommentar</b>:
+<code>;%_N_&lt;NAME&gt;_MPF</code> und <code>;$PATH=/_N_MPF_DIR</code>. Das ist der Siemens-&Uuml;bertragungskopf &mdash; er nennt
+der Steuerung beim Einlesen Programmnamen und Ablageort und ist das Gegenst&uuml;ck zum <b>=eof=</b> am Ende. Als Kommentar
+st&ouml;rt er nicht; wer die Datei seriell statt von Diskette einliest, nimmt die zwei Strichpunkte weg. Darunter steht <code>;SETUP (0.1,100,50)</code> &mdash; genau diese drei Zahlen, so
+wie sie im Programm der Maschine stehen. Was sie bedeuten, ist nicht belegt; die Steuerung liest die Zeile gar nicht
+(sie beginnt mit einem Strichpunkt), sie geh&ouml;rt dem Programm, das die Datei geschrieben hat. Am <b>Programmende</b>
+steht <b>M82</b> &mdash; am Bildschirm der Maschine abgelesen. Der Rest ist
+<b>fest</b> und wird nicht gerechnet: TRAFOOF,
 D0&nbsp;M1=56, G53&nbsp;G0&nbsp;Z0, G54&nbsp;B0&nbsp;C0, <b>TRAORI(1)</b>, T..&nbsp;D1, M3&nbsp;S..&nbsp;F..,
 G00&nbsp;G54&nbsp;X0&nbsp;Y0&nbsp;Z20 &mdash; am Ende der R&uuml;ckzug, die Parkposition und <b>=eof=</b>. TRAORI(1) steht auch
 bei reiner 3-Achs-Bearbeitung dort, so verlangt es die Unterlage. <b>G90 G17</b> erg&auml;nzt die App von sich aus
 (Absolutma&szlig;, Ebene XY) &mdash; zwei Kommentarzeilen im Kopf sagen, dass das nicht aus der Unterlage stammt.</dd>
+<dt id="ba-fk07b-modal">Warum so wenige G-W&ouml;rter im Programm stehen</dt><dd>Das G-Wort steht <b>einstellig</b>
+(G0&nbsp;G1&nbsp;G2&nbsp;G3) und <b>f&auml;llt weg</b>, solange sich die Bewegungsart nicht &auml;ndert &mdash; so steht es
+im Programm der Maschine:<br>
+<code>N90&nbsp;&nbsp;G1 Z-0.5 M8 F2500</code><br>
+<code>N100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X124.5 Y-2.9</code> &nbsp;&larr; kein G-Wort, G1 gilt weiter<br>
+Das ist kein Sch&ouml;nheitsfehler, sondern <b>Platz</b>: gemessen &uuml;ber alle Testvorlagen <b>8&nbsp;%</b> der Datei, an
+einer Zeilenbahn bis 13&nbsp;% &mdash; und Platz ist hier der Engpass, weil das Programm auf eine Diskette muss.
+<b>Ausgeschrieben</b> bleibt das Wort im festen Kopf und Ende und bei jedem R&uuml;ckzug zum Werkzeugwechsel: dort will
+man sich auf keinen modalen Zustand verlassen. Wer mitten im Programm einsteigt, l&auml;sst die Steuerung mit
+<b>Satzsuche mit Berechnung</b> anfahren &mdash; sie rechnet die modalen Zust&auml;nde dabei mit.</dd>
+<dt id="ba-fk07b-wandler">Ein Klartext-Programm f&uuml;r die 840D umschreiben</dt><dd>Der Knopf
+<b>&#x2B06; .H &rarr; 840D</b> in der NC-Ausgabe liest ein fertiges Heidenhain-Klartext-Programm und gibt es als
+<b>.MPF</b> wieder heraus &mdash; auch eines, das nicht aus dieser App stammt. Die Datei wird sofort gesichert; das
+offene Programm bleibt unber&uuml;hrt.<br>
+<b>Die Bahn wird &uuml;bersetzt, nicht nachgerechnet.</b> Geraden, Kreise, Schraubenlinien, Verweilzeiten, Werkzeug-
+und Drehzahlaufrufe, die Bohrzyklen 200/201/203/206/240 und die Bohrbilder &mdash; alles andere steht als Kommentar
+<code>; NICHT UEBERSETZT</code> im Programm, und die Meldung z&auml;hlt es auf. <b>Die App r&auml;t dort nichts.</b>
+Das betrifft vor allem die <b>Taschen-, Nut-, Zapfen- und SL-Zyklen</b>: um daraus eine Siemens-Bahn zu machen,
+m&uuml;sste der Wandler die Bahn selbst rechnen &mdash; und dann w&auml;re es nicht mehr das Programm, das man
+eingelesen hat. Wer eine solche Bearbeitung braucht, legt sie in dieser App als Arbeitsplan an und stellt die
+Zielmaschine um; dann rechnet die App die Bahn und kennt jeden Satz.<br>
+<b>Zwei Dinge, die der Wandler nicht besser kann, als der Klartext es hergibt:</b> ein <code>CR</code>-Satz tr&auml;gt
+nur den <b>Radius</b>, nicht den Mittelpunkt &mdash; die 840D verlangt ihn absolut, also wird er aus den auf ein
+Tausendstel gerundeten Endpunkten <b>zur&uuml;ckgerechnet</b> und kann um ebendieses Tausendstel danebenliegen.
+Und der <b>Werkzeugwechsel</b> f&auml;hrt auf die H&ouml;he, die im Klartext steht, nicht auf die Parkh&ouml;he
+dieser Maschine: die H&ouml;he des Zielprofils einzusetzen w&auml;re eine &Auml;nderung der Bahn.<br>
+<b>M-W&ouml;rter sind die Falle</b>, und der Wandler kennt sie: <code>M13</code> (Spindel rechts <i>und</i>
+K&uuml;hlmittel) wird zu <b>M3 M8</b>, weil Siemens daf&uuml;r zwei W&ouml;rter hat; <code>M99</code> und
+<code>M91</code> hei&szlig;en an den beiden Steuerungen <b>nicht dasselbe</b> und werden nicht &uuml;bernommen.<br>
+Alles, was f&uuml;r die eigene Ausgabe gilt, gilt auch hier: derselbe Rahmen, dieselbe Wache auf die
+Zyklusparameter, dieselbe Vollkreis-Regel &mdash; und derselbe Vorbehalt, <b>vor dem ersten Lauf im Einzelsatz
+zu fahren</b>.</dd>
 <dt id="ba-fk07b-fuenf">F&uuml;nfachsig?</dt><dd>Die Maschine ist es, die App noch nicht: sie rechnet dreiachsig mit der
 Werkzeugachse&nbsp;Z. B0&nbsp;C0 stellt die Schwenkachsen auf null, TRAORI(1) steht im Kopf, geschwenkt wird nicht.</dd>
 <dt id="ba-fk07b-grenzen">Die drei Grenzen dieser Maschine</dt><dd>Die App pr&uuml;ft sie und <b>sperrt</b>, wenn eine
@@ -4176,6 +4228,13 @@ var F_STATUS = {
   // schwaechste Belegstufe des Projekts, und sie heisst deshalb so:
   // die Saetze sind plausibel, gesehen hat sie an dieser Steuerung
   // niemand. Vor dem ersten Lauf: an der Maschine im EINZELSATZ fahren.
+  // 20.09.2026: Daniel hat den Bildschirm der Maschine abfotografiert -
+  // Anfang und Ende eines Programms, das dort wirklich gelaufen ist
+  // (Siemens/fotos/steuerung-programmanfang.png und -programmende.png).
+  // Damit ist der RAHMEN keine Ableitung mehr: Kopf, Ende und die
+  // Schreibweise der Saetze sind abgelesen. Was damit NICHT belegt ist:
+  // unsere eigene Bahn und unsere Zyklusaufrufe - nur der Rahmen darum.
+  bildschirm: {txt:'am Bildschirm der Maschine abgelesen (Foto eines Programms, das dort gelaufen ist, 20.09.2026) — unsere Bahn darin ist damit nicht belegt', cls:'pgst', grp:'offen'},
   abgeleitet: {txt:'aus der Unterlage abgeleitet — an dieser Maschine NICHT belegt, vor dem ersten Lauf im Einzelsatz pruefen', cls:'ann', grp:'offen'},
   gesperrt : {txt:'nicht gebaut', cls:'sperr', grp:'offen'}
 };
@@ -4257,7 +4316,36 @@ var F_PROFILE = {
     // Kopf und Ende Wort fuer Wort aus der Unterlage. Die Platzhalter
     // fuellt der Schreiber; alles andere bleibt Zeichen fuer Zeichen so.
     kopf:['TRAFOOF', 'D0 M1=56', 'G53 G0 Z0', 'G54 B0 C0', 'TRAORI(1)'],
-    fuss:['G00 Z20', 'G00 Z200', 'G00 Z200 M5 S0 M91 M98', 'G00 Y450 X0 M99 M80 M821', 'M30'],
+    // Der Siemens-UEBERTRAGUNGSKOPF: er nennt der Steuerung beim Einlesen
+    // den Programmnamen und das Verzeichnis und ist das Gegenstueck zum
+    // =eof= am Ende. Er steht AUSKOMMENTIERT, genau wie in Daniels
+    // Muster-MPF: als Kommentar stoert er nicht, und wer die Datei ueber
+    // die serielle Schnittstelle statt von Diskette einliest, nimmt die
+    // zwei Strichpunkte weg. <NAME> setzt der Schreiber ein.
+    dateikopf:[';%_N_<NAME>_MPF', ';$PATH=/_N_MPF_DIR'],
+    // Die SETUP-Zeile traegt DREI ZAHLEN, nicht den Programmnamen -
+    // abgelesen vom Bildschirm der Maschine (Siemens/fotos/
+    // steuerung-programmanfang.png, zweite Zeile des Programms).
+    // Wir hatten dort den Namen geschrieben; das war geraten. Was die
+    // drei Zahlen bedeuten, ist NICHT belegt - die Steuerung liest die
+    // Zeile gar nicht (sie beginnt mit einem Strichpunkt), sie gehoert
+    // dem Postprozessor, der die Datei geschrieben hat. Deshalb steht
+    // sie unveraendert so da, wie sie im Programm der Maschine steht.
+    setup:';SETUP (0.1,100,50)',
+    // M82 am Ende, nicht M821: Daniels Muster-MPF und die Textbausteine
+    // des Postprozessors schreiben M82; nur die Zusammenfassung in
+    // Siemens/840D_postprocessor_context.md sagt M821. Das Muster ist die
+    // Rohquelle, die Zusammenfassung daraus gemacht — deshalb M82.
+    // OFFEN und beim ersten Lauf zu pruefen, s. Merkmale.
+    // Vier Saetze, vom Bildschirm der Maschine abgelesen:
+    //   N285 G00 Z200 / N465 G00 Z200 M5 S0 M91 M98
+    //   N470 G00 Y450 X0 M99 M80 M82 / N5 M30 / =eof=
+    // Das 'G00 Z20' davor, das die Unterlage in ihrer Aufzaehlung nennt,
+    // steht dort NICHT - und es waere eine Abwaertsfahrt im Eilgang:
+    // nach der Bearbeitung steht das Werkzeug auf der sicheren Hoehe,
+    // Z20 liegt darunter. Das Beispielprogramm derselben Unterlage hat
+    // es ebenfalls nicht. Raus.
+    fuss:['G00 Z200', 'G00 Z200 M5 S0 M91 M98', 'G00 Y450 X0 M99 M80 M82', 'M30'],
     eof:'=eof=',
     // Alle Familien 'abgeleitet' — s. oben. Was die App fuer diese
     // Steuerung gar nicht schreiben kann, steht als 'gesperrt' und faellt
@@ -4275,8 +4363,8 @@ var F_PROFILE = {
       bohrfraesen:'abgeleitet', gewindeSpan:'gesperrt', einlippen:'abgeleitet', planfraesen:'abgeleitet',
       modellSchruppen:'abgeleitet', modellSchlichten:'abgeleitet', modellRest:'abgeleitet', modellSchlichtenEben:'abgeleitet'
     },
-    termine:'Kein einziger Lauf und kein gezogenes Programm dieser Maschine. Die Form stammt aus der Unterlage in Siemens/ (Programmkopf und -ende, M-Woerter der Hersteller-PLC, I=AC/J=AC, Vakuumgrenze Z-49,9, Diskettengrenze 1,0 MB), erarbeitet aus Bildschirmfotos und Praxiserfahrung — Stand 12.09.2026.',
-    offen:'Eine echte .MPF dieser Maschine als Fixture (Daniel beschafft sie) — daran erst ist der Kopf, das Ende und die Satzform wirklich belegt. Dann: erster Lauf im Einzelsatz mit Grafiksimulation an der Steuerung. Fuenfachsig rechnet die App noch nicht (B0 C0, TRAORI(1) steht im Kopf); Gewindefraesen, Rueckwaerts-Senken und Gewindebohren mit Spanbruch sind nicht gebaut.'
+    termine:'Kein Lauf an dieser Maschine. 20.09.2026: Daniel hat den Bildschirm der Maschine abfotografiert — Anfang und Ende eines Programms, das dort gelaufen ist. Damit sind Rahmen und Satzschreibweise abgelesen statt abgeleitet, und drei Annahmen sind widerlegt (SETUP-Zeile, M82, G00 Z20). Die ZYKLEN deckt das nicht ab: ein aelteres Postprozessor-Paket zu dieser Maschine fuehrt nachweislich falsche Parameterlisten (CYCLE83 mit 15 statt 12, im Reibzyklus CYCLE85 die Parameter des Gewindebohrers) — deshalb die Wache auf den klassischen Zyklenstand.',
+    offen:'Eine .MPF, die von DIESER Maschine gezogen ist — daran erst sind die ZYKLUSPARAMETER belegt (der Rahmen ist es seit den Fotos, die Bahn darin nicht). Ein Foto der Zyklusmaske genuegt schon fuer einen Zyklus. Dann: erster Lauf im Einzelsatz mit Grafiksimulation an der Steuerung. Fuenfachsig rechnet die App noch nicht (B0 C0, TRAORI(1) steht im Kopf); Gewindefraesen, Rueckwaerts-Senken und Gewindebohren mit Spanbruch sind nicht gebaut.'
   }
 };
 
@@ -12831,8 +12919,26 @@ var SI_M_ERLAUBT = [0, 1, 3, 4, 5, 8, 9];
 // im Satz, wenn sie sich aendert, F nur bei Wechsel. Die G-Funktion
 // steht dagegen in JEDEM Fahrsatz — das kostet drei Zeichen und macht
 // die Datei am Bildschirm der Maschine lesbar.
-function fBahnSiemens(B, warn){
+// Sind diese zwei Kreisboegen zusammen ein VOLLKREIS? Beide um dieselbe
+// Mitte, in derselben Richtung, mit demselben Vorschub, und der zweite
+// endet genau dort, wo der erste angefangen hat. Dann faehrt die 840D
+// sie in EINEM Satz (Start gleich Ende) - der Klartext braucht dafuer
+// zwei Halbboegen. Die Regel steht hier einmal; sie gilt fuer die eigene
+// Ausgabe wie fuer den Wandler.
+function fSiVollkreis(a, b, sx, sy){
+  return !!(a && b && a.a === 'kreis' && b.a === 'kreis' && sx != null && sy != null &&
+            Math.abs(a.cx - b.cx) < 1e-9 && Math.abs(a.cy - b.cy) < 1e-9 &&
+            (a.dr > 0) === (b.dr > 0) && Math.abs((+a.f || 0) - (+b.f || 0)) < 1e-9 &&
+            Math.abs(b.x - sx) < 1e-6 && Math.abs(b.y - sy) < 1e-6);
+}
+
+function fBahnSiemens(B, warn, start){
   const out = []; const pos = {x:null, y:null, z:null}; let ff = null;
+  // Startlage: der Wandler (fKlartext840) ruft diese Funktion satzweise
+  // und muss ihr sagen, wo das Werkzeug steht - sonst kann sie eine
+  // Schraubenlinie nicht rechnen (Radius und Startwinkel kommen aus der
+  // Lage). Ohne start bleibt alles wie bisher.
+  if(start){ ['x', 'y', 'z'].forEach(k => { if(start[k] != null) pos[k] = start[k]; }); if(start.f != null) ff = fRund(start.f); }
   const ach = (m) => ['x', 'y', 'z'].map(k => (m[k] != null && (pos[k] == null || Math.abs(pos[k] - m[k]) > 1e-9)) ? ' ' + k.toUpperCase() + siNum(m[k]) : '').join('');
   const merk = (m) => ['x', 'y', 'z'].forEach(k => { if(m[k] != null) pos[k] = m[k]; });
   const fw = (v) => { const r = fRund(v); if(ff != null && Math.abs(ff - r) < 1e-9) return ''; ff = r; return ' F' + siNum(r); };
@@ -12849,12 +12955,7 @@ function fBahnSiemens(B, warn){
     // derselben Richtung, deren zweiter genau am Startpunkt des ersten
     // endet, sind so ein Vollkreis und werden zusammengezogen.
     const nx = B[bi + 1];
-    if(m.a === 'kreis' && nx && nx.a === 'kreis' && pos.x != null &&
-       Math.abs(m.cx - nx.cx) < 1e-9 && Math.abs(m.cy - nx.cy) < 1e-9 &&
-       (m.dr > 0) === (nx.dr > 0) && Math.abs(m.f - nx.f) < 1e-9 &&
-       Math.abs(nx.x - pos.x) < 1e-6 && Math.abs(nx.y - pos.y) < 1e-6){
-      m = nx; bi++;
-    }
+    if(fSiVollkreis(m, nx, pos.x, pos.y)){ m = nx; bi++; }
     // Drehzahlwechsel ohne Werkzeugwechsel (Zyklus 241): bei Siemens ein
     // S-Wort im Satz, kein eigener Werkzeugaufruf.
     if(m.s) out.push('S' + Math.round(m.s));
@@ -12936,6 +13037,62 @@ function fBahnSiemens(B, warn){
 // waeren sie gefaehrlicher als die belegten Einzelsaetze. Sie laufen
 // weiter als Bahn und sagen es in der Meldung.
 // ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// POWERLINE, NICHT SOLUTION LINE — die Wache dazu.
+//
+// Daniels Einwand (20.09.2026): "ich bin mir nicht sicher, ob da
+// Powerline hinterlegt war oder nur Solution Line". Der Einwand traf:
+// in einem aelteren Postprozessor-Paket zu dieser Maschine stehen
+// nachweislich falsche Listen — CYCLE83 mit 15 Parametern (die drei
+// letzten gibt es erst im neueren Zyklenpaket), und in der Liste des
+// Reibzyklus CYCLE85 stehen Parameter des Gewindebohrers.
+//
+// Die Zahl hier ist die Parameterzahl des KLASSISCHEN Zyklenstands.
+// Sie ist die sichere Seite, und zwar aus einem Grund, der sich
+// begruenden laesst: ein Zyklus ist bei Siemens ein Unterprogramm mit
+// vorbelegten Parametern. Hintere Parameter duerfen fehlen — die
+// Steuerung nimmt dann ihren Vorgabewert. MEHR Parameter, als die
+// Zyklusdefinition kennt, sind dagegen ein Alarm. Eine kurze Liste
+// laeuft also auf jedem Stand, eine lange nur auf dem neuen.
+//
+// Was nicht in dieser Liste steht, schreibt die App nicht: nicht weil
+// es die Steuerung nicht koennte, sondern weil an DIESER Maschine
+// nichts davon geprueft ist.
+var SI_ZYK_PL = {
+  CYCLE81:5,    // RTP,RFP,SDIS,DP,DPR
+  CYCLE82:6,    // + DTB
+  CYCLE83:12,   // RTP,RFP,SDIS,DP,DPR,FDEP,FDPR,DAM,DTB,DTS,FRF,VARI
+  CYCLE84:12,   // Gewindebohren ohne Ausgleichsfutter (nicht gebaut)
+  CYCLE840:11,  // RTP,RFP,SDIS,DP,DPR,DTB,SDR,SDAC,ENC,MPIT,PIT
+  CYCLE85:8,    // RTP,RFP,SDIS,DP,DPR,DTB,FFR,RFF
+  HOLES1:6, HOLES2:6,
+  POCKET3:23, POCKET4:19
+};
+
+// Prueft einen fertigen Programmtext. Liefert die Beanstandungen als
+// Liste; leer heisst in Ordnung. Kommentarzeilen bleiben aussen vor —
+// ueber jedem Zyklussatz steht seine Parameterliste als Kommentar, und
+// die faengt mit demselben Wort an (dieselbe Falle wie am 20.09. beim
+// Diskettenfilter).
+function fSi840Wache(text){
+  const raus = [];
+  String(text || "").split(/\r?\n/).forEach((z, i) => {
+    if(z.charAt(0) === ";") return;
+    const re = /\b([A-Z][A-Z0-9_]*)\s*\(([^)]*)\)/g;
+    let m;
+    while((m = re.exec(z))){
+      const nm = m[1];
+      if(nm === "TRAORI" || nm === "MSG" || nm === "AC" || nm === "IC") continue;
+      if(!(nm in SI_ZYK_PL)){
+        raus.push("Zeile " + (i + 1) + ": " + nm + " steht nicht auf der geprueften Liste dieser Steuerung.");
+        continue;
+      }
+      const n = m[2].trim() === "" ? 0 : m[2].split(",").length;
+      if(n > SI_ZYK_PL[nm]) raus.push("Zeile " + (i + 1) + ": " + nm + " hat " + n + " Parameter, der klassische Zyklenstand kennt " + SI_ZYK_PL[nm] + ".");
+    }
+  });
+  return raus;
+}
 var F_ZYK_840D = {
   // --- Bohren ---------------------------------------------------------
   zentrieren:{zy:'CYCLE82', par:'RTP,RFP,SDIS,DP,DPR,DTB', bohr:true},
@@ -13068,6 +13225,40 @@ function fTiefsteStelle(prog){
 // gerechnet. Was der Schreiber einsetzt, sind nur Name, Werkzeug,
 // Drehzahl und Vorschub des ersten Schritts.
 // ---------------------------------------------------------------------
+// Ist das ein reiner BAHNSATZ, dessen G-Wort modal wegfallen darf?
+// Nur Saetze, die mit G00..G03 beginnen und danach kein zweites G-Wort
+// tragen. Ein 'G00 G54 X0 Y0 Z20' (Kopf) faellt damit heraus, ein
+// 'G04 F2' (Verweilen) ebenso, und jeder Zyklusaufruf sowieso.
+function fSiBahnsatz(z){ return /^G0([0123])(?:\s|$)/.test(z) && !/\sG/.test(z); }
+
+// Das G-Wort modal schreiben: einstellig, und weg, wenn es schon gilt.
+// vorher ist die zuletzt gueltige Gruppe ('0'..'3') oder null; die
+// Funktion gibt den Satz und die neue Gruppe zurueck.
+function fSiModal(z, vorher){
+  // Der Bahnsatz-Test steht HIER, nicht nur bei den Aufrufern: sonst
+  // naehme diese Funktion auch 'G00 G54 X0 Y0 Z20' sein G-Wort weg.
+  const m = fSiBahnsatz(z) ? z.match(/^G0([0123])(\s.*)?$/) : null;
+  if(!m) return {satz:z, g:null};          // kein Bahnsatz: Gruppe unbekannt
+  const rest = m[2] || '';
+  if(vorher === m[1]) return {satz:rest.replace(/^\s+/, ''), g:m[1]};
+  return {satz:'G' + m[1] + rest, g:m[1]};
+}
+
+// Eine ganze Satzliste modal schreiben. Kommentare (';') ueberspringt
+// der Lauf, ohne den Zustand anzutasten - sie aendern an der Steuerung
+// nichts. Alles andere, was kein Bahnsatz ist, setzt ihn zurueck.
+function fSiModalLauf(zeilen){
+  let g = null;
+  const out = [];
+  zeilen.forEach(z => {
+    if(z.charAt(0) === ';'){ out.push(z); return; }
+    if(!fSiBahnsatz(z)){ g = null; out.push(z); return; }
+    const r = fSiModal(z, g); g = r.g;
+    if(r.satz) out.push(r.satz);
+  });
+  return out;
+}
+
 function fProgrammSchreibenSiemens(prog, opt){
   opt = opt || {};
   const P = F_PROFILE.SIEMENS_840D_PL;
@@ -13155,8 +13346,22 @@ function fProgrammSchreibenSiemens(prog, opt){
     // Diskette passt. Bei einer Formschlichtbahn machen sie ein Viertel
     // der Datei aus (am Blister gemessen: 109 von 420 kB) — dann fallen
     // sie weg, bevor die App das Programm teilt.
-    const satz = mitN ? (t) => { n += 5; zeilen.push('N' + n + ' ' + t); } : (t) => { zeilen.push(t); };
-    roh(';SETUP (' + teilName + ')');
+    // gAkt ist die zuletzt geschriebene Bewegungsgruppe. Ein Satz, der
+    // KEIN reiner Bahnsatz ist (Werkzeugaufruf, Zyklus, M-Wort, der
+    // feste Kopf- und Fusstext), setzt sie auf null zurueck - danach
+    // steht das G-Wort wieder da. Kommentare (roh) lassen sie stehen:
+    // sie aendern an der Steuerung nichts.
+    let gAkt = null;
+    const zeile = mitN ? (t) => { n += 5; zeilen.push('N' + n + ' ' + t); } : (t) => { zeilen.push(t); };
+    // fest=true: Text aus dem Profil (Kopf, Fuss) - Wort fuer Wort so,
+    // wie er im Programm der Maschine steht, ohne Modalisierung.
+    const satz = (t, fest) => {
+      if(fest || !fSiBahnsatz(t)){ gAkt = null; zeile(t); return; }
+      const r = fSiModal(t, gAkt); gAkt = r.g;
+      if(r.satz) zeile(r.satz);
+    };
+    (P.dateikopf || []).forEach(z => roh(z.replace('<NAME>', teilName)));
+    roh(P.setup);
     roh('; DZ CAM FRAESEN ' + datum + ' - SINUMERIK 840D POWERLINE');
     roh('; AUS DER UNTERLAGE ABGELEITET - AN DIESER MASCHINE NICHT BELEGT.');
     if(bloecke.some(b => b.zyklus)) roh('; MIT ZYKLEN DER STEUERUNG - PARAMETER IN DER ZYKLUSMASKE PRUEFEN.');
@@ -13171,14 +13376,14 @@ function fProgrammSchreibenSiemens(prog, opt){
     for(let i = von; i < bis; i++){
       const b = bloecke[i], s = schritte[i];
       if(aktT === null){
-        kopfZeilen(b.t, s.s, s.f).forEach(z => satz(z));
+        kopfZeilen(b.t, s.s, s.f).forEach(z => satz(z, true));
         // Der Kopf faehrt Z20 an (Unterlage). Liegt die sichere Hoehe des
         // Programms darueber, wird sie nachgezogen — sonst nicht: hoeher
         // ist immer sicher.
         if(+k.rz > 20) satz('G00 Z' + siNum(+k.rz));
         roh(b.zeilen[0]);
       }
-      else if(b.t !== aktT){ roh(b.zeilen[0]); wechselZeilen(b.t, s.s, s.f).forEach(z => satz(z)); }
+      else if(b.t !== aktT){ roh(b.zeilen[0]); wechselZeilen(b.t, s.s, s.f).forEach(z => satz(z, true)); }
       else roh(b.zeilen[0]);
       if(aktT !== null && b.t === aktT)
         if(Math.round(+s.s || 0) !== Math.round(+schritte[i - 1].s || 0) || fRund(+s.f || 0) !== fRund(+schritte[i - 1].f || 0)) satz('M3 S' + Math.round(+s.s || 0) + ' F' + siNum(+s.f || 0));
@@ -13189,8 +13394,8 @@ function fProgrammSchreibenSiemens(prog, opt){
       if(kw !== kuehl){ satz(kw); kuehl = kw; }
       for(let zi = 1; zi < b.zeilen.length; zi++){ const z = b.zeilen[zi]; (z.charAt(0) === ';') ? roh(z) : satz(z); }
     }
-    if(aktT === null) kopfZeilen(wz[0] || 1, erst.s, erst.f).forEach(z => satz(z));
-    P.fuss.forEach(z => satz(z));
+    if(aktT === null) kopfZeilen(wz[0] || 1, erst.s, erst.f).forEach(z => satz(z, true));
+    P.fuss.forEach(z => satz(z, true));
     roh(P.eof);
     return zeilen;
   };
@@ -13243,10 +13448,296 @@ function fProgrammSchreibenSiemens(prog, opt){
     warn.push('Das Programm ist ' + kb(bytes(zeilen)) + ' gross (Grenze ' + kb(P.maxBytes) + ') und besteht aus einem einzigen Schritt — es laesst sich nicht aufteilen. Rautiefe oder Raster vergroebern.');
   }
 
+  teile.forEach(t => fSi840Wache(t.text).forEach(x => fehler.push('NC-FEHLER in ' + t.datei + ' — ' + x)));
+  if(fehler.length && !opt.trotzdem) return {text:null, zeilen:[], warnungen:warn, fehler:fehler, name:name, teile:[]};
+
   const haupt = teile[0];
   return {text:haupt.text, zeilen:haupt.zeilen, saetze:haupt.zeilen.filter(z => z.charAt(0) !== ';' && z !== P.eof).length, ohneNummern:!mitN,
           warnungen:warn, fehler:fehler, name:name, datei:haupt.datei, teile:teile,
           bytes:haupt.text.length, maxBytes:P.maxBytes};
+}
+
+// ---------------------------------------------------------------------
+// WANDLER: iTNC-530-KLARTEXT NACH SINUMERIK 840D POWERLINE
+//
+// Daniels zweiter Wunsch zum 840D-Auftrag: "dann waere es halt auch gut,
+// wenn wir quasi ein Heidenhain-iTNC-530-Programm einlesen koennen ueber
+// die App und das dann umwandeln koennen auf die 840D powerline."
+//
+// WAS ER TUT: er liest einen Klartext-Satz nach dem anderen und schreibt
+// den entsprechenden Siemens-Satz. Geradensaetze, alle vier Kreisformen,
+// Rundung und Fase, Werkzeugaufruf, M-Woerter und die Bohrzyklen. Der
+// Programmrahmen der 840D kommt aus demselben Profil wie bei der eigenen
+// Ausgabe, die Zyklen aus derselben geprueften Tabelle (fZyk840) - der
+// Wandler baut nichts davon nach.
+//
+// WAS ER NICHT TUT, und das steht in der Meldung UND als Kommentar an der
+// Stelle im Programm: Q-Parameter-Rechnung (FN), die freie
+// Konturprogrammierung (FK), Schwenken (PLANE, Zyklus 19), die SL-Zyklen
+// mit Konturlabels, Tastsystemzyklen und Unterprogramm-Wiederholungen.
+// Ein solcher Satz wird NICHT geraten, sondern als Kommentar mitgefuehrt
+// und gezaehlt. Wer ihn braucht, sieht genau, wo er fehlt.
+//
+// DREI FALLEN, die dabei stecken - jede ein M-Wort, das in beiden
+// Dialekten existiert und etwas ANDERES bedeutet:
+//   M99  Klartext: rufe den Zyklus an dieser Stelle auf.
+//        840D:     eine Funktion der Hersteller-PLC (steht in der
+//                  Parkposition des Programmendes).
+//   M91  Klartext: die Koordinaten dieses Satzes sind Maschinenkoordinaten.
+//        840D:     ebenfalls PLC (Programmende).
+//   M13  Klartext: Spindel ein und Kuehlmittel ein in einem Wort.
+//        840D:     kennt es nicht - wird zu M3 M8.
+// Deshalb uebersetzt der Wandler M-Woerter ueber eine feste Liste und
+// laesst alles andere stehen bzw. meldet es.
+var KL840_M = {
+  0:'M0', 1:'M1', 3:'M3', 4:'M4', 5:'M5', 8:'M8', 9:'M9',
+  13:'M3 M8',            // Spindel + Kuehlmittel in einem Wort
+  30:null, 2:null,       // Programmende - der Rahmen schreibt es selbst
+  99:null, 89:null,      // Zyklusaufruf - der Wandler loest ihn selbst auf
+  91:'?', 92:'?', 94:'?', 97:'?', 98:'?', 128:'?', 129:'?', 126:'?', 127:'?', 138:'?', 140:'?', 144:'?', 145:'?'
+};
+
+// Ein Klartext-Wort aus einem Satz holen: 'X+12.5' -> 12.5
+function fKlWort(satz, buchstabe){
+  const m = satz.match(new RegExp('(?:^|\\s)' + buchstabe + '\\s*([+-]?[0-9.]+)(?:\\s|$)'));
+  return m ? parseFloat(m[1]) : null;
+}
+
+// Die Zyklen, die der Wandler kennt: Klartext-Nummer -> unsere Familie
+// plus die Zuordnung Q-Wort -> Feld unseres Schritts. Mehr als das kann
+// die App fuer die 840D ohnehin nicht schreiben (SI_ZYK_PL), und was sie
+// nicht schreiben kann, soll sie nicht raten.
+var KL840_ZYK = {
+  200:{art:'bohren',     q:{200:'sc', 201:'tiefe', 206:'f', 202:'zust', 210:'vOben', 203:'q203', 204:'sc2', 211:'vUnten'}},
+  201:{art:'reiben',     q:{200:'sc', 201:'tiefe', 206:'f', 211:'vUnten', 208:'fRueck', 203:'q203', 204:'sc2'}},
+  203:{art:'tief',       q:{200:'sc', 201:'tiefe', 206:'f', 202:'zust', 210:'vOben', 203:'q203', 204:'sc2', 212:'abnahme', 213:'spanBrueche', 205:'zustMin', 211:'vUnten', 208:'fRueck', 256:'rzSpan'}},
+  206:{art:'gewinde',    q:{200:'sc', 201:'tiefe', 206:'f', 211:'vUnten', 203:'q203', 204:'sc2', 239:'steigung'}},
+  240:{art:'zentrieren', q:{200:'sc', 201:'tiefe', 206:'f', 211:'vUnten', 203:'q203', 204:'sc2'}}
+};
+
+// Der Wandler. Liefert {text, zeilen, warnungen, offen, saetze, name}.
+function fKlartext840(text, opt){
+  opt = opt || {};
+  const P = F_PROFILE.SIEMENS_840D_PL;
+  const warn = [], offen = [], L = [];
+  const pos = {x:null, y:null, z:null};
+  let ff = null, cc = null, name = '', tAkt = null, sAkt = null;
+  let zyk = null, zykQ = null, punkte = [], zykNr = 0;
+
+  const roh = (t) => L.push(t);
+  const satz = (t) => L.push(t);
+  const zahl = (v) => siNum(fRund(v));
+  const achsen = (m) => ['x', 'y', 'z'].map(k => (m[k] != null && (pos[k] == null || Math.abs(pos[k] - m[k]) > 1e-9)) ? ' ' + k.toUpperCase() + zahl(m[k]) : '').join('');
+  const merk = (m) => ['x', 'y', 'z'].forEach(k => { if(m[k] != null) pos[k] = m[k]; });
+  const fWort = (v) => { if(v == null) return ''; const r = fRund(v); if(ff != null && Math.abs(ff - r) < 1e-9) return ''; ff = r; return ' F' + siNum(r); };
+
+  // Ein gesammelter Zyklus wird geschrieben, sobald seine Positionen
+  // feststehen - unter MCALL, wie bei der eigenen Ausgabe. Gerechnet wird
+  // er von fZyk840: dieselbe Tabelle, dieselbe Parameterreihenfolge, und
+  // damit gilt auch die Wache auf den klassischen Zyklenstand.
+  let warte = null;                    // {obj, sx, sy} - wartender Kreissatz
+  const kreisSchreiben = (o) => {
+    satz((o.dr > 0 ? 'G03' : 'G02') + ' X' + zahl(o.x) + ' Y' + zahl(o.y) +
+         ' I=AC(' + zahl(o.cx) + ') J=AC(' + zahl(o.cy) + ')' + fWort(o.f));
+  };
+  const kreisPuffern = (o) => {
+    if(warte && fSiVollkreis(warte.obj, o, warte.sx, warte.sy)){
+      // Zwei Halbboegen um dieselbe Mitte: EIN Satz, Start gleich Ende.
+      warte = null; kreisSchreiben(o); pos.x = o.x; pos.y = o.y; return;
+    }
+    if(warte){ const w = warte; warte = null; kreisSchreiben(w.obj); }
+    warte = {obj:o, sx:pos.x, sy:pos.y};
+    pos.x = o.x; pos.y = o.y;
+  };
+  const kreisSpuelen = () => { if(warte){ const w = warte; warte = null; kreisSchreiben(w.obj); } };
+
+  const zyklusSchreiben = () => {
+    if(!zyk || !punkte.length) { punkte = []; return; }
+    const K = KL840_ZYK[zyk];
+    const s = {art:K.art, t:tAkt || 1, aktiv:true};
+    Object.keys(K.q).forEach(q => { if(zykQ[q] != null) s[K.q[q]] = zykQ[q]; });
+    const zk = fZyk840(s, {nr:tAkt, d:0}, {muster:[]}, punkte.slice());
+    if(zk){
+      zk.warn.forEach(w => warn.push('Zyklus ' + zyk + ': ' + w));
+      zk.zeilen.forEach(e => (e.kom !== undefined) ? roh(e.kom) : satz(e.satz));
+      zykNr++;
+    } else {
+      offen.push('CYCL DEF ' + zyk + ' - die App konnte daraus keinen 840D-Zyklus rechnen (Werte unvollstaendig).');
+      roh('; NICHT UEBERSETZT: CYCL DEF ' + zyk);
+    }
+    punkte = [];
+  };
+
+  const zeilenEin = String(text || '').replace(/\r/g, '').split('\n');
+  for(let i = 0; i < zeilenEin.length; i++){
+    // Satznummer abtrennen; die Tilde am Zeilenende setzt einen Satz fort.
+    let z = zeilenEin[i].trim();
+    while(/~$/.test(z) && i + 1 < zeilenEin.length){ z = z.replace(/~$/, ' ') + zeilenEin[++i].trim(); }
+    z = z.replace(/^\d+\s+/, '').trim();
+    if(!z) continue;
+
+    // --- Rahmen ------------------------------------------------------
+    let m;
+    if((m = z.match(/^BEGIN PGM\s+(\S+)/))){ name = m[1]; continue; }
+    if(/^END PGM/.test(z)) continue;
+    if(/^BLK FORM/.test(z)){ roh('; ' + z); continue; }
+    if(/^;/.test(z) || /^\*/.test(z)){ roh('; ' + z.replace(/^[;*]\s*/, '')); continue; }
+
+    // --- Werkzeugaufruf ----------------------------------------------
+    if((m = z.match(/^TOOL CALL\s+(\d+)/))){
+      kreisSpuelen(); zyklusSchreiben();
+      tAkt = +m[1]; sAkt = fKlWort(z, 'S');
+      const f = fKlWort(z, 'F');
+      satz('T' + tAkt + ' D1');
+      satz('M3 S' + Math.round(sAkt || 0) + (f != null ? ' F' + siNum(f) : ''));
+      if(f != null) ff = fRund(f);
+      continue;
+    }
+    if(/^TOOL DEF/.test(z)) continue;
+
+    // --- Zyklusdefinition --------------------------------------------
+    if((m = z.match(/^CYCL DEF\s+(\d+)/))){
+      kreisSpuelen(); zyklusSchreiben();
+      const nr = +m[1];
+      if(KL840_ZYK[nr]){ zyk = nr; zykQ = {}; }
+      else {
+        zyk = null;
+        offen.push('CYCL DEF ' + nr + ' (' + z.replace(/^CYCL DEF\s+\d+\s*/, '').trim() + ') - fuer die 840D nicht gebaut.');
+        roh('; NICHT UEBERSETZT: ' + z);
+      }
+      continue;
+    }
+    if((m = z.match(/^Q(\d+)\s*=\s*([+-]?[0-9.]+)/))){
+      if(zyk) zykQ[m[1]] = parseFloat(m[2]);
+      continue;
+    }
+    if(/^CYCL CALL/.test(z)){
+      if(zyk && pos.x != null) punkte.push({x:pos.x, y:pos.y});
+      continue;
+    }
+
+    // --- Bahnsaetze ---------------------------------------------------
+    if((m = z.match(/^(L|LP)\s/)) || /^L$/.test(z)){
+      const p = {x:fKlWort(z, 'X'), y:fKlWort(z, 'Y'), z:fKlWort(z, 'Z')};
+      const eil = /\bFMAX\b/.test(z);
+      const f = eil ? null : fKlWort(z, 'F');
+      const mw = fKlWort(z, 'M');
+      // M99 im Fahrsatz: Position anfahren UND dort den Zyklus ausloesen.
+      // Unter MCALL macht das der Positioniersatz von selbst - der Punkt
+      // wird deshalb nur gesammelt.
+      if(mw === 99 || mw === 89){
+        if(p.x != null) pos.x = p.x; if(p.y != null) pos.y = p.y; if(p.z != null) pos.z = p.z;
+        if(zyk) punkte.push({x:pos.x, y:pos.y});
+        continue;
+      }
+      kreisSpuelen(); zyklusSchreiben();
+      let a = achsen(p);
+      let mTeil = '';
+      if(mw != null){
+        const u = KL840_M[mw];
+        if(u === undefined){ warn.push('M' + mw + ' ist der App unbekannt und wurde NICHT geschrieben (Satz: ' + z + ').'); }
+        else if(u === '?'){ warn.push('M' + mw + ' hat an der 840D eine ANDERE Bedeutung als im Klartext und wurde NICHT geschrieben (Satz: ' + z + ').'); offen.push('M' + mw + ' im Satz "' + z + '"'); }
+        else if(u) mTeil = ' ' + u;
+      }
+      if(!a && !mTeil) continue;
+      if(!a) a = ' Z' + zahl(pos.z == null ? 0 : pos.z);
+      satz((eil ? 'G00' : 'G01') + a + (eil ? '' : fWort(f)) + mTeil);
+      merk(p);
+      continue;
+    }
+    // Kreismittelpunkt merken
+    if((m = z.match(/^CC\s/))){
+      cc = {x:fKlWort(z, 'X') != null ? fKlWort(z, 'X') : (cc ? cc.x : pos.x), y:fKlWort(z, 'Y') != null ? fKlWort(z, 'Y') : (cc ? cc.y : pos.y)};
+      continue;
+    }
+    // Kreis um den zuletzt gesetzten Mittelpunkt
+    if((m = z.match(/^C\s/))){
+      zyklusSchreiben();
+      if(!cc){ offen.push('C-Satz ohne CC davor: "' + z + '"'); roh('; NICHT UEBERSETZT: ' + z); continue; }
+      const x = fKlWort(z, 'X'), y = fKlWort(z, 'Y'), f = /\bFMAX\b/.test(z) ? null : fKlWort(z, 'F');
+      const ccw = /DR\+/.test(z);
+      kreisPuffern({a:'kreis', x:(x != null ? x : pos.x), y:(y != null ? y : pos.y), cx:cc.x, cy:cc.y, dr:(ccw ? 1 : -1), f:(f != null ? f : ff)});
+      continue;
+    }
+    // Kreis ueber den Radius (CR-Regel des Klartexts)
+    if((m = z.match(/^CR\s/))){
+      zyklusSchreiben();
+      const x = fKlWort(z, 'X'), y = fKlWort(z, 'Y'), r = fKlWort(z, 'R');
+      const ccw = /DR\+/.test(z);
+      if(pos.x == null || x == null || y == null || r == null){ offen.push('CR-Satz unvollstaendig: "' + z + '"'); roh('; NICHT UEBERSETZT: ' + z); continue; }
+      // R negativ heisst im Klartext: der laengere der beiden Boegen.
+      const M = fBogenMitte(pos.x, pos.y, x, y, Math.abs(r), ccw ? 1 : -1, r < 0);
+      if(!M){ offen.push('CR-Satz: aus Radius und Endpunkt laesst sich kein Bogen rechnen ("' + z + '")'); roh('; NICHT UEBERSETZT: ' + z); continue; }
+      kreisPuffern({a:'kreis', x:x, y:y, cx:M.cx, cy:M.cy, dr:(ccw ? 1 : -1), f:ff});
+      cc = {x:M.cx, y:M.cy};
+      continue;
+    }
+    // SCHRAUBENLINIE. Der Klartext gibt sie in Polarkoordinaten an:
+    // IPA = ueberstrichener Winkel (1080 Grad sind drei Umlaeufe), IZ =
+    // Hub. Gerechnet wird sie von fBahnSiemens - derselbe Code, der sie
+    // auch fuer die eigene Ausgabe schreibt.
+    if((m = z.match(/^CP\s/))){
+      kreisSpuelen(); zyklusSchreiben();
+      const ipa = fKlWort(z, 'IPA'), iz = fKlWort(z, 'IZ'), f = /\bFMAX\b/.test(z) ? null : fKlWort(z, 'F');
+      if(!cc || pos.x == null || ipa == null){ offen.push('CP-Satz ohne CC oder ohne bekannte Lage: "' + z + '"'); roh('; NICHT UEBERSETZT: ' + z); continue; }
+      const w = [], sub = fBahnSiemens([{a:'helix', cx:cc.x, cy:cc.y, turns:Math.abs(ipa) / 360, dr:(ipa < 0 ? -1 : 1), dz:(iz || 0), f:(f != null ? f : ff)}], w, {x:pos.x, y:pos.y, z:pos.z, f:ff});
+      w.forEach(x => warn.push(x));
+      if(!sub.length){ offen.push('CP-Satz: keine Bahn gerechnet ("' + z + '")'); roh('; NICHT UEBERSETZT: ' + z); continue; }
+      sub.forEach(t => satz(t));
+      // Endlage nachfuehren: Winkel plus IPA auf demselben Radius.
+      const r = Math.hypot(pos.x - cc.x, pos.y - cc.y), a0 = Math.atan2(pos.y - cc.y, pos.x - cc.x);
+      const a1 = a0 + (ipa * Math.PI / 180);
+      pos.x = cc.x + r * Math.cos(a1); pos.y = cc.y + r * Math.sin(a1);
+      if(iz != null) pos.z = (pos.z == null ? 0 : pos.z) + iz;
+      if(f != null) ff = fRund(f);
+      continue;
+    }
+    // Rundung und Fase: bei Siemens Satzworte am VORIGEN Satz.
+    if((m = z.match(/^RND\s+R?\s*([0-9.]+)/))){
+      kreisSpuelen();
+      if(L.length && /^G0[01]/.test(L[L.length - 1])) L[L.length - 1] += ' RND=' + siNum(parseFloat(m[1]));
+      else { offen.push('RND ohne Fahrsatz davor'); roh('; NICHT UEBERSETZT: ' + z); }
+      continue;
+    }
+    if((m = z.match(/^CHF\s+([0-9.]+)/))){
+      kreisSpuelen();
+      if(L.length && /^G0[01]/.test(L[L.length - 1])) L[L.length - 1] += ' CHF=' + siNum(parseFloat(m[1]));
+      else { offen.push('CHF ohne Fahrsatz davor'); roh('; NICHT UEBERSETZT: ' + z); }
+      continue;
+    }
+
+    // --- alles andere: NICHT raten ------------------------------------
+    kreisSpuelen();
+    offen.push(z);
+    roh('; NICHT UEBERSETZT: ' + z);
+  }
+  kreisSpuelen(); zyklusSchreiben();
+
+  // --- den Rahmen der 840D drumherum --------------------------------
+  const nm = fName({kopf:{name:name || opt.name || 'GEWANDELT'}});
+  const kopf = [];
+  (P.dateikopf || []).forEach(t => kopf.push(t.replace('<NAME>', nm)));
+  kopf.push(P.setup);
+  kopf.push('; AUS EINEM HEIDENHAIN-KLARTEXT-PROGRAMM GEWANDELT' + (name ? ' (' + fAsciiText(name) + ')' : ''));
+  kopf.push('; DIE BAHN IST UEBERSETZT, NICHT NACHGERECHNET - IM EINZELSATZ FAHREN.');
+  if(offen.length) kopf.push('; ' + offen.length + ' SATZ/SAETZE NICHT UEBERSETZT - SIEHE DIE KOMMENTARE IM PROGRAMM.');
+  P.kopf.forEach(t => kopf.push(t));
+  kopf.push('G90 G17');
+
+  const alle = kopf.concat(fSiModalLauf(L));
+  P.fuss.forEach(t => alle.push(t));
+  alle.push(P.eof);
+
+  // Satznummern wie bei der eigenen Ausgabe, Kommentare ohne.
+  let n = 0;
+  const fertig = alle.map(t => (t.charAt(0) === ';' || t === P.eof) ? t : ('N' + (n += 5) + ' ' + t));
+
+  const txt = fertig.join(P.zeilenende) + P.zeilenende;
+  fSi840Wache(txt).forEach(x => warn.push('NC-FEHLER — ' + x));
+  if(offen.length) warn.push(offen.length + ' Satz/Saetze konnten nicht uebersetzt werden und stehen als Kommentar im Programm: ' +
+                             offen.slice(0, 4).map(o => '"' + o.slice(0, 40) + '"').join(', ') + (offen.length > 4 ? ' und weitere' : '') +
+                             '. Die App raet dort nichts.');
+  return {text:txt, zeilen:fertig, warnungen:warn, offen:offen, saetze:n / 5, zyklen:zykNr, name:nm, datei:nm + P.endung};
 }
 
 // ---------------------------------------------------------------------
@@ -14681,17 +15172,21 @@ function fMerkmale(profilId){
   // Die 840D hat eine eigene Liste: ihre Saetze sehen anders aus, und vor
   // allem ist ihr Belegstand ein anderer (nichts gefahren, nichts gezogen).
   if(P.dialekt === 'siemens') return [
-    {t:'Programmrahmen: ;SETUP (Name), TRAFOOF, D0 M1=56, G53 G0 Z0, G54 B0 C0, TRAORI(1), T.. D1, M3 S.. F.., G00 G54 X0 Y0 Z20 — und am Ende G00 Z20 / Z200 / Z200 M5 S0 M91 M98 / Y450 X0 M99 M80 M821 / M30 / =eof=. Wort fuer Wort aus der Unterlage; die App setzt nur Name, Werkzeug, Drehzahl und Vorschub ein.', s:'abgeleitet'},
+    {t:'Programmrahmen, vom Bildschirm der Maschine abgelesen: ;SETUP (0.1,100,50), TRAFOOF, D0 M1=56, G53 G0 Z0, G54 B0 C0, TRAORI(1), T.. D1, M3 S.. F.., G00 G54 X0 Y0 Z20 — am Ende G00 Z200 / G00 Z200 M5 S0 M91 M98 / G00 Y450 X0 M99 M80 M82 / M30 / =eof=. Davor stellt die App den Uebertragungskopf ;%_N_<NAME>_MPF und ;$PATH=/_N_MPF_DIR; im gespeicherten Programm steht er nicht mehr, die Steuerung verbraucht ihn beim Einlesen. Die App setzt nur Name, Werkzeug, Drehzahl und Vorschub ein.', s:'bildschirm'},
+    {t:'Drei Dinge haben die Fotos WIDERLEGT, alle berichtigt: die SETUP-Zeile traegt drei Zahlen und nicht den Programmnamen; am Ende steht M82 und nicht M821; und das G00 Z20, das die Unterlage als ersten Fusssatz nennt, gibt es dort nicht — es waere eine Abwaertsfahrt im Eilgang nach der Bearbeitung.', s:'bildschirm'},
     {t:'G90 G17 schreibt die App zusaetzlich (Absolutmass, Ebene XY) — das steht NICHT in der Unterlage, aber ohne beides faehrt das Programm falsch, wenn ein Vorgaenger G91 oder G18 hinterlassen hat, und I=AC/J=AC sind die Kreismitten der XY-Ebene. Zwei Kommentarzeilen im Kopf sagen es.', s:'abgeleitet'},
-    {t:'Bahnsaetze: G00 Eilgang, G01 mit F, Kreis G02/G03 mit ABSOLUTER Mitte I=AC() J=AC() (Pflicht auf dieser Steuerung), Vollkreis in EINEM Satz (Start gleich Ende), Schraubenlinie als Kreissatz mit Z-Endpunkt und TURN=<zusaetzliche Umlaeufe>, Verweilzeit G04 F<Sekunden>. Achsen und F modal — ein Wort steht nur, wenn es sich aendert.', s:'abgeleitet'},
+    {t:'Bahnsaetze: Kreis G2/G3 mit ABSOLUTER Mitte I=AC() J=AC() (Pflicht auf dieser Steuerung), Vollkreis in EINEM Satz (Start gleich Ende), Schraubenlinie als Kreissatz mit Z-Endpunkt und TURN=<zusaetzliche Umlaeufe>, Verweilzeit G04 F<Sekunden>. Achsen und F modal — ein Wort steht nur, wenn es sich aendert.', s:'bildschirm'},
+    {t:'Das G-Wort steht EINSTELLIG (G0 G1 G2 G3) und faellt weg, solange sich die Bewegungsart nicht aendert — so steht es im Programm der Maschine. Das spart ueber alle Testvorlagen 8 Prozent der Datei, an einer Zeilenbahn bis 13, und auf der Diskette ist Platz der Engpass. Ausgeschrieben bleibt es im festen Kopf und Ende und bei jedem Rueckzug zum Werkzeugwechsel: dort will man sich auf keinen modalen Zustand verlassen.', s:'bildschirm'},
     {t:'Werkzeugwechsel mitten im Programm: G00 Z200 / M5 / T.. D1 / M3 S.. F.. — dazu sagt die Unterlage nichts, das ist der plausible Weg. Kuehlmittel getrennt als M8/M9 (die TNC hat dafuer ein Wort, M13).', s:'abgeleitet'},
     {t:'Zyklen der Steuerung (Kopffeld, Vorgabe AUS): Bohren CYCLE82, Tieflochbohren CYCLE83, Reiben CYCLE85, Gewindebohren mit Ausgleichsfutter CYCLE840, Rechtecktasche POCKET3, Kreistasche POCKET4, Lochkreis HOLES2 und Lochreihe HOLES1 unter MCALL. Ueber jedem Satz steht seine Parameterliste. Gemessen spart das an einer Platte mit Taschen und Bohrbildern die Haelfte der Datei, an einer reinen Bohrleiste zwei Drittel.', s:'abgeleitet'},
+    {t:'POWERLINE, nicht Solution Line: die App schreibt nur Zyklen des KLASSISCHEN Zyklenstands, und zwar mit dessen Parameterzahl (CYCLE82 sechs, CYCLE83 zwoelf, CYCLE85 acht, CYCLE840 elf, POCKET3 23, POCKET4 19, HOLES1/2 je sechs). Das ist die sichere Seite: hintere Parameter duerfen fehlen, die Steuerung nimmt ihren Vorgabewert — MEHR Parameter, als die Zyklusdefinition kennt, sind ein Alarm. Eine Wache prueft jeden fertigen Satz dagegen; schlaegt sie an, entsteht kein Programm.', s:'abgeleitet'},
     {t:'Ohne Zyklus (Vorgabe): jede Bearbeitung laeuft als eigene Bahn der App — dieselbe, die am Programmierplatz der iTNC 530 Satz fuer Satz belegt ist (DZ4 bis DZ24). Neu ist nur die Schreibweise, nicht die Geometrie.', s:'abgeleitet'},
     {t:'Grenzen der Maschine, von der App geprueft: hoechstens ' + (P.plaetze || 2) + ' Werkzeuge im Programm (rot), bei Vakuumspannung nicht tiefer als Z' + P.zVakuum + ' (rot), Rohteil-Oberkante unter Z20 (rot — der feste Kopf faehrt dort hin).', s:'abgeleitet'},
     {t:'Diskette: die Unterlage setzt die Grenze bei ' + Math.round(P.maxBytes / 1000) + ' kB. Die App geht in drei Stufen — mit Satznummern, ohne Satznummern (an einer Formschlichtbahn ein Viertel der Datei), dann aufgeteilt an einer Schrittgrenze, jedes Teil mit eigenem Kopf und Ende.', s:'abgeleitet'},
+    {t:'Wandler .H -> .MPF (Knopf in der NC-Ausgabe): ein fertiges Klartext-Programm wird UEBERSETZT, nicht nachgerechnet. Geraden, Kreise, Schraubenlinien, Verweilzeiten, Werkzeug- und Drehzahlaufrufe, die Bohrzyklen 200/201/203/206/240 und die Bohrbilder; Taschen-, Nut-, Zapfen- und SL-Zyklen werden GEMELDET statt geraten. Ein CR-Satz traegt nur den Radius — die Mitte wird aus den gerundeten Endpunkten zurueckgerechnet und kann ein Tausendstel danebenliegen. M13 wird M3 und M8; M99 und M91 heissen hier etwas anderes und werden nicht uebernommen. Gemessen am Umweg (derselbe Plan direkt als 840D gegen Klartext-dann-gewandelt): jeder Bahnsatz kommt wieder, die Reihenfolge weicht nur an den Rueckzuegen zum Werkzeugwechsel ab.', s:'abgeleitet'},
     {t:'Fuenfachsig: die Maschine ist es, die Bahnen der App sind es nicht. TRAORI(1) und B0 C0 stehen im Kopf (die Unterlage nennt TRAORI Pflicht auch bei 3-Achs-Bearbeitung), geschwenkt wird nicht.', s:'gesperrt'},
     {t:'Nicht gebaut: Zapfen (CYCLE76/77), Nuten (SLOT1/SLOT2/LONGHOLE), Planfraesen (CYCLE71), Bahnfraesen (CYCLE72), Gewindefraesen (CYCLE90), Gewindebohren synchron (CYCLE84), Rueckwaerts-Senken. Bei ihnen haengt die Bedeutung an Parametern, die sich ohne Beleg nicht sicher zuordnen lassen — sie laufen als Bahn und sagen es.', s:'gesperrt'},
-    {t:'Stand: ' + P.termine, s:'abgeleitet', offen:P.offen}
+    {t:'Stand: ' + P.termine, s:'bildschirm', offen:P.offen}
   ];
   return [
     z('zentrieren', 'Zentrieren — Zyklus 240 (Q200 Q343 Q201 Q344 Q206 Q211 Q203 Q204)'),
@@ -16629,6 +17124,29 @@ function fAmpelZeigen(){
   on('btnGen', fNcErzeugen);
   on('btnAmpel', ()=>{ const b = document.getElementById('ampelBox'); if(b && b.style.display !== 'none' && b.innerHTML){ b.style.display = 'none'; b.innerHTML = ''; return; } fAmpelZeigen(); });
   on('btnCopy', async ()=>{ const r = fLetztes || fNcErzeugen(); if(!r.text){ melde('FEHLER: kein Programm.'); return; } melde((await copyText(r.text)) ? 'Klartext kopiert (' + r.saetze + ' Saetze).' : 'Kopieren nicht moeglich.'); });
+  // WANDLER .H -> .MPF (Daniels zweiter Wunsch zum 840D-Auftrag).
+  // Die Ausgabe ist ein ANDERES Programm als das offene - sie gehoert
+  // deshalb nicht in die Textflaeche, sondern direkt in eine Datei. Was
+  // nicht uebersetzt werden konnte, steht als Kommentar IM Programm und
+  // zusaetzlich in der Meldung: die App raet dort nichts.
+  { const e = document.getElementById('ncWandelFile');
+    if(e) e.addEventListener('change', function(){
+      const f = this.files && this.files[0]; if(!f) return;
+      const r = new FileReader();
+      r.onload = () => {
+        this.value = '';
+        let R;
+        try{ R = fKlartext840(String(r.result || ''), {name:f.name.replace(/\.[^.]*$/, '')}); }
+        catch(err){ melde('Der Wandler ist an dieser Datei gescheitert: ' + err.message); return; }
+        if(!R.saetze){ melde('In dieser Datei steht kein Klartext-Programm, das sich wandeln liesse.'); return; }
+        exportiereDatei(R.datei, R.text, 'gewandelt aus ' + f.name);
+        melde(R.saetze + ' Saetze gewandelt' + (R.zyklen ? ', darunter ' + R.zyklen + ' Zyklusaufruf(e)' : '') + ' -> ' + R.datei + '.' +
+              '\n\nDie Bahn ist UEBERSETZT, nicht nachgerechnet: vor dem ersten Lauf im Einzelsatz fahren.' +
+              (R.warnungen.length ? '\n\n' + R.warnungen.join('\n') : ''));
+      };
+      r.readAsText(f, 'ISO-8859-1');
+    });
+  }
   on('btnDownload', ()=>{
     const r = fLetztes || fNcErzeugen(); if(!r.text){ melde('FEHLER: kein Programm.'); return; }
     // Passt das Programm nicht auf eine Diskette, hat der Schreiber es an
