@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 23:18 (98ad0456)";</script>
+<script>window.__DZ_STAND="22.09.2026 20:52 (5cf3cc22)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3411,6 +3411,16 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
                      S. 436), aber die Vorgabe ist Daniels Praxis. -->
                 <div class="mrow"><label>U Schlichtaufmaß (radial)</label><input type="number" id="gwU" value="0" step="any"><span class="unit">mm</span></div>
                 <div class="mrow"><label>α Zustellung an der Flanke</label><input type="number" id="gwAlpha" value="0" step="any"><span class="unit">Grad</span></div>
+                <!-- Q UND G GIBT ES AN DER 1500er WIRKLICH [Daniels
+                     Maskensaetze O987, 22.09.2026]: ihre Laengsgewinde-Maske
+                     fuehrt einen Startwinkel Q und eine variable Steigung G,
+                     aber KEIN Feld fuer die Gangzahl — mehrgaengig wird dort
+                     jeder Gang einzeln ueber Q gesetzt. Beide wandern als PS
+                     und PV in den Zyklussatz und stehen nur dort, wenn ein
+                     Wert eingetragen ist. Ohne Eintrag aendert sich an der
+                     Ausgabe nichts (alle Baselines bitgenau). -->
+                <div class="mrow"><label>Q Startwinkel</label><input type="number" id="gwQStart" value="0" step="any"><span class="unit">Grad</span></div>
+                <div class="mrow"><label>G Steigungsänderung je Umdrehung</label><input type="number" id="gwGVar" value="0" step="any"><span class="unit unit2"><i>mm/U²</i></span></div>
                 <!-- WECHSELNDE FLANKE [ShopTurn Bild 9-33, Daniels
                      Freigabe 28.08.2026]. Nur wirksam, wenn ein
                      Zustellwinkel > 0 steht — bei radialer Zustellung
@@ -4836,8 +4846,11 @@ bestehen &bdquo;Prog. Pr&uuml;fen&ldquo;; die Meldung &bdquo;Zeit&uuml;berschrei
 Opferzeile (das M30 kommt als letzte Zeile an, O9911) &mdash; die Datei wird nur noch
 f&uuml;r DNC Precision so aufbereitet (Schalter &bdquo;Datei f&uuml;r DNC Precision&ldquo; im
 DNC-Block). Kommentare bricht die App f&uuml;r den App-Weg erst bei 62 Zeichen um, der
-Breite des Editors der 1000er. An der 1500er ist der Weg aus der App noch nicht gefahren, dort ist
-bisher nur DNC Precision belegt (03.09.2026). Das geht NUR in Chrome oder Edge am
+Breite des Editors der 1000er; die 1500er zeigt dieselbe Breite. An der 1500er sind
+Dateien aus der App eingelesen und mit &bdquo;Prog. Pr&uuml;fen&ldquo; best&auml;tigt
+(O9903 und der Ballen mit 645 Zeilen am 18.09.2026, O9021 am 22.09. mit einem Satz von
+144 Zeichen, der vollst&auml;ndig ankommt). Welches Programm dabei &uuml;bertragen hat,
+ist nicht festgehalten &mdash; belegt gefahren ist dort DNC Precision (03.09.2026). Das geht NUR in Chrome oder Edge am
 Rechner &mdash; das iPhone kann grunds&auml;tzlich nicht direkt seriell; daf&uuml;r
 gibt es das DNC-Funk-K&auml;stchen.</dd>
 <dt id="ba-ma-dnc">Daten&uuml;bertragung (DNC Precision, V24)</dt>
@@ -4959,9 +4972,15 @@ Bohrzyklus (sie unterscheidet ein einziges Wort), Gewinde au&szlig;en und innen 
 Lage steckt im Vorzeichen von <code>PO</code>, wie an der 1000er am Teil bewiesen) und
 das Kegelgewinde. Beim Bohren ist damit auch ein alter Fehler weg: die Handbuchform
 schaltete mit <code>G91</code> auf inkremental und nie zur&uuml;ck.
-<br><b>Nur am Handbuch</b> h&auml;ngt jetzt noch <code>G77</code> Plangewinde. Mehrg&auml;ngige
-Gewinde fallen an beiden Maschinen auf Einzels&auml;tze zur&uuml;ck: alle gezogenen
-S&auml;tze hatten einen Gang.
+<br><b>Nur am Handbuch</b> h&auml;ngt jetzt noch <code>G77</code> Plangewinde.
+<br><b>Mehrg&auml;ngige Gewinde an der 1500er (22.09.2026):</b> die App schreibt
+<b>je Gang einen eigenen Zyklusaufruf</b> mit versetztem Startwinkel &mdash; bei zwei
+G&auml;ngen also zwei S&auml;tze, der zweite mit <code>PS180</code>. Das folgt der
+Maschine: ihre L&auml;ngsgewinde-Maske hat gar kein Feld f&uuml;r die Gangzahl,
+sondern den Startwinkel <b>Q</b>, und mehrg&auml;ngig wird dort von Hand Gang f&uuml;r
+Gang programmiert. Ein im Feld <b>Q</b> eingetragener Winkel bleibt der Versatz des
+ERSTEN Gangs. An der <b>1000er</b> bleibt der R&uuml;ckfall auf Einzels&auml;tze: dort
+ist der Startwinkel im Satz nicht belegt.
 <br><b>Aus der Steuerungssoftware gelesen (11.09.2026):</b> das Programm MTC0.EXE der
 Diskettenkopie belegt das P-Wort-Alphabet mit Formaten, die drei T-Formen und die
 Parameterliste des Einstichs (Sicherheitsabstand, Schneidenradius, U, &alpha;1/&alpha;2, B, T,
@@ -5353,7 +5372,7 @@ vorschruppen.</dd>
      TT.MM.JJJJ" ergaenzt, MUSS dieses Datum mitziehen — sonst schlaegt
      der Pruefstand an. [Daniels Befund 06.09.2026: die Anleitung war
      inhaltlich nachgezogen, das Standdatum stand noch auf 31.08.] -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 20.09.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 22.09.2026. Sie
 w&auml;chst mit der App &mdash; das Inhaltsverzeichnis wird aus den Kapiteln
 erzeugt und ist damit immer vollst&auml;ndig.</p>
 
@@ -7012,11 +7031,13 @@ function toWorld(sx,sy){
 // UEBERSTAND der Backe vor der Futterstirn: 1000er 65 mm GEMESSEN
 // (Daniel 11.09.2026, am montierten Futter — die Annahme 45 lag 20 mm
 // daneben; die Backenfront selbst haengt an LA und wandert nicht, nur
-// der Futterkoerper sitzt entsprechend weiter hinten). 1500er: 45 mm
-// bleibt ANNAHME (Backen waren am 03.09. demontiert), nachmessen.
+// der Futterkoerper sitzt entsprechend weiter hinten).
+// 1500er GEMESSEN am 22.09.2026 (Daniel, am montierten Futter): 41,5 mm.
+// Die Annahme 45 lag 3,5 mm zu hoch — in die sichere Richtung, aber die
+// Kollisionspruefung haette 3,5 mm Luft verschenkt, die es nicht gibt.
 const FUTTER_JE_MASCHINE = {
   MONFORTS_1500_EUROTURN:   { rAussen:157.5, hoehe:95,  rBohrung:41,
-                              backeB:32, backeH:90, backeL:45,
+                              backeB:32, backeH:90, backeL:41.5,
                               stufenZ:[17.94, 19.14] },
   MONFORTS_1000_MTC_K_6624B:{ rAussen:157.5, hoehe:117, rBohrung:41,
                               backeB:35, backeH:67, backeL:65,
@@ -11637,6 +11658,7 @@ function editStep(i){
     setVal('gwVR', isFinite(p.vr)? p.vr : 1.5);
     setVal('gwTPI', p.tpi||8);
     gwArtUmschalten(p.gart||'metrisch'); setVal('gwD', p.dz1!==undefined?p.dz1:0.3);
+    setVal('gwQStart', p.qStart||0); setVal('gwGVar', p.gVar||0);
     setVal('gwLR',p.lr); setVal('gwN',p.n); setVal('gwT',p.t); setVal('gwS',p.s);
     document.getElementById('gwX0Label').textContent = p.lage==='innen'
       ? 'X0 Bezugspunkt ⌀ (abs, Vorbohrung/Kern-⌀)' : 'X0 Bezugspunkt ⌀ (abs, Nenn-⌀)';
@@ -12483,7 +12505,7 @@ function akEingrenzSync(){
 }
 { const g=document.getElementById("akEingrenzBtns");
   if(g && g.addEventListener) g.addEventListener("click", ()=>setTimeout(akEingrenzSync,0)); }
-['gwX1','gwD','gwND','gwU','gwAlpha','gwLW','gwLR','gwN'].forEach(id=>{
+['gwX1','gwD','gwND','gwU','gwAlpha','gwLW','gwLR','gwN','gwQStart','gwGVar'].forEach(id=>{
   const e=document.getElementById(id);
   if(e) e.addEventListener('input', gwGruppenSync);
 });
@@ -13229,6 +13251,8 @@ document.getElementById('btnGwOk').onclick=()=>{
     vr: parseFloat((document.getElementById('gwVR')||{}).value),
     tpi: (selBtnVal('gwArtBtns')==='zoll') ? (+document.getElementById('gwTPI').value||0) : 0,
     dz1: +document.getElementById('gwD').value || 0.3,
+    qStart: +((document.getElementById('gwQStart')||{}).value) || 0,
+    gVar:   +((document.getElementById('gwGVar')||{}).value) || 0,
     lw: +document.getElementById('gwLW').value, lr: +document.getElementById('gwLR').value,
     n: Math.max(1, Math.round(+document.getElementById('gwN').value||1)),
     form: selBtnVal('gwFormBtns')||'zyl', x1: +document.getElementById('gwX1').value,
@@ -21387,6 +21411,24 @@ updateToolFormFields();
 updateToolPreview();
 
 // ---- Programmverwaltung ----
+// DER STAND DER APP, aus EINER Quelle [Daniel, 22.09.2026: "dass sie
+// mitlaufen, dass sie immer auf dem aktuellen Stand sind"]. Genommen wird die
+// Standzeile der Anleitung: sie wird ohnehin mit jedem Paket gepflegt, und
+// Pruefabschnitt 132 haelt sie gegen das juengste Datum im Text. Ein zweiter,
+// von Hand gefuehrter Stempel bliebe stehen — so ist es der Fraes-App
+// ergangen, deren Exportdateien noch den 12.09. trugen, als die App zehn Tage
+// weiter war.
+function standDerApp(){
+  let s = '';
+  try{
+    const t = (document.getElementById('baPanel') || {}).textContent || '';
+    const m = /Stand dieser Anleitung:\s*(\d{2}\.\d{2}\.\d{4})/.exec(t);
+    if(m) s = m[1];
+  }catch(e){}
+  try{ if(window.__DZ_STAND) s = (s ? s + ' · ' : '') + window.__DZ_STAND; }catch(e){}
+  return s || 'Stand unbekannt';
+}
+
 function captureSettings(){
   const s={};
   SETTINGS_IDS.forEach(id=>{ s[id]=document.getElementById(id).value; });
@@ -21560,6 +21602,12 @@ document.getElementById('btnProgFileSave').onclick=()=>{
     // version 2 seit dem 29.08.2026: D und UX gelten radial.
     // version-1-Dateien rechnet loadProgram beim Laden um.
     format:'euroturn-cam-programm', version:2, wertung:'radial',
+    // DER STAND DER APP LAEUFT MIT [Daniel, 22.09.2026]. `version` ist die
+    // FORMATnummer und darf sich nicht bewegen — daran erkennt loadProgram
+    // alte Dateien. `stand` sagt daneben, welche Fassung die Datei
+    // geschrieben hat: aus der Standzeile der Anleitung (die der Pruefstand
+    // aktuell haelt) und, wenn bekannt, der veroeffentlichten Fassung.
+    stand:standDerApp(),
     datum:new Date().toISOString(),
     name:'O'+nr,
     settings:captureSettings(),
@@ -21732,6 +21780,14 @@ const MASCHINEN_PROFILE = {
     // 7.210i wehrt hohe T-Nummern also ebenso ab. Real sind es 16
     // Revolverplaetze; die App warnt ab T17.
     tMax:16, plaetze:16, tMaxBeleg:'18.09.2026 am Geraet: T33 -> 152 unzulaessiges Zahlenformat (wie die 1000er); T17 noch ungeprueft; real 16 Plaetze',
+    // DREHZAHLGRENZE [Daniel, 22.09.2026: "Drehzahl machst du wie bei der
+    // Tausender die Begrenzung"]. Der Wert ist die Einstellung des
+    // Hardware-Drehzahlwaechters, nicht eine Rechengroesse: beide Monforts
+    // haben ein eigenes Kaestchen, das von Hand gestellt wird. Er belegt
+    // das leere Kopffeld beim Profilwechsel vor; wer einen anderen Wert
+    // braucht, ueberschreibt ihn dort. Ohne NMAX im Kopf laeuft KEINE
+    // Wache, und genau das fuehrte am 10.09. zu Alarm 007.
+    nmax:600,
     // IBN-BELEGT seit dem 31.08.2026 (Daniels Datendiskette, IBN.PAR
     // vom 22.01.2004): N4036=0 — die X-Achse ist die DURCHMESSERACHSE,
     // N4037/N4038=0 (WZ-Korrektur/-Verschleiss ebenso). Damit gilt der
@@ -21767,12 +21823,15 @@ const MASCHINEN_PROFILE = {
                 7.210i, "1500 Zyklen.TAP") — G73/G77 weiter nur am
                 Handbuch. */
              g71:'machine_syntax', g72:'machine_syntax',
-             g73:'documented_for_control', g77:'documented_for_control' },
+             /* G73 seit dem 18.09.2026 ebenfalls am gezogenen Maskensatz
+                belegt (O6789) — der Nachzug blieb damals liegen.
+                G77 Plangewinde haengt als einziger noch am Handbuch. */
+             g73:'machine_syntax', g77:'documented_for_control' },
     // (uebertragung steht weiter oben im Profil — am Geraet bewiesen
     // 03.09.2026; hier nur der Fahrtest-Ertrag des Termins.)
     fahrtests:'gefahren 03.09.2026: Wiedereinstieg per Satzvorlauf (G96-Drehzahl exakt, CRC aktiv), Drehzahlvariation SSV fliegend, Spanbrechen G04 F2; Uebertragung in beide Richtungen',
-    fahrtestsOffen:'G72/G74/G75-Zyklussaetze am Teil; Maskensaetze G74/G75/G76/G77/G73/G78/G79 aus der Zyklen-Maske ziehen (Probenzettel 1500er)',
-    termine:'03.09.2026 — Uebertragung 9600/7/N/1 bewiesen, 42 Bestandsprogramme gesichert, G72 innen und mit Winkeln sowie G71 aus der Zyklen-Maske gezogen, Futter gemessen (Bauhoehe 95, Backen 32) · 18.09.2026 — App-Weg hin belegt (MINI O9903, BALLEN 645 Zeilen), O-Zeile muss zuerst stehen, T33 gibt 152 unzulaessiges Zahlenformat, G71-Einstich mit T4 GEFAHREN, Spanbrechen G04 und Drehzahlvariation GEFAHREN (T62 O9173)',
+    fahrtestsOffen:'kein Zyklussatz je am Teil gelaufen — ersten Lauf je Familie im Einzelsatz; aus der Maske fehlen Form E innen (kein Lage-Feld) und die Stirnnut (22.09. an der Werkzeuglage gescheitert); G77 nur am Handbuch',
+    termine:'03.09.2026 — Uebertragung 9600/7/N/1 bewiesen, 42 Bestandsprogramme gesichert, G72 innen und mit Winkeln sowie G71 aus der Zyklen-Maske gezogen, Futter gemessen (Bauhoehe 95, Backen 32) · 18.09.2026 — App-Weg hin belegt (MINI O9903, BALLEN 645 Zeilen), O-Zeile muss zuerst stehen, T33 gibt 152 unzulaessiges Zahlenformat, G71-Einstich mit T4 GEFAHREN, Spanbrechen G04 und Drehzahlvariation GEFAHREN (T62 O9173) · 22.09.2026 — zehn Maskensaetze (O987): PK/PL sind die Flankenwinkel des G71 (keine Herleitung mehr), PZ ist der Stichabstand, im Gewinde PR=E PS=Q PV=variable Steigung, bei Flankenwinkel 0 entfallen PP/PX/P236, PL im G78 ist Z1; O9021 aus der App eingelesen — der 144-Zeichen-Satz kommt vollstaendig an; Backenueberstand 41,5 gemessen, WZ-KORR aller 16 Plaetze fotografiert',
     statusZeilen:[
       '(PROFIL: Monforts 1500 - EuroTurn | Zyklussyntax aus DV 610-0C belegt,)',
       '(  Maschinenkonfiguration aus Daniels IBN-Sicherung - Stand 22.01.2004.)',
@@ -21796,6 +21855,9 @@ const MASCHINEN_PROFILE = {
     // Prog. Pruefen; real hat die Maschine 16 Plaetze (Daniel). Die Wache
     // in buildProgram und im Exportfilter haengt daran.
     tMax:32, plaetze:16, tMaxBeleg:'10.09.2026 am Geraet: T32 angenommen, T33 Fehler 152; real 16 Plaetze',
+    // Derselbe Wert wie an der 1500er — mit ihm ist die Kantenwelle O9016
+    // am 10.09.2026 komplett gelaufen (s. fahrtests).
+    nmax:600,
     // ZYKLUSSAETZE AN DER MASCHINE [Termin 10.09.2026]: Stufenbolzen O9001
     // aus der App eingespielt, G74 (130 Zeichen) und G75 (135) bestehen
     // 'Prog. Pruefen' - Lauf am Teil offen.
@@ -22278,6 +22340,14 @@ function setMaschinenProfil(id){
   // werkzeugBelegungWechseln (05.09.2026, Plaetze je Maschine).
   try{ const b=document.getElementById('ppInfo');
     if(b && b.style.display!=='none') ppInfoMalen(); }catch(e){}
+  // HIER STAND EINE NMAX-VORBELEGUNG, und sie ist am 22.09.2026 nach EINER
+  // Messung wieder herausgeflogen: das leere Kopffeld beim Profilwechsel mit
+  // p.nmax zu fuellen aendert elf der 22 Baselines (die NMAX-Wache klemmt
+  // dann jede G96-Anwahl und schreibt eigene Saetze), bricht den
+  // Wiedereinstieg-Haken an 70 Bloecken und macht die Pruefsumme
+  // unreproduzierbar, weil das Feld zwischen zwei Durchgaengen stehen
+  // bleibt. Der Wert steht als Maschinendatum im Profil; ihn wirksam zu
+  // machen ist ein eigenes Paket mit Beweis und neuer Grundlinie.
   const meldungen = ['Maschinenprofil: '+p.label];
   // Gesperrte native Zyklen im Arbeitsplan auf G-Einzelsaetze zuruecksetzen.
   // NUR IM MTC-DIALEKT: 'zyklus'/'zyklus81' sind die G71/G74/G75 der
@@ -28230,14 +28300,15 @@ function genGewinde(p, N, bump, lines, warnings){
     warnings.push('Mehrgaengiges Gewinde als G75-Zyklus an der 1000er: der Gangwinkel Q im Satz ist unbelegt — Ausgabe als G33-Einzelsaetze mit Q-Versatz.');
     zyklusModus=false;
   }
-  // AUCH AN DER 1500er [18.09.2026]: die drei gezogenen Saetze hatten alle
-  // L 1. Unser frueheres PY<n> stand nur im Handbuch — dieselbe Quelle, die
-  // sich bei sieben anderen Woertern dieses Zyklus geirrt hat. Bis ein
-  // Maskensatz mit L groesser 1 vorliegt: G33-Einzelsaetze mit Q-Versatz.
-  if(zyklusModus && MASCHINENPROFIL.id!=='MONFORTS_1000_MTC_K_6624B' && (p.n||1)>1){
-    warnings.push('Mehrgaengiges Gewinde als G75-Zyklus an der 1500er: alle drei gezogenen Maskensaetze (O6789) hatten EINEN Gang; das frueher geschriebene PY stand nur im Handbuch, das sich bei diesem Zyklus in sieben Woertern geirrt hat — Ausgabe als G33-Einzelsaetze mit Q-Versatz.');
-    zyklusModus=false;
-  }
+  // MEHRGAENGIG AN DER 1500er: EIN ZYKLUSAUFRUF JE GANG [Daniel, 22.09.2026:
+  // "das mehrgaengige schreiben wir ueber mehrere Zyklen"]. Bis dahin fiel es
+  // auf G33-Einzelsaetze zurueck, weil unser frueheres PY<n> nur im Handbuch
+  // stand. Der Grund dafuer ist mit Daniels Maskenbild vom 22.09. erledigt:
+  // die Laengsgewinde-Maske der 1500er hat GAR KEIN Feld fuer die Gangzahl,
+  // sondern den Startwinkel Q (= PS im Satz, belegt). Mehrgaengig wird dort
+  // also von Hand jeder Gang einzeln programmiert — genau das schreibt die
+  // App jetzt selbst: n Saetze mit Q, Q+360/n, Q+2*360/n ...
+  // Ein eingetragener Startwinkel bleibt dabei der Versatz des ERSTEN Gangs.
   // =========================================================
   // DIE ZWEI PLAUSIBILITAETSPRUEFUNGEN DER STEUERUNG
   // [Maschinentermin 16.09.2026 an der 1000er, beide am Bildschirm
@@ -28291,6 +28362,10 @@ function genGewinde(p, N, bump, lines, warnings){
     const flankeI = alphaZ>0 ? Math.tan(alphaZ*Math.PI/180)*p.h1 : 0;
     const degr = (p.verf==='fest') ? 0 : 1;
     let worte;
+    // Bei der 1500er steht hier je GANG ein Satz (mehrgaengig = mehrere
+    // Zyklusaufrufe mit versetztem Startwinkel); die 1000er laesst die Liste
+    // leer und schreibt ihren einen Satz wie bisher.
+    const alleSaetze=[];
     if(MASCHINENPROFIL.id==='MONFORTS_1000_MTC_K_6624B'){
       // REALFORM DER 1000er [Daniels Zyklus-Saetze 11.09.2026, P11111..P66666,
       // maschinentermin/G75-REALFORM-1000er-2026-09-11.md]. Die alte
@@ -28386,42 +28461,78 @@ function genGewinde(p, N, bump, lines, warnings){
       // (so wie PW und P230 im Einstich beide die Meisselbreite tragen).
       // P232:1, P235:1 und P237:1 sind UNGEDEUTET; in allen drei gezogenen
       // Saetzen stehen sie auf 1, deshalb schreiben wir sie fest mit.
-      // NICHT unterscheidbar am Beleg: in allen drei Saetzen war Z0 = 0,
-      // damit sind 'K absolut' und 'K inkremental' derselbe Wert. Wir
-      // schreiben K und PL ABSOLUT — so haelt es die 1500er im G72 und im
-      // G71 auch, und ohne G91 im Satz waere inkremental ohnehin sinnlos.
+      // PL IST INKREMENTAL [Daniels Maskensatz O987, 22.09.2026]. Bis dahin
+      // stand hier die Annahme 'absolut', und sie war am Beleg nicht zu
+      // pruefen: in allen drei Saetzen vom 18.09. war Z0 = 0, damit sind
+      // absolut und inkremental derselbe Wert. Am 22.09. hat Daniel Z0 -1,5
+      // und Z1 -29,5 getippt, und die Maschine schreibt K-29.5 (absolut,
+      // wie das Achswort) UND PL-28 (die Differenz). Zweiter Satz desselben
+      // Tages bestaetigt es: Z0 -1, Z1 -31 -> K-31 PL-30.
+      // Bei alpha 0 schreibt die Steuerung PP, PX und P236 GAR NICHT
+      // (beide Saetze vom 22.09.). Wir haben sie bis dahin mit 0 gesetzt.
       const fmt6b = v => String(Math.round(v*1e6)/1e6);
+      // Startwinkel und variable Steigung: beides steht nur im Satz, wenn
+      // der Bediener es wirklich eingetragen hat (0 heisst 'gibt es nicht').
+      const qStart = +p.qStart || 0;
+      const gVar   = +p.gVar   || 0;
       const po15 = (innen ? 1 : -1) * Math.abs(+p.h1);
       const pp15 = (po15<0 ? -1 : 1) * flankeI;
-      const pblock15=[
+      // Je Gang ein eigener Block: nur PS aendert sich, alles andere bleibt.
+      const machBlock15 = (qs) => [
         'PG'+fmt(p.u||0),
         (kegel?'PK'+fmt(((+p.x1)-(+p.x0))/2):null),
-        'PL'+fmt(zSchl),
+        'PL'+fmt(zSchl-zAnf),
         'PM'+fmt(p.lw||0),'PN'+fmt(p.lr||0),
         'PO'+fmt(po15),
-        'PP'+fmt6b(pp15),
+        (alphaZ?'PP'+fmt6b(pp15):null),
         'PQ'+fmt(p.dz1||0.3),
-        'PR'+fmt(gwE),
+        // PR steht nur bei einer Eintauchtiefe E groesser 0 — Daniels Satz
+        // mit E 0 traegt das Wort nicht (22.09.2026).
+        (gwE?'PR'+fmt(gwE):null),
+        // PS = Q STARTWINKEL, PV = G VARIABLE STEIGUNG [Daniels Maskensaetze
+        // O987, 22.09.2026]. Beides gab es bei uns bis dahin nicht: die
+        // Laengsgewinde-Maske der 1500er fuehrt kein Feld fuer die GANGZAHL,
+        // sondern den Startwinkel — mehrgaengig wird dort jeder Gang einzeln
+        // ueber Q programmiert. Belegt an zwei Saetzen desselben Tages: Q 0,6
+        // -> PS0.6 (im Satz ohne Q fehlt das Wort), G 1,0 -> PV1 und G 2,0
+        // -> PV2. Die Steuerung schreibt ihre Woerter alphabetisch, deshalb
+        // steht PS zwischen PR und PT und PV zwischen PU und PW.
+        (qs?'PS'+fmt(qs):null),
         'PT'+fmt(vr),
         'PU'+fmt(p.p),
+        (gVar?'PV'+fmt(gVar):null),
         (degr?'PW1':null),
-        'PX'+fmt6b(alphaZ),
+        (alphaZ?'PX'+fmt6b(alphaZ):null),
         'PZ'+fmt(p.dz1||0.3),
-        'P232:1','P235:1','P236:'+fmt6b(alphaZ),'P237:1',
+        'P232:1','P235:1',(alphaZ?'P236:'+fmt6b(alphaZ):null),'P237:1',
         (p.bearbeitung==='beide'?'P240:1':null),
         'P250:'+fmt(p.p)
       ].filter(Boolean).join('');
-      worte = ['F'+fmt(p.p), kegel?'G76':'G75',
+      const machWorte15 = (qs) => ['F'+fmt(p.p), kegel?'G76':'G75',
         'X'+fmt(p.x0),'Z'+fmt(zAnf),
         (kegel?'I'+fmt(p.x1):null),
-        'K'+fmt(zSchl), pblock15].filter(Boolean);
+        'K'+fmt(zSchl), machBlock15(qs)].filter(Boolean);
+      const gaenge15 = Math.max(1, Math.round(+p.n||1));
+      for(let g=0; g<gaenge15; g++)
+        alleSaetze.push({worte: machWorte15(qStart + g*(360/gaenge15)),
+                         gang: gaenge15>1 ? (g+1)+'/'+gaenge15 : ''});
+      worte = alleSaetze[0].worte;
     }
     lines.push('(=== NATIVER '+(kegel?'G76-KEGELGEWINDEZYKLUS':'G75-LAENGSGEWINDEZYKLUS')+' - Schnittaufteilung macht die Steuerung ===)');
     lines.push(MASCHINENPROFIL.id==='MONFORTS_1000_MTC_K_6624B'
       ? (kegel ? '(1000er-REALFORM 16.09.2026 aus O112244 N0140: I und PK = Gewindeschraege als RADIUSmass, PW1 = degressiv)'
                : '(1000er-REALFORM 11.09.2026: F = Steigung, P-Buchstaben, PX = Flankenwinkel)')
       : '(1500er-REALFORM aus O6789 N0090/N0110/N0130, 18.09.2026: Steigung im F-Wort, PO traegt die Lage, PT = V aus der Maske)');
-    lines.push(`${N()} (GEWINDE ) ${worte.join(' ')}`); bump();
+    if(alleSaetze.length){
+      // MEHRGAENGIG = MEHRERE AUFRUFE [Daniel, 22.09.2026]. Bei einem Gang ist
+      // das genau ein Satz und damit Zeichen fuer Zeichen die bisherige Ausgabe.
+      if(alleSaetze.length>1)
+        lines.push('(MEHRGAENGIG: '+alleSaetze.length+' Gaenge als '+alleSaetze.length+' Zyklusaufrufe, Startwinkel je Gang um '+fmt(360/alleSaetze.length)+' Grad versetzt)');
+      alleSaetze.forEach(s=>{
+        if(s.gang) lines.push('(--- GANG '+s.gang+' ---)');
+        lines.push(`${N()} (GEWINDE ) ${s.worte.join(' ')}`); bump();
+      });
+    } else { lines.push(`${N()} (GEWINDE ) ${worte.join(' ')}`); bump(); }
     lines.push('(--- SIM-EXPANSION: nur fuer die CAM-Simulation, Maschine ignoriert Kommentare ---)');
   }
   const simStart = lines.length;
@@ -37583,7 +37694,13 @@ function siDrehProgramm(opt){
   L.push(S.anfang(String(oNr).padStart(4,'0'), pName));
   if(S.zyklusArt === 'CYCLE') L.push(';$PATH=/_N_MPF_DIR');
   kom('DZ CAM ' + new Date().toLocaleDateString('de-DE') + ' - ' + S.label);
-  kom('AM HANDBUCH GEBAUT, NIE AN DIESER MASCHINE GELAUFEN.');
+  // Die 810T hat seit dem 22.09.2026 eine bessere Beleglage als das Handbuch:
+  // 146 gelaufene Programme einer solchen Steuerung. Das steht im Kopf, weil
+  // der Bediener wissen soll, worauf die Satzform beruht — aber auch, dass
+  // von DIESER App noch nie ein Programm dort gelaufen ist.
+  kom(S.id === 'SINUMERIK_810T'
+    ? 'SATZFORM AN GELAUFENEN 810T-PROGRAMMEN BELEGT, DIESE APP NIE GEFAHREN.'
+    : 'AM HANDBUCH GEBAUT, NIE AN DIESER MASCHINE GELAUFEN.');
   kom('ERSTEN LAUF IM EINZELSATZ FAHREN UND JEDEN SATZ PRUEFEN.');
   kom('Rohteil ' + siZ(stock) + ' x ' + siZ(za - feld('pkZI', -100)) + ' mm');
 
@@ -37924,14 +38041,21 @@ function siVerweilSek(p, warn){
 // ---------------------------------------------------------------------------
 // R-Parameter und Aufruf in EINEM Satz (System-800-Zyklenhandbuch, beide
 // gedruckten Beispiele auf PDF-Seite 31 und 32).
-function siL(nr, rs, S){
+function siL(nr, rs, S, f){
   const teile = [];
   Object.keys(rs).forEach(k => {
     const v = rs[k];
     if(v === null || v === undefined || v === "") return;
     teile.push("R" + k + "=" + siZ(v));
   });
-  const ruf = "L" + nr + " P1";
+  // DER VORSCHUB STEHT AM AUFRUF, NICHT IN EINEM R-PARAMETER
+  // [Daniels Programmsicherung, 22.09.2026]. Alle 60 echten L95-Aufrufe der
+  // einer 810T schreiben "L95 P1 F<wert>"; ohne das F faehrt der Zyklus mit dem
+  // MODALEN Vorschub des letzten Satzes — dieselbe Falle, die an der Monforts
+  // 1000er den G75 mit F0.05 statt der Steigung ziehen liess (11.09.2026).
+  // P1 steht am L95 (60 von 60 vollen Aufrufen) und am L97, am L98 in KEINEM
+  // einzigen — dort lautet der Aufruf schlicht "L98 F<wert>".
+  const ruf = "L" + nr + (nr === 98 ? "" : " P1") + (f ? " F" + siZ(f) : "");
   // Platz fuer die Satznummer, die erst spaeter davorkommt ("N0125 ").
   const max = (S && S.maxSatz) ? S.maxSatz - 8 : 0;
   if(!max) return [teile.join(" ") + " " + ruf];
@@ -37957,8 +38081,17 @@ function siR29(p){
   const laengs = (p.richtung !== "x-parallel");
   const innen  = (p.lage === "innen");
   const seite  = (laengs ? 1 : 2) + (innen ? 2 : 0);
+  // KOMPLETTBEARBEITUNG IST 3x, NICHT 4x [Daniels Programmsicherung,
+  // 22.09.2026]. In 60 echten L95-Aufrufen einer 810T kommen genau fuenf
+  // Werte vor: 12, 31, 32, 33 und 34. Die Zehnerstelle traegt die Bearbeitung
+  // (1 Schruppen, 2 Schlichten, 3 komplett), die Einerstelle die Richtung —
+  // die 12 ist der Gegenbeleg, denn 1+2 heisst Schruppen plan aussen, und die
+  // Paarung von R20 mit dem Konturunterprogramm bestaetigt die Richtungen
+  // (R29=33 fuehrt in jedem der neun Faelle zu einer Innenkontur).
+  // Hier stand 40 fuer komplett, aus dem Handbuchbeispiel "R29=41". Was die
+  // Maschine schreibt, gilt — dieselbe Regel wie bei den Monforts.
   const art = (p.bearbeitung === "schruppen") ? 10
-            : (p.bearbeitung === "schlichten") ? 20 : 40;
+            : (p.bearbeitung === "schlichten") ? 20 : 30;
   return art + seite;
 }
 
@@ -37997,14 +38130,24 @@ function siZyklus810(st, S, ctx){
       // Laengs aussen und plan innen -> G42, laengs innen und plan aussen
       // -> G41. Zwei der vier Faelle sind gedruckt, die zwei Innen-Faelle
       // sind daraus hergeleitet.
-      27: ((p.richtung !== "x-parallel") !== (p.lage === "innen")) ? 42 : 41,
+      // R23=1 UND R27=40 STEHEN KONSTANT IN JEDEM VOLLEN AUFRUF der echten
+      // Programme (30 von 60; die anderen 30 lassen sie weg und verlassen
+      // sich darauf, dass R-Parameter MODAL sind — was ein erzeugtes Programm
+      // nicht darf, weil dort der Wert des VORIGEN Programms stehen wuerde).
+      // Hier stand in R27 die SRK-G-Nummer 41/42 aus dem Handbuchbeispiel;
+      // in keinem echten Satz steht etwas anderes als 40.
+      23: 1,
+      27: 40,
+      // R28 traegt in den vollen Aufrufen Werte zwischen 0,15 und 0,25, also
+      // die Groessenordnung eines Vorschubs, waehrend der SCHRUPPvorschub am
+      // Aufruf steht. Wir schreiben den Schlichtvorschub — HYPOTHESE, am
+      // Probeschnitt zu pruefen.
       28: +p.ff || +p.fr || 0.2,
       29: siR29(p),
-      30: 0.5,
     };
-    R.liste = "; L95 R20=Kontur R21/R22=Anfangspunkt R24/R25=Aufmass X/Z R26=Spantiefe " +
-              "R27=SRK R28=Vorschub R29=Art R30=Faktor";
-    R.ruf = siL(95, rs, S);
+    R.liste = "; L95 R20=Kontur R21/R22=Anfangspunkt R23/R27 konstant R24/R25=Aufmass X/Z " +
+              "R26=Spantiefe R28=Schlichtvorschub R29=Art, Vorschub am Aufruf";
+    R.ruf = siL(95, rs, S, +p.fr || +p.ff || 0.2);
     R.kom.push("R24/R25/R26 sind RADIUSWERTE (Abstand zur Kontur, nicht im Durchmesser).");
     if(p.bearbeitung === "schruppen")
       R.kom.push("R29 " + siZ(rs[29]) + " = achsparallel schruppen; dabei unterdrueckt der " +
@@ -38141,8 +38284,10 @@ function siZyklus810(st, S, ctx){
       28: siVerweilSek(p, R.warn),
     };
     R.liste = "; L98 R11=Spanbrechen/Entspaenen R22=Anfang R24=Degression R25=1.Bohrtiefe " +
-              "R26=Endbohrtiefe R27/R28=Verweilzeiten";
-    R.ruf = siL(98, rs, S);
+              "R26=Endbohrtiefe R27/R28=Verweilzeiten, Vorschub am Aufruf";
+    // Vorschub am Aufruf, ohne P1 — so schreibt es jeder echte L98 der
+    // 810T [Daniels Programmsicherung, 22.09.2026]: "L98 F.08".
+    R.ruf = siL(98, rs, S, +p.f || 0.1);
     R.vorher.push("G0 X0 Z" + siZ(+p.z0 + (+p.safe || 2)));
     R.kom.push("R24 ist ein BETRAG in mm; die App fuehrt einen Degressionsfaktor -");
     R.kom.push("hier umgerechnet aus D " + siZ(p.d) + " x DF " + siZ(p.df) + ".");
@@ -38325,8 +38470,14 @@ function siKonturLabel(els, p, S, ctx){
   const z = siKonturUP(els, "L" + lnr, S,
     {titel:"KONTUR " + nr + " fuer L95", warn:ctx.warn, ohneAnfang:true});
   const innen = z.slice(1, -1);
-  ctx.upListe.push({name:"L" + lnr, zeilen:["%L" + lnr].concat(innen).concat(["M17"])});
-  ctx.warn.push("Das Kontur-Unterprogramm %L" + lnr + " ist eine EIGENE DATEI und muss " +
+  // DIE KONTURDATEI BEGINNT MIT "%SPF <nr>", NICHT MIT "%L<nr>"
+  // [Daniels Programmsicherung, 22.09.2026]. Alle 18 Konturunterprogramme der
+  // einer 810T tragen diesen Kopf, und ihre Nummer ist genau das R20 des
+  // zugehoerigen L95-Aufrufs — an 22 Paaren nachgesehen. MPF ist das Haupt-,
+  // SPF das Unterprogramm; aufgerufen wird es mit L<nr>, geschrieben steht
+  // es als %SPF. Hier stand "%L901" aus der Programmieranleitung.
+  ctx.upListe.push({name:"SPF" + lnr, zeilen:["%SPF " + lnr].concat(innen).concat(["M17"])});
+  ctx.warn.push("Das Kontur-Unterprogramm %SPF " + lnr + " ist eine EIGENE DATEI und muss " +
                 "mit an die Steuerung uebertragen werden. Ohne sie findet L95 seine " +
                 "Kontur nicht. Es steht hinter dem Hauptprogramm.");
   return lnr;
@@ -38541,7 +38692,7 @@ function siDrehAlsProgramm(){
 // Feld `offen`, was dafuer noch fehlt. Die Belegstufen sind die vorhandenen
 // aus PP_STATUS -- ein zweites Vokabular waere nur eine zweite Baustelle.
 const SI_FEST = [
-  "Jedes Programm traegt drei Zeilen im Kopf: am Handbuch gebaut, nie an dieser Maschine gelaufen, ersten Lauf im Einzelsatz fahren. Sie bleiben stehen, bis ein Satz dieser Maschine vorliegt.",
+  "Jedes Programm traegt drei Zeilen im Kopf: worauf die Satzform beruht, dass von dieser App noch nie ein Programm an der Maschine gelaufen ist, und dass der erste Lauf im Einzelsatz gehoert. Bei der 810T nennt die erste Zeile seit dem 22.09.2026 die gelaufenen Programme statt des Handbuchs.",
   "Die Werkzeuguebersicht im Kopf nennt jedes Werkzeug mit Nummer, Namen und Schneidenradius [Termin 18.09.2026]. Stimmen App-Tabelle und Werkzeugkorrektur der Steuerung nicht ueberein, sucht man den Fehler sonst an der falschen Stelle.",
   "Die Aufmasse UX und UZ gehen als ABSTAND ZUR KONTUR in die Zyklen, nicht im Durchmesser - bei Siemens die uebliche Lesart. Fuer die Zustelltiefe gibt es deshalb ein Settingdatum, fuer die Aufmasse keins.",
   "D Zustelltiefe und UX Aufmass gelten in der App RADIAL (ap, je Seite); axiale Werte 1:1. Das ist dieselbe Regel wie bei den Monforts.",
@@ -38554,9 +38705,13 @@ function siMerkmale(pr){
   const M = [];
 
   M.push({t:"Belegstand dieser Maschine", s:"unknown_for_target_machine",
-    w:"Es liegt KEIN Programm dieser Maschine vor - weder gezogen noch gelaufen. Alles hier steht auf " +
-      (t810 ? "der Programmieranleitung 810T (GA3) und dem Zyklenhandbuch System 800 (ASM 4)."
-            : "dem Zyklenhandbuch 840D/840Di/810D (Ausgabe 11.02)."),
+    w:(t810
+      ? "146 GELAUFENE Programme einer 810T belegen seit dem 22.09.2026: Vorschub am Zyklusaufruf " +
+        "(93 von 93), R29-Kodierung (komplett 3x), Konturdatei %SPF mit ihrer Nummer in R20 " +
+        "(22 Paare), R23=1 und R27=40. Die uebrigen R-Parameter stehen auf der Programmieranleitung " +
+        "810T und dem Zyklenhandbuch System 800. Ein von DIESER App erzeugtes Programm ist nie gelaufen."
+      : "Es liegt KEIN Programm dieser Maschine vor - weder gezogen noch gelaufen. Alles hier steht auf " +
+        "dem Zyklenhandbuch 840D/840Di/810D (Ausgabe 11.02)."),
     offen:"Ein einziges gezogenes Programm oder ein Foto der Zyklusmaske macht aus jeder Ableitung hier einen Beleg."});
 
   M.push({t:"Maschinentermine", s:"unknown_for_target_machine",

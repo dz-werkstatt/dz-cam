@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="20.09.2026 23:18 (98ad0456)";</script>
+<script>window.__DZ_STAND="22.09.2026 20:52 (5cf3cc22)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2465,7 +2465,18 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
   .pointlist td button{font-size:11px;padding:2px 7px;}
   .fmerk{padding:6px 10px;font-size:12px;}
   .fmerk .ppz{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--line-light);}
-  .fmerk .ppz .st{flex:0 0 auto;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;white-space:nowrap;}
+  /* Die Marke bleibt schmal und darf NICHT die zweite Spalte verdraengen
+     [Daniels Handy-Bild, 22.09.2026]. Deshalb eine feste Hoechstbreite und
+     Umbruch statt nowrap; der volle Stufentext steht als eigene Zeile
+     darunter (.ppstatus) und im Tooltip. */
+  .fmerk .ppz .st{flex:0 0 auto;max-width:38%;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;line-height:1.3;}
+  .fmerk .ppstatus{display:block;margin-top:2px;font-size:10.5px;color:var(--text-dim);}
+  /* Am Handy untereinander: nebeneinander bleibt fuer die Beschreibung
+     kein Platz. Gemessen an DZ20 bei 390 px. */
+  @media(max-width:560px){
+    .fmerk .ppz{flex-direction:column;gap:2px;}
+    .fmerk .ppz .st{max-width:100%;align-self:flex-start;}
+  }
   .fmerk .st.ok{background:#dcefdc;color:#1d6b2a;}
   .fmerk .st.ann{background:#fff3c4;color:#7a5b00;}
   /* pgst = im Programm-Test des Programmierplatzes durchgelaufen (12.09.2026): weder gruen (Maschine) noch gelb (nur Handbuch). */
@@ -2726,6 +2737,20 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     #maskSim > .mask-head{cursor:default;}
     #maskSim > .mask-griff{display:none;}
   }
+
+/* --- Meldungen der NC-Ausgabe ------------------------------------------- */
+/* Befunde stehen offen, Bahnbericht und Arbeitsweise zugeklappt. Wer
+   siebzehn gleich aussehende Zeilen sieht, liest keine davon. */
+#warnBox .wkopf{font-weight:700;margin:0 0 8px;}
+#warnBox .wkopf.wgut{font-weight:600;opacity:.85;}
+#warnBox .wz{margin:0 0 7px;padding-left:14px;text-indent:-14px;}
+#warnBox .wz::before{content:"• ";}
+#warnBox .wgruppe{margin-top:10px;border-top:1px solid rgba(0,0,0,.12);padding-top:8px;}
+#warnBox .wgruppe>summary{cursor:pointer;font-weight:650;list-style:none;padding:2px 0;}
+#warnBox .wgruppe>summary::-webkit-details-marker{display:none;}
+#warnBox .wgruppe>summary::before{content:"▸︎ ";}
+#warnBox .wgruppe[open]>summary::before{content:"▾︎ ";}
+#warnBox .wgruppe .wz{margin-top:8px;}
 </style>
 </head>
 <body class="mode-arbeitsplan">
@@ -4186,6 +4211,16 @@ Zyklusmaske ge&ouml;ffnet &mdash; dort steht jeder Wert mit seinem Namen.</dd>
 <li>Sinumerik 840D powerline: <b>gebaut</b> (siehe <a href="#ba-fk07b">Kapitel 7b</a>) &mdash; aber an dieser Maschine
 nicht belegt. Es fehlt eine echte .MPF, ein Lauf und die f&uuml;nfachsige Bahn.</li>
 </ul>
+<!-- STANDZEILE [Daniels Frage, 22.09.2026: "ist die Hilfeanleitung aktualisiert
+     fuer die Dinge, die immer wieder vergessen werden?"]. Die Dreh-Anleitung
+     hat sie seit jeher samt Wache im Pruefstand, die Fraes-Anleitung nicht —
+     man konnte ihr nicht ansehen, wie alt sie ist. Wer hier ein Kapitel
+     aendert, zieht das Datum mit; der Pruefstand vergleicht es gegen das
+     juengste Datum im Text. -->
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 22.09.2026. Sie
+wird mit jedem Paket mitgeschrieben &mdash; wer eine Funktion baut oder erweitert,
+schreibt ihren Absatz mit. Findest Du hier eine Aussage, die die App nicht mehr
+einl&ouml;st, ist das ein Fehler und geh&ouml;rt gemeldet.</p>
     </div></div>
   </div>
 
@@ -4311,7 +4346,15 @@ window.__fehlerMelden = function(quelle, e){
 // Generator, sobald echte MPF-Dateien dieser Maschine vorliegen.
 // =====================================================================
 
-var F_VERSION = 'Stufe 1 · 12.09.2026';
+// NUR NOCH DER RUECKFALL [Daniel, 22.09.2026: "dass sie mitlaufen, dass sie
+// immer auf dem aktuellen Stand sind"]. Der Stempel stand fest auf dem
+// 12.09. und landete so in jeder exportierten Programmdatei, obwohl die App
+// zehn Tage weiter war. Den wirklichen Stand holt fStand() in der
+// Oberflaeche aus der ANLEITUNG — die traegt ihre Standzeile ohnehin und
+// wird vom Pruefstand gegen das juengste Datum im Text gehalten. Eine
+// Quelle, eine Wache, und der Stempel laeuft von selbst mit.
+// Hier keine DOM-Abfrage: F10 ist der DOM-freie Kern.
+var F_VERSION = 'Stand unbekannt';
 
 // Belegstufen der Fraesausgabe — dieselbe Dreiteilung wie die Merkmale
 // des Drehteils (bestaetigt / Satz belegt / offen). Nach dem ersten
@@ -16053,6 +16096,81 @@ function fKalkPreiseUebernehmen(j, w){
   });
   return bericht;
 }
+
+// ===========================================================================
+// MELDUNGEN DER NC-AUSGABE EINTEILEN
+// ---------------------------------------------------------------------------
+// Die Bahnen der App melden viel, und das zu Recht: sie sind eigene Bahnen
+// ohne Steuerungszyklus, und wer sie an eine Maschine gibt, soll wissen, wie
+// sie zustande kommen. Nur standen bisher ALLE Meldungen als eine gelbe
+// Liste untereinander -- am Rampenblock siebzehn Stueck, von denen ZWEI
+// etwas ueber das Teil sagten. Der Rest war die App, die sich selbst
+// erklaert (jedes Mal derselbe Wortlaut), und ein Bericht ueber die
+// erzeugte Bahn. Wer siebzehn Zeilen sieht, liest keine.
+//
+// Dieselbe Krankheit hatte die Dreh-App (APP_ARBEITSWEISE, 28.08.2026),
+// dieselbe Behandlung: sichtbar bleibt alles, aber getrennt, und das Urteil
+// zaehlt nur die Befunde.
+//
+// Erkannt wird ueber den Wortlaut. Aendert jemand eine Meldung, greift ihr
+// Muster nicht mehr und sie steht wieder unter "Ansehen" -- der harmlose
+// Ausfall. Damit die Listen nicht stumm verrotten, prueft der Pruefstand,
+// dass JEDES Muster ueber die Vorlagen mindestens einmal trifft.
+
+// (a) So rechnet die App -- steht bei jedem Teil gleich da.
+const F_ARBEITSWEISE = [
+  /ist die eigene Bahn der App \(kein Steuerungszyklus\)/,
+  /Geprueft wird nur die KUGEL/,
+  /Ueberflug und Anfahrt rechnen gegen den STAND/,
+  /^Z ist die KUGELUNTERKANTE/,
+  /^Rasterweite der Sollform/,
+  /^Hinweis: dieser Schritt fasst beide Bahnen zusammen/,
+  /^Konturzug: Eintauchen senkrecht am Bahnanfang/,
+  /nach Handbuch \(DEF-aktiv/,
+];
+
+// (b) Bericht ueber die erzeugte Bahn: Zahlen zu DIESEM Teil, aber kein
+//     Befund -- niemand muss etwas tun, wenn dort 61 Zuege stehen.
+const F_BAHNBERICHT = [
+  /^Modell abspanen: \d+ Ebene/,
+  /^Schraegen schlichten: \d+ Zug/,
+  /^\d+ Zustellung\(en\) auf die naechste Ebene/,
+  /^\d+ Zug\/Zuege kommen von AUSSEN/,
+  /^\d+ Zeilenwechsel fahren UNTEN/,
+  /^\d+ Zeilenwechsel laufen auf der FLAECHE/,
+  /^Zeilen in [XY] — automatisch gewaehlt/,
+  /^Kein Restmaterial:/,
+  // NICHT /^Restmaterial:/ -- so beginnt "Restmaterial: keine Sollform
+  // geladen", und das ist ein roter Befund, kein Bericht. Der Waechter im
+  // Pruefstand hat das Muster als tot gemeldet; nachgesehen war es falsch.
+  /^Restmaterial abspanen: \d+ Ebene/,
+  /^\d+ Zug\/Zuege tauchen PENDELND/,
+  /^Bezug: Schritt \d+/,
+  /^BOEDEN UND WAENDE SCHLICHTEN:/,
+  /^\d+ Kantensegment\(e\) mit Hoehensprung/,
+];
+
+// Die Schrittnummer steht vorn ("Schritt 2: ..."); fuer die Einteilung
+// zaehlt der Satz dahinter.
+function fMeldungKern(w){ return String(w).replace(/^Schritt \d+[^:]*: /, ''); }
+
+// Teilt die Meldungen der NC-Ausgabe in drei Listen.
+// Doppelte fallen weg: am Rampenblock stand "Geprueft wird nur die KUGEL"
+// zweimal da, einmal aus dem Zykluskopf und einmal aus der Bahn.
+function fMeldungenOrdnen(warnungen){
+  const befund = [], bericht = [], arbeit = [];
+  const schon = new Set();
+  (warnungen || []).forEach(function(w){
+    const k = fMeldungKern(w);
+    if(schon.has(k)) return;
+    schon.add(k);
+    if(F_ARBEITSWEISE.some(re => re.test(k))) arbeit.push(w);
+    else if(F_BAHNBERICHT.some(re => re.test(k))) bericht.push(w);
+    else befund.push(w);
+  });
+  return {befund:befund, bericht:bericht, arbeit:arbeit,
+          doppelt:(warnungen || []).length - (befund.length + bericht.length + arbeit.length)};
+}
 // =====================================================================
 // DZ CAM · FRAESEN — OBERFLAECHE (F20)
 // ---------------------------------------------------------------------
@@ -17836,8 +17954,25 @@ function fNcErzeugen(){
     st.textContent = t;
   }
   if(wb){
-    if(r.warnungen.length){ wb.style.display = 'block'; wb.innerHTML = r.warnungen.map(w => '• ' + esc(w)).join('<br>'); }
-    else { wb.style.display = 'none'; wb.innerHTML = ''; }
+    // Drei Bloecke statt einer Liste: was man ANSEHEN muss, steht offen
+    // oben; der Bahnbericht und die Arbeitsweise der App sind zugeklappt.
+    // Sichtbar bleibt alles -- nur nicht alles gleichzeitig.
+    const M = fMeldungenOrdnen(r.warnungen);
+    if(!M.befund.length && !M.bericht.length && !M.arbeit.length){
+      wb.style.display = 'none'; wb.innerHTML = '';
+    } else {
+      const zeilen = (a) => a.map(w => '<div class="wz">' + esc(w) + '</div>').join('');
+      const klapp = (titel, a) => a.length
+        ? '<details class="wgruppe"><summary>' + titel + ' (' + a.length + ')</summary>' + zeilen(a) + '</details>'
+        : '';
+      wb.style.display = 'block';
+      wb.innerHTML =
+        (M.befund.length
+          ? '<div class="wkopf">Ansehen — ' + M.befund.length + (M.befund.length === 1 ? ' Befund' : ' Befunde') + ' am Teil</div>' + zeilen(M.befund)
+          : '<div class="wkopf wgut">Kein Befund am Teil — die Meldungen unten sagen nur, WIE die Bahn entstanden ist.</div>') +
+        klapp('Bahnbericht: was die App gerechnet hat', M.bericht) +
+        klapp('So rechnet die App — kein Befund am Teil', M.arbeit);
+    }
   }
   return r;
 }
@@ -17918,7 +18053,26 @@ function fAmpelZeigen(){
   on('btnPpInfo', ()=>{
     const p = document.getElementById('ppInfo'); if(!p) return;
     if(p.style.display !== 'none'){ p.style.display = 'none'; return; }
-    p.innerHTML = fMerkmale(fProg.kopf.profil).map(m => '<div class="ppz"><span class="st ' + (F_STATUS[m.s] || {}).cls + '">' + esc((F_STATUS[m.s] || {}).txt || m.s) + '</span><span>' + esc(m.t) + (m.offen ? ' <span class="ppoffen">offen: ' + esc(m.offen) + '</span>' : '') + '</span></div>').join('');
+    // DIE MARKE IST EINE MARKE, KEIN SATZ [Daniels Handy-Bild, 22.09.2026]:
+    // die Belegstufen tragen ausfuehrliche Texte ("im Programm-Test des
+    // iTNC-530-Programmierplatzes durchgelaufen (NC-SW 606 42x, 12.09.2026),
+    // an der Maschine zu pruefen"), und als nowrap-Marke schob das die ganze
+    // zweite Spalte aus dem Bild — von der Zyklusbeschreibung blieb nichts
+    // uebrig. Gezeigt wird jetzt das erste Satzstueck bis zum Gedankenstrich
+    // oder zur Klammer, hoechstens 30 Zeichen; der volle Text steht im
+    // Tooltip und unter der Zeile. Im Drehteil sind die Stufentexte von
+    // vornherein kurz — hier holt das die Anzeige nach.
+    const marke = t => {
+      const erst = String(t || '').split(/\s[—(]/)[0].trim();
+      return erst.length > 30 ? erst.slice(0, 29).trim() + '…' : erst;
+    };
+    p.innerHTML = fMerkmale(fProg.kopf.profil).map(m => {
+      const st = F_STATUS[m.s] || {}, voll = st.txt || m.s;
+      return '<div class="ppz"><span class="st ' + st.cls + '" title="' + esc(voll) + '">' +
+             esc(marke(voll)) + '</span><span>' + esc(m.t) +
+             (m.offen ? ' <span class="ppoffen">offen: ' + esc(m.offen) + '</span>' : '') +
+             '<span class="ppstatus">' + esc(voll) + '</span></span></div>';
+    }).join('');
     p.style.display = 'block';
   });
 }
@@ -17926,6 +18080,25 @@ function fAmpelZeigen(){
 // =====================================================================
 // PROGRAMMVERWALTUNG (Browserspeicher, Datei, Vorlagen)
 // =====================================================================
+// DER STAND LAEUFT MIT [Daniel, 22.09.2026]. Er kommt aus der Standzeile der
+// ANLEITUNG, weil die ohnehin gepflegt wird und der Pruefstand sie gegen das
+// juengste Datum im Text haelt — ein zweiter Stempel waere eine zweite
+// Baustelle, und genau so ist der alte auf dem 12.09. stehengeblieben.
+// Ist die veroeffentlichte Fassung bekannt (window.__DZ_STAND setzt
+// pwa-bauen.js), steht sie dahinter: dann sagt eine exportierte Datei auch,
+// welche Fassung sie geschrieben hat.
+function fStand(){
+  let s = '';
+  try{
+    const t = (document.getElementById('baPanel') || {}).textContent || '';
+    const m = /Stand dieser Anleitung:\s*(\d{2}\.\d{2}\.\d{4})/.exec(t);
+    if(m) s = m[1];
+  }catch(e){}
+  if(!s) s = F_VERSION;
+  try{ if(window.__DZ_STAND) s += ' · ' + window.__DZ_STAND; }catch(e){}
+  return s;
+}
+
 function fProgLesen(){ try{ const r = localStorage.getItem(F_SLOT_PROG); const a = r ? JSON.parse(r) : []; return Array.isArray(a) ? a : []; }catch(e){ return []; } }
 function fProgSchreiben(l){ try{ localStorage.setItem(F_SLOT_PROG, JSON.stringify(l)); return true; }catch(e){ return false; } }
 function fProgListe(){
@@ -17952,8 +18125,8 @@ function fProgListe(){
     if(b.dataset.pl !== undefined){ const en = l[+b.dataset.pl]; if(en){ fProgrammSetzen(JSON.parse(JSON.stringify(en.prog)), 'Geladen: ' + en.name); maskZu('maskProgramme'); } }
     if(b.dataset.pd !== undefined){ zweiklickBestaetigen(b, 'Wirklich?', ()=>{ l.splice(+b.dataset.pd, 1); fProgSchreiben(l); fProgListe(); }); }
   });
-  on('btnProgFileSave', ()=>exportiereDatei((fName(fProg)) + '-fraesen.json', JSON.stringify({typ:'dzcam-fraesen', version:F_VERSION, programme:[{name:fProg.kopf.name, prog:fProg}]}, null, 1), 'Programmdatei'));
-  on('btnProgExport', ()=>exportiereDatei('dzcam-fraesen-programme.json', JSON.stringify({typ:'dzcam-fraesen', version:F_VERSION, programme:fProgLesen()}, null, 1), 'Sicherung'));
+  on('btnProgFileSave', ()=>exportiereDatei((fName(fProg)) + '-fraesen.json', JSON.stringify({typ:'dzcam-fraesen', version:fStand(), programme:[{name:fProg.kopf.name, prog:fProg}]}, null, 1), 'Programmdatei'));
+  on('btnProgExport', ()=>exportiereDatei('dzcam-fraesen-programme.json', JSON.stringify({typ:'dzcam-fraesen', version:fStand(), programme:fProgLesen()}, null, 1), 'Sicherung'));
   const imp = document.getElementById('progImportFile');
   if(imp && imp.addEventListener) imp.addEventListener('change', ()=>{
     const f = imp.files && imp.files[0]; if(!f) return;
