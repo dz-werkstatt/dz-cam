@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="23.09.2026 00:48 (ccd87d87)";</script>
+<script>window.__DZ_STAND="23.09.2026 01:18 (d5bd6a9b)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3587,6 +3587,16 @@ Unterschieden wird an der <b>Neigung der Sollform</b> unter der Stelle (5 bis 80
 <br><b>Warum das ein Befund war:</b> der Ausschlu&szlig; des Aufma&szlig;streifens ma&szlig; den Abstand zur Wand in der <b>letzten</b> Ebene. &Uuml;ber einer Stufe ist dort alles
 gesperrt, der Abstand also null &mdash; und jede Stelle galt als Aufma&szlig;streifen. Die Bahn meldete &bdquo;kein Restmaterial: das Werkzeug erreicht &uuml;berall die Sollform
 samt Aufma&szlig;&ldquo;, w&auml;hrend 4 mm stehen blieben. Eine falsche Zusicherung ist schlimmer als keine. Gemessen wird jetzt auf der <b>H&ouml;he der Stelle selbst</b>.</dd>
+<dt id="ba-fk05c-stufenhoehe">Stufenh&ouml;he: die Treppe an Schr&auml;gen flacher machen (23.09.2026)</dt><dd>Z-konstantes Schruppen l&auml;&szlig;t an einer Schr&auml;ge eine
+Treppe stehen, die so hoch ist wie die <b>Zustellung</b>. Wer sie flacher will, m&uuml;&szlig;te enger zustellen &mdash; und zahlt das auf der <b>ganzen</b> Fl&auml;che,
+obwohl nur die Schr&auml;ge es braucht.
+<br>Das Feld <b>Stufenh&ouml;he</b> f&uuml;gt Zwischenebenen ein, und die App f&auml;hrt sie <b>nur dort, wo die Sollform geneigt ist</b> (5 bis 80 Grad). Auf
+waagerechten Fl&auml;chen und an senkrechten W&auml;nden &auml;ndert sich nichts. <b>0 schaltet es ab &mdash; das ist die Vorgabe</b>, denn es kostet Schnittweg.
+<br><b>Gemessen</b> am Rampenblock (45-Grad-Schr&auml;ge, Zustellung 4, &#x2300;12): ohne Stufenh&ouml;he ist die Treppe <b>4,75 mm</b> hoch bei 471 mm Schnittweg;
+mit 2 mm sind es <b>2,75 mm</b> bei 1081 mm, mit 1 mm <b>2,35 mm</b> und mit 0,5 mm <b>1,55 mm</b> bei 5220 mm. Der Bericht nennt die <b>gemessene</b> H&ouml;he, nicht die eingestellte:
+an der Grenze der Ebenenmaske weicht die Bahn je Ebene um den Werkzeugradius zur&uuml;ck, und dort bleibt mehr stehen.
+<br><i>Vorbild:</i> hyperMILLs <i>Stufenh&ouml;he</i>. Dort kostet sie den ganzen Schnittweg (an seinem Trainingsjob 8 gemessen: 18689 auf 32340 mm, also fast doppelt),
+weil die Zwischenebenen &uuml;berall gefahren werden. Weil unsere Bahn ohnehin je Ebene entscheidet, wo sie f&auml;hrt, zahlen wir nur f&uuml;r die Schr&auml;gen.</dd>
 <dt id="ba-fk05c-abtrag">Mindest-Eingriff: Z&uuml;ge weglassen, die kaum schneiden (22.09.2026)</dt><dd>Ein Zug, der nur mit einem Zehntelmillimeter seiner Breite
 im Material steht, kostet die volle Fahrzeit und tr&auml;gt fast nichts ab. Das Feld <b>Mindest-Eingriff</b> ist die <b>mittlere Eingriffsbreite</b> in Millimetern:
 abgetragene Fl&auml;che geteilt durch die Zugl&auml;nge. Bleibt ein Zug darunter, wird er ausgelassen und gez&auml;hlt. <b>0 schaltet es ab &mdash; das ist die Vorgabe.</b>
@@ -4261,7 +4271,7 @@ nicht belegt. Es fehlt eine echte .MPF, ein Lauf und die f&uuml;nfachsige Bahn.<
      man konnte ihr nicht ansehen, wie alt sie ist. Wer hier ein Kapitel
      aendert, zieht das Datum mit; der Pruefstand vergleicht es gegen das
      juengste Datum im Text. -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 22.09.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 23.09.2026. Sie
 wird mit jedem Paket mitgeschrieben &mdash; wer eine Funktion baut oder erweitert,
 schreibt ihren Absatz mit. Findest Du hier eine Aussage, die die App nicht mehr
 einl&ouml;st, ist das ein Fehler und geh&ouml;rt gemeldet.</p>
@@ -4945,6 +4955,9 @@ var F_FELDER = {
   // laesst dort schnell zu viel liegen - gemessen am Rampenblock mit
   // 3 mm: Schnittweg 471 auf 71 mm, Restmaterial 19 auf 79 mm2. Die App
   // laesst nichts ungefragt stehen.
+  // STUFENHOEHE [23.09.2026]: Zwischenebenen nur an den Schraegen. 0 = aus.
+  stufeMax:   {name:'Stufenhöhe', einheit:'mm', typ:'zahl',
+               ba:'ba-fk05c-stufenhoehe'},
   abtragMin:  {name:'Mindest-Eingriff', einheit:'mm', typ:'zahl',
                ba:'ba-fk05c-abtrag'},
   ebWas:      {name:'Was schlichten', typ:'wahl',
@@ -5200,7 +5213,7 @@ var F_MASKE = {
   // eintauchen in das Bauteil, sondern seitlich zustellen im freien Raum"]:
   // die dritte Stellung laesst jeden Zug aus, der ein Eintauchen im Material
   // braeuchte - das Material bleibt stehen und steht im Restmaterial.
-  modellSchruppen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','aufSeite','aufTiefe','#Bahn','bahnArt','ae','aeArt','bahnSinn','abtragMin','eintauch','#!Sicherheit','sc','sc2'],
+  modellSchruppen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','stufeMax','aufSeite','aufTiefe','#Bahn','bahnArt','ae','aeArt','bahnSinn','abtragMin','eintauch','#!Sicherheit','sc','sc2'],
                feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd'],['3','nur von außen: kein Eintauchen, Unerreichbares bleibt stehen'],['0','über SC anfahren, senkrecht eintauchen']]},
                feldText:{f:'F Vorschub Fräsen', fTief:'FZ Vorschub Eintauchen', zust:'D Zustellung in Z',
                  eintauch:'Anfahren & Eintauchen',
@@ -5211,7 +5224,7 @@ var F_MASKE = {
   // Restmaterial abspanen: dieselben Felder wie das Abspanen plus die
   // Restschwelle. Der BEZUG ist kein Feld - er ist immer der letzte
   // Schruppschritt davor, und die Maske nennt ihn im Kopf.
-  modellRest:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','aufSeite','aufTiefe','#Bahn','bahnArt','ae','aeArt','bahnSinn','restAb','abtragMin','eintauch','#!Sicherheit','sc','sc2'],
+  modellRest:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','stufeMax','aufSeite','aufTiefe','#Bahn','bahnArt','ae','aeArt','bahnSinn','restAb','abtragMin','eintauch','#!Sicherheit','sc','sc2'],
                feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd'],['3','nur von außen: kein Eintauchen, Unerreichbares bleibt stehen'],['0','über SC anfahren, senkrecht eintauchen']]},
                feldText:{f:'F Vorschub Fräsen', fTief:'FZ Vorschub Eintauchen', zust:'D Zustellung in Z',
                  eintauch:'Anfahren & Eintauchen',
@@ -5839,7 +5852,7 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
       // und Tiefe aus dem Rohteil.
       // ausgabe steht fest auf einzel: einen Zyklus gibt es nicht.
       Object.assign(s, {q203:+k.z1 || 0, tiefe:-Math.max(1, fRund((+k.z1 || 0) - (+k.z0 || 0))),
-        zust:2, aufSeite:0.5, aufTiefe:0.2, ae:40, aeArt:'%', bahnArt:'zeilen', bahnSinn:0, ebenenArt:'flaechen', abtragMin:0, dVor:0, fTief:fRund(s.f * 0.3), ausgabe:'einzel'});
+        zust:2, aufSeite:0.5, aufTiefe:0.2, ae:40, aeArt:'%', bahnArt:'zeilen', bahnSinn:0, ebenenArt:'flaechen', abtragMin:0, stufeMax:0, dVor:0, fTief:fRund(s.f * 0.3), ausgabe:'einzel'});
       if(art === 'modellRest'){
         // Der Bezug ist der letzte Schruppschritt im Arbeitsplan: seine
         // Tiefe, seine Aufmasse und seine Bahnwerte sind die Vorgabe - wer
@@ -10728,7 +10741,21 @@ function fBahnSchlichtenEben(s, tool, prog){
 // Werkzeug die Arbeit.
 //
 // uZ ist das Aufmass in der Tiefe: die Schruppebene liegt darueber.
-function fSchruppEbenen(F, zOben, zEnde, dz, uZ, aufFlaechen){
+// DIE STUFENHOEHE [23.09.2026]. An einer Schraege laesst Z-konstantes
+// Schruppen eine Treppe stehen, die so hoch ist wie die Zustellung. Wer sie
+// kleiner will, muss enger zustellen - und zahlt das auf der GANZEN Flaeche,
+// obwohl nur die Schraege es braucht. hyperMILL macht genau das (Job 8:
+// Schnittweg 18689 auf 32340 mm, also fast doppelt).
+//
+// Wir koennen es besser, weil die Bahn ohnehin je Ebene entscheidet, wo sie
+// faehrt: die ZWISCHENEBENEN werden nur dort gefahren, wo die Sollform
+// GENEIGT ist. Auf waagerechten Flaechen und an senkrechten Waenden bleibt
+// alles, wie es war.
+//
+// Die Zwischenebenen stehen als Menge am Array (Eigenschaft "zwischen") -
+// so bleibt die Liste selbst eine Liste von Zahlen, und jeder Haken, der
+// sie vergleicht, vergleicht weiter Zahlen.
+function fSchruppEbenen(F, zOben, zEnde, dz, uZ, aufFlaechen, stufeMax){
   // OHNE Flaechenerkennung bleibt es Bit fuer Bit die alte Folge: volle
   // Schritte von oben, der Rest als letzter kurzer Schnitt. Daran haengt
   // jede Vorlage und der Programmierplatz-Beleg DZ14 - die gleichmaessige
@@ -10736,7 +10763,7 @@ function fSchruppEbenen(F, zOben, zEnde, dz, uZ, aufFlaechen){
   if(!aufFlaechen){
     const nur = [];
     for(let z = zOben - dz; ; z -= dz){ const v = (z < zEnde) ? zEnde : z; nur.push(fRund(v)); if(v <= zEnde + 1e-9) break; }
-    return nur;
+    return fStufenEbenen(nur, zOben, stufeMax);
   }
   const eb = [];
   const rein = (z) => { const v = fRund(z); if(v < zEnde - 1e-9 || v > zOben + 1e-9) return; if(!eb.some(w => Math.abs(w - v) < 1e-6)) eb.push(v); };
@@ -10761,7 +10788,29 @@ function fSchruppEbenen(F, zOben, zEnde, dz, uZ, aufFlaechen){
   // Doppelte (eine Pflichtebene, die zufaellig auf einem Schritt liegt) weg.
   const fertig = [];
   aus.forEach(z => { if(!fertig.length || Math.abs(fertig[fertig.length - 1] - z) > 1e-6) fertig.push(z); });
-  return fertig;
+  return fStufenEbenen(fertig, zOben, stufeMax);
+}
+// Zwischenebenen einfuegen, bis kein Schritt hoeher als stufeMax ist.
+// Gleichmaessig zwischen zwei Hauptebenen - eine feste Teilung liesse den
+// letzten Schnitt duenn.
+function fStufenEbenen(haupt, zOben, stufeMax){
+  if(!(stufeMax > 0) || !haupt.length) { haupt.zwischen = null; return haupt; }
+  const aus = [], zw = Object.create(null);
+  let von = zOben;
+  haupt.forEach(z => {
+    const spanne = von - z;
+    if(spanne > stufeMax + 1e-9){
+      const nS = Math.ceil(spanne / stufeMax - 1e-9);
+      for(let q = 1; q < nS; q++){
+        const v = fRund(von - spanne / nS * q);
+        aus.push(v); zw[v] = 1;
+      }
+    }
+    aus.push(z);
+    von = z;
+  });
+  aus.zwischen = zw;
+  return aus;
 }
 function fBahnModell(s, tool, prog){
   const warn = [];
@@ -11552,7 +11601,11 @@ function fBahnModell(s, tool, prog){
   // zum ersten Mal NICHT mehr verboten ist - das ist der Abstand zur Wand
   // auf ihrer eigenen Hoehe.
   const d2Hoehe = new Float64Array(nx * ny); d2Hoehe.fill(-1);
-  const zListe = fSchruppEbenen(F, zOben, zEnde, dz, uZ, aufFlaechen);
+  // 0 = aus. Groesser als die Zustellung waere wirkungslos.
+  const stufeMax = (+s.stufeMax > 0 && +s.stufeMax < dz) ? +s.stufeMax : 0;
+  const zListe = fSchruppEbenen(F, zOben, zEnde, dz, uZ, aufFlaechen, stufeMax);
+  const zwischenMenge = zListe.zwischen || null;
+  let ebenenZw = 0;
   let trefferEb = 0;
   if(aufFlaechen && F.ebenen) F.ebenen.forEach(e => {
     const zz = fRund(+e.z + uZ);
@@ -11589,6 +11642,28 @@ function fBahnModell(s, tool, prog){
     }
     return zellen * r * r / L;
   };
+  // WO ERREICHT DAS WERKZEUG EINE SCHRAEGE? Die Werkzeugmitte steht nie
+  // AUF der Schraege - die Ebenenmaske haelt sie Werkzeugradius plus
+  // Aufmass davon fern; geraeumt wird mit der Schneide. Die Frage ist also
+  // nicht "ist die Zelle unter der Mitte geneigt", sondern "liegt im
+  // Umkreis des Werkzeugs eine geneigte Zelle". Das ist dieselbe
+  // Abstandsverwandlung, mit der die Bahn schon das Material sucht.
+  // (Der erste Bau fragte die Zelle unter der Mitte - am Rampenblock fiel
+  // damit JEDE Zwischenebene aus, obwohl das Teil fast nur Schraege ist.)
+  const schraegM = (stufeMax > 0) ? new Uint8Array(n) : null;
+  const d2S = (stufeMax > 0) ? new Float64Array(n) : null;
+  if(stufeMax > 0){
+    for(let j = 1; j < ny - 1; j++) for(let i = 1; i < nx - 1; i++){
+      const q = j * nx + i;
+      if(!G.imRoh[q]) continue;
+      const gx = (G.soll[q + 1] - G.soll[q - 1]) / (2 * r);
+      const gy = (G.soll[q + nx] - G.soll[q - nx]) / (2 * r);
+      const gr = Math.atan(Math.hypot(gx, gy)) * 180 / Math.PI;
+      if(gr > F_REST_EBEN_GRAD && gr < F_REST_WAND_GRAD) schraegM[q] = 1;
+    }
+    fEdt(schraegM, nx, ny, d2S);
+  }
+  const reichS = (rt + uXY) / r, reichS2 = reichS * reichS;
   for(let li = 0; li < zListe.length; li++){
     const z = zListe[li];
     const zr = fRund(z);
@@ -11657,8 +11732,24 @@ function fBahnModell(s, tool, prog){
     if(!d2M) d2M = new Float64Array(n);
     if(material) fEdt(mat, nx, ny, d2M); else d2M.fill(Infinity);
     const reichM = Math.max(0, rt / r - schritt / 2), rM2 = reichM * reichM;
-    const gutEbene = (q) => erlaubt[q] && d2M[q] <= rM2 + 1e-9;
-    const weitEbene = (q) => erlaubt[q] && d2M[q] <= rr2 + 1e-9;
+    // ZWISCHENEBENE: nur dort fahren, wo die Sollform geneigt ist - dort
+    // steht die Treppe. Auf waagerechten Flaechen hat die Hauptebene
+    // darueber schon alles genommen, an senkrechten Waenden aendert eine
+    // Zwischenebene nichts als Fahrzeit.
+    const nurSchraeg = !!(zwischenMenge && zwischenMenge[zr]);
+    // Erreicht das WERKZEUG von hier aus eine Schraege? Die Maske selbst
+    // steht oben (einmal je Bahn); der Rand des Gitters ist darin
+    // ausgenommen, weil die Sollform dort auf ihre Unterkante abfaellt und
+    // dieser Abfall wie eine Schraege aussaehe - gemessen an einer Platte
+    // OHNE Schraege: 228 statt 64 Zuege.
+    const schraegHier = (q) => !!d2S && d2S[q] <= reichS2 + 1e-9;
+    const gutEbene = nurSchraeg
+      ? (q) => erlaubt[q] && d2M[q] <= rM2 + 1e-9 && schraegHier(q)
+      : (q) => erlaubt[q] && d2M[q] <= rM2 + 1e-9;
+    const weitEbene = nurSchraeg
+      ? (q) => erlaubt[q] && d2M[q] <= rr2 + 1e-9 && schraegHier(q)
+      : (q) => erlaubt[q] && d2M[q] <= rr2 + 1e-9;
+    if(nurSchraeg) ebenenZw++;
     if(konturparallel){
       // Ringe statt Zeilen; der Querdurchgang entfaellt (der letzte Ring
       // laeuft an der Wand, es bleibt kein Kamm).
@@ -11687,7 +11778,8 @@ function fBahnModell(s, tool, prog){
     if(offen){
       if(!d2R) d2R = new Float64Array(n);
       fEdt(rest, nx, ny, d2R);
-      inEbene += durchgang(1 - haupt, z, zr, (q) => erlaubt[q] && d2R[q] <= rr2 + 1e-9, null, 2);
+      // Auch der Querdurchgang gilt auf einer Zwischenebene nur den Schraegen.
+      inEbene += durchgang(1 - haupt, z, zr, (q) => erlaubt[q] && d2R[q] <= rr2 + 1e-9 && (!nurSchraeg || schraegHier(q)), null, 2);
     }
     if(inEbene){ ebenen++; if(haupt) ebenenY++; else ebenenX++; }
     if(z <= zEnde + 1e-9) break;
@@ -11843,6 +11935,10 @@ function fBahnModell(s, tool, prog){
     + '. Ein Saum in der Groesse des Arbeitsrasters (' + fRund(r) + ' mm) ist die Rechengenauigkeit; breitere Stellen erreicht ⌀'
     + fRund(2 * rt) + ' nicht — dort mit einem kleineren Werkzeug nachsetzen.');
   else warn.push('Kein Restmaterial: das Werkzeug erreicht ueberall die Sollform samt Aufmass.');
+  if(stufeMax > 0) warn.push('STUFENHOEHE ' + fRund(stufeMax) + ' mm: ' + ebenenZw
+    + ' Zwischenebene(n) zusaetzlich, und zwar NUR dort, wo die Sollform geneigt ist — auf waagerechten Flaechen und an senkrechten Waenden aendert sich nichts.'
+    + ' Die Treppe an den Schraegen ist damit noch ' + fRund(treppeMax) + ' mm hoch (ohne Stufenhoehe waere sie so hoch wie die Zustellung ' + fRund(dz) + ' mm).'
+    + ' Sie wird nicht genau ' + fRund(stufeMax) + ' mm: an der Grenze der Ebenenmaske weicht die Bahn je Ebene um den Werkzeugradius zurueck, und dort bleibt mehr stehen.');
   if(kratzer) warn.push(kratzer + ' Zug/Zuege (' + fRund(kratzerMm) + ' mm) sind wegen MINIMALEM MATERIALABTRAG ausgelassen: dort stand im Mittel weniger als '
     + fRund(abtragMin) + ' mm Eingriffsbreite an — die volle Fahrzeit fuer fast nichts. Was dort stehen bleibt, ist im Restmaterial enthalten; mit 0 im Feld faehrt die Bahn wieder jeden Zug.');
   if(ausgelassen) warn.push(ausgelassen + ' Zug/Zuege (' + fRund(ausgelassenMm) + ' mm) sind AUSGELASSEN: dort waere ein Eintauchen im Material noetig gewesen, und das Feld Anfahren & Eintauchen steht auf "nur von aussen" — das Material bleibt stehen und steht im Restmaterial.');
