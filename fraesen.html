@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="22.09.2026 23:32 (1b8ce40e)";</script>
+<script>window.__DZ_STAND="23.09.2026 00:48 (ccd87d87)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3566,6 +3566,36 @@ Werkzeug die Schuld zu geben. Trag das echte Rohteil ein oder setz Z0 h&ouml;her
 &bdquo;Sollform ans Programm&ldquo; bekommen hat: wer ein anderes Programm l&auml;dt (Vorlage, Ablage, neues Programm), hat dort keine Sollform &mdash; bis zum 18.09.2026 blieb die des
 vorigen Modells stehen, und die Simulation bewertete das neue Programm gegen das alte Teil. Nach dem Neuladen der App also erst wieder Modell
 laden und <b>Sollform ans Programm</b> dr&uuml;cken, sonst meldet die Programmpr&uuml;fung einen roten Befund.</dd>
+<dt id="ba-fk05c-ebenen2">Zustellung: gleichm&auml;&szlig;ig oder auf Modellfl&auml;chen (22.09.2026)</dt><dd>Z-konstantes Schruppen legt seine Ebenen bisher in festen Schritten:
+Oberkante minus Zustellung, minus zweimal Zustellung, und so fort. Das ist einfach und an einem <b>Taschenboden falsch</b>: liegt er zwischen zwei Ebenen, wird er nie erreicht.
+<br><b>Auf Modellfl&auml;chen</b> legt auf jede waagerechte Fl&auml;che des Modells eine Ebene (das Aufma&szlig; in der Tiefe kommt dazu) und teilt die Strecken dazwischen
+gleichm&auml;&szlig;ig in Schritte h&ouml;chstens so gro&szlig; wie die Zustellung. Gleichm&auml;&szlig;ig ist Absicht: mit vollen Schritten plus einem Rest bliebe der letzte Schnitt d&uuml;nn,
+und ein d&uuml;nner Schnitt an der tiefsten Stelle rattert am ehesten.
+<br><b>Gemessen</b> an einer Platte mit einer Stufe auf &minus;4 und einer Tasche auf &minus;12, Zustellung 5, Fr&auml;ser &#x2300;10: <b>gleichm&auml;&szlig;ig</b> ergibt die Ebenen
+&minus;5 / &minus;10 / &minus;11,8 &mdash; &uuml;ber der Stufe bleibt das Rohteil in voller H&ouml;he stehen (gemessener Stand 0,00 statt &minus;3,80), <b>980 mm&sup2; Restmaterial</b> (dazu 20 mm&sup2; Treppe am schr&auml;gen &Uuml;bergang).
+<b>Auf Modellfl&auml;chen</b> ergibt &minus;3,8 / &minus;7,8 / &minus;11,8 &mdash; die Stufe wird auf Aufma&szlig; gefahren, <b>kein Restmaterial</b>, daf&uuml;r 59 statt 46 Z&uuml;ge.
+<br><b>Die Vorgabe eines neu angelegten Schritts ist &bdquo;auf Modellfl&auml;chen&ldquo;</b>; die Testvorlagen tragen ausdr&uuml;cklich &bdquo;gleichm&auml;&szlig;ig&ldquo;, weil ihre
+Bahnen und der Programmierplatz-Beleg DZ14 daran h&auml;ngen. Hat das Modell keine waagerechte Fl&auml;che im Bereich, sind beide Betriebsarten dasselbe.
+<br><i>Vorbild:</i> was hyperMILL Planfl&auml;chenerkennung nennt. Die Einstellung &auml;ndert dort die Bahn deutlich (gemessen an seinen Trainingsjobs: 1454 gegen 2885 S&auml;tze am selben Teil);
+&uuml;bernommen ist die Begr&uuml;ndung, nicht seine Einstellung &mdash; eine Ebene genau auf der Fl&auml;che spart dem n&auml;chsten Werkzeug die Arbeit.</dd>
+<dt id="ba-fk05c-treppe">Restmaterial: Treppe oder L&uuml;cke (22.09.2026)</dt><dd>Der Bericht des Schruppens trennt seit dem 22.09.2026 zwei Dinge, die vorher beide
+unter den Tisch fielen:
+<br><b>Die Treppe</b> an einer Schr&auml;ge ist beim Z-konstanten Schruppen <b>gewollt</b> &mdash; jede Ebene endet waagerecht, und was dazwischen stehen bleibt, holt das
+Schlichten. Sie steht in einer eigenen Zeile mit Fl&auml;che und H&ouml;he und z&auml;hlt <b>nicht</b> als Restmaterial.
+<br><b>Die L&uuml;cke</b> &uuml;ber einer waagerechten Fl&auml;che ist ein Befund: dort hat die Ebenenwahl die Fl&auml;che verfehlt, oder das Werkzeug kommt nicht hin.
+Unterschieden wird an der <b>Neigung der Sollform</b> unter der Stelle (5 bis 80 Grad = Schr&auml;ge; dar&uuml;ber ist es eine Wand, dort ist stehengebliebenes Material eine Ecke).
+<br><b>Warum das ein Befund war:</b> der Ausschlu&szlig; des Aufma&szlig;streifens ma&szlig; den Abstand zur Wand in der <b>letzten</b> Ebene. &Uuml;ber einer Stufe ist dort alles
+gesperrt, der Abstand also null &mdash; und jede Stelle galt als Aufma&szlig;streifen. Die Bahn meldete &bdquo;kein Restmaterial: das Werkzeug erreicht &uuml;berall die Sollform
+samt Aufma&szlig;&ldquo;, w&auml;hrend 4 mm stehen blieben. Eine falsche Zusicherung ist schlimmer als keine. Gemessen wird jetzt auf der <b>H&ouml;he der Stelle selbst</b>.</dd>
+<dt id="ba-fk05c-abtrag">Mindest-Eingriff: Z&uuml;ge weglassen, die kaum schneiden (22.09.2026)</dt><dd>Ein Zug, der nur mit einem Zehntelmillimeter seiner Breite
+im Material steht, kostet die volle Fahrzeit und tr&auml;gt fast nichts ab. Das Feld <b>Mindest-Eingriff</b> ist die <b>mittlere Eingriffsbreite</b> in Millimetern:
+abgetragene Fl&auml;che geteilt durch die Zugl&auml;nge. Bleibt ein Zug darunter, wird er ausgelassen und gez&auml;hlt. <b>0 schaltet es ab &mdash; das ist die Vorgabe.</b>
+<br><b>Warum aus:</b> an einer <b>Schr&auml;ge</b> ist die Eingriffsbreite von Natur aus klein &mdash; jede Zeile nimmt dort nur einen schmalen Streifen. Gemessen am
+Rampenblock mit 3 mm Schwelle: der Schnittweg f&auml;llt von 471 auf 71 mm, das Restmaterial steigt von 19 auf 79 mm&sup2;. An einem Teil mit gro&szlig;en Fl&auml;chen
+ist die Wirkung dagegen fast umsonst zu haben. Die App l&auml;&szlig;t nichts ungefragt stehen; wer die Zeit braucht, tr&auml;gt einen kleinen Wert ein (0,3 bis 1 mm) und
+liest im Bericht nach, wieviel dadurch stehen bleibt.
+<br><b>Was stehen bleibt, ist ein Befund</b> &mdash; kein Treppenabsatz: eine Treppe ist h&ouml;chstens eine Zustellung hoch, alles dar&uuml;ber steht im Restmaterial.
+<br><i>Vorbild:</i> hyperMILLs <i>minimaler Materialabtrag</i>; an seinen Trainingsjobs 14/15 gemessen 1219 gegen 777 S&auml;tze am selben Teil.</dd>
 <dt id="ba-fk05c-kontur">Bahnart: Zeilen oder konturparallel (20.09.2026)</dt><dd>Beide Schruppschritte (Modell abspanen, Restmaterial abspanen) haben das Feld <b>Bahnart</b>.
 <b>Zeilen</b> ist der M&auml;ander wie bisher. <b>Konturparallel</b> f&auml;hrt je Z-Ebene Ringe um die Sollform: jeder Ring ist eine H&ouml;henlinie des Abstands zur
 Form, der Ringabstand ist ae, gefahren wird von au&szlig;en nach innen (bei einer Tasche von der Mitte zur Wand) &mdash; die Schneide nimmt so immer nur den Streifen ae
@@ -4903,6 +4933,20 @@ var F_FELDER = {
   bahnArt:    {name:'Bahnart', typ:'wahl',
                wahl:[['zeilen','Zeilen (Mäander)'],['kontur','konturparallel (Ringe)']],
                ba:'ba-fk05c-kontur'},
+  // DIE EBENEN AUF DIE FLAECHEN [22.09.2026]. "gleichmaessig" ist die alte
+  // Folge - jede Vorlage und der Programmierplatz-Beleg DZ14 haengen daran.
+  ebenenArt:  {name:'Zustellung', typ:'wahl',
+               wahl:[['gleich','gleichmäßig (feste Zustellung)'],['flaechen','auf Modellflächen legen']],
+               ba:'ba-fk05c-ebenen2'},
+  // MINIMALER MATERIALABTRAG [22.09.2026]. In Millimetern mittlerer
+  // Eingriffsbreite; 0 = aus. VORGABE IST AUS, und das mit Grund: an
+  // einer Schraege ist die Eingriffsbreite von Natur aus klein (jede
+  // Zeile nimmt dort nur einen schmalen Streifen), und eine Schwelle
+  // laesst dort schnell zu viel liegen - gemessen am Rampenblock mit
+  // 3 mm: Schnittweg 471 auf 71 mm, Restmaterial 19 auf 79 mm2. Die App
+  // laesst nichts ungefragt stehen.
+  abtragMin:  {name:'Mindest-Eingriff', einheit:'mm', typ:'zahl',
+               ba:'ba-fk05c-abtrag'},
   ebWas:      {name:'Was schlichten', typ:'wahl',
                wahl:[['beide','Böden und Wände'],['boeden','nur Böden'],['waende','nur Wände']],
                ba:'ba-fk05c-boeden'},
@@ -5156,7 +5200,7 @@ var F_MASKE = {
   // eintauchen in das Bauteil, sondern seitlich zustellen im freien Raum"]:
   // die dritte Stellung laesst jeden Zug aus, der ein Eintauchen im Material
   // braeuchte - das Material bleibt stehen und steht im Restmaterial.
-  modellSchruppen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','aufSeite','aufTiefe','#Bahn','bahnArt','ae','aeArt','bahnSinn','eintauch','#!Sicherheit','sc','sc2'],
+  modellSchruppen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','aufSeite','aufTiefe','#Bahn','bahnArt','ae','aeArt','bahnSinn','abtragMin','eintauch','#!Sicherheit','sc','sc2'],
                feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd'],['3','nur von außen: kein Eintauchen, Unerreichbares bleibt stehen'],['0','über SC anfahren, senkrecht eintauchen']]},
                feldText:{f:'F Vorschub Fräsen', fTief:'FZ Vorschub Eintauchen', zust:'D Zustellung in Z',
                  eintauch:'Anfahren & Eintauchen',
@@ -5167,7 +5211,7 @@ var F_MASKE = {
   // Restmaterial abspanen: dieselben Felder wie das Abspanen plus die
   // Restschwelle. Der BEZUG ist kein Feld - er ist immer der letzte
   // Schruppschritt davor, und die Maske nennt ihn im Kopf.
-  modellRest:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','aufSeite','aufTiefe','#Bahn','bahnArt','ae','aeArt','bahnSinn','restAb','eintauch','#!Sicherheit','sc','sc2'],
+  modellRest:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','aufSeite','aufTiefe','#Bahn','bahnArt','ae','aeArt','bahnSinn','restAb','abtragMin','eintauch','#!Sicherheit','sc','sc2'],
                feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd'],['3','nur von außen: kein Eintauchen, Unerreichbares bleibt stehen'],['0','über SC anfahren, senkrecht eintauchen']]},
                feldText:{f:'F Vorschub Fräsen', fTief:'FZ Vorschub Eintauchen', zust:'D Zustellung in Z',
                  eintauch:'Anfahren & Eintauchen',
@@ -5795,7 +5839,7 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
       // und Tiefe aus dem Rohteil.
       // ausgabe steht fest auf einzel: einen Zyklus gibt es nicht.
       Object.assign(s, {q203:+k.z1 || 0, tiefe:-Math.max(1, fRund((+k.z1 || 0) - (+k.z0 || 0))),
-        zust:2, aufSeite:0.5, aufTiefe:0.2, ae:40, aeArt:'%', bahnArt:'zeilen', bahnSinn:0, dVor:0, fTief:fRund(s.f * 0.3), ausgabe:'einzel'});
+        zust:2, aufSeite:0.5, aufTiefe:0.2, ae:40, aeArt:'%', bahnArt:'zeilen', bahnSinn:0, ebenenArt:'flaechen', abtragMin:0, dVor:0, fTief:fRund(s.f * 0.3), ausgabe:'einzel'});
       if(art === 'modellRest'){
         // Der Bezug ist der letzte Schruppschritt im Arbeitsplan: seine
         // Tiefe, seine Aufmasse und seine Bahnwerte sind die Vorgabe - wer
@@ -10662,6 +10706,63 @@ function fBahnSchlichtenEben(s, tool, prog){
   return {ok:true, bahn:B, warn:warn, waende:Z.waende, ebenenW:Z.ebenenW, boeden:Z.boeden, zuege:Z.zuege, bodenHoehen:boeden, uebersprungen:Z.uebersprungen, ausgelassen:Z.ausgelassen, ohneMaterial:Z.ohneMaterial, anBoden:Z.anBoden, schraegen:Z.schraegen, gemischt:Z.gemischt};
 }
 // Die Bahn: Ebene fuer Ebene, in jeder Ebene zeilenweise im Zickzack.
+// DIE Z-EBENEN EINES SCHRUPPSCHRITTS [22.09.2026, Daniels Auftrag, die
+// Schruppstrategien auszukundschaften]. Bis hierher war es eine
+// arithmetische Folge: zOben − dz, −2dz, −3dz … Das ist einfach und an
+// einem Taschenboden falsch: liegt er zwischen zwei Ebenen, bleibt dort
+// bis zu EINER ZUSTELLUNG zu viel stehen, und das Schlichten muss es mit
+// dem kleinen Werkzeug holen.
+//
+// "flaechen" legt deshalb auf JEDE waagerechte Flaeche des Modells eine
+// Ebene (F.ebenen kennt ihre Hoehen seit dem Boeden-Paket) und teilt die
+// Strecken dazwischen GLEICHMAESSIG in Schritte hoechstens dz. Gleichmaessig
+// ist wichtig: mit vollen dz-Schritten plus einem Rest bliebe der letzte
+// Schnitt duenn, und ein duenner Schnitt an der tiefsten Stelle ist der,
+// der am ehesten rattert.
+//
+// Das Vorbild ist hyperMILLs "Planflaechenerkennung". Gemessen an dessen
+// Trainingsjobs 9 bis 12 (dasselbe Teil, nur diese Einstellung): AUS 1454
+// Saetze, AUTOMATISCH 2885, OPTIMIERT 2015 - die Einstellung bestimmt die
+// Bahn deutlich. Was hier steht, ist die Begruendung, nicht seine
+// Einstellung: eine Ebene GENAU auf der Flaeche spart dem naechsten
+// Werkzeug die Arbeit.
+//
+// uZ ist das Aufmass in der Tiefe: die Schruppebene liegt darueber.
+function fSchruppEbenen(F, zOben, zEnde, dz, uZ, aufFlaechen){
+  // OHNE Flaechenerkennung bleibt es Bit fuer Bit die alte Folge: volle
+  // Schritte von oben, der Rest als letzter kurzer Schnitt. Daran haengt
+  // jede Vorlage und der Programmierplatz-Beleg DZ14 - die gleichmaessige
+  // Teilung waere fachlich besser, ist aber eine andere Bahn.
+  if(!aufFlaechen){
+    const nur = [];
+    for(let z = zOben - dz; ; z -= dz){ const v = (z < zEnde) ? zEnde : z; nur.push(fRund(v)); if(v <= zEnde + 1e-9) break; }
+    return nur;
+  }
+  const eb = [];
+  const rein = (z) => { const v = fRund(z); if(v < zEnde - 1e-9 || v > zOben + 1e-9) return; if(!eb.some(w => Math.abs(w - v) < 1e-6)) eb.push(v); };
+  if(F && F.ebenen) F.ebenen.forEach(e => rein(+e.z + uZ));
+  rein(zEnde);
+  eb.sort((a, b) => b - a);
+  // Von oben nach unten auffuellen. Die erste Strecke beginnt an zOben
+  // (dort steht das Rohteil), jede weitere an der Pflichtebene darueber.
+  const aus = [];
+  let von = zOben;
+  const ziele = eb.slice();
+  if(!ziele.length || Math.abs(ziele[ziele.length - 1] - zEnde) > 1e-9) ziele.push(zEnde);
+  ziele.forEach(zZiel => {
+    const spanne = von - zZiel;
+    if(spanne > 1e-9){
+      const nS = Math.max(1, Math.ceil(spanne / dz - 1e-9));
+      const schritt = spanne / nS;
+      for(let q = 1; q <= nS; q++) aus.push(fRund(von - schritt * q));
+    }
+    von = zZiel;
+  });
+  // Doppelte (eine Pflichtebene, die zufaellig auf einem Schritt liegt) weg.
+  const fertig = [];
+  aus.forEach(z => { if(!fertig.length || Math.abs(fertig[fertig.length - 1] - z) > 1e-6) fertig.push(z); });
+  return fertig;
+}
 function fBahnModell(s, tool, prog){
   const warn = [];
   const nein = (g) => ({ok:false, grund:g, bahn:[], warn:warn});
@@ -11296,6 +11397,11 @@ function fBahnModell(s, tool, prog){
         const stehtAn = wegVorab ? -Infinity : fStandMax(G, xa, ya, xa, ya, rt);
         const zEilVorab = wegVorab ? zr : fRund(Math.max(z, Math.min(ueberVorab, stehtAn + sc)));
         if(nurAussen && !wegVorab && stehtMaterial(xa, ya)){ ausgelassen++; ausgelassenMm += Math.hypot(xb - xa, yb - ya); return; }
+        // Zu duenn? Dann gar nicht erst hinfahren.
+        if(abtragMin > 0){
+          const L = Math.hypot(xb - xa, yb - ya);
+          if(L > 1e-9 && eingriffBreite(xa, ya, xb, yb, z, L) < abtragMin){ kratzer++; kratzerMm += L; return; }
+        }
         if(x === null){ eil({x:xa, y:ya, z:sicher}); }
         else {
           // ZEILENWECHSEL AUF TIEFE [17.09.2026]. Bis hierher zog die Bahn
@@ -11410,8 +11516,81 @@ function fBahnModell(s, tool, prog){
     return getan;
   };
 
-  for(let z = zOben - dz; ; z -= dz){
-    if(z < zEnde) z = zEnde;
+  // ZWEI BETRIEBSARTEN, ein Feld: "gleich" ist die alte arithmetische
+  // Folge (Bestand: jede Vorlage und jeder Programmierplatz-Beleg haengt
+  // daran), "flaechen" legt die Ebenen auf die waagerechten Flaechen.
+  const aufFlaechen = String(s.ebenenArt || "gleich") === "flaechen";
+  // MINIMALER MATERIALABTRAG [22.09.2026]. Ein Zug, der nur mit einem
+  // Zehntelmillimeter seiner Breite im Material steht, kostet die volle
+  // Fahrzeit und traegt fast nichts ab. hyperMILL laesst solche Zuege weg;
+  // gemessen an seinen Trainingsjobs 14 und 15 (dasselbe Teil, nur diese
+  // Einstellung): 1219 gegen 777 Saetze, Luftweg 2371 gegen 1432 mm - ein
+  // gutes Drittel weniger, ohne dass sich an der Zustellung etwas aendert.
+  //
+  // Das Mass ist die MITTLERE EINGRIFFSBREITE: abgetragene Flaeche geteilt
+  // durch die Zuglaenge. Sie ist anschaulich (ein halber Millimeter ist ein
+  // halber Millimeter) und haengt nicht an der Zuglaenge - eine Schwelle
+  // "Flaeche" wuerde lange Kratzer durchlassen und kurze Vollschnitte
+  // aussortieren.
+  //
+  // WAS DABEI STEHEN BLEIBT, steht im Restmaterial und wird gezaehlt: der
+  // Handel ist Zeit gegen einen duennen Grat, den der naechste Schritt
+  // ohnehin nimmt. 0 schaltet es ab.
+  const abtragMin = (+s.abtragMin > 0) ? +s.abtragMin : 0;
+  let kratzer = 0, kratzerMm = 0;
+  // DER ABSTAND ZUR WAND GILT JE ZELLE AUF IHRER EIGENEN HOEHE
+  // [22.09.2026, gefunden beim Bau der Flaechenerkennung]. Der
+  // Restmaterial-Bericht unten nimmt den Aufmassstreifen von der Zaehlung
+  // aus - und benutzte dafuer d2, die Abstaende der LETZTEN Ebene. Ueber
+  // einer Stufe ist dort alles verboten, der Abstand also 0, und jede
+  // Zelle darueber galt als Aufmassstreifen. GEMESSEN an einer Platte mit
+  // Stufe auf -4 und Tasche auf -12 (Zustellung 5): ueber der Stufe blieb
+  // das Rohteil in voller Hoehe stehen, und die Bahn meldete "kein
+  // Restmaterial: das Werkzeug erreicht ueberall die Sollform samt
+  // Aufmass". Eine falsche Zusicherung ist schlimmer als keine.
+  // Jetzt wird der Abstand in der Ebene festgehalten, in der die Zelle
+  // zum ersten Mal NICHT mehr verboten ist - das ist der Abstand zur Wand
+  // auf ihrer eigenen Hoehe.
+  const d2Hoehe = new Float64Array(nx * ny); d2Hoehe.fill(-1);
+  const zListe = fSchruppEbenen(F, zOben, zEnde, dz, uZ, aufFlaechen);
+  let trefferEb = 0;
+  if(aufFlaechen && F.ebenen) F.ebenen.forEach(e => {
+    const zz = fRund(+e.z + uZ);
+    if(zz < zEnde - 1e-9 || zz > zOben + 1e-9) return;
+    if(zListe.some(w => Math.abs(w - zz) < 1e-6)) trefferEb++;
+  });
+  // Mittlere Eingriffsbreite eines Zuges auf der Ebene z: die Zellen, die
+  // er wirklich absenkt (Stand zu BEGINN der Ebene ueber der Ebene, im
+  // Werkzeugband), mal Zellflaeche, geteilt durch die Zuglaenge. Gezaehlt
+  // wird auf demselben Raster, auf dem auch gestempelt wird - eine Zelle
+  // zaehlt hoechstens einmal.
+  const ebZellen = new Uint8Array(nx * ny);
+  let ebMarke = 0;
+  const eingriffBreite = (xa, ya, xb, yb, z, L) => {
+    ebMarke++;
+    if(ebMarke > 250){ ebZellen.fill(0); ebMarke = 1; }
+    const nS = Math.max(1, Math.ceil(L / (r / 2)));
+    let zellen = 0;
+    for(let q = 0; q <= nS; q++){
+      const t = q / nS, cx = xa + (xb - xa) * t, cy = ya + (yb - ya) * t;
+      const i0 = Math.max(0, Math.floor((cx - rt - G.x0) / r)), i1 = Math.min(nx - 1, Math.ceil((cx + rt - G.x0) / r));
+      const j0 = Math.max(0, Math.floor((cy - rt - G.y0) / r)), j1 = Math.min(ny - 1, Math.ceil((cy + rt - G.y0) / r));
+      for(let j = j0; j <= j1; j++){
+        const dy = G.y0 + (j + 0.5) * r - cy, o = j * nx;
+        for(let p = i0; p <= i1; p++){
+          const dx = G.x0 + (p + 0.5) * r - cx;
+          if(dx * dx + dy * dy > rt * rt) continue;
+          const c = o + p;
+          if(ebZellen[c] === ebMarke) continue;
+          ebZellen[c] = ebMarke;
+          if(standVor[c] > z + 0.001) zellen++;
+        }
+      }
+    }
+    return zellen * r * r / L;
+  };
+  for(let li = 0; li < zListe.length; li++){
+    const z = zListe[li];
     const zr = fRund(z);
     // Der Stand zu BEGINN der Ebene entscheidet, wo gefahren wird. Der
     // laufende Stand taugt dafuer nicht: der Stempel einer Zeile reicht einen
@@ -11420,6 +11599,8 @@ function fBahnModell(s, tool, prog){
     // Zeilen Material stehen bleibt (gemessen: jede zweite Zeile fiel aus).
     for(let q = 0; q < n; q++) verboten[q] = (G.soll[q] + uZ > z + 1e-9) ? 1 : 0;
     fEdt(verboten, nx, ny, d2);
+    // Erste Ebene, in der diese Zelle frei ist: ihr Abstand zur Wand gilt.
+    for(let q = 0; q < n; q++) if(d2Hoehe[q] < 0 && !verboten[q]) d2Hoehe[q] = d2[q];
     // WAS DAS VORWERKZEUG SCHON GENOMMEN HAT, steht nicht mehr da. Erst
     // in den Stand stempeln, dann den Stand der Ebene merken - sonst
     // faehrt der kleine Fraeser die ganze Flaeche noch einmal ab.
@@ -11535,16 +11716,61 @@ function fBahnModell(s, tool, prog){
   // noetig". Technisch richtig, als Rat falsch.
   const fertig = new Uint8Array(n), saum = new Float64Array(n);
   const zuViel = new Float32Array(n);
+  let treppeZellen = 0, treppeMax = 0;
+  // Gefaelle der Sollform an dieser Zelle, in Grad. Ueber dem Rand des
+  // Gitters gibt es keine Nachbarn - dort gilt waagerecht (dort steht
+  // ohnehin kein Teil).
+  const steilHier = (q) => {
+    const i = q % nx, j = (q - i) / nx;
+    if(i < 1 || j < 1 || i > nx - 2 || j > ny - 2) return 0;
+    const gx = (G.soll[q + 1] - G.soll[q - 1]) / (2 * r);
+    const gy = (G.soll[q + nx] - G.soll[q - nx]) / (2 * r);
+    return Math.atan(Math.hypot(gx, gy)) * 180 / Math.PI;
+  };
   for(let q = 0; q < n; q++){
     zuViel[q] = -1;
     if(!G.imRoh[q]) continue;
     // Der Streifen von UXY vor einer Wand SOLL stehen bleiben — das ist das
-    // seitliche Aufmass, kein Befund. d2 traegt nach der Schleife noch die
-    // Abstaende der letzten Ebene.
-    if(uXY > 0 && d2[q] <= (uXY / r) * (uXY / r) + 1e-9) continue;
+    // seitliche Aufmass, kein Befund. Gemessen wird auf der HOEHE DIESER
+    // ZELLE (d2Hoehe), nicht in der letzten Ebene: sonst faellt alles aus
+    // der Zaehlung, was ueber einer Stufe steht (Befund 22.09.2026).
+    // Eine Zelle, die in KEINER Ebene frei war, ist kein Aufmassstreifen -
+    // sie wurde nie erreicht und gehoert gezaehlt.
+    const dW = (d2Hoehe[q] >= 0) ? d2Hoehe[q] : Infinity;
+    if(uXY > 0 && dW <= (uXY / r) * (uXY / r) + 1e-9) continue;
+    // TREPPE ODER LUECKE [22.09.2026]. Z-konstantes Schruppen laesst an
+    // einer SCHRAEGE per Bauart eine Treppe stehen - das ist die Arbeit des
+    // Schlichters und kein Befund. Ueber einer WAAGERECHTEN Flaeche gibt es
+    // dagegen keinen Grund, etwas stehen zu lassen: dort hat die Ebenenwahl
+    // sie verfehlt. Beides wird gezaehlt, aber nur die Luecke ist ein
+    // Befund. Unterschieden wird an der Neigung der SOLLFORM unter der
+    // Zelle (Gefaelle ueber die vier Nachbarn).
     const soll = Math.max(G.soll[q] + uZ, zEnde);
     if(soll >= zOben - 1e-6) continue;                     // dort war nichts wegzunehmen
     const d = Math.min(G.stand[q], zOben) - soll;
+    // Treppe an einer Schraege: gewollt, kein Befund (siehe oben).
+    // Die Treppe entsteht auf einer SCHRAEGE. An einer senkrechten WAND
+    // springt die Sollform zwischen zwei Nachbarzellen um ihre ganze Hoehe -
+    // der Gradient ist dann riesig, und die Zelle gilt faelschlich als
+    // Schraege. Gemessen an der Tasche mit scharfen Ecken: die vier
+    // Eckreste verschwanden aus der Meldung. Darum ein Fenster.
+    const stH = (d > 0.001) ? steilHier(q) : 0;
+    // Und sie ist hoechstens EINE ZUSTELLUNG hoch (plus Aufmass und eine
+    // Rasterweite Zugabe): so entsteht sie. Steht mehr, hat die Bahn dort
+    // etwas ausgelassen - zum Beispiel wegen des minimalen Materialabtrags -
+    // und das ist ein Befund, keine Treppe.
+    // Die Zugabe ist die Hoehe, die eine RASTERZELLE auf dieser Schraege
+    // ueberdeckt (tan(Neigung) mal Rasterweite) plus eine halbe Zelle
+    // Messunsicherheit - bei 45 Grad und Raster 0,3 also 0,6 mm.
+    if(stH > F_REST_EBEN_GRAD && stH < F_REST_WAND_GRAD &&
+       d <= dz + uZ + r * (1 + Math.tan(stH * Math.PI / 180)) + 1e-9){
+      treppeZellen++; if(d > treppeMax) treppeMax = d;
+      // Fuer die BREITENMESSUNG zaehlt die Treppe als bearbeitet: die Breite
+      // ist der Abstand zur naechsten bearbeiteten Stelle, und die Treppe ist
+      // gefahren. Ohne das misst ein Teil aus lauter Schraegen "0 mm breit".
+      fertig[q] = 1;
+      continue;
+    }
     zuViel[q] = d;
     if(d <= 0.001) fertig[q] = 1;
   }
@@ -11595,14 +11821,30 @@ function fBahnModell(s, tool, prog){
   else if(senkrecht) warn.push('Alle ' + senkrecht + ' Zuege stechen SENKRECHT auf Ebenentiefe ein'
     + (pendeln ? (wAngle > 0 ? ' (kein Zug ist lang genug zum Pendeln)' : ' — T' + s.t + ' hat keinen Eintauchwinkel ANGLE in der Werkzeugtabelle; mit ANGLE taucht die Bahn im Schnitt ein') : ' (Feld Eintauchen steht auf senkrecht)')
     + ' — dort muss das Werkzeug ueber Mitte schneiden koennen.');
-  if(restZellen && !fertigN) warn.push('Stehen geblieben: ' + flaeche + ' mm2 (' + restZellen
+  if(treppeZellen) warn.push('Die TREPPE an den Schraegen steht noch: ' + fRund(treppeZellen * r * r) + ' mm2, bis ' + fRund(treppeMax)
+    + ' mm hoch — das ist beim Z-konstanten Schruppen so gewollt (jede Ebene endet waagerecht) und gehoert dem Schlichten. Sie zaehlt NICHT als Restmaterial.');
+  // "NIRGENDS erreicht" gilt nur, wenn wirklich nichts gelungen ist. Ein
+  // Teil, das fast ganz aus Schraegen besteht (Rampenblock), hat keine
+  // einzige FERTIGE Zelle - die Treppe ist aber gefahren, und die Meldung
+  // waere eine Luege.
+  if(restZellen && !fertigN && !treppeZellen) warn.push('Stehen geblieben: ' + flaeche + ' mm2 (' + restZellen
     + ' Rasterstellen), bis ' + fRund(restMax) + ' mm hoch — NIRGENDS ist die Sollform samt Aufmass erreicht. ⌀'
     + fRund(2 * rt) + ' ist fuer dieses Teil zu gross, oder die Tiefe Z1 reicht nicht bis an die Sollform heran.');
+  // EIN SAUM IST KEIN BEFUND [22.09.2026]. Liegt die breiteste Stelle unter
+  // einer Rasterweite, ist sie die Rechengenauigkeit des Arbeitsgitters -
+  // die Werkzeugmitte darf nur auf Rasterstellen stehen, und die Grenze
+  // traegt eine halbe Zellendiagonale Zugabe. Eine Meldung, die ihre eigene
+  // Belanglosigkeit erklaert, gehoert in den Bericht und nicht nach oben.
+  else if(restZellen && breit < r + 1e-9) warn.push('Saum an den Kanten: ' + flaeche + ' mm2 (' + restZellen
+    + ' Rasterstellen), bis ' + fRund(restMax) + ' mm hoch, nirgends breiter als eine Rasterweite (' + fRund(r)
+    + ' mm) — das ist die Rechengenauigkeit des Arbeitsgitters, kein Material fuer ein kleineres Werkzeug.');
   else if(restZellen) warn.push('Stehen geblieben: ' + flaeche + ' mm2 (' + restZellen + ' Rasterstellen), bis '
     + fRund(restMax) + ' mm hoch und bis ' + fRund(breit) + ' mm breit, am meisten bei X' + fRund(restX) + ' Y' + fRund(restY)
     + '. Ein Saum in der Groesse des Arbeitsrasters (' + fRund(r) + ' mm) ist die Rechengenauigkeit; breitere Stellen erreicht ⌀'
     + fRund(2 * rt) + ' nicht — dort mit einem kleineren Werkzeug nachsetzen.');
   else warn.push('Kein Restmaterial: das Werkzeug erreicht ueberall die Sollform samt Aufmass.');
+  if(kratzer) warn.push(kratzer + ' Zug/Zuege (' + fRund(kratzerMm) + ' mm) sind wegen MINIMALEM MATERIALABTRAG ausgelassen: dort stand im Mittel weniger als '
+    + fRund(abtragMin) + ' mm Eingriffsbreite an — die volle Fahrzeit fuer fast nichts. Was dort stehen bleibt, ist im Restmaterial enthalten; mit 0 im Feld faehrt die Bahn wieder jeden Zug.');
   if(ausgelassen) warn.push(ausgelassen + ' Zug/Zuege (' + fRund(ausgelassenMm) + ' mm) sind AUSGELASSEN: dort waere ein Eintauchen im Material noetig gewesen, und das Feld Anfahren & Eintauchen steht auf "nur von aussen" — das Material bleibt stehen und steht im Restmaterial.');
   if(istRest && kette) warn.push('Bezug: Schritt ' + kette.nr + ' (T' + kette.schritt.t + ' ⌀' + fRund(+kette.werkzeug.d) + '), der letzte Schruppschritt davor. Gefahren wird nur, wo der etwas stehen gelassen hat — mit seinem wirklich gefraesten Stand, nicht mit einer Annahme. Rest schmaler als ' + fRund(restAbMm) + ' mm gilt als Saum und bleibt dem Schlichten' + (saumZellen ? ' (' + fRund(saumZellen * r * r) + ' mm2 davon stehen noch)' : '') + '.');
   else if(istRest) warn.push('Bezug: kein Schruppschritt davor im Arbeitsplan — gerechnet mit der Annahme, ein Vorwerkzeug ⌀' + fRund(2 * rVor) + ' habe alles erreicht, was es erreichen konnte (alte Programme, Proben des Planers).');
@@ -12710,6 +12952,14 @@ function fBahnSchlichtenKomplett(s, tool, prog){
 // die WebGL-Aufrufe. Bewusst NICHT gebaut: Halter und Spannmittel (Daniels
 // Ansage), SL-Zyklen 20-24 (gibt es in der App nicht).
 // ---------------------------------------------------------------------
+// Bis zu welcher Neigung gilt eine Sollflaeche als WAAGERECHT? Darueber ist
+// stehengebliebenes Material die Treppe des Z-konstanten Schruppens, darunter
+// eine Luecke der Ebenenwahl [22.09.2026]. 5 Grad ist dieselbe Grenze, mit
+// der die Schlichtbahn ihr unteres Winkelband beginnt.
+var F_REST_EBEN_GRAD = 5;
+// Darueber ist es keine Schraege mehr, sondern eine Wand - dort ist
+// stehengebliebenes Material eine Ecke, kein Treppenabsatz.
+var F_REST_WAND_GRAD = 80;
 var F_SIM_EILGANG = 6000;   // mm/min fuer FMAX in der Zeitachse (kein NC-Wort, nur Anzeige)
 // Kegelmass der Werkzeugspitze: Hoehe je mm Radius (cot des halben
 // Spitzenwinkels). 0 = flach (Fraeser, Reibahle, Bohrstange).
@@ -15842,7 +16092,7 @@ function fDemoStepRampe(){
   Object.assign(p.kopf, {x0:0, y0:0, z0:-18, x1:80, y1:50, z1:0, sc:2, sc2:50, oberflaeche:0, rz:100, stand:'07'});
   // Schruppen mit dem Schaftfraeser 12, schlichten mit dem Kugelfraeser 8.
   const a = fSchrittNeu(p, 'modellSchruppen', 13);
-  Object.assign(a, {q203:0, tiefe:-18, zust:4, aufSeite:0.5, aufTiefe:0.3, ae:50, aeArt:'%', bahnSinn:0,   // ae 50 % von ⌀12 = 6 mm, wie vorher ueberl 1 x R
+  Object.assign(a, {q203:0, tiefe:-18, zust:4, aufSeite:0.5, aufTiefe:0.3, ae:50, aeArt:'%', bahnSinn:0, ebenenArt:'gleich',   // ae 50 % von ⌀12 = 6 mm, wie vorher ueberl 1 x R
                     sc:2, sc2:50, s:3200, f:570, fTief:200});
   // Kugelfraeser 10 (LCUTS 20): der 8er hat nur 16 mm Schneide und
   // reicht fuer 18 mm Tiefe nicht - die App sagt das auch.
@@ -15867,11 +16117,11 @@ function fDemoStepRest(){
   p.kopf.name = 'DZ23';
   Object.assign(p.kopf, {x0:0, y0:0, z0:-12, x1:60, y1:40, z1:0, sc:2, sc2:50, oberflaeche:0, rz:100, stand:'07'});
   const a = fSchrittNeu(p, 'modellSchruppen', 16);
-  Object.assign(a, {q203:0, tiefe:-6, zust:2, aufSeite:0.5, aufTiefe:0.2, ae:40, aeArt:'%', bahnSinn:0, eintauch:2,
+  Object.assign(a, {q203:0, tiefe:-6, zust:2, aufSeite:0.5, aufTiefe:0.2, ae:40, aeArt:'%', bahnSinn:0, eintauch:2, ebenenArt:'gleich',
                     sc:2, sc2:50, s:1900, f:520, fTief:160});
   p.schritte = [a];
   const b = fSchrittNeu(p, 'modellRest', 11);      // erbt Tiefe, Aufmass und Bahnwerte vom Bezug (Schritt 1)
-  Object.assign(b, {eintauch:3, restAb:0, s:4800, f:570, fTief:180});
+  Object.assign(b, {eintauch:3, restAb:0, ebenenArt:'gleich', s:4800, f:570, fTief:180});
   // Boeden und Waende schlichten mit dem Schaftfraeser 10 (Platz 12), Aufmass 0
   // [20.09.2026]: das Material ist das Aufmass des Schruppens (UXY 0,5 / UZ 0,2);
   // die Waende kommen exakt aus den Schleifen der Ebenen des Modells.
@@ -15902,7 +16152,7 @@ function fDemoStepRampeR2(){
   // die Bahn rechnet trotzdem mit der scharfen (Ebenenmaske aus rt + UXY).
   // Das ist die sichere Seite, es bleibt hoechstens etwas mehr stehen.
   const a = fSchrittNeu(p, 'modellSchruppen', 19);
-  Object.assign(a, {q203:0, tiefe:-18, zust:4, aufSeite:0.4, aufTiefe:0.25, ae:40, aeArt:'%', bahnSinn:0,
+  Object.assign(a, {q203:0, tiefe:-18, zust:4, aufSeite:0.4, aufTiefe:0.25, ae:40, aeArt:'%', bahnSinn:0, ebenenArt:'gleich',
                     sc:2, sc2:50, s:3200, f:570, fTief:200});
   // Schlichten mit demselben Werkzeug: die Bahn haelt jetzt das GANZE
   // Werkzeug (⌀12) von der Sollform frei und legt sich mit der Rundung R2 an.
@@ -16265,6 +16515,8 @@ const F_BAHNBERICHT = [
   // Pruefstand hat das Muster als tot gemeldet; nachgesehen war es falsch.
   /^Restmaterial abspanen: \d+ Ebene/,
   /^Eckenradiusfraeser: die Rautiefe gilt/,
+  /^Die TREPPE an den Schraegen steht noch:/,
+  /^Saum an den Kanten:/,
   /^\d+ Zug\/Zuege tauchen PENDELND/,
   /^Bezug: Schritt \d+/,
   /^BOEDEN UND WAENDE SCHLICHTEN:/,
