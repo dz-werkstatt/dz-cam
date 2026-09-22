@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="22.09.2026 22:35 (9f950a0f)";</script>
+<script>window.__DZ_STAND="22.09.2026 23:32 (1b8ce40e)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3573,6 +3573,20 @@ zwischen zwei Ringen, und der letzte Ring l&auml;uft im Abstand Werkzeugradius +
 gilt wie bei den Zeilen: im Gleichlauf liegt das Material (zur Form hin) rechts der Fahrtrichtung, die Ringe laufen im Uhrzeigersinn um das Teil; &bdquo;beides&ldquo;
 f&auml;hrt die Ringe im Gleichlauf. Anfahren und Eintauchen, Rest ab Breite und der Bezug des Rest-Schritts gelten unver&auml;ndert. Konturparallel ist die Wahl f&uuml;r
 Taschen und Inseln mit runden W&auml;nden; an langen geraden Kanten ist der M&auml;ander k&uuml;rzer. Der Bericht der Bahn nennt die Zahl der Ringe je Ebene.</dd>
+<dt id="ba-fk05c-eckenradius">Kugelfr&auml;ser oder Eckenradiusfr&auml;ser (22.09.2026)</dt><dd>Schr&auml;gen &uuml;ber die Rautiefe schlichtet nicht nur der <b>Kugelfr&auml;ser</b>.
+Jedes Werkzeug mit einer <b>runden Schneidenkante</b> kann es: ein VHM-Schaftfr&auml;ser mit Eckenradius R2, ein Eckfr&auml;ser mit Wendeschneidplatten mit Radius,
+ein Aufsteckfr&auml;ser auf dem Dorn. In der Werkzeugtabelle steht der Radius in der Spalte <b>R2</b> &mdash; beim Kugelfr&auml;ser ist er der halbe Durchmesser,
+beim Eckenradiusfr&auml;ser kleiner. Ohne R2 lehnt die Bahn ab: ein scharfkantiger Fr&auml;ser schneidet mit der Ecke, und die Rautiefenformel gilt f&uuml;r ihn nicht.
+<br><b>ZWEI RADIEN, und sie tun Verschiedenes.</b> Der <b>Eckenradius R2</b> bestimmt den <b>Bahnabstand</b>: s = Wurzel(8 &middot; R2 &middot; Rz). Ein &#x2300;16 mit R2
+braucht also dieselben Bahnen wie ein &#x2300;4-Vollradius, nicht weniger. Der <b>halbe Durchmesser</b> bestimmt, <b>wie tief die Spitze stehen darf</b>: die Bahn h&auml;lt das
+ganze Werkzeug von der Sollform frei. Bis zum 22.09.2026 rechnete sie nur mit R2 &mdash; ein &#x2300;16 mit R2 fuhr an einer 45-Grad-Rampe gemessen <b>6 mm ins Teil</b>.
+<br><b>Was ein Eckenradiusfr&auml;ser anders macht:</b> auf einer <b>waagerechten</b> Fl&auml;che schneidet er flach und l&auml;sst gar keinen Kamm stehen &mdash; die Rautiefe
+ist dort eine Zugabe, kein Ma&szlig;. Daf&uuml;r kommt er in eine <b>Kehle enger als R2</b> nicht hinein und an eine <b>Wand</b> nur bis auf seinen halben Durchmesser.
+Beides steht im Bericht der Bahn, mit den Zahlen des eingetragenen Werkzeugs.
+<br><b>Der Planer</b> w&auml;hlt f&uuml;r das Schlichten den <b>gr&ouml;&szlig;ten Eckenradius</b>, bei gleichem Radius den kleineren Durchmesser (er kommt weiter). Zum Planen
+und Abspanen nimmt er weiter die flachen Werkzeuge &mdash; ein Eckenradiusfr&auml;ser darf beides und steht daf&uuml;r auch zur Verf&uuml;gung.
+<br><b>Vorlage DZ25</b> zeigt es an demselben Teil wie DZ22: Rampenblock, abspanen und schlichten mit dem Schaftfr&auml;ser &#x2300;12 R2, Rautiefe 0,02 mm
+(mit R2 statt R5 w&auml;ren f&uuml;r 0,01 mm nur 0,283 mm Bahnabstand erlaubt &mdash; weniger als eine Rasterweite; die App sagt das, wenn es nicht aufgeht).</dd>
 <dt id="ba-fk05c-boeden">B&ouml;den und W&auml;nde schlichten &mdash; mit dem Schaftfr&auml;ser (20.09.2026)</dt><dd>Die dritte Kachel der Gruppe STEP-Modell.
 Nach dem Schruppen (Modell abspanen, Restmaterial abspanen) bleibt an den W&auml;nden UXY und auf den B&ouml;den UZ stehen; dieser Schritt nimmt beides mit Aufma&szlig; 0 weg.
 <b>W&auml;nde</b> f&auml;hrt er <b>exakt</b>: jede waagerechte Fl&auml;che des Modells bringt ihre Randkonturen mit (sie h&auml;ngen seit dem 20.09.2026 an der Sollform &mdash; eine
@@ -5433,6 +5447,12 @@ function fWerkzeugeVorgabe(){
     {nr:2,  name:'Planfraeser 63 (WSP)',   art:'fraeser', d:63, lcuts:6,  angle:0, schaftD:63, auskrag:45, halterD:50, s:1000, f:1000},
     {nr:3,  name:'Planfraeser 52 (WSP)',   art:'fraeser', d:52, lcuts:6,  angle:0, schaftD:52, auskrag:40, halterD:40, s:1200, f:980},
     {nr:4,  name:'Eckfraeser 40 (WSP 90°)',art:'fraeser', d:40, lcuts:10, angle:0, schaftD:32, auskrag:65, halterD:50, s:1400, f:860},
+    // ECKENRADIUS-FRAESER mit Wendeschneidplatten: dieselben Koerper, nur
+    // mit runder Plattenecke. Sie schruppen wie ein Eckfraeser UND
+    // schlichten Schraegen ueber die Rautiefe - die Rundung R2 uebernimmt
+    // dort die Rolle, die beim Kugelfraeser der halbe Durchmesser hat.
+    {nr:5,  name:'Eckfraeser 50 R2 (WSP)', art:'fraeser', d:50, r2:2, lcuts:9,  angle:0, schaftD:50, auskrag:40, halterD:40, s:1100, f:1050},
+    {nr:6,  name:'Eckfraeser 32 R2 (WSP)', art:'fraeser', d:32, r2:2, lcuts:10, angle:0, schaftD:32, auskrag:60, halterD:50, s:1700, f:900},
     // --- Schaftfraeser: Taschen, Konturen, Nuten ----------------------
     {nr:10, name:'Schaftfraeser 6',   art:'fraeser', d:6,  lcuts:13, angle:3, schaftD:6, auskrag:30, halterD:34, s:6000, f:550},
     {nr:11, name:'Schaftfraeser 8',   art:'fraeser', d:8,  lcuts:19, angle:3, schaftD:8, auskrag:35, halterD:34, s:4800, f:570},
@@ -5446,6 +5466,9 @@ function fWerkzeugeVorgabe(){
     // Durchmesser, daran haengt die ganze Rautiefen-Rechnung.
     {nr:17, name:'Kugelfraeser 8',    art:'fraeser', d:8,  r2:4, lcuts:16, angle:3, schaftD:8, auskrag:35, halterD:34, s:4800, f:600},
     {nr:18, name:'Kugelfraeser 10',   art:'fraeser', d:10, r2:5, lcuts:20, angle:3, schaftD:10, auskrag:42, halterD:42, s:3800, f:600},
+    // Der VHM-Schaftfraeser mit Eckenradius: Daniels haeufigstes Werkzeug
+    // fuer Schraegen. Er taucht ein (ANGLE 3), schruppt und schlichtet.
+    {nr:19, name:'Schaftfraeser 12 R2', art:'fraeser', d:12, r2:2, lcuts:26, angle:3, schaftD:12, auskrag:48, halterD:42, s:3200, f:570},
     // --- Bohren: zentrieren, dann die Loecher -------------------------
     // Der NC-Anbohrer zentriert UND senkt: mit 90 Grad Spitze reicht er
     // fuer jede Senkung bis ⌀10 (Daniels Regel Nenn + 0,6 heisst: bis M8).
@@ -8625,7 +8648,15 @@ function fPlanIstKugel(w){ return (+w.d || 0) > 0 && fWerkzeugStirn(w).art === '
 function fPlanFraeser(prog, zweck){
   const wz = ((prog && prog.werkzeuge) || []).filter(w => w.art === 'fraeser' && (+w.d || 0) > 0);
   let f = [];
-  if(zweck === 'kugel') f = wz.filter(fPlanIstKugel);
+  // SCHLICHTEN BRAUCHT EINE RUNDE SCHNEIDENKANTE, KEINE KUGEL
+  // [22.09.2026]. Bis hierher kamen nur Vollradiusfraeser in Frage; ein
+  // Eckenradiusfraeser kann dieselbe Bahn fahren, und Daniel faehrt ihn
+  // haeufiger. Gewaehlt wird nach dem ECKENRADIUS, nicht nach dem
+  // Durchmesser: an ihm haengt der Bahnabstand (s = wurzel(8 r Rz)), und
+  // ein grosser Durchmesser mit kleiner Rundung braeuchte MEHR Bahnen und
+  // kaeme nebenbei in keine enge Stelle. Bei gleichem Radius gewinnt der
+  // kleinere Durchmesser - er kommt weiter.
+  if(zweck === 'kugel') f = wz.filter(w => (+w.r2 || 0) > 0);
   // Planen: der groesste, der KEINE Kugel ist. Ein Messerkopf taucht
   // nicht ein, muss er beim Planfraesen auch nicht - der Zyklus faehrt
   // seitlich an.
@@ -8634,6 +8665,7 @@ function fPlanFraeser(prog, zweck){
   // ANGLE pendelt sie sich im eigenen Zug hinunter; ohne ANGLE bliebe nur
   // der senkrechte Stich, und ob das Werkzeug das darf, ist dann geraten.
   else f = wz.filter(w => !fPlanIstKugel(w) && (+w.angle || 0) > 0);
+  if(zweck === 'kugel') return f.sort((a, b) => ((+b.r2 || 0) - (+a.r2 || 0)) || ((+a.d || 0) - (+b.d || 0)))[0] || null;
   return f.sort((a, b) => (+b.d || 0) - (+a.d || 0))[0] || null;
 }
 // Was gaebe es an diesem Modell ueberhaupt zu tun? Die Antwort steht im
@@ -8871,8 +8903,8 @@ function fPlanFlaechen(prog, A, F){
     schritte.push({art:'modellSchlichten', t:wKugel.nr, werte:{
       q203:fRund(B ? B.z1 : (+k.z1 || 0)), tiefe:fRund(zTief - (B ? B.z1 : 0)),
       winkelMin:wMin, winkel:wMax, rautiefe:0.01, tolBahn:0.005, strategie:2, ausgabe:'einzel'},
-      text:'Schraegen schlichten (' + wMin + ' bis ' + wMax + ' Grad, ' + anteil + ' % der Flaeche), Kugelfraeser ' + wKugel.nr + ' (⌀' + wKugel.d + ')'});
-  } else if(F && bef.imBand > 0) hinweise.push('Im Band ' + wMin + ' bis ' + wMax + ' Grad liegen ' + anteil + ' % der Flaeche, aber die Tabelle hat keinen Kugelfraeser — nicht geschlichtet.' + holWeg);
+      text:'Schraegen schlichten (' + wMin + ' bis ' + wMax + ' Grad, ' + anteil + ' % der Flaeche), ' + (fWerkzeugStirn(wKugel).art === 'kugel' ? 'Kugelfraeser ' : 'Eckenradiusfraeser R' + fRund(+wKugel.r2 || 0) + ' ') + wKugel.nr + ' (⌀' + wKugel.d + ')'});
+  } else if(F && bef.imBand > 0) hinweise.push('Im Band ' + wMin + ' bis ' + wMax + ' Grad liegen ' + anteil + ' % der Flaeche, aber die Tabelle hat kein Werkzeug mit runder Schneidenkante (Kugelfraeser oder Eckenradiusfraeser mit R2) — nicht geschlichtet.' + holWeg);
   else if(F) hinweise.push('Keine Schraege im Band ' + wMin + ' bis ' + wMax + ' Grad (' + Math.round(bef.zuFlach / (bef.zellen || 1) * 100) + ' % flacher, ' + Math.round(bef.zuSteil / (bef.zellen || 1) * 100) + ' % steiler) — nichts zu schlichten.');
 
   return {schritte:schritte, hinweise:hinweise, befund:bef};
@@ -10240,20 +10272,27 @@ function fStandKopie(G){
 // GEMESSEN an Daniels "Bauteil fuer Schraubstock": ein Eilgang auf
 // Z -10,571, waehrend dort noch Material auf Z -4 stand.
 // tol ist dieselbe Schranke, mit der die Bahn oben aussortiert.
-function fStandKugelStempel(G, x0, y0, z0, x1, y1, z1, rk, tol){
+// stirn (ab 22.09.2026) ist das Unterprofil des Werkzeugs: ein
+// Eckenradiusfraeser nimmt ueber seine ganze Breite Material weg, nicht
+// nur ueber seinen Eckenradius. Ohne stirn bleibt der Kugelweg Bit fuer Bit.
+function fStandKugelStempel(G, x0, y0, z0, x1, y1, z1, rk, tol, stirn){
+  const kugelig = !stirn || stirn.art === "kugel" || !(stirn.rt > rk);
+  const reich = kugelig ? rk : stirn.rt;
   const r = G.raster, St = G.stand;
   const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / (r / 2)));
   for(let q = 0; q <= n; q++){
     const t = q / n, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t;
-    const zc = z0 + (z1 - z0) * t + rk;                 // Hoehe der Kugelmitte
-    const i0 = Math.max(0, Math.floor((x - rk - G.x0) / r)), i1 = Math.min(G.nx - 1, Math.ceil((x + rk - G.x0) / r));
-    const j0 = Math.max(0, Math.floor((y - rk - G.y0) / r)), j1 = Math.min(G.ny - 1, Math.ceil((y + rk - G.y0) / r));
+    const zs = z0 + (z1 - z0) * t;                      // Hoehe der Spitze
+    const zc = zs + rk;                                 // Hoehe der Kugelmitte
+    const i0 = Math.max(0, Math.floor((x - reich - G.x0) / r)), i1 = Math.min(G.nx - 1, Math.ceil((x + reich - G.x0) / r));
+    const j0 = Math.max(0, Math.floor((y - reich - G.y0) / r)), j1 = Math.min(G.ny - 1, Math.ceil((y + reich - G.y0) / r));
     for(let j = j0; j <= j1; j++){
       const dy = G.y0 + (j + 0.5) * r - y, o = j * G.nx;
       for(let p = i0; p <= i1; p++){
         const dx = G.x0 + (p + 0.5) * r - x, d2 = dx * dx + dy * dy;
-        if(d2 > rk * rk) continue;
-        const h = zc - Math.sqrt(rk * rk - d2);
+        if(d2 > reich * reich) continue;
+        const h = kugelig ? zc - Math.sqrt(rk * rk - d2)
+                          : zs + fStirnHoehe(stirn, Math.sqrt(d2));
         const c = o + p;
         if(tol > 0 && G.soll && St[c] > G.soll[c] + tol + 1e-6) continue;   // laesst die Bahn aus
         if(h < St[c]) St[c] = h;
@@ -10273,9 +10312,10 @@ function fStandKugelStempel(G, x0, y0, z0, x1, y1, z1, rk, tol){
 // zaehlt jetzt der naechste Punkt der Zelle: Mittenabstand minus halbe
 // Zellendiagonale. Das ist dieselbe Zugabe wie bei der Ebenenmaske des
 // Schruppens.
-function fStandFreiHoehe(G, x0, y0, x1, y1, rk){
+function fStandFreiHoehe(G, x0, y0, x1, y1, rk, stirn){
+  const kugelig = !stirn || stirn.art === "kugel" || !(stirn.rt > rk);
   const r = G.raster, St = G.stand;
-  const zu = r * Math.SQRT1_2, reich = rk + zu;
+  const zu = r * Math.SQRT1_2, reich = (kugelig ? rk : stirn.rt) + zu;
   const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / (r / 2)));
   let hoch = -Infinity;
   for(let q = 0; q <= n; q++){
@@ -10288,12 +10328,13 @@ function fStandFreiHoehe(G, x0, y0, x1, y1, rk){
         const dx = G.x0 + (p + 0.5) * r - x, d = Math.hypot(dx, dy);
         if(d > reich) continue;
         const de = Math.max(0, d - zu);
-        const v = St[o + p] + Math.sqrt(rk * rk - de * de);
+        const v = kugelig ? St[o + p] + Math.sqrt(rk * rk - de * de)
+                          : St[o + p] - fStirnHoehe(stirn, de);
         if(v > hoch) hoch = v;
       }
     }
   }
-  return isFinite(hoch) ? hoch - rk : hoch;
+  return isFinite(hoch) ? (kugelig ? hoch - rk : hoch) : hoch;
 }
 // ae IN MILLIMETERN [17.09.2026 spaet abends]. ae ist die seitliche
 // Zustellung, in Prozent vom Werkzeug-Durchmesser (Vorgabe 40 %) oder in
@@ -10613,9 +10654,9 @@ function fBahnSchlichtenEben(s, tool, prog){
   }
   if(!B.length) return nein(Z.uebersprungen.length ? Z.uebersprungen.join('; ') : ('im Bereich Z' + zTief + '..Z' + zOben + ' liegt keine waagerechte Flaeche unter der Oberkante und keine Wand'));
   B.push({a:'eil', z:sicher});
-  warn.unshift('BOEDEN UND WAENDE SCHLICHTEN: ' + Z.waende + ' Wand/Waende exakt entlang der Konturen der Ebenen (Aufmass 0, ' + Z.ebenenW + ' Z-Ebene(n) im Schritt ' + dzW + '), ' + Z.boeden + ' Boden/Boeden auf ' + (boeden.length ? boeden.map(z => 'Z' + z).join(', ') : '—') + ' mit ' + Z.zuege + ' Zuegen — das Material ist das Aufmass des Schruppens. Schraegen gehoeren dem Kugelfraeser (Schraegen schlichten).');
+  warn.unshift('BOEDEN UND WAENDE SCHLICHTEN: ' + Z.waende + ' Wand/Waende exakt entlang der Konturen der Ebenen (Aufmass 0, ' + Z.ebenenW + ' Z-Ebene(n) im Schritt ' + dzW + '), ' + Z.boeden + ' Boden/Boeden auf ' + (boeden.length ? boeden.map(z => 'Z' + z).join(', ') : '—') + ' mit ' + Z.zuege + ' Zuegen — das Material ist das Aufmass des Schruppens. Schraegen gehoeren dem Schritt Schraegen schlichten (Kugel- oder Eckenradiusfraeser).');
   if(Z.ohneMaterial) warn.push(Z.ohneMaterial + ' Kantensegment(e) mit Hoehensprung, an denen nach dem Schruppen nichts mehr steht (Aussenkante des Teils, schon geschlichtet) — keine Wand fuer diesen Schritt.');
-  if(Z.schraegen) warn.push(Z.schraegen + ' Kante(n) grenzen an eine SCHRAEGE — keine Wand fuer diesen Schritt; Schraegen gehoeren dem Kugelfraeser (Schraegen schlichten).');
+  if(Z.schraegen) warn.push(Z.schraegen + ' Kante(n) grenzen an eine SCHRAEGE — keine Wand fuer diesen Schritt; Schraegen gehoeren dem Schritt Schraegen schlichten (Kugel- oder Eckenradiusfraeser).');
   if(Z.gemischt) warn.push('MODELL: ' + Z.gemischt + ' Kante(n) wechseln laengs ihrer Laenge die Nachbarflaeche (' + Z.gemischtOrte.slice(0, 3).join('; ') + (Z.gemischt > 3 ? '; …' : '') + ') — das Modell teilt seine Kanten nicht an den Nachbarflaechen. Diese Waende werden NICHT geschlichtet, weil die Trennstelle nur auf eine halbe Rasterweite genau laege: das Modell im CAD nachbauen oder die Wand als Konturzug programmieren.');
   if(Z.uebersprungen.length) warn.push('UEBERSPRUNGEN: ' + Z.uebersprungen.join(' | '));
   return {ok:true, bahn:B, warn:warn, waende:Z.waende, ebenenW:Z.ebenenW, boeden:Z.boeden, zuege:Z.zuege, bodenHoehen:boeden, uebersprungen:Z.uebersprungen, ausgelassen:Z.ausgelassen, ohneMaterial:Z.ohneMaterial, anBoden:Z.anBoden, schraegen:Z.schraegen, gemischt:Z.gemischt};
@@ -11621,13 +11662,32 @@ function fStandVorSchlicht(F, prog, s){
 // nur = Maske der Zellen, fuer die die Versatzflaeche gebraucht wird
 // (null = alle). Die Kappe tastet immer das ganze Hoehenfeld ab — nur die
 // ERGEBNISZELLEN sind eingeschraenkt, die Flaeche bleibt also dieselbe.
-function fBallFeld(F, r, nur){
-  const rr = F.raster, k = Math.max(1, Math.round(r / rr));
+// DIE REICHWEITE IST DER WERKZEUGRADIUS, NICHT DER ECKENRADIUS
+// [22.09.2026, Daniels Frage nach dem Eckenradiusfraeser]. Beim
+// Kugelfraeser sind beide gleich, und nur dafuer war die Rechnung
+// gebaut. Ein Schaftfraeser ⌀16 mit R2 2 greift aber bis 8 mm von
+// seiner Achse: eine Kugel-Dilatation mit r 2 laesst ihn in Stellen
+// fahren, in die er nie hineinkommt. GEMESSEN an der 45-Grad-Rampe:
+// 6,000 mm Einschnitt (Kugelfraeser am selben Teil: 0,000).
+// Richtig ist die Dilatation mit dem eigenen UNTERPROFIL: die Spitze
+// darf nur so tief, dass an KEINER Stelle der Scheibe die Unterseite
+// unter der Sollform liegt, also zSpitze = max ueber rho <= rt von
+// ( h − g(rho) ) mit g aus fStirnHoehe. Gespeichert wird weiter
+// zSpitze + r (beim Kugelfraeser die Mittenhoehe), damit jede
+// abgeleitete Stelle unveraendert "− rk" rechnen kann.
+function fBallFeld(F, r, nur, stirn){
+  // Ohne Stirn (und beim Kugelfraeser) bleibt die alte Rechnung Bit fuer
+  // Bit stehen — r − g(rho) IST dort wurzel(r² − rho²).
+  const kugelig = !stirn || stirn.art === "kugel" || !(stirn.rt > r);
+  const reich = kugelig ? r : stirn.rt;
+  const hebe = kugelig ? (d2) => Math.sqrt(Math.max(0, r * r - d2))
+                       : (d2) => r - fStirnHoehe(stirn, Math.sqrt(d2));
+  const rr = F.raster, k = Math.max(1, Math.round(reich / rr));
   const di = [], dj = [], dh = [];
   for(let b = -k; b <= k; b++) for(let a = -k; a <= k; a++){
     const d2 = (a * a + b * b) * rr * rr;
-    if(d2 > r * r) continue;
-    di.push(a); dj.push(b); dh.push(Math.sqrt(r * r - d2));
+    if(d2 > reich * reich) continue;
+    di.push(a); dj.push(b); dh.push(hebe(d2));
   }
   const n = di.length, B = new Float32Array(F.nx * F.ny);
   if(nur) B.fill(-Infinity);
@@ -11660,7 +11720,7 @@ function fBallFeld(F, r, nur){
   // Nur Zellen, die der Stempel ueberhaupt gerechnet hat, werden
   // angehoben: ausserhalb der Maske steht -Infinity und das bleibt so.
   if(F.kanten && F.kanten.length){
-    const schritt = Math.max(rr * 0.4, 0.02), r2 = r * r;
+    const schritt = Math.max(rr * 0.4, 0.02), reichQ = reich * reich;
     for(let e = 0; e < F.kanten.length; e++){
       const P = F.kanten[e];
       for(let q2 = 0; q2 + 1 < P.length; q2++){
@@ -11671,18 +11731,18 @@ function fBallFeld(F, r, nur){
         for(let t = 0; t <= m2; t++){
           const u = t / m2;
           const px = a0[0] + dx0 * u, py = a0[1] + dy0 * u, pz = a0[2] + dz0 * u;
-          const i0 = Math.max(0, Math.floor((px - r - F.x0) / rr));
-          const i1 = Math.min(F.nx - 1, Math.ceil((px + r - F.x0) / rr));
-          const j0 = Math.max(0, Math.floor((py - r - F.y0) / rr));
-          const j1 = Math.min(F.ny - 1, Math.ceil((py + r - F.y0) / rr));
+          const i0 = Math.max(0, Math.floor((px - reich - F.x0) / rr));
+          const i1 = Math.min(F.nx - 1, Math.ceil((px + reich - F.x0) / rr));
+          const j0 = Math.max(0, Math.floor((py - reich - F.y0) / rr));
+          const j1 = Math.min(F.ny - 1, Math.ceil((py + reich - F.y0) / rr));
           for(let j = j0; j <= j1; j++){
             const dy = F.y0 + (j + 0.5) * rr - py, o = j * F.nx;
             for(let i = i0; i <= i1; i++){
               const dx = F.x0 + (i + 0.5) * rr - px, d2 = dx * dx + dy * dy;
-              if(d2 > r2) continue;
+              if(d2 > reichQ) continue;
               const c = o + i;
               if(!(B[c] > -Infinity)) continue;
-              const v = pz + Math.sqrt(r2 - d2);
+              const v = pz + hebe(d2);
               if(v > B[c]) B[c] = v;
             }
           }
@@ -12014,14 +12074,18 @@ function fBahnSchlichten(s, tool, prog){
   const nein = (g) => ({ok:false, grund:g, bahn:[], warn:warn});
   const F = F_SOLLFELD;
   if(!F) return nein('keine Sollform geladen — im STEP-Fenster ein Modell laden und "Sollform ans Programm" druecken');
-  // Der Kugelradius steht in der Werkzeugtabelle als R2 (Eckenradius der
-  // TOOL.T). Beim Vollradiusfraeser ist R2 gleich dem Werkzeugradius; ein
-  // Schaftfraeser mit R2 = 0 taugt fuer diese Bahn nicht — er wuerde mit der
-  // Ecke schneiden, und die Rautiefenformel gilt fuer ihn nicht.
+  // ZWEI RADIEN, und sie sind nicht dasselbe [22.09.2026, Daniels Hinweis,
+  // dass er "eher haeufiger Schaftfraeser mit einem Eckenradius" faehrt]:
+  // rk ist der ECKENRADIUS R2 — an ihm haengt die Rautiefe, denn mit dieser
+  // Rundung schneidet das Werkzeug auf der Schraege. rt ist der halbe
+  // DURCHMESSER — so weit greift der Koerper, und danach richtet sich, wie
+  // tief die Spitze stehen darf. Beim Kugelfraeser sind beide gleich, und
+  // nur deshalb ist der Unterschied lange nicht aufgefallen.
   const rt = (tool && +tool.d > 0) ? +tool.d / 2 : 0;
   const rk = (tool && +tool.r2 > 0) ? +tool.r2 : 0;
+  const stirn = fWerkzeugStirn(tool);
   if(!(rt > 0)) return nein('Werkzeug-Durchmesser fehlt (Werkzeugtabelle)');
-  if(!(rk > 0)) return nein('T' + s.t + ' hat keinen Eckenradius R2 — die Rautiefe gilt fuer den KUGELFRAESER; in der Werkzeugtabelle R2 eintragen');
+  if(!(rk > 0)) return nein('T' + s.t + ' hat keinen Eckenradius R2 — diese Bahn braucht eine RUNDE Schneidenkante (Kugelfraeser oder Eckenradiusfraeser); ein scharfkantiger Schaftfraeser wuerde mit der Ecke schneiden. R2 in der Werkzeugtabelle eintragen');
   if(rk > rt + 1e-9) return nein('Eckenradius R2 ' + fRund(rk) + ' ist groesser als der Werkzeugradius ' + fRund(rt));
   const rz = +s.rautiefe || 0;
   if(!(rz > 0)) return nein('Rautiefe fehlt — sie ist das Mass dieser Bahn');
@@ -12102,7 +12166,7 @@ function fBahnSchlichten(s, tool, prog){
   // Abstand auf einer Schraege um cos alpha kleiner — gerechnet wird mit der
   // steilsten wirklich bearbeiteten Stelle, damit die Rautiefe ueberall haelt.
   // Die Versatzflaeche erst JETZT, und nur wo sie gebraucht wird.
-  const BF = fBallFeld(F, rk, fMaskeWeiten(gut, nx, ny, Math.max(2, Math.ceil(3 * Math.sqrt(8 * rk * rz) / r))));
+  const BF = fBallFeld(F, rk, fMaskeWeiten(gut, nx, ny, Math.max(2, Math.ceil(3 * Math.sqrt(8 * rk * rz) / r))), stirn);
   const sFlaeche = Math.sqrt(8 * rk * rz);
   const schrittMm = sFlaeche * Math.cos(aMax * Math.PI / 180);
   // ABRUNDEN, nie runden: eine Rasterweite zu viel heisst ein groesserer
@@ -12241,20 +12305,20 @@ function fBahnSchlichten(s, tool, prog){
         // wirklich etwas steht, muss der Eilgang darueber, auch wenn das
         // ueber Z0 + SC2 liegt.
         let zv = fRund(Math.min(sicher, Math.max(fBallMax(BF, F, letzt[0], letzt[1], A0[0], A0[1]) - rk, letzt[2], A0[2]) + sc));
-        if(SG){ const hs = fStandFreiHoehe(SG, letzt[0], letzt[1], A0[0], A0[1], rk); if(isFinite(hs) && hs + sc > zv) zv = fRund(hs + sc); }
+        if(SG){ const hs = fStandFreiHoehe(SG, letzt[0], letzt[1], A0[0], A0[1], rk, stirn); if(isFinite(hs) && hs + sc > zv) zv = fRund(hs + sc); }
         if(zv >= sicher - 1e-9) spruenge++;
         eil({z:zv}); eil({x:A0[0], y:A0[1]});
       }
       // Abwaerts nur bis SC ueber das, was an der Anfahrstelle steht — den
       // Rest faehrt der Eintauchvorschub. Dieselbe Regel wie beim Abspanen.
       let zA = fRund(A0[2] + sc);
-      if(SG){ const ha = fStandFreiHoehe(SG, A0[0], A0[1], A0[0], A0[1], rk); if(isFinite(ha) && ha + sc > zA) zA = fRund(ha + sc); }
+      if(SG){ const ha = fStandFreiHoehe(SG, A0[0], A0[1], A0[0], A0[1], rk, stirn); if(isFinite(ha) && ha + sc > zA) zA = fRund(ha + sc); }
       eil({z:zA});
       vor({z:A0[2], f:(+s.fTief > 0) ? +s.fTief : f});
       }
       for(let q = 1; q < D2.length; q++) vor({x:D2[q][0], y:D2[q][1], z:D2[q][2], f:f});
       if(SG) for(let q = 1; q < D2.length; q++)
-        fStandKugelStempel(SG, D2[q-1][0], D2[q-1][1], D2[q-1][2], D2[q][0], D2[q][1], D2[q][2], rk, sTol);
+        fStandKugelStempel(SG, D2[q-1][0], D2[q-1][1], D2[q-1][2], D2[q][0], D2[q][1], D2[q][2], rk, sTol, stirn);
       punkte += D2.length; zuege++; letzt = D2[D2.length - 1];
     });
   }
@@ -12264,7 +12328,7 @@ function fBahnSchlichten(s, tool, prog){
   eil({z:sicher});
   warn.push('Schraegen schlichten: ' + zuege + ' Zug/Zuege, ' + punkte + ' Punkte (roh ' + roh
     + ', mit Sehnentoleranz ' + fRund(tol) + ' mm ausgeduennt). Bahnabstand ' + fRund(istMm)
-    + ' mm aus Rautiefe ' + fRund(rz) + ' und Kugelradius ' + fRund(rk)
+    + ' mm aus Rautiefe ' + fRund(rz) + ' und Eckenradius ' + fRund(rk)
     + ' (erlaubt waeren ' + fRund(schrittMm) + ' mm bei der steilsten bearbeiteten Stelle '
     + fRund(aMax) + ' Grad; gefahrene Rautiefe ' + fRund(istRz) + ' mm).');
   // Die Zeilenrichtung ist keine Nebensache — sie entscheidet, ob die Kugel
@@ -12275,7 +12339,7 @@ function fBahnSchlichten(s, tool, prog){
       + ' Rasterstellen: Gefaelle in X ' + fRund(achse.sx / Math.max(1, achse.n))
       + ', in Y ' + fRund(achse.sy / Math.max(1, achse.n)) + ' je Zelle).'
     : ' — von Hand gewaehlt. Quer zum Gefaelle bleibt Z auf der Zeile nahezu konstant und die Kugel schneidet mit der Flanke; laengs dazu faehrt sie die Schraege hinauf und hinunter.'));
-  if(istRz > rz + 1e-9) warn.push('Die Rautiefe ' + fRund(rz) + ' mm ist mit diesem Raster NICHT zu halten: der Bahnabstand kann nur ein Vielfaches der Rasterweite ' + fRund(r) + ' mm sein, gefahren wird ' + fRund(istMm) + ' mm und damit ' + fRund(istRz) + ' mm Rautiefe. Kleineres Modell-Raster waehlen oder groesseren Kugelradius.');
+  if(istRz > rz + 1e-9) warn.push('Die Rautiefe ' + fRund(rz) + ' mm ist mit diesem Raster NICHT zu halten: der Bahnabstand kann nur ein Vielfaches der Rasterweite ' + fRund(r) + ' mm sein, gefahren wird ' + fRund(istMm) + ' mm und damit ' + fRund(istRz) + ' mm Rautiefe. Kleineres Modell-Raster waehlen oder groesseren Eckenradius.');
   if(nSteil) warn.push(nSteil + ' Rasterstelle(n) sind steiler als der Grenzwinkel ' + fRund(grenz)
     + ' Grad — sie bekommen im selben Schritt die Z-konstante Bahn (seit 16.09.2026).');
   if(nFlach) warn.push(nFlach + ' Rasterstelle(n) sind flacher als ' + fRund(grenzU)
@@ -12285,7 +12349,14 @@ function fBahnSchlichten(s, tool, prog){
   warn.push(SG
     ? 'Ueberflug und Anfahrt rechnen gegen den STAND nach dem Schruppen, nicht nur gegen die Sollform — ein Eilgang faehrt damit nicht in Material, das das Schruppen gelassen hat.'
     : 'ACHTUNG: Ueberflug und Anfahrt rechnen gegen die SOLLFORM. Was das Schruppen stehen liess, kennt diese Bahn nicht — der Eilgang koennte dort hineinfahren. Den Stand legt der Planer bei (Programm vorschlagen); von Hand angelegte Schritte haben ihn nicht.');
-  warn.push('Z ist die KUGELUNTERKANTE (die Spitze), so wie die Werkzeuglaenge L gemessen wird — nicht die Kugelmitte.');
+  // WAS EIN ECKENRADIUSFRAESER ANDERS MACHT [22.09.2026, Daniels Hinweis]:
+  // seine Rundung sitzt aussen, die Mitte ist flach. Auf einer WAAGERECHTEN
+  // Flaeche laesst er darum gar keinen Kamm stehen - die Rautiefe ist dort
+  // eine Zugabe, kein Mass. Dafuer greift er bis zu seinem halben
+  // Durchmesser: in eine Innenkehle kommt er nur so weit wie sein
+  // Eckenradius, obwohl die Bahn mit diesem Radius rechnet.
+  if(stirn && stirn.art === 'torus') warn.push('Eckenradiusfraeser: die Rautiefe gilt fuer die SCHRAEGE (dort schneidet die Rundung R' + fRund(rk) + '); auf waagerechten Flaechen bleibt kein Kamm stehen. Die Bahn haelt das ganze Werkzeug (⌀' + fRund(2 * rt) + ') von der Sollform frei - eine Innenkehle enger als R' + fRund(rk) + ' bleibt stehen, eine Wand naeher als ' + fRund(rt) + ' mm ebenso.');
+  warn.push('Z ist die WERKZEUGUNTERKANTE (die Spitze), so wie die Werkzeuglaenge L gemessen wird — nicht die Mitte der Rundung.');
   // DIE GRENZE DES VERFAHRENS, und sie gehoert gesagt [17.09.2026]. Die
   // Sollform steht als Hoehenfeld da, und eine SCHARFE konvexe Kante liegt
   // zwischen den Zellenmitten - der Stempel allein rundete sie um knapp die
@@ -12296,8 +12367,8 @@ function fBahnSchlichten(s, tool, prog){
   // Raster 0,60, 0,0066 bei 0,30 und 0,0024 bei 0,15 - rund ein
   // Vierzigstel der Rasterweite. Weder die Sehnentoleranz noch die
   // Ausduennung haben daran Anteil (beide nachgemessen).
-  warn.push('Rasterweite der Sollform ' + fRund(F.raster) + ' mm. Die KANTEN des Modells gehen exakt in die Bahn ein, nicht nur ueber das Raster; was bleibt, ist die Aufloesung des Feldes auf den Flaechen — rund ' + fRund(F.raster / 40) + ' mm an einer scharfen konvexen Kante (gemessen 0,007 mm bei Raster 0,30). Eine scharfe Kante bildet eine Kugel ohnehin nicht ab.');
-  warn.push('Geprueft wird nur die KUGEL, nicht der Schaft und nicht der Halter: an einer hohen steilen Wand kann der Schaft anstehen, ohne dass die App es sagt. Vor dem ersten Lauf Programm-Test und Einzelsatz.');
+  warn.push('Rasterweite der Sollform ' + fRund(F.raster) + ' mm. Die KANTEN des Modells gehen exakt in die Bahn ein, nicht nur ueber das Raster; was bleibt, ist die Aufloesung des Feldes auf den Flaechen — rund ' + fRund(F.raster / 40) + ' mm an einer scharfen konvexen Kante (gemessen 0,007 mm bei Raster 0,30). Eine scharfe Kante bildet eine runde Schneidenkante ohnehin nicht ab.');
+  warn.push('Geprueft wird nur das SCHNEIDTEIL, nicht der Schaft und nicht der Halter: an einer hohen steilen Wand kann der Schaft anstehen, ohne dass die App es sagt. Vor dem ersten Lauf Programm-Test und Einzelsatz.');
   return {ok:true, bahn:B, warn:warn, zuege:zuege, punkte:punkte, roh:roh,
     schritt:fRund(istMm), soll:fRund(schrittMm), rz:fRund(istRz), spruenge:spruenge,
     steil:nSteil, flach:nFlach, steht:nSteht, stehtMax:fRund(stehtMax), mitStand:!!SG,
@@ -12326,8 +12397,9 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
   if(!F) return nein('keine Sollform geladen — im STEP-Fenster ein Modell laden und "Sollform ans Programm" druecken');
   const rt = (tool && +tool.d > 0) ? +tool.d / 2 : 0;
   const rk = (tool && +tool.r2 > 0) ? +tool.r2 : 0;
+  const stirn = fWerkzeugStirn(tool);   // Reichweite rt, Rundung rk — siehe fBahnSchlichten
   if(!(rt > 0)) return nein('Werkzeug-Durchmesser fehlt (Werkzeugtabelle)');
-  if(!(rk > 0)) return nein('T' + s.t + ' hat keinen Eckenradius R2 — die Rautiefe gilt fuer den KUGELFRAESER; in der Werkzeugtabelle R2 eintragen');
+  if(!(rk > 0)) return nein('T' + s.t + ' hat keinen Eckenradius R2 — diese Bahn braucht eine RUNDE Schneidenkante (Kugelfraeser oder Eckenradiusfraeser); R2 in der Werkzeugtabelle eintragen');
   const rz = +s.rautiefe || 0;
   if(!(rz > 0)) return nein('Rautiefe fehlt — sie ist das Mass dieser Bahn');
   const tol = (+s.tolBahn > 0) ? +s.tolBahn : 0.005;
@@ -12375,7 +12447,7 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
   // Die Versatzflaeche, aufgeweitet: die Hoehenlinie braucht auch die
   // Nachbarzellen der Randquadrate.
   const BF = (vorgabe && vorgabe.ball) ? vorgabe.ball
-           : fBallFeld(F, rk, fMaskeWeiten(gut, nx, ny, Math.max(2, Math.ceil(rk / r) + 2)));
+           : fBallFeld(F, rk, fMaskeWeiten(gut, nx, ny, Math.max(2, Math.ceil(rk / r) + 2)), stirn);
   const sFlaeche = Math.sqrt(8 * rk * rz);
   const dzSoll = sFlaeche * Math.sin(aMin * Math.PI / 180);
   if(!(dzSoll > 1e-6)) return nein('der Z-Abstand aus der Rautiefe wird null — Grenzwinkel oder Rautiefe pruefen');
@@ -12494,7 +12566,7 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
         : (weitA <= 3 * dz + 1e-9) ? true
         : (weitA <= 12 * dz + 4 * r)
           ? ((fBallMax(BF, F, letzt[0], letzt[1], A0[0], A0[1]) - rk) <= letzt[2] + 1e-9
-             && (!SG || !(fStandFreiHoehe(SG, letzt[0], letzt[1], A0[0], A0[1], rk) > letzt[2] + 1e-9)))
+             && (!SG || !(fStandFreiHoehe(SG, letzt[0], letzt[1], A0[0], A0[1], rk, stirn) > letzt[2] + 1e-9)))
           : false;
       if(zu && letzt && !rampeFrei) nWeit++;
       let rampe = null;
@@ -12518,16 +12590,16 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
         eil({z:sicher}); eil({x:A0[0], y:A0[1]});
       } else {
         let zv = fRund(Math.min(sicher, Math.max(fBallMax(BF, F, letzt[0], letzt[1], A0[0], A0[1]) - rk, letzt[2], A0[2]) + sc));
-        if(SG){ const hs = fStandFreiHoehe(SG, letzt[0], letzt[1], A0[0], A0[1], rk); if(isFinite(hs) && hs + sc > zv) zv = fRund(hs + sc); }
+        if(SG){ const hs = fStandFreiHoehe(SG, letzt[0], letzt[1], A0[0], A0[1], rk, stirn); if(isFinite(hs) && hs + sc > zv) zv = fRund(hs + sc); }
         eil({z:zv}); eil({x:A0[0], y:A0[1]});
       }
       let zA = fRund(A0[2] + sc);
-      if(SG){ const ha = fStandFreiHoehe(SG, A0[0], A0[1], A0[0], A0[1], rk); if(isFinite(ha) && ha + sc > zA) zA = fRund(ha + sc); }
+      if(SG){ const ha = fStandFreiHoehe(SG, A0[0], A0[1], A0[0], A0[1], rk, stirn); if(isFinite(ha) && ha + sc > zA) zA = fRund(ha + sc); }
       eil({z:zA});
       vor({z:A0[2], f:(+s.fTief > 0) ? +s.fTief : f});
       for(let q = 1; q < D2.length; q++) vor({x:D2[q][0], y:D2[q][1], z:D2[q][2], f:f});
       if(SG) for(let q = 1; q < D2.length; q++)
-        fStandKugelStempel(SG, D2[q-1][0], D2[q-1][1], D2[q-1][2], D2[q][0], D2[q][1], D2[q][2], rk, sTol);
+        fStandKugelStempel(SG, D2[q-1][0], D2[q-1][1], D2[q-1][2], D2[q][0], D2[q][1], D2[q][2], rk, sTol, stirn);
       punkte += D2.length; zuege++; letzt = D2[D2.length - 1];
     });
   }
@@ -12537,9 +12609,16 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
   const istRz = (dz / Math.max(0.05, Math.sin(aMin * Math.PI / 180))) ** 2 / (8 * rk);
   warn.push('Z-konstant schlichten: ' + ebenen + ' Ebene(n), ' + zuege + ' Zug/Zuege, ' + punkte
     + ' Punkte (roh ' + roh + ', mit Sehnentoleranz ' + fRund(tol) + ' mm ausgeduennt). Z-Abstand '
-    + fRund(dz) + ' mm aus Rautiefe ' + fRund(rz) + ' und Kugelradius ' + fRund(rk)
+    + fRund(dz) + ' mm aus Rautiefe ' + fRund(rz) + ' und Eckenradius ' + fRund(rk)
     + ' (flachste bearbeitete Stelle ' + fRund(aMin) + ' Grad; gefahrene Rautiefe ' + fRund(istRz) + ' mm).');
-  warn.push('Z ist die KUGELUNTERKANTE (die Spitze), so wie die Werkzeuglaenge L gemessen wird — nicht die Kugelmitte.');
+  // WAS EIN ECKENRADIUSFRAESER ANDERS MACHT [22.09.2026, Daniels Hinweis]:
+  // seine Rundung sitzt aussen, die Mitte ist flach. Auf einer WAAGERECHTEN
+  // Flaeche laesst er darum gar keinen Kamm stehen - die Rautiefe ist dort
+  // eine Zugabe, kein Mass. Dafuer greift er bis zu seinem halben
+  // Durchmesser: in eine Innenkehle kommt er nur so weit wie sein
+  // Eckenradius, obwohl die Bahn mit diesem Radius rechnet.
+  if(stirn && stirn.art === 'torus') warn.push('Eckenradiusfraeser: die Rautiefe gilt fuer die SCHRAEGE (dort schneidet die Rundung R' + fRund(rk) + '); auf waagerechten Flaechen bleibt kein Kamm stehen. Die Bahn haelt das ganze Werkzeug (⌀' + fRund(2 * rt) + ') von der Sollform frei - eine Innenkehle enger als R' + fRund(rk) + ' bleibt stehen, eine Wand naeher als ' + fRund(rt) + ' mm ebenso.');
+  warn.push('Z ist die WERKZEUGUNTERKANTE (die Spitze), so wie die Werkzeuglaenge L gemessen wird — nicht die Mitte der Rundung.');
   // DIE GRENZE DES VERFAHRENS, und sie gehoert gesagt [17.09.2026]. Die
   // Sollform steht als Hoehenfeld da, und eine SCHARFE konvexe Kante liegt
   // zwischen den Zellenmitten - der Stempel allein rundete sie um knapp die
@@ -12550,8 +12629,8 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
   // Raster 0,60, 0,0066 bei 0,30 und 0,0024 bei 0,15 - rund ein
   // Vierzigstel der Rasterweite. Weder die Sehnentoleranz noch die
   // Ausduennung haben daran Anteil (beide nachgemessen).
-  warn.push('Rasterweite der Sollform ' + fRund(F.raster) + ' mm. Die KANTEN des Modells gehen exakt in die Bahn ein, nicht nur ueber das Raster; was bleibt, ist die Aufloesung des Feldes auf den Flaechen — rund ' + fRund(F.raster / 40) + ' mm an einer scharfen konvexen Kante (gemessen 0,007 mm bei Raster 0,30). Eine scharfe Kante bildet eine Kugel ohnehin nicht ab.');
-  warn.push('Geprueft wird nur die KUGEL, nicht der Schaft und nicht der Halter: an einer hohen steilen Wand kann der Schaft anstehen, ohne dass die App es sagt. Vor dem ersten Lauf Programm-Test und Einzelsatz.');
+  warn.push('Rasterweite der Sollform ' + fRund(F.raster) + ' mm. Die KANTEN des Modells gehen exakt in die Bahn ein, nicht nur ueber das Raster; was bleibt, ist die Aufloesung des Feldes auf den Flaechen — rund ' + fRund(F.raster / 40) + ' mm an einer scharfen konvexen Kante (gemessen 0,007 mm bei Raster 0,30). Eine scharfe Kante bildet eine runde Schneidenkante ohnehin nicht ab.');
+  warn.push('Geprueft wird nur das SCHNEIDTEIL, nicht der Schaft und nicht der Halter: an einer hohen steilen Wand kann der Schaft anstehen, ohne dass die App es sagt. Vor dem ersten Lauf Programm-Test und Einzelsatz.');
   if(splitter) warn.push(splitter + ' kurze Reststueck(e) der Hoehenlinie wurden weggelassen (unter drei Rasterweiten lang) — sie kosten Anfahrt und Rueckzug und schneiden nichts.');
   if(nSteht) warn.push(nSteht + ' Rasterstelle(n) bleiben aus: dort steht nach dem Schruppen bis ' + fRund(stehtMax) + ' mm ueber der Sollform.');
   return {ok:true, bahn:B, warn:warn, zuege:zuege, punkte:punkte, roh:roh,
@@ -12579,7 +12658,7 @@ function fBahnSchlichtenKomplett(s, tool, prog){
   const warn = [];
   if(flach.ok) warn.push.apply(warn, flach.warn || []);
   else warn.push('Zeilenbahn (flache Flaechen) faellt aus: ' + flach.grund);
-  if(steil.ok) warn.push.apply(warn, (steil.warn || []).filter(w => !/KUGELUNTERKANTE|nicht der Schaft/.test(w)));
+  if(steil.ok) warn.push.apply(warn, (steil.warn || []).filter(w => !/WERKZEUGUNTERKANTE|nicht der Schaft/.test(w)));
   else warn.push('Z-konstante Bahn (steile Flaechen) faellt aus: ' + steil.grund);
   if(!flach.ok || !steil.ok) warn.push('Hinweis: dieser Schritt fasst beide Bahnen zusammen — flach ueber die Zeilen, steil Z-konstant. Der Grenzwinkel ' + fRund((+s.winkel > 0) ? +s.winkel : 45) + ' Grad trennt sie.');
   // DIE FELDER DER ZEILENBAHN BLEIBEN OBEN STEHEN (schritt, soll, rz, flach,
@@ -15088,21 +15167,28 @@ function fPruefen(prog){
       if((s.art === 'gewSenk' || s.art === 'gewBohr') && !(+s.q356 < +s.tiefe)) gelb.push(nr + (s.art === 'gewBohr' ? 'Bohrtiefe' : 'Senktiefe') + ' Q356 liegt nicht unter der Gewindetiefe — die Steuerung fraest das Gewinde bis in den Grund.');
       if(+s.steigung > 0 && +s.q335 > 0 && +s.steigung > +s.q335 / 2) gelb.push(nr + 'Steigung ' + s.steigung + ' gegen Soll-⌀ ' + s.q335 + ' ist unueblich gross — Werte pruefen.');
     } else if(z && z.schlicht){
-      // Stufe 4. Die Rautiefe gilt fuer den KUGELFRAESER — deshalb ist R2 des
-      // Werkzeugs hier Pflicht und nicht nur ein Hinweis: mit einem
+      // Stufe 4. Die Rautiefe braucht eine RUNDE Schneidenkante - deshalb ist
+      // R2 hier Pflicht und nicht nur ein Hinweis: mit einem scharfkantigen
       // Schaftfraeser (R2 = 0) schneidet die Ecke, und die Formel h = s²/(8r)
       // gilt fuer ihn gar nicht.
+      // DER ECKENRADIUSFRAESER IST SEIT DEM 22.09.2026 GLEICHBERECHTIGT.
+      // Hier stand bis dahin die Warnung, die Bahn rechne mit R2 und "der
+      // flache Teil der Stirn schneidet auf einer Schraege frueher" - das war
+      // eine richtige Beobachtung ueber einen echten Fehler, aber sie wurde
+      // dem Bediener aufgebuerdet, statt gerechnet zu werden. Gemessen an der
+      // 45-Grad-Rampe: 6,000 mm Einschnitt. fBallFeld dilatiert jetzt das
+      // ganze Unterprofil; was bleibt, ist eine Auskunft, kein Vorbehalt.
       if(tool && tool.art !== 'fraeser') gelb.push(nr + 'T' + s.t + ' ist kein Fraeser (' + (F_WERKZEUGARTEN[tool.art] || tool.art) + ').');
       if(!fStepFeldHolen()) rot.push(nr + 'keine Sollform geladen — im STEP-Fenster ein Modell laden und "Sollform ans Programm" druecken.');
-      if(tool && !(+tool.r2 > 0)) rot.push(nr + 'T' + s.t + ' hat keinen Eckenradius R2 — die Rautiefe gilt fuer den KUGELFRAESER; in der Werkzeugtabelle R2 eintragen.');
-      if(tool && +tool.r2 > 0 && +tool.d > 0 && +tool.r2 < +tool.d / 2 - 1e-9) gelb.push(nr + 'T' + s.t + ' ist ein Eckenradiusfraeser (R2 ' + tool.r2 + ' bei ⌀' + tool.d + '), kein Vollradiusfraeser — die Bahn rechnet mit R2, der flache Teil der Stirn schneidet auf einer Schraege frueher.');
+      if(tool && !(+tool.r2 > 0)) rot.push(nr + 'T' + s.t + ' hat keinen Eckenradius R2 — diese Bahn braucht eine runde Schneidenkante (Kugel- oder Eckenradiusfraeser); in der Werkzeugtabelle R2 eintragen.');
+      if(tool && +tool.r2 > 0 && +tool.d > 0 && +tool.r2 < +tool.d / 2 - 1e-9) gelb.push(nr + 'T' + s.t + ' ist ein Eckenradiusfraeser (R2 ' + tool.r2 + ' bei ⌀' + tool.d + '): der Bahnabstand kommt aus R2, die Bahn haelt aber das ganze Werkzeug von der Sollform frei. In eine Kehle enger als R' + tool.r2 + ' kommt er nicht, und an eine Wand nur bis ' + fRund(+tool.d / 2) + ' mm.');
       if(!(+s.rautiefe > 0)) rot.push(nr + 'Rautiefe fehlt — sie ist das Mass dieser Bahn.');
       if(!(+s.tiefe < 0)) rot.push(nr + 'Z1 muss NEGATIV sein (unterste Höhe des Bereichs), steht auf ' + s.tiefe + '.');
       if(+s.tolBahn > 0 && +s.rautiefe > 0 && +s.tolBahn > +s.rautiefe) gelb.push(nr + 'Sehnentoleranz ' + s.tolBahn + ' ist groesser als die Rautiefe ' + s.rautiefe + ' — dann bestimmt die Ausduennung die Form, nicht die Rautiefe.');
       if(!(+s.winkel > 0 && +s.winkel < 90)) rot.push(nr + 'Steilste Neigung α1 muss zwischen 0 und 90 Grad liegen.');
       if(+s.winkelMin < 0 || +s.winkelMin >= +s.winkel) rot.push(nr + 'Flachste Neigung α0 muss unter der steilsten liegen.');
       if(!(+s.winkelMin > 0)) gelb.push(nr + 'α0 steht auf 0 — dann schlichtet die Kugel auch die WAAGERECHTEN Flaechen; die gehoeren ueblicherweise dem Schaft- oder Messerkopf.');
-      gelb.push(nr + 'Schraegen schlichten ist die eigene Bahn der App (kein Steuerungszyklus). Geprueft wird nur die KUGEL, nicht Schaft und Halter — vor dem ersten Lauf Programm-Test und Einzelsatz.');
+      gelb.push(nr + 'Schraegen schlichten ist die eigene Bahn der App (kein Steuerungszyklus). Geprueft wird nur das SCHNEIDTEIL, nicht Schaft und Halter — vor dem ersten Lauf Programm-Test und Einzelsatz.');
     } else if(z && z.modell){
       // Stufe 3 Teil B. Die schwere Frage ("kommt das Werkzeug ueberall
       // hin?") beantwortet die Bahn selbst samt Restmaterialbericht — hier
@@ -15796,6 +15882,37 @@ function fDemoStepRest(){
   return p;
 }
 
+// DZ25 RAMPENBLOCK MIT ECKENRADIUSFRAESER [22.09.2026, Daniels Auftrag:
+// "mit einem solchen Fraeser, also mit einer Radius-2er-Platte, mal so ein
+// Modell abspannen, auch so eine Schraege"]. Dasselbe Teil wie DZ22, aber
+// beide Schritte mit EINEM Werkzeug: dem VHM-Schaftfraeser 12 mit R2 - so
+// arbeitet Daniel. Der Vergleich zu DZ22 ist damit direkt: gleiche
+// Sollform, gleiches Rohteil, anderes Werkzeug.
+// RAUTIEFE 0,02 mm statt 0,01 wie bei DZ22: der Bahnabstand haengt am
+// ECKENRADIUS (s = wurzel(8 r Rz)), und mit R2 statt R5 waeren fuer 0,01 mm
+// nur 0,283 mm erlaubt - weniger als eine Rasterweite. Die App saehe das
+// und sagte es; die Vorlage soll aber zeigen, wie es AUFGEHT.
+function fDemoStepRampeR2(){
+  const A = fStepAusrichten(fStepModell(fStepTestkoerper()), {achse:'+Z'});
+  const p = fProgrammNeu();
+  fStepFeldSetzen(fStepSollfeld(A), p);
+  p.kopf.name = 'DZ25';
+  Object.assign(p.kopf, {x0:0, y0:0, z0:-18, x1:80, y1:50, z1:0, sc:2, sc2:50, oberflaeche:0, rz:100, stand:'07'});
+  // Schruppen: die Rundung unten schneidet weniger als eine scharfe Ecke -
+  // die Bahn rechnet trotzdem mit der scharfen (Ebenenmaske aus rt + UXY).
+  // Das ist die sichere Seite, es bleibt hoechstens etwas mehr stehen.
+  const a = fSchrittNeu(p, 'modellSchruppen', 19);
+  Object.assign(a, {q203:0, tiefe:-18, zust:4, aufSeite:0.4, aufTiefe:0.25, ae:40, aeArt:'%', bahnSinn:0,
+                    sc:2, sc2:50, s:3200, f:570, fTief:200});
+  // Schlichten mit demselben Werkzeug: die Bahn haelt jetzt das GANZE
+  // Werkzeug (⌀12) von der Sollform frei und legt sich mit der Rundung R2 an.
+  const b = fSchrittNeu(p, 'modellSchlichten', 19);
+  Object.assign(b, {q203:0, tiefe:-18, winkelMin:5, winkel:45, rautiefe:0.02, tolBahn:0.005,
+                    strategie:2, sc:2, sc2:50, s:3600, f:620, fTief:240});
+  p.schritte = [a, b];
+  return p;
+}
+
 // DIE VORLAGEN. Jede traegt:
 //   nr     die Programmnummer (DZn) - danach wird sortiert
 //   name   das TEIL in zwei, drei Woertern
@@ -15814,6 +15931,9 @@ var F_DEMOS = [
    was:'aus dem STEP-Modell: Z-konstant schruppen, Schräge über die Rautiefe schlichten', lade:fDemoStepRampe},
   {id:'steprest', nr:'DZ23', gruppe:'werkstueck', name:'T-Tasche 60 x 40 (STEP)',
    was:'aus dem STEP-Modell: Hauptfeld mit ⌀20 abspanen, Finger und Ecken als Restmaterial mit ⌀8 — nur von außen angefahren, danach Böden und Wände mit ⌀10 schlichten', lade:fDemoStepRest},
+
+  {id:'steprampeR2', nr:'DZ25', gruppe:'werkstueck', name:'Rampenblock mit R2-Platte (STEP)',
+   was:'dasselbe Teil wie DZ22, aber mit dem Eckenradiusfräser ⌀12 R2 — abspanen und die Schräge über die Rautiefe schlichten', lade:fDemoStepRampeR2},
 
   {id:'flansch', nr:'DZ1', gruppe:'test', name:'Flanschplatte',
    was:'Lochkreis 6x zentrieren und bohren, vier M8 in den Ecken', lade:fDemoFlansch},
@@ -16120,9 +16240,9 @@ function fKalkPreiseUebernehmen(j, w){
 // (a) So rechnet die App -- steht bei jedem Teil gleich da.
 const F_ARBEITSWEISE = [
   /ist die eigene Bahn der App \(kein Steuerungszyklus\)/,
-  /Geprueft wird nur die KUGEL/,
+  /Geprueft wird nur das SCHNEIDTEIL/,
   /Ueberflug und Anfahrt rechnen gegen den STAND/,
-  /^Z ist die KUGELUNTERKANTE/,
+  /^Z ist die WERKZEUGUNTERKANTE/,
   /^Rasterweite der Sollform/,
   /^Hinweis: dieser Schritt fasst beide Bahnen zusammen/,
   /^Konturzug: Eintauchen senkrecht am Bahnanfang/,
@@ -16144,6 +16264,7 @@ const F_BAHNBERICHT = [
   // geladen", und das ist ein roter Befund, kein Bericht. Der Waechter im
   // Pruefstand hat das Muster als tot gemeldet; nachgesehen war es falsch.
   /^Restmaterial abspanen: \d+ Ebene/,
+  /^Eckenradiusfraeser: die Rautiefe gilt/,
   /^\d+ Zug\/Zuege tauchen PENDELND/,
   /^Bezug: Schritt \d+/,
   /^BOEDEN UND WAENDE SCHLICHTEN:/,
@@ -16155,7 +16276,7 @@ const F_BAHNBERICHT = [
 function fMeldungKern(w){ return String(w).replace(/^Schritt \d+[^:]*: /, ''); }
 
 // Teilt die Meldungen der NC-Ausgabe in drei Listen.
-// Doppelte fallen weg: am Rampenblock stand "Geprueft wird nur die KUGEL"
+// Doppelte fallen weg: am Rampenblock stand "Geprueft wird nur das SCHNEIDTEIL"
 // zweimal da, einmal aus dem Zykluskopf und einmal aus der Bahn.
 function fMeldungenOrdnen(warnungen){
   const befund = [], bericht = [], arbeit = [];
