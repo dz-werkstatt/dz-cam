@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="22.09.2026 20:52 (5cf3cc22)";</script>
+<script>window.__DZ_STAND="22.09.2026 22:35 (9f950a0f)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -5195,6 +5195,43 @@ Zyklen. Falsche Winkel = falsche Warnungen.</dd>
 <dd>Der Schneidenradius geht in die Schneidenradiuskorrektur der Simulation und in den
 Ma&szlig;bericht &mdash; die Maschine bekommt G41/G42 und rechnet mit ihrem
 Offset.</dd>
+<dt id="ba-wz-abgleich">Abgleich gegen die Werkzeugkorrektur der Maschine (seit 22.09.2026)</dt>
+<dd>Die App f&uuml;hrt <b>eine</b> Werkzeugtabelle f&uuml;r beide Monforts. Die Maschine
+f&uuml;hrt ihre eigene (WZ-KORR), und wenn beide auseinanderlaufen, geht das zweimal
+schief: der <b>Schneidenradius</b> wandert als <code>PF</code> in jeden Abspan-,
+Einstich- und Freistichsatz &mdash; aus UNSERER Zahl, w&auml;hrend die Steuerung mit
+ihrer rechnet; und die <b>Werkzeugart</b> entscheidet, ob sie den Zyklus &uuml;berhaupt
+annimmt (am 22.09.2026 gab die Stirnnut mit T7 &bdquo;ung&uuml;ltige Werkzeuglage!&ldquo;,
+weil dort ein Stecher sitzt und kein Bohrer).
+<br>Die Ampel vergleicht deshalb jeden Platz, den das Programm ruft, gegen die
+abgelesene WZ-KORR und meldet Abweichungen unter <b>WERKZEUGABGLEICH</b>. Gemeldet wird
+auch, wenn ein Werkzeug aus dem <b>Lager</b> ohne Platz gerufen wird: die Maschine kennt
+keine Lagernummern &mdash; sie greift auf ihren Revolverplatz mit dieser Zahl, und dort
+steckt etwas anderes.
+<br><b>Das ist ein Hinweis, kein Blocker, und das hat einen Grund:</b> die Referenz ist
+das Foto eines bestimmten Tages (1500er 22.09.2026, alle 16 Pl&auml;tze; 1000er
+16.09.2026, nur sechs abgelesene Pl&auml;tze). Wer seither umger&uuml;stet hat, hat recht
+und die Referenz unrecht. Deshalb steht in jeder Meldung das Ablesedatum und beide
+Zahlen &mdash; entscheiden musst Du. &Uuml;ber Pl&auml;tze, die nie abgelesen wurden,
+sagt die App ausdr&uuml;cklich nichts.</dd>
+<dt id="ba-wz-radius">Passt der Schneidenradius in die Kontur? (seit 22.09.2026)</dt>
+<dd>Eine Schneide hat einen Radius, und der l&auml;sst sich nicht in jede Kontur
+fahren. Die Steuerung pr&uuml;ft das selbst und weist das Programm mit
+<b>Konturverletzung</b> zur&uuml;ck &mdash; am 18.09.2026 am Masterteil, wegen einer
+Innenstufe von 0,7&nbsp;mm gegen den Nasenradius 1,2 der Bohrstange. Die App misst es
+jetzt vorher, auf den <b>fertigen Bahnen</b>, und meldet zwei F&auml;lle:
+<br><b>Hohlkehle enger als die Schneide.</b> Eine Rundung mit Radius 2 ist mit einer
+Schneide von 4 nicht zu fahren &mdash; dort entsteht der Radius der Schneide, nicht der
+gezeichnete.
+<br><b>Element k&uuml;rzer als die Radiusschuld.</b> An einer konkaven Ecke braucht die
+Schneide auf jedem Schenkel die L&auml;nge r/tan(&theta;/2), bei 90&nbsp;Grad also genau
+ihren Radius. Ist die Fl&auml;che dazwischen k&uuml;rzer als beide Schulden zusammen,
+&uuml;berschneiden sich die Rundungen und die Fl&auml;che entsteht nie &mdash; genau
+Daniels 0,7&nbsp;mm gegen 1,2.
+<br>Der Ausweg ist immer einer von zweien: <b>kleineren Schneidenradius</b> w&auml;hlen
+oder die <b>Stufe aufmachen</b>. Gemessen wird gegen den Radius aus der
+Werkzeugtabelle &mdash; steht dort 0, sagt die App nichts, und das ist ehrlich: dann
+wei&szlig; sie es nicht. Hinweis, kein Blocker.</dd>
 <dt id="ba-wz-halter">ISO-Schaft</dt>
 <dd>Die Halterdarstellung nutzt ISO-Schaftma&szlig;e (5608/1832) am geraden Balken.
 Konstruierte Halterk&ouml;pfe sind bewusst zur&uuml;ckgebaut; geplant ist der Import
@@ -21780,6 +21817,47 @@ const MASCHINEN_PROFILE = {
     // 7.210i wehrt hohe T-Nummern also ebenso ab. Real sind es 16
     // Revolverplaetze; die App warnt ab T17.
     tMax:16, plaetze:16, tMaxBeleg:'18.09.2026 am Geraet: T33 -> 152 unzulaessiges Zahlenformat (wie die 1000er); T17 noch ungeprueft; real 16 Plaetze',
+    // WZ-KORR DER MASCHINE [Daniels Foto der Geometrieseite, 22.09.2026,
+    // alle sechzehn Plaetze auf einem Bild]. Das ist NICHT unsere
+    // Werkzeugtabelle, sondern das, was die Steuerung an diesem Tag
+    // gefuehrt hat — die Vergleichsseite fuer den Abgleich.
+    //
+    // WARUM DIE REFERENZ UEBERHAUPT HIER STEHT: der Schneidenradius
+    // wandert ueber PF in jeden Abspan-, Einstich- und Freistichsatz,
+    // und zwar aus UNSERER Tabelle. Laufen beide auseinander, rechnet
+    // die Steuerung mit einem anderen Radius, als wir programmiert
+    // haben — an einer Fase ist das ein Massfehler in der Groesse der
+    // Differenz. Die Werkzeugart entscheidet zusaetzlich, ob die
+    // Steuerung den Zyklus ueberhaupt annimmt: am 22.09. gab die
+    // Stirnnut mit T7 'ungueltige Werkzeuglage!', weil dort ein
+    // STECHER sitzt und kein Bohrer (dritter Fall dieser Klasse nach
+    // dem Masterteil O9180 vom 18.09.).
+    //
+    // 'leer' = XL 200,000 / ZL 0 / RS 0, also die Vorgabewerte der
+    // Steuerung: dort ist vermutlich gar nichts eingerichtet. Platz 8
+    // traegt dieselben Werte, aber ein Innen-Lagesymbol — deshalb
+    // 'unsicher': sein RS 0 wird NICHT als Abweichung gemeldet.
+    wzKorr:{
+      stand:'22.09.2026',
+      quelle:'Foto der WZ-KORR-Geometrieseite (alle 16 Plaetze)',
+      plaetze:{
+        1:{art:'dreher', lage:'aussen', rs:1.2},
+        2:{art:'dreher', lage:'aussen', rs:0.8},
+        3:{art:'dreher', lage:'aussen', rs:0.4},
+        4:{art:'stecher', lage:'aussen', rs:0.15},
+        5:{art:'dreher', lage:'aussen', rs:0},
+        6:{art:'bohrer', lage:'zentrisch', rs:0},
+        7:{art:'stecher', lage:'aussen', rs:0.15},
+        8:{art:'dreher', lage:'innen', rs:0, unsicher:true},
+        9:{art:'bohrer', lage:'zentrisch', rs:10},
+        10:{leer:true}, 11:{leer:true},
+        12:{art:'dreher', lage:'innen', rs:1.2},
+        13:{art:'dreher', lage:'innen', rs:0.4},
+        14:{leer:true},
+        15:{art:'dreher', lage:'innen', rs:0.4},
+        16:{art:'dreher', lage:'aussen', rs:0.4}
+      }
+    },
     // DREHZAHLGRENZE [Daniel, 22.09.2026: "Drehzahl machst du wie bei der
     // Tausender die Begrenzung"]. Der Wert ist die Einstellung des
     // Hardware-Drehzahlwaechters, nicht eine Rechengroesse: beide Monforts
@@ -21855,6 +21933,26 @@ const MASCHINEN_PROFILE = {
     // Prog. Pruefen; real hat die Maschine 16 Plaetze (Daniel). Die Wache
     // in buildProgram und im Exportfilter haengt daran.
     tMax:32, plaetze:16, tMaxBeleg:'10.09.2026 am Geraet: T32 angenommen, T33 Fehler 152; real 16 Plaetze',
+    // WZ-KORR DER MASCHINE [Daniels Foto der Werkzeugkorrektur, Spalte RS,
+    // 16.09.2026]. HIER STEHT NUR EIN AUSSCHNITT, und das ist wichtig:
+    // belegt sind die sechs Plaetze, die an jenem Tag in einem Zyklussatz
+    // vorkamen (dort war PF 21-mal von 21 genau dieser RS). Die uebrigen
+    // zehn Plaetze wurden nie abgelesen — sie fehlen deshalb, und der
+    // Abgleich schweigt zu ihnen, statt etwas zu behaupten.
+    // Die ART ist an der 1000er NICHT erfasst (das Foto zeigte die
+    // Radien-Spalte, nicht die Lagesymbole) — nur der Radius wird verglichen.
+    wzKorr:{
+      stand:'16.09.2026',
+      quelle:'Foto der WZ-KORR (Spalte RS) — nur die sechs Plaetze der Zyklussaetze',
+      plaetze:{
+        1:{rs:1.2},
+        3:{rs:0},
+        5:{rs:0},
+        7:{rs:0.2},
+        12:{rs:1.2},
+        14:{rs:0}
+      }
+    },
     // Derselbe Wert wie an der 1500er — mit ihm ist die Kantenwelle O9016
     // am 10.09.2026 komplett gelaufen (s. fahrtests).
     nmax:600,
@@ -21932,6 +22030,110 @@ const M_BEFEHLE=[
   {m:'M00', txt:'Programm halt - weiter mit NC-Start',      gefahren:false},
   {m:'M01', txt:'Wahlweiser Halt (nur wenn am Pult aktiv)', gefahren:false},
 ];
+// =================================================================
+// ABGLEICH UNSERER WERKZEUGTABELLE GEGEN DIE WZ-KORR DER MASCHINE
+// [Daniels Auftrag 22.09.2026, nach dem dritten Fall derselben Klasse]
+//
+// Die App fuehrt EINE Werkzeugtabelle fuer beide Monforts — das ist
+// Daniels Ansage vom 18.09. und bleibt so. Was fehlte, war die
+// Gegenprobe: steht an der Maschine auf diesem Platz wirklich das
+// Werkzeug, mit dem wir rechnen?
+//
+// Dreimal hat genau das einen Termin gekostet, und jedes Mal zeigte
+// die Meldung der Steuerung auf den ZYKLUS statt auf die Ursache:
+//   18.09. Masterteil O9180 — dreimal Abbruch, darunter ein Bohrer
+//          auf dem Platz, auf dem wir eine Bohrstange fuehren
+//   22.09. Stirnnut mit T7 — 'ungueltige Werkzeuglage!', weil dort
+//          ein Stecher sitzt und kein Spiralbohrer
+//
+// GELB, NICHT ROT, und zwar mit Absicht: die Referenz ist ein Foto
+// von einem bestimmten Tag. Wer seither umgeruestet hat, hat recht
+// und die Referenz unrecht — ein Blocker wuerde dann ein richtiges
+// Programm verhindern. Die Meldung nennt deshalb immer das
+// Ablesedatum und beide Zahlen; entscheiden muss der Einrichter.
+//
+// DOM-frei: nimmt die Platznummern entgegen und liefert Saetze.
+// 'plaetze' sind die im Programm wirklich gerufenen Nummern — es
+// wird nichts ueber Plaetze gesagt, die niemand benutzt.
+function wzArtFuerKorr(w){
+  // Unsere Art/Schneidenlage in die Sprache der WZ-KORR uebersetzen.
+  // Der Gewindestahl laeuft dort als Drehmeissel (Platz 5 der 1500er:
+  // 'Drehmeissel aussen', bei uns 'Gewindedrehmeissel') — das ist
+  // keine Abweichung, sondern dieselbe Sache in zwei Worten.
+  const a=String(w&&w.art||'');
+  const art = a==='stechen' ? 'stecher' : (a==='bohren' ? 'bohrer' : 'dreher');
+  const sl=+(w&&w.sl)||0;
+  const lage = sl===9 ? 'zentrisch' : (sl===4 ? 'innen' : 'aussen');
+  return {art:art, lage:lage};
+}
+// Gemeinsames Praefix aller Abgleich-Meldungen. Es hat zwei Aufgaben:
+// in der Ampel sieht der Bediener auf einen Blick, dass es um die
+// BESTUECKUNG geht und nicht um die Bahn — und der Pruefstand kann die
+// Gruppe eindeutig filtern. (Ohne das hatte mein erster Rauchtest zwei
+// Meldungen weggefiltert, weil sie zufaellig andere Woerter trugen.)
+const WZK='WERKZEUGABGLEICH — ';
+function wzKorrAbgleich(profil, plaetze){
+  const meld=[];
+  const k = profil && profil.wzKorr;
+  if(!k || !k.plaetze) return meld;               // keine Referenz -> nichts behaupten
+  if(typeof wzVonPlatz!=='function') return meld;
+  const unbekannt=[];
+  (plaetze||[]).forEach(nr=>{
+    const w=wzVonPlatz(String(nr));
+    const soll=k.plaetze[nr];
+    if(!w){
+      // DIE NUMMER OHNE PLATZ — der gefaehrlichste Fall, und genau der
+      // vom Masterteil O9180 (18.09.2026). Ein LAGERwerkzeug ruft seine
+      // eigene Nummer; die Maschine kennt aber keine Lagernummern, sie
+      // greift auf ihren Revolverplatz mit dieser Zahl. Steht dort etwas
+      // anderes, faehrt sie mit dem falschen Werkzeug los.
+      const grenze=+(profil.plaetze||profil.tMax)||0;
+      if(soll && nr<=grenze){
+        const lag=(typeof toolTable!=='undefined' && toolTable) ? toolTable.find(x=>String(x.t)===String(nr)) : null;
+        const wir=lag? ', waehrend wir "'+(lag.name||'')+'" meinen' : '';
+        const dort = soll.leer
+          ? 'und der war am '+k.stand+' NICHT eingerichtet (Vorgabewerte XL 200 / ZL 0 / RS 0)'
+          : 'und dort steckt laut WZ-KORR vom '+k.stand+' ein '+String(soll.art||'?').toUpperCase()+
+            ' ('+(soll.lage||'?')+', RS '+fmt(+soll.rs||0)+')';
+        meld.push(WZK+'T'+nr+' liegt bei uns im LAGER, nicht auf einem Platz — die NC ruft die blosse Nummer. '+
+          'Die Maschine greift dann auf ihren Revolverplatz '+nr+', '+dort+wir+
+          '. Das Werkzeug im Lager auf seinen Platz legen (Werkzeuge, Pfeil-Knopf).');
+      }
+      return;
+    }
+    if(!soll){ unbekannt.push(nr); return; }
+    if(soll.leer){
+      meld.push(WZK+'PLATZ '+nr+' war an der '+profil.label+' NICHT eingerichtet (WZ-KORR vom '+k.stand+
+        ': Vorgabewerte XL 200 / ZL 0 / RS 0). Das Programm ruft dort "'+(w.name||('T'+nr))+
+        '". Vor dem Lauf einrichten und vermessen.');
+      return;
+    }
+    const uns=wzArtFuerKorr(w);
+    // ART UND LAGE zuerst: das ist der Fall, den die Steuerung selbst
+    // abweist, und er macht den Radius daneben bedeutungslos.
+    if(soll.art && (soll.art!==uns.art || (soll.lage && soll.lage!==uns.lage))){
+      meld.push(WZK+'PLATZ '+nr+': an der Maschine steckt laut WZ-KORR vom '+k.stand+' ein '+
+        soll.art.toUpperCase()+' ('+soll.lage+'), unsere Tabelle fuehrt dort "'+(w.name||'')+
+        '" ('+uns.art+', '+uns.lage+'). Die Steuerung weist einen Zyklus mit falscher Werkzeuglage ZURUECK — '+
+        'am 22.09.2026 gab die Stirnnut mit T7 genau deshalb "ungueltige Werkzeuglage!".');
+      return;
+    }
+    // RADIUS: nur melden, wenn die Referenz belastbar ist. Ein RS 0
+    // auf einem Platz mit Vorgabewerten (unsicher) sagt nichts.
+    if(soll.unsicher || soll.rs===undefined) return;
+    const uR=+(w.r)||0, mR=+soll.rs||0;
+    if(Math.abs(uR-mR)>0.005){
+      meld.push(WZK+'PLATZ '+nr+' Schneidenradius: unsere Tabelle '+fmt(uR)+' mm, die WZ-KORR vom '+
+        k.stand+' '+fmt(mR)+' mm. Das PF in jedem Abspan-, Einstich- und Freistichsatz kommt aus UNSERER '+
+        'Zahl — an einer Fase oder Rundung ist die Differenz der Massfehler am Teil. Eine der beiden Tabellen nachziehen.');
+    }
+  });
+  if(unbekannt.length){
+    meld.push(WZK+'Fuer Platz '+unbekannt.join(', ')+' gibt es keine abgelesene WZ-KORR der '+profil.label+
+      ' (Stand '+k.stand+', '+k.quelle+') — dort ist NICHT geprueft, ob unsere Werte stimmen.');
+  }
+  return meld;
+}
 let MASCHINENPROFIL = MASCHINEN_PROFILE.MONFORTS_1500_EUROTURN;
 document.addEventListener('DOMContentLoaded', ()=>{
   const sel=document.getElementById('maschProfilSel');
@@ -22132,6 +22334,8 @@ const PP_FEST=[
   'NC-Kommentare in ASCII, ohne Klammern im Text — die Steuerung schliesst den Kommentar an der ERSTEN \u0029.',
   'D Zustelltiefe und UX Aufmass gelten RADIAL (ap, je Seite); axiale Werte (Planzustellung, UZ) 1:1.',
   'Schneidenradiuskorrektur automatisch: Schruppen ohne, Schlichten G41/G42 nach Lage.',
+  'Passt der Schneidenradius in die Kontur? Die Ampel misst auf den fertigen Bahnen, ob eine Hohlkehle enger ist als die Schneide und ob ein Element kuerzer ist als die Radiusschuld r/tan(theta/2) seiner konkaven Enden - beides weist die Steuerung als Konturverletzung zurueck (18.09.2026 am Masterteil: Innenstufe 0,7 mm gegen Nasenradius 1,2). Hinweis, kein Blocker.',
+  'Werkzeug-Abgleich gegen die WZ-KORR der Maschine: die Ampel vergleicht jeden gerufenen Platz mit der abgelesenen Korrekturtabelle (1500er 22.09.2026 alle 16 Plaetze, 1000er 16.09.2026 sechs Plaetze) und meldet abweichenden Schneidenradius (er geht als PF in den Zyklussatz), abweichende Werkzeugart (die Steuerung weist den Zyklus zurueck) und Lagerwerkzeuge ohne Platz. Hinweis, kein Blocker — die Referenz ist ein Foto, wer umgeruestet hat, hat recht.',
   'NMAX-Drehzahlgrenze (Programmkopf): jede G96-Anwahl steht als G97 S<NMAX>, G96 erst vor dem ersten Satz, dessen Start und Ziel ueber dem Grenz-Durchmesser liegen; unter der Klemme keine S-Woerter (10.09.2026: Alarm 007 an der 1000er, G96 am kleinen X angewaehlt). Leer = keine Wache, die Ampel sagt es an.',
   'Vorschub je Konturelement (Kontureditor, Feld F an Gerade und Kreis): im Schlichtzug des Konturzyklus steht vor den Saetzen des Elements (VORSCHUB) G95 F<f>, danach zurueck auf den Schlichtvorschub; Schruppen, Stechdrehen und Ecke lesen es nicht (ShopTurn-Vorbild, 10.09.2026).',
   'Zwischenschritt Bemerkung / M-Befehl (Arbeitsplan, Softkey Zyklen): die Bemerkung steht als Kommentarzeile (BEMERKUNG: ...) an ihrer Stelle im NC, M-Befehle einzeln als (M-BEFEHL)-Saetze in fester Folge Kuehlmittel, Spindel, Halt (DV 610 Kap. 4.1); wahlweise vorher zum Wechselpunkt. Der naechste Werkzeugaufruf schreibt M03/M07 wieder - Kuehlmittel an bleibt die Vorgabe; je Zyklus schaltet der Schalter bei F/S auf aus (Kopfsatz M09 statt M07). Seit dem 10.09.2026 auch beim Abstechen und nach dem Wechsel auf T2 (vorher ohne Kuehlmittelwort).',
@@ -30575,6 +30779,57 @@ function buildProgram(){
     lines.forEach(l=>{ const m=l.match(/\(WERKZEUG\) T(\d+)\b/); if(m && +m[1]>MASCHINENPROFIL.tMax && !zuHoch.includes(m[1])) zuHoch.push(m[1]); });
     if(zuHoch.length) warnings.push('T-NUMMER ZU HOCH fuer die '+MASCHINENPROFIL.label+': T'+zuHoch.join(', T')+' - die Steuerung nimmt nur T1-T'+MASCHINENPROFIL.tMax+' ('+(MASCHINENPROFIL.tMaxBeleg||'')+'). Werkzeug im Lager auf einen Platz 1-'+(MASCHINENPROFIL.plaetze||MASCHINENPROFIL.tMax)+' legen (Werkzeuge, Pfeil-Knopf), dann ruft die NC den Platz.');
   }
+  // WZ-KORR-ABGLEICH [Daniels Auftrag 22.09.2026]: die Steuerung prueft
+  // jeden Zyklus gegen IHRE Werkzeugtabelle und bricht ab, wenn Art oder
+  // Lage nicht passen - dreimal ist genau das an einem Termin passiert,
+  // und die Meldung zeigte jedes Mal auf den Zyklus statt auf den Platz.
+  // Gerechnet wird nur ueber die Plaetze, die dieses Programm WIRKLICH
+  // ruft (der (WERKZEUG)-Satz traegt die Nummer, die an die Maschine
+  // geht - bei einem Lagerwerkzeug auf einem Platz hat tSatz dort schon
+  // auf den Platz aufgeloest).
+  if(typeof wzKorrAbgleich==='function'){
+    const gerufen=[];
+    lines.forEach(l=>{ const m=l.match(/\(WERKZEUG\) T(\d+)\b/); if(m && !gerufen.includes(+m[1])) gerufen.push(+m[1]); });
+    wzKorrAbgleich(MASCHINENPROFIL, gerufen).forEach(s=>warnings.push(s));
+  }
+  // PASST DER SCHNEIDENRADIUS IN DIE KONTUR? [Daniels Auftrag 22.09.2026]
+  // Die Steuerung prueft das und meldet "Konturverletzung" (Masterteil
+  // O9180 am 18.09.: Innenstufe 0,7 mm gegen Nasenradius 1,2). Gerechnet
+  // wird auf den fertigen Bahnen - dafuer wird das Programm einmal
+  // zurueckgelesen, wie es der Massbericht auch tut.
+  if(typeof simRadiusPasst==='function' && typeof parseGcodeForSim==='function'){
+    try{
+      // DIE BAHNEN DER SIMULATION BLEIBEN UNBERUEHRT. simEckenBestimmen
+      // arbeitet auf dem globalen simMoves; wer es hier stehen liesse,
+      // haette buildProgram zu einer Funktion gemacht, die nebenbei den
+      // Zustand der Simulation aendert (und Pruefabschnitt 27/28, die von
+      // Hand eine Bahnliste herstellen, laufen genau darueber).
+      const vorher = simMoves;
+      simMoves = parseGcodeForSim(lines.join('\n'));
+      if(typeof simEckenBestimmen==='function') simEckenBestimmen();
+      const funde=simRadiusPasst();
+      simMoves = vorher;
+      // Je Werkzeug und Art nur EINE Meldung mit dem schlimmsten Fall -
+      // an einer langen Kontur waeren es sonst Dutzende gleicher Zeilen.
+      const schlimmste={};
+      funde.forEach(f=>{
+        const k=f.art+'|'+fmt(f.r);
+        const mass = f.art==='bogen' ? f.soll : f.laenge;
+        if(!schlimmste[k] || mass < schlimmste[k].mass) schlimmste[k]={f:f, mass:mass};
+      });
+      Object.keys(schlimmste).forEach(k=>{
+        const f=schlimmste[k].f;
+        if(f.art==='bogen')
+          warnings.push('SCHNEIDENRADIUS PASST NICHT: Hohlkehle mit Radius '+fmt(f.soll)+
+            ' mm bei Z'+fmt(f.z)+' / ⌀'+fmt(f.x)+' - die Schneide hat '+fmt(f.r)+
+            ' mm und bildet dort ihren eigenen, groesseren Radius ab. Die Steuerung meldet das als Konturverletzung (18.09.2026 am Masterteil). Kleineren Schneidenradius waehlen oder die Kehle aufmachen.');
+        else
+          warnings.push('SCHNEIDENRADIUS PASST NICHT: das Konturelement bei Z'+fmt(f.z)+' / ⌀'+fmt(f.x)+
+            ' ist '+fmt(f.laenge)+' mm lang, die Schneide braucht an seinen Innenecken '+fmt(f.noetig)+
+            ' mm (Radius '+fmt(f.r)+'). Die Rundungen ueberschneiden sich - die Flaeche entsteht nie, und die Steuerung meldet Konturverletzung. Stufe aufmachen oder kleineren Schneidenradius waehlen.');
+      });
+    }catch(e){ /* Die Pruefung darf ein Programm nie verhindern. */ }
+  }
   letzteWarnungen = warnings.slice();
   const out=ncLesbarMachen(lines.join('\n'));
   if(warnings.length) renderWarnBox(warnBox, warnings);
@@ -32580,6 +32835,93 @@ function simEckenBestimmen(){
       if(mv.__konkavE) mv.__knickE=Math.atan2(Math.abs(dE1.z*dE2.x-dE1.x*dE2.z), dE1.z*dE2.z+dE1.x*dE2.x);
     }
   }
+}
+
+// =================================================================
+// PASST DER SCHNEIDENRADIUS IN DIE KONTUR?
+// [Daniels Auftrag 22.09.2026; Befund vom Maschinentermin 18.09.2026]
+//
+// Die Steuerung prueft das selbst und meldet "Konturverletzung" — am
+// Masterteil O9180 zweimal, beim zweiten Mal wegen einer Innenstufe von
+// 0,7 mm gegen den Nasenradius 1,2 seiner Bohrstange. Unsere Ampel sagte
+// dazu nichts; erst nach dem Aufmachen der Stufe auf ⌀33 lief das
+// Programm durch.
+//
+// GERECHNET WIRD AUF DER BAHN, nicht auf der Kontur: simEckenBestimmen
+// weiss bereits, welche Ecke konkav ist und wie stark sie knickt (das
+// traegt seit dem Ballen-Paket die SRK-Klemme). Damit gilt die Pruefung
+// fuer jeden Zyklus, der mit G41/G42 schlichtet, ohne dass sie die
+// Konturlogik ein zweites Mal formulieren muesste.
+//
+// ZWEI GEOMETRISCHE REGELN, beide sind dieselbe Sache aus zwei Richtungen:
+//
+//  (a) KONKAVER BOGEN: eine Hohlkehle mit Radius kleiner als der
+//      Schneidenradius laesst sich nicht ausfahren. Die Schneide bildet
+//      dort ihren eigenen, groesseren Radius ab.
+//
+//  (b) ZU KURZES ELEMENT: an einer konkaven Ecke mit dem Innenwinkel
+//      theta braucht der Schneidenradius auf JEDEM Schenkel die Laenge
+//      r/tan(theta/2) — bei 90 Grad also genau r. Ist das Element
+//      kuerzer als die Summe seiner beiden Schulden, ueberschneiden sich
+//      die Rundungen: die Flaeche entsteht nie.
+//
+//  simEckenBestimmen liefert den Knickwinkel zwischen den Bahnrichtungen;
+//  der Innenwinkel ist 180 Grad minus dieser Knick.
+function simRadiusPasst(){
+  const funde=[];
+  if(typeof simMoves==='undefined' || !simMoves.length) return funde;
+  // Das Werkzeug haengt am ZUG: mv.t traegt die aufgeloeste Werkzeugnummer
+  // (parseGcodeForSim rechnet den Revolverplatz zurueck). Ein Programm
+  // faehrt mehrere Werkzeuge, und jedes hat seinen eigenen Radius.
+  let r=0;
+  const schuld=(knick)=>{
+    // knick im Bogenmass, zwischen den Bahnrichtungen gemessen.
+    if(!(knick>1e-6)) return 0;
+    const theta=Math.PI-knick;                 // Innenwinkel im Material
+    if(theta<=1e-6) return Infinity;           // Kontur kehrt um
+    const t=Math.tan(theta/2);
+    return t>1e-9 ? r/t : Infinity;
+  };
+  simMoves.forEach(mv=>{
+    if(mv.type==='rapid' || !mv.comp) return;
+    const tw=(typeof toolTable!=='undefined' && toolTable) ? toolTable.find(x=>String(x.t)===String(mv.t)) : null;
+    r=Math.max(0, +(tw&&tw.r)||0);
+    if(!r) return;
+    // (a) Hohlkehle enger als die Schneide. Ob ein Bogen eine Kehle ist
+    //     oder eine Kuppe, ist dieselbe Frage wie bei einer Ecke: dreht
+    //     die Bahn ZUM Werkzeug hin? Deshalb wird hier nicht am
+    //     Drehsinn geraten, sondern simEckeKonkav auf Anfangs- und
+    //     Endtangente DESSELBEN Bogens angewandt — dieselbe gemessene
+    //     Funktion, an der die SRK-Klemme haengt.
+    //     (Mein erster Anlauf las den Drehsinn direkt: "bei G42 ist ein
+    //     Gegenuhrzeigersinn-Bogen die Kehle". Das war falsch herum —
+    //     die R2- und R3-Kehlen des Stufenbolzens galten als Kuppen, und
+    //     die Regel waere toter Code gewesen.)
+    if(mv.type==='arc' && mv.cx!==undefined){
+      const rk=Math.hypot(mv.z1-mv.cz, d2r(mv.x1)-d2r(mv.cx));
+      const hohl = simEckeKonkav(simRichtungAn(mv,0), simRichtungAn(mv,1), mv.comp);
+      if(hohl && rk>1e-6 && rk < r-1e-6)
+        funde.push({art:'bogen', z:mv.z1, x:mv.x1, soll:rk, r:r});
+    }
+    // (b) Element kuerzer als die Radiusschuld seiner konkaven Enden.
+    let L;
+    if(mv.type==='arc' && mv.cx!==undefined){
+      const rk=Math.hypot(mv.z1-mv.cz, d2r(mv.x1)-d2r(mv.cx));
+      const a1=Math.atan2(d2r(mv.x1)-d2r(mv.cx), mv.z1-mv.cz);
+      const a2=Math.atan2(d2r(mv.x2)-d2r(mv.cx), mv.z2-mv.cz);
+      let da=a2-a1;
+      if(mv.cw && da>0) da-=2*Math.PI;
+      if(!mv.cw && da<0) da+=2*Math.PI;
+      L=Math.abs(da)*rk;
+    } else {
+      L=Math.hypot(mv.z2-mv.z1, d2r(mv.x2)-d2r(mv.x1));
+    }
+    const sA = mv.__konkavA ? schuld(mv.__knickA||Math.PI/2) : 0;
+    const sE = mv.__konkavE ? schuld(mv.__knickE||Math.PI/2) : 0;
+    if(sA+sE > L+1e-6)
+      funde.push({art:'kurz', z:mv.z1, x:mv.x1, laenge:L, noetig:sA+sE, r:r});
+  });
+  return funde;
 }
 
 // Bahnrichtung an der Stelle t (Radiusmaß), für die Schneidenradiuskorrektur
