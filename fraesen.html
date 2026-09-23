@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="23.09.2026 20:14 (68221ea1)";</script>
+<script>window.__DZ_STAND="23.09.2026 21:12 (8f81fe66)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -8502,9 +8502,25 @@ function fPlanBohrungen(A, F){
 // kein Grund zu raten: entweder faehrt ein Fraeser die Bohrung wendelnd
 // aus (Zyklus 208, dafuer muss er hineinpassen), oder die App sagt, was
 // fehlt.
-function fPlanBohrWerkzeug(prog, d){
+// dFrei [23.09.2026]: der Durchmesser, der an der MUENDUNG dieser Bohrung
+// wirklich offen ist. Ohne ihn waehlte die Wahl nur nach dem Bohrungsmass -
+// und ein ⌀20-Fraeser, der in eine ⌀21-Bohrung gehoert, kommt nicht
+// hinein, wenn der Weg dorthin nur ⌀16 frei ist. Gefunden an Daniels
+// Verbinder: der Fraeser fuhr im Eilgang auf SC ueber die Bezugsflaeche,
+// und sein Rand stand dabei im Material daneben (Kollision bei Z-0,207).
+// Fuer Zentrierschritte wird das seit dem 17.09.2026 gerechnet, fuer die
+// Bohrung selbst bis jetzt nicht.
+function fPlanBohrWerkzeug(prog, d, dFrei){
   const wz = (prog && prog.werkzeuge) || [];
-  const bohrer = wz.filter(w => w.art === 'bohrer' && Math.abs((+w.d || 0) - d) < 0.021)
+  // MIT LUFT, nicht auf Kante: gemessen war die Oeffnung an Daniels
+  // Verbinder ⌀20,04 und der gewaehlte Fraeser ⌀20 - rechnerisch passt er,
+  // praktisch streift er die Wand, und das Sollfeld loest 0,04 mm ohnehin
+  // nicht auf (Raster 0,3 bis 0,5). Ein Millimeter im Durchmesser ist
+  // dieselbe Groessenordnung wie der Abstand, den die Wahl zum
+  // BOHRUNGSMASS ohnehin haelt (0,4 mm).
+  const F_MUEND_LUFT = 1;
+  const passt = (w) => !(dFrei > 0) || (+w.d || 0) <= dFrei - F_MUEND_LUFT;
+  const bohrer = wz.filter(w => w.art === 'bohrer' && Math.abs((+w.d || 0) - d) < 0.021 && passt(w))
                    .sort((a, b) => (b.lcuts || 0) - (a.lcuts || 0))[0];
   if(bohrer) return {art:'bohren', t:bohrer.nr, wz:bohrer};
   // Wendelnd ausfraesen (Zyklus 208): das geht nur mit einem Fraeser, der
@@ -8515,14 +8531,15 @@ function fPlanBohrWerkzeug(prog, d){
   // faehrt er ewig im Kreis, und die Stelle ist ohnehin keine Bohrung mehr,
   // sondern eine runde Tasche.
   const fr = wz.filter(w => w.art === 'fraeser' && (+w.angle || 0) > 0
-                            && (+w.d || 0) <= d - 0.4 && (+w.d || 0) >= d / 3)
+                            && (+w.d || 0) <= d - 0.4 && (+w.d || 0) >= d / 3 && passt(w))
                 .sort((a, b) => (+b.d || 0) - (+a.d || 0))[0];
   if(fr) return {art:'bohrfraesen', t:fr.nr, wz:fr};
   // Warum es nicht geht, ist fuer die Meldung wichtiger als das blosse Nein.
   const rampe = wz.filter(w => w.art === 'fraeser' && (+w.angle || 0) > 0)
                   .sort((a, b) => (+b.d || 0) - (+a.d || 0))[0];
-  return {art:null, t:0, wz:null,
-          grund:(rampe && d > (+rampe.d || 0) * 3) ? 'tasche' : 'kein werkzeug'};
+  return {art:null, t:0, wz:null, dFrei:dFrei,
+          grund:(rampe && d > (+rampe.d || 0) * 3) ? 'tasche'
+               : ((dFrei > 0 && dFrei < d - 0.4) ? 'muendung' : 'kein werkzeug')};
 }
 
 // WIEVIEL PLATZ HAT DAS WERKZEUG AN DIESER STELLE? [17.09.2026]
@@ -8712,8 +8729,22 @@ function fPlanBohrSchritte(prog, A, F){
    } else if(e.punkte.length && ei === 0 && !zentrierer) hinweise.push('Kein Zentrierbohrer in der Werkzeugtabelle — es wird ohne Zentrieren gebohrt.');
 
    e.gruppen.forEach(g => {
-    const W = fPlanBohrWerkzeug(prog, g.d);
-    if(!W.art) return;                               // schon vorweg gemeldet
+    // Je GRUPPE, nicht je Ebene: eine Bohrung im Freien soll nicht daran
+    // scheitern, dass eine andere auf derselben Flaeche eng steht.
+    const frei = g.punkte.length
+      ? fRund(2 * Math.min.apply(null, g.punkte.map(p => fFreiRadius(F, p.x, p.y, e.z, 60))))
+      : 0;
+    const W = fPlanBohrWerkzeug(prog, g.d, frei);
+    if(!W.art){
+      if(W.grund === 'muendung')
+        hinweise.push('⌀' + g.d + ' auf Flaeche Z' + e.z + ': an der Muendung sind nur ⌀' + frei
+          + ' offen — kein Werkzeug kommt dort hinein. Diese Bohrung wird NICHT geplant;'
+          + ' erst muss die Oeffnung darueber gefraest werden.');
+      return;                                        // sonst schon vorweg gemeldet
+    }
+    if(frei > 0 && (+W.wz.d || 0) < g.d - 0.4 && W.art === 'bohrfraesen' && frei < g.d - 0.4)
+      hinweise.push('⌀' + g.d + ' auf Flaeche Z' + e.z + ': an der Muendung sind nur ⌀' + frei
+        + ' offen — gewaehlt wird deshalb der Fraeser ⌀' + fRund(W.wz.d) + '.');
     const mi = muster.length;
     muster.push({name:'⌀' + g.d + (g.durch ? ' durch' : ' ' + fRund(g.tiefe) + ' tief'), typ:'punkte', punkte:g.punkte.slice()});
     // Spitzenlaenge 0,3 x ⌀ gilt fuer den 118-Grad-Standardbohrer; steht in
