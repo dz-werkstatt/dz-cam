@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="23.09.2026 23:22 (35adadc5)";</script>
+<script>window.__DZ_STAND="24.09.2026 01:15 (bb0bdbeb)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -5214,6 +5214,35 @@ das Foto eines bestimmten Tages (1500er 22.09.2026, alle 16 Pl&auml;tze; 1000er
 und die Referenz unrecht. Deshalb steht in jeder Meldung das Ablesedatum und beide
 Zahlen &mdash; entscheiden musst Du. &Uuml;ber Pl&auml;tze, die nie abgelesen wurden,
 sagt die App ausdr&uuml;cklich nichts.</dd>
+<dt id="ba-wz-bezug">Die Bezugsschneide der Stecher (seit 24.09.2026)</dt>
+<dd>Eine Stechplatte ist breit, und die Steuerung muss wissen, auf welche ihrer
+beiden Kanten das Werkzeug eingemessen ist. In der Werkzeugtabelle steht das je
+Werkzeug als <b>Bezugsschneide</b>, und gemeint ist die <b>Bildansicht</b>:
+&bdquo;links&ldquo; hei&szlig;t, der programmierte Punkt ist die im Bild linke
+Klingenkante, die Klinge liegt rechts davon.
+<br><b>Ab Werk stehen alle drei Stecher auf links</b> &mdash; so misst Daniel sie
+ein. Das &auml;ndert am fertigen Teil nichts: die App verschiebt die Z-Werte des
+Zyklus um die Klingenbreite, und dieselbe Klinge steht an derselben Stelle
+(nachgerechnet am H&ouml;henfeld, Spalte f&uuml;r Spalte identisch). Was sich
+&auml;ndert, sind die Zahlen im Programm &mdash; und deshalb sagt die Ampel es in
+einer eigenen Zeile unter <i>So rechnet die App</i>.
+<br><b>Wichtig:</b> an der Maschine muss das Werkzeug ebenso eingemessen sein wie
+in der Tabelle. Steht es dort auf der anderen Kante, sitzt jede Nut um eine
+Klingenbreite daneben. Umstellen l&auml;sst es sich je Werkzeug im
+Werkzeugfenster.
+<br><b>Drei Stellen bleiben unber&uuml;hrt</b>, und jede aus eigenem Grund:
+der <b>Zyklussatz</b> (G71 und Geschwister) tr&auml;gt die <b>Nutgeometrie</b> &mdash;
+die Mei&szlig;elbreite bekommt die Steuerung im selben Satz und setzt die Klinge
+selbst; die <b>Stirnnut</b> sticht axial, dort liegt die Klingenbreite radial und
+nicht in Z; und ein Werkzeug, das nicht auf links steht, wird ohnehin nicht
+verschoben.
+<br><b>Ehrlich offen:</b> welche radiale Kante bei einer <i>axialen</i> Platte
+&bdquo;links&ldquo; hei&szlig;t, ist an keiner Maschine belegt &mdash; bei einer
+Stirnnut sagt die App das und bittet um den ersten Lauf im Einzelsatz. Und die
+abgelesenen Werkzeugtabellen der Maschinen f&uuml;hren keine Spalte f&uuml;r die
+Bezugsschneide: der Abgleich gegen die WZ-KORR kann sie deshalb nicht
+pr&uuml;fen.</dd>
+
 <dt id="ba-wz-radius">Passt der Schneidenradius in die Kontur? (seit 22.09.2026)</dt>
 <dd>Eine Schneide hat einen Radius, und der l&auml;sst sich nicht in jede Kontur
 fahren. Die Steuerung pr&uuml;ft das selbst und weist das Programm mit
@@ -5409,7 +5438,7 @@ vorschruppen.</dd>
      TT.MM.JJJJ" ergaenzt, MUSS dieses Datum mitziehen — sonst schlaegt
      der Pruefstand an. [Daniels Befund 06.09.2026: die Anleitung war
      inhaltlich nachgezogen, das Standdatum stand noch auf 31.08.] -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 22.09.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 24.09.2026. Sie
 w&auml;chst mit der App &mdash; das Inhaltsverzeichnis wird aus den Kapiteln
 erzeugt und ist damit immer vollst&auml;ndig.</p>
 
@@ -6464,7 +6493,7 @@ let toolTable = [
   {platz:1, t:'1',  name:'Außen Schruppen CNMG 80°', art:'aussen', r:0.8, sl:3, ew:95, sw:80, len:12, vc:180},
   {platz:2, t:'2',  name:'Außen Schruppen DNMG 55°', art:'aussen', r:0.8, sl:3, ew:93, sw:55, len:10, vc:180},
   {platz:3, t:'3',  name:'Außen Schlichten VBMT 35°', art:'aussen', r:0.4, sl:3, ew:93, sw:35, len:8, vc:200},
-  {platz:4, t:'4',  name:'Stechdrehmeißel außen 3,15mm', art:'stechen', r:0.15, sl:3, ew:90, sw:0, len:3.15, refEdge:'rechts', vc:140},
+  {platz:4, t:'4',  name:'Stechdrehmeißel außen 3,15mm', art:'stechen', r:0.15, sl:3, ew:90, sw:0, len:3.15, refEdge:'links', vc:140},
   // Schneidenlage 3 = Schneide LINKS UNTEN, wie es die Normplatten fuer das
   // Aussengewinde tragen; kein Vc, denn Gewinde faehrt G97 (feste Drehzahl).
   {platz:5, t:'5',  name:'Gewindedrehmeißel außen 60°', art:'gewinde', r:0, sl:3, ew:90, sw:60, len:4},
@@ -6490,7 +6519,7 @@ let toolTable = [
   // Der Innenstecher traegt SL4 wie die Bohrstangen - der Koerper liegt
   // Richtung KLEINERER Durchmesser, also in der Bohrung. Mit einem
   // Aussenstecher (SL3) waere der Halter dort in der Wand.
-  {platz:11, t:'11', name:'Stechdrehmeißel innen 3mm (Bohrstange)', art:'stechen', r:0.2, sl:4, ew:90, sw:0, len:3, refEdge:'rechts', vc:140},
+  {platz:11, t:'11', name:'Stechdrehmeißel innen 3mm (Bohrstange)', art:'stechen', r:0.2, sl:4, ew:90, sw:0, len:3, refEdge:'links', vc:140},
   {platz:12, t:'12', name:'Gewindebohrstange 60° (innen)', art:'gewinde', r:0.8, sl:4, ew:90, sw:60, len:4},
   // ---- Revolver 13-14: GROSSE TEILE --------------------------------
   // Beide braucht eine Testvorlage wirklich, und beide sind ein Umruestfall:
@@ -6498,7 +6527,7 @@ let toolTable = [
   // 3-mm-Klinge wuerde dort niemand einsetzen; und um eine Bohrung auf ⌀48
   // auszudrehen, muss sie erst ⌀26 vorgebohrt sein (die Bohrstange hat 10 mm
   // Kopfdurchmesser und kommt in ein ⌀10-Loch nicht hinein).
-  {platz:13, t:'13', name:'Stechdrehmeißel außen 6mm', art:'stechen', r:0.4, sl:3, ew:90, sw:0, len:6, refEdge:'rechts', vc:140},
+  {platz:13, t:'13', name:'Stechdrehmeißel außen 6mm', art:'stechen', r:0.4, sl:3, ew:90, sw:0, len:6, refEdge:'links', vc:140},
   {platz:14, t:'14', name:'Wendeplattenbohrer 26mm', art:'bohren', r:0, sl:9, ew:0, sw:140, len:80, dm:26},
   // PLAETZE 15 und 16 bleiben FREI - dort steckt, was ein bestimmtes Bauteil
   // braucht. Eine Luecke MITTEN in der Liste bringt dagegen nichts: der Puffer
@@ -6548,7 +6577,11 @@ const WZ_VORGABE=JSON.parse(JSON.stringify(toolTable));
 // (aus 20 wurde 4, aus 21 wurde 13, aus 13 wurde ein Lagerwerkzeug).
 // Eine stumme Uebernahme waere die schlimmere Antwort — der Bediener
 // saehe eine Tabelle, die zu seinen Programmen nicht mehr passt.
-const WZ_SLOT_V=4;
+// v5 [23.09.2026]: die Stecher stehen ab Werk auf der LINKEN
+// Bezugsschneide. Ein aelterer Slot wird verworfen statt umgerechnet -
+// ein gespeichertes Werkzeug kann bewusst auf rechts stehen, und
+// welche Seite gemeint war, ist rueckwaerts nicht zu entscheiden.
+const WZ_SLOT_V=5;
 let WZ_SLOT_VERWORFEN=false;
 // EINE BELEGUNG FUER BEIDE MASCHINEN [Daniel, 18.09.2026: "die
 // gleiche Auflistung, die haben auch beide 16 Revolverplaetze, und
@@ -15756,8 +15789,8 @@ const WERKZEUG_VORLAGEN = [
   { id:'d55',   label:'55° Platte (D)',  name:'Außendrehmeißel 55° Schlichten', art:'aussen', r:0.4, sl:3, ew:93, sw:55, len:10 },
   { id:'v35',   label:'35° Platte (V)',  name:'Kopierdrehmeißel 35°',           art:'aussen', r:0.2, sl:3, ew:93, sw:35, len:8  },
   { id:'rund',  label:'Rundplatte (R)',  name:'Runddrehmeißel R4',              art:'aussen', r:4,   sl:3, ew:90, sw:0,  len:8, rund:true },
-  { id:'stech', label:'Stechplatte',     name:'Stechdrehmeißel 3mm',            art:'stechen',r:0.2, sl:3, ew:90, sw:0,  len:3, refEdge:'rechts' },
-  { id:'steI',  label:'Stech innen',    name:'Stechdrehmeißel innen 3mm',      art:'stechen',r:0.2, sl:4, ew:90, sw:0,  len:3, refEdge:'rechts' },
+  { id:'stech', label:'Stechplatte',     name:'Stechdrehmeißel 3mm',            art:'stechen',r:0.2, sl:3, ew:90, sw:0,  len:3, refEdge:'links' },
+  { id:'steI',  label:'Stech innen',    name:'Stechdrehmeißel innen 3mm',      art:'stechen',r:0.2, sl:4, ew:90, sw:0,  len:3, refEdge:'links' },
   { id:'gew',   label:'Gewinde 60°',     name:'Gewindedrehmeißel 60°',          art:'gewinde',r:0.1, sl:3, ew:90, sw:60, len:4 },
   { id:'i80',   label:'Innen 80° (C)',   name:'Innendrehmeißel 80°',            art:'innen',  r:0.4, sl:4, ew:93, sw:80, len:8 },
   { id:'bohr',  label:'Spiralbohrer',    name:'Spiralbohrer 10mm',              art:'bohren', r:0,   sl:9, ew:0,  sw:118,len:60, dm:10 },
@@ -22416,6 +22449,7 @@ const PP_FEST=[
   'NC-Kommentare in ASCII, ohne Klammern im Text — die Steuerung schliesst den Kommentar an der ERSTEN \u0029.',
   'D Zustelltiefe und UX Aufmass gelten RADIAL (ap, je Seite); axiale Werte (Planzustellung, UZ) 1:1.',
   'Schneidenradiuskorrektur automatisch: Schruppen ohne, Schlichten G41/G42 nach Lage.',
+  'Bezugsschneide der Stecher: ab Werk LINKS (Bildansicht - der programmierte Punkt ist die linke Klingenkante). Die Z-Worte der Stech-, Einstech- und Abstechzyklen liegen dadurch um die Klingenbreite niedriger; das Teil ist dasselbe (Hoehenfeld Spalte fuer Spalte identisch, 24.09.2026). Der ZYKLUSSATZ bleibt unveraendert - dort steht die Nutgeometrie, die Steuerung bekommt die Meisselbreite im Satz. Die Stirnnut (axial) wird nicht verschoben: dort liegt die Breite radial. An der Maschine muss das Werkzeug ebenso eingemessen sein.',
   'Passt der Schneidenradius in die Kontur? Die Ampel misst auf den fertigen Bahnen, ob eine Hohlkehle enger ist als die Schneide und ob ein Element kuerzer ist als die Radiusschuld r/tan(theta/2) seiner konkaven Enden - beides weist die Steuerung als Konturverletzung zurueck (18.09.2026 am Masterteil: Innenstufe 0,7 mm gegen Nasenradius 1,2). Hinweis, kein Blocker.',
   'Werkzeug-Abgleich gegen die WZ-KORR der Maschine: die Ampel vergleicht jeden gerufenen Platz mit der abgelesenen Korrekturtabelle (1500er 22.09.2026 alle 16 Plaetze, 1000er 16.09.2026 sechs Plaetze) und meldet abweichenden Schneidenradius (er geht als PF in den Zyklussatz), abweichende Werkzeugart (die Steuerung weist den Zyklus zurueck) und Lagerwerkzeuge ohne Platz. Hinweis, kein Blocker — die Referenz ist ein Foto, wer umgeruestet hat, hat recht.',
   'NMAX-Drehzahlgrenze (Programmkopf): jede G96-Anwahl steht als G97 S<NMAX>, G96 erst vor dem ersten Satz, dessen Start und Ziel ueber dem Grenz-Durchmesser liegen; unter der Klemme keine S-Woerter (10.09.2026: Alarm 007 an der 1000er, G96 am kleinen X angewaehlt). Leer = keine Wache, die Ampel sagt es an.',
@@ -30177,15 +30211,54 @@ function zwischenMListe(q){
 // daneben (gemessen an der Nutwelle: 10 mm Einschnitt im Feld,
 // Mastertestteil 94,9 mm).
 // =================================================================
-function bezugsschneideVersetzen(lines, von, tNr, warnings, wo){
+function bezugsschneideVersetzenNeu(){ bezugsschneideVersetzen.__gesagt = {}; }
+function bezugsschneideVersetzen(lines, von, tNr, warnings, wo, axial){
   const tw = toolTable.find(x=>String(x.t)===String(tNr));
   if(!tw || tw.refEdge!=='links') return 0;
   const bw = Math.max(0.5, +tw.len||3);
+  // AXIAL IST ES KEIN Z-VERSATZ [23.09.2026, an der Stirnnut der Buchse
+  // gemessen]. Beim radialen Stich liegt die Klingenbreite in Z, beim
+  // AXIALEN (Stirnnut) quer dazu - radial. Der pauschale Z-Versatz stach
+  // die Nut um eine Klingenbreite zu tief: Grund Z-34 statt Z-31 bei T1 6
+  // ab Z0 -25. Welche radiale Kante bei einer axialen Platte "links"
+  // heisst, ist an keiner Maschine belegt - die Stirnnut ist ohnehin
+  // unverifiziert (05.09.2026). Deshalb hier NICHTS verschieben und es
+  // sagen, statt die zweite Richtung zu raten.
+  if(axial){
+    warnings.push(wo+' mit T'+tNr+' (Stirnnut): das Werkzeug ist LINKS eingemessen. Bei einem AXIALEN Stich liegt die Klingenbreite radial, nicht in Z - die Z-Werte bleiben deshalb unveraendert. Welche radiale Kante der Bezugspunkt ist, ist an keiner Maschine belegt: den ersten Lauf im Einzelsatz fahren und die Nutlage in X nachmessen.');
+    return 0;
+  }
   for(let li=von; li<lines.length; li++){
-    if(!/^N\d+/.test(lines[li])) continue;
+    // AUCH DIE (SIM:)-ZEILEN [23.09.2026, an der 20-mm-Nut aus Abschnitt
+    // 195 gemessen]. Im Zyklusmodus steht die Bahn nicht als Satzfolge da,
+    // sondern als (SIM:)-Huelle um den Zyklussatz - und die trifft
+    // /^N\d+/ nicht. Die Simulation stempelte die Klinge damit nach der
+    // Werkzeugtabelle (links), waehrend die Bahn auf der rechten Ecke
+    // stand: der Massbericht meldete 93 % statt 100. Die SIM-Zeilen sind
+    // die WERKZEUGBAHN, nicht die Zyklusgeometrie - sie wandern mit.
+    if(!/^N\d+/.test(lines[li]) && !/^\(SIM: N\d+/.test(lines[li])) continue;
+    // EIN ZYKLUSSATZ BLEIBT, WIE ER IST [23.09.2026, am G71 des
+    // Stufenbolzens gemessen]. Dort steht die NUTGEOMETRIE, nicht der
+    // Werkzeugpunkt: die Steuerung bekommt die Meisselbreite im selben
+    // Satz (PW/P230) und setzt die Klinge nach IHRER Werkzeugtabelle
+    // selbst; Z ist die linke Nutkante (Maskensatz 11.09.2026). Der
+    // pauschale Versatz machte daraus zweierlei Unsinn: aus Z-21.5 wurde
+    // Z-24.65 - die Nut saesse 3,15 mm zu weit links, an der Maschine ein
+    // falsches Teil -, und aus dem Inkrementalwort K0 des Zyklus wurde
+    // K-3.15, wo K gar kein Bogenmittelpunkt ist.
+    if(/\bG(7[0-9]|80)\b/.test(lines[li])) continue;
     lines[li]=lines[li].replace(/([ZK])(-?\d+(?:\.\d+)?)/g, (m,w,v)=>w+fmt(+v-bw));
   }
-  warnings.push(wo+' mit T'+tNr+': Bezugsschneide ist die LINKE Klingenkante — alle Z-Werte des Zyklus liegen um die Stechbreite ('+fmt(bw)+' mm) niedriger als bei rechter Bezugskante. Die Bearbeitung selbst sitzt unveraendert; Werkzeug entsprechend eingemessen haben.');
+  // EINMAL JE WERKZEUG, NICHT JE ZYKLUS [23.09.2026]: die Rotorwelle
+  // sticht zweimal mit T13 und bekam denselben Satz zweimal. Und der
+  // Satz sagt etwas ueber die AUSGABE, nicht ueber das Teil - er
+  // gehoert damit in den Block "So rechnet die App" (APP_ARBEITSWEISE).
+  const merk = wo + "|" + tNr;
+  if(!bezugsschneideVersetzen.__gesagt) bezugsschneideVersetzen.__gesagt = {};
+  if(!bezugsschneideVersetzen.__gesagt[merk]){
+    bezugsschneideVersetzen.__gesagt[merk] = 1;
+    warnings.push('So rechnet die App — Bezugsschneide: T'+tNr+' ist LINKS eingemessen (Stechbreite '+fmt(bw)+' mm), der programmierte Punkt ist die linke Klingenkante. Die Z-Werte des '+wo+'-Zyklus liegen deshalb um diese Breite niedriger als bei rechter Bezugskante; die Bearbeitung sitzt unveraendert. An der Maschine muss das Werkzeug ebenso eingemessen sein.');
+  }
   return bw;
 }
 // REITSTOCKGRENZE AUS DEM PROGRAMMKOPF [Daniel, 18.09.2026]: Spitze,
@@ -30203,6 +30276,7 @@ function mitReitstock(par, idx, warnings){
   return Object.assign({}, par, {xmin: rs, xminKopf: true});
 }
 function buildProgram(){
+  bezugsschneideVersetzenNeu();
   // ZIELMASCHINE SIEMENS: ein eigener Schreiber (98-siemens-drehen.js).
   // Er liest denselben Arbeitsplan, kann aber Zyklen statt Einzelsaetzen
   // und schreibt den Siemens-Dialekt. Diese Funktion bleibt darunter
@@ -30671,7 +30745,7 @@ function buildProgram(){
       const esVon = lines.length;
       genEinstechen({...st.params,
         safeX: (st.params.lage==='innen') ? undefined : stock + 2}, N, bump, lines, warnings);
-      bezugsschneideVersetzen(lines, esVon, st.params.t, warnings, 'Einstechen');
+      bezugsschneideVersetzen(lines, esVon, st.params.t, warnings, 'Einstechen', st.params.ausr==='axial');
     }
     else if(st.type==='abstechen'){
       const rsAb=(typeof pkReitstockXmin==='function')? pkReitstockXmin() : 0;
@@ -36672,7 +36746,17 @@ function massBericht(){
         // obwohl sie sauber geschnitten wird.
         const twB=toolTable.find(x=>String(x.t)===String(m.t));
         const bwB=(twB && twB.art==='stechen' && +twB.len>0)? +twB.len : 0;
-        const kandidaten = bwB>0 ? [zc0, zc0-bwB] : [zc0];
+        // SEITE DER PLATTE AUCH HIER [23.09.2026, an der Rotorwelle
+        // gemessen]. Die zweite Kante lag fest bei zc0-bw, also auf der
+        // rechten Bezugsschneide. Mit einem links eingemessenen Stecher
+        // - seit heute die Vorgabe - suchte die Pruefung die Flanke auf
+        // der falschen Seite: Z-140 und Z-330 galten als FEHLMASS, Z-150
+        // wurde als Z-152 gemessen, obwohl das Hoehenfeld Spalte fuer
+        // Spalte dasselbe Teil zeigt. Dieselbe Klasse wie das Band in
+        // istBauen(), nur an einer Stelle, die am 18.09.2026 uebersehen
+        // wurde.
+        const linksRefB = !!(twB && twB.refEdge==='links');
+        const kandidaten = bwB>0 ? [zc0, linksRefB ? zc0+bwB : zc0-bwB] : [zc0];
         kandidaten.forEach(zc=>{
           if(zc>zRoh+0.005) return;                        // schneidet Luft
           if(Math.abs(zc-zSoll)>2) return;                 // nur das Fenster um die Flaeche
@@ -36899,6 +36983,9 @@ const APP_ARBEITSWEISE = [
   /^Konturabspanen innen/,
   /^Gewinde Längs innen: X0 ist der Kern/,
   /an der Maschine noch unbestaetigt/,
+  // Die Bezugsschneide sagt, WIE die App die Z-Werte schreibt - am Teil
+  // aendert sie nichts (Hoehenfeld Spalte fuer Spalte gleich, 23.09.2026).
+  /^So rechnet die App — Bezugsschneide:/,
 ];
 function programmPruefen(){
   const rot=[], gelb=[], gruen=[], grau=[];
