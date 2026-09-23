@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="23.09.2026 01:18 (d5bd6a9b)";</script>
+<script>window.__DZ_STAND="23.09.2026 09:51 (72972af0)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3590,13 +3590,19 @@ samt Aufma&szlig;&ldquo;, w&auml;hrend 4 mm stehen blieben. Eine falsche Zusiche
 <dt id="ba-fk05c-stufenhoehe">Stufenh&ouml;he: die Treppe an Schr&auml;gen flacher machen (23.09.2026)</dt><dd>Z-konstantes Schruppen l&auml;&szlig;t an einer Schr&auml;ge eine
 Treppe stehen, die so hoch ist wie die <b>Zustellung</b>. Wer sie flacher will, m&uuml;&szlig;te enger zustellen &mdash; und zahlt das auf der <b>ganzen</b> Fl&auml;che,
 obwohl nur die Schr&auml;ge es braucht.
-<br>Das Feld <b>Stufenh&ouml;he</b> f&uuml;gt Zwischenebenen ein, und die App f&auml;hrt sie <b>nur dort, wo die Sollform geneigt ist</b> (5 bis 80 Grad). Auf
+<br>Das Feld <b>Stufenh&ouml;he</b> f&uuml;gt Zwischenebenen ein, und die App f&auml;hrt sie <b>nur dort, wo die Sollform geneigt ist</b> (0,2 bis 80 Grad). Auf
 waagerechten Fl&auml;chen und an senkrechten W&auml;nden &auml;ndert sich nichts. <b>0 schaltet es ab &mdash; das ist die Vorgabe</b>, denn es kostet Schnittweg.
 <br><b>Gemessen</b> am Rampenblock (45-Grad-Schr&auml;ge, Zustellung 4, &#x2300;12): ohne Stufenh&ouml;he ist die Treppe <b>4,75 mm</b> hoch bei 471 mm Schnittweg;
 mit 2 mm sind es <b>2,75 mm</b> bei 1081 mm, mit 1 mm <b>2,35 mm</b> und mit 0,5 mm <b>1,55 mm</b> bei 5220 mm. Der Bericht nennt die <b>gemessene</b> H&ouml;he, nicht die eingestellte:
 an der Grenze der Ebenenmaske weicht die Bahn je Ebene um den Werkzeugradius zur&uuml;ck, und dort bleibt mehr stehen.
-<br><i>Vorbild:</i> hyperMILLs <i>Stufenh&ouml;he</i>. Dort kostet sie den ganzen Schnittweg (an seinem Trainingsjob 8 gemessen: 18689 auf 32340 mm, also fast doppelt),
-weil die Zwischenebenen &uuml;berall gefahren werden. Weil unsere Bahn ohnehin je Ebene entscheidet, wo sie f&auml;hrt, zahlen wir nur f&uuml;r die Schr&auml;gen.</dd>
+<br><b>Auch eine FLACHE Schr&auml;ge z&auml;hlt dazu</b>, und das ist wichtiger, als es klingt: die Treppe ist auf jeder geneigten Fl&auml;che so hoch wie die Zustellung &mdash;
+die Neigung bestimmt nur ihre <b>Breite</b>. An einer Fl&auml;che mit 3 Grad ist sie <b>4,0 mm</b> hoch, an einer 45-Grad-Rampe <b>4,05 mm</b>; mit 2 mm Stufenh&ouml;he
+werden daraus <b>2,02</b> bzw. <b>2,05 mm</b>. Die untere Grenze von 0,2 Grad steht nur gegen ein im CAD minimal schief modelliertes &#x201E;waagerecht&#x201C;.
+<br><i>Vorbild:</i> hyperMILLs <i>Stufenh&ouml;he</i>. Dort liegen die Zwischenebenen &uuml;ber dem ganzen Bereich und kosten entsprechend Schnittweg (an seinem
+Trainingsjob 8 gemessen: 18689 auf 32340 mm). Weil unsere Bahn ohnehin je Ebene entscheidet, wo sie f&auml;hrt, zahlen wir nur f&uuml;r die Schr&auml;gen &mdash; an einer
+45-Grad-Rampe rund die H&auml;lfte dessen, was ein vollfl&auml;chiges Vorgehen kostet, bei gleicher Treppenh&ouml;he. <b>Auf einer flach geneigten Fl&auml;che kommt
+dabei dasselbe heraus wie beim Vorbild</b>: dort ist ohnehin alles Schr&auml;ge. Bis zum 23.09.2026 stand unsere untere Grenze auf 5 Grad, und genau dieser Fall
+fiel heraus &mdash; die Zwischenebene kostete dort Weg, ohne die Treppe flacher zu machen.</dd>
 <dt id="ba-fk05c-abtrag">Mindest-Eingriff: Z&uuml;ge weglassen, die kaum schneiden (22.09.2026)</dt><dd>Ein Zug, der nur mit einem Zehntelmillimeter seiner Breite
 im Material steht, kostet die volle Fahrzeit und tr&auml;gt fast nichts ab. Das Feld <b>Mindest-Eingriff</b> ist die <b>mittlere Eingriffsbreite</b> in Millimetern:
 abgetragene Fl&auml;che geteilt durch die Zugl&auml;nge. Bleibt ein Zug darunter, wird er ausgelassen und gez&auml;hlt. <b>0 schaltet es ab &mdash; das ist die Vorgabe.</b>
@@ -11659,7 +11665,7 @@ function fBahnModell(s, tool, prog){
       const gx = (G.soll[q + 1] - G.soll[q - 1]) / (2 * r);
       const gy = (G.soll[q + nx] - G.soll[q - nx]) / (2 * r);
       const gr = Math.atan(Math.hypot(gx, gy)) * 180 / Math.PI;
-      if(gr > F_REST_EBEN_GRAD && gr < F_REST_WAND_GRAD) schraegM[q] = 1;
+      if(gr > F_SCHRAEG_MIN_GRAD && gr < F_REST_WAND_GRAD) schraegM[q] = 1;
     }
     fEdt(schraegM, nx, ny, d2S);
   }
@@ -11854,7 +11860,7 @@ function fBahnModell(s, tool, prog){
     // Die Zugabe ist die Hoehe, die eine RASTERZELLE auf dieser Schraege
     // ueberdeckt (tan(Neigung) mal Rasterweite) plus eine halbe Zelle
     // Messunsicherheit - bei 45 Grad und Raster 0,3 also 0,6 mm.
-    if(stH > F_REST_EBEN_GRAD && stH < F_REST_WAND_GRAD &&
+    if(stH > F_SCHRAEG_MIN_GRAD && stH < F_REST_WAND_GRAD &&
        d <= dz + uZ + r * (1 + Math.tan(stH * Math.PI / 180)) + 1e-9){
       treppeZellen++; if(d > treppeMax) treppeMax = d;
       // Fuer die BREITENMESSUNG zaehlt die Treppe als bearbeitet: die Breite
@@ -13048,14 +13054,38 @@ function fBahnSchlichtenKomplett(s, tool, prog){
 // die WebGL-Aufrufe. Bewusst NICHT gebaut: Halter und Spannmittel (Daniels
 // Ansage), SL-Zyklen 20-24 (gibt es in der App nicht).
 // ---------------------------------------------------------------------
-// Bis zu welcher Neigung gilt eine Sollflaeche als WAAGERECHT? Darueber ist
-// stehengebliebenes Material die Treppe des Z-konstanten Schruppens, darunter
-// eine Luecke der Ebenenwahl [22.09.2026]. 5 Grad ist dieselbe Grenze, mit
-// der die Schlichtbahn ihr unteres Winkelband beginnt.
-var F_REST_EBEN_GRAD = 5;
+// Bis zu welcher Neigung gilt eine Sollflaeche als WAAGERECHT? Darueber
+// traegt sie eine TREPPE des Z-konstanten Schruppens - stehengebliebenes
+// Material ist dort gewollt, und eine Zwischenebene macht die Treppe
+// flacher. Darunter ist beides falsch: auf einer waagerechten Flaeche
+// entsteht keine Treppe, dort ist Material eine Luecke der Ebenenwahl.
+//
+// DIE GRENZE STAND BIS ZUM 23.09.2026 AUF 5 GRAD, und das war an beiden
+// Stellen falsch [Daniels Einwand, ob hyperMILLs "Zwischenebenen
+// ueberall" nicht doch seinen Grund hat - er hatte einen]. Eine Treppe
+// ist auf JEDER geneigten Flaeche so hoch wie die Zustellung; die
+// Neigung bestimmt nur ihre BREITE (dz/tan a). Gemessen an einer
+// 3-Grad-Flaeche mit 4 mm Zustellung:
+//   - die Zwischenebene fiel aus, die Treppe blieb 4,21 mm - und kostete
+//     trotzdem 62 % mehr Schnittweg (Randfenster ohne Nutzen),
+//   - und der Restmaterial-Bericht meldete 9181 mm2 "stehen geblieben,
+//     bis 4 mm hoch", wo in Wahrheit die gewollte Treppe stand.
+// Bei 8 und 30 Grad war beides richtig - der Fehler zeigte sich nur
+// unterhalb der Grenze, und dort hatte kein Pruefkoerper ihn gesucht.
+//
+// Nach unten gibt es keine fachliche Grenze: 0,2 Grad steht nur gegen
+// ein im CAD minimal schief modelliertes "waagerecht". Das Feld selbst
+// rauscht nicht - auf einer waagerechten Flaeche steht in jeder Zelle
+// derselbe Float32-Wert, der Gradient ist exakt 0 (an neun Modellen
+// gemessen, ueber 320000 Zellen kein einziger Ausreisser).
+var F_SCHRAEG_MIN_GRAD = 0.2;
 // Darueber ist es keine Schraege mehr, sondern eine Wand - dort ist
 // stehengebliebenes Material eine Ecke, kein Treppenabsatz.
 var F_REST_WAND_GRAD = 80;
+// Nach OBEN ist es keine Schraege mehr, sondern eine WAND: bei 80 Grad
+// und 4 mm Zustellung ist die Treppe 0,7 mm breit, schmaler als eine
+// Rasterweite. Dort ist stehengebliebenes Material eine Ecke, und eine
+// Zwischenebene brauchte es nicht.
 var F_SIM_EILGANG = 6000;   // mm/min fuer FMAX in der Zeitachse (kein NC-Wort, nur Anzeige)
 // Kegelmass der Werkzeugspitze: Hoehe je mm Radius (cot des halben
 // Spitzenwinkels). 0 = flach (Fraeser, Reibahle, Bohrstange).
