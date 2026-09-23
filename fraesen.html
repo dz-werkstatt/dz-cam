@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="23.09.2026 22:18 (48027118)";</script>
+<script>window.__DZ_STAND="23.09.2026 23:22 (35adadc5)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3758,13 +3758,21 @@ das Band also auf 0 bis 90.</dd>
 <b>ganze Teil</b>: die Bahn f&auml;hrt alles, was &uuml;ber der Sollform steht. Das reicht f&uuml;r ein Teil, das in einem Zug fertig wird. Wer <b>eine einzelne
 Tasche</b> mit einem kleineren Fr&auml;ser nachsetzen, <b>eine Fl&auml;che</b> zuletzt schlichten oder einen Bereich bewusst <b>auslassen</b> will, sagt der App das
 &uuml;ber eine <b>Begrenzung</b>.
-<p><b>Der Weg:</b> im STEP-Fenster auf <i>Ansicht &rarr; Sollform</i> schalten und die gew&uuml;nschte Fl&auml;che <b>antippen</b> (nochmal tippen w&auml;hlt sie ab;
-mehrere Fl&auml;chen gehen). Sie wird orange markiert. Dann in der Zeile <b>Bereich</b>:</p>
+<p><b>Der Weg:</b> im STEP-Fenster auf <i>Ansicht &rarr; Sollform</i> (oder <i>Reststand</i>) schalten und die gew&uuml;nschte Fl&auml;che <b>antippen</b>.
+Sie wird orange markiert. Dann in der Zeile <b>Bereich</b>:</p>
 <ul><li><b>Als Begrenzung &uuml;bernehmen</b> legt aus dem Rand der Fl&auml;che eine oder mehrere <b>Konturen</b> im Programm an. Diese hakst Du in der Maske eines
 Modell-Schritts unter <b>Bereich</b> an &mdash; der Schritt arbeitet dann nur dort.</li>
 <li><b>Schritt nur hier</b> nimmt Dir beides ab: die App legt einen fertigen Schritt an und w&auml;hlt daf&uuml;r <b>den gr&ouml;&szlig;ten Fr&auml;ser, der in den
 Bereich hineinkommt</b> (gemessen als gr&ouml;&szlig;ter Kreis, der in die Begrenzung passt, samt Seitenaufma&szlig;). Steht im Arbeitsplan schon ein Schruppschritt,
 wird es ein <i>Restmaterial abspanen</i> (er sieht dessen Stand), sonst ein <i>Modell abspanen</i>.</li></ul>
+<p><b>So viele Fl&auml;chen, wie Du brauchst</b> [Daniel, 23.09.2026]: tippe sie <b>nacheinander</b> an &mdash; jede kommt dazu, die Zeile <b>Bereich</b> z&auml;hlt
+mit (&bdquo;3 Fl&auml;che(n) gew&auml;hlt&ldquo;). Ein zweiter Tipp auf dieselbe Fl&auml;che nimmt sie wieder heraus, <b>Auswahl leeren</b> r&auml;umt alles ab. Aus drei
+gew&auml;hlten Fl&auml;chen entstehen die Begrenzungskonturen aller drei (jede mit ihren L&ouml;chern), und <i>Schritt nur hier</i> legt EINEN Schritt an, der in
+allen dreien arbeitet. Das ist der Weg, wenn ein Boden im Modell aus mehreren St&uuml;cken besteht &mdash; oder wenn Du schlicht mehrere Taschen mit demselben
+Werkzeug zerspanen willst.</p>
+<p><b>Wenn der Tipp knapp danebengeht:</b> das Bild der Sollform ist breit und flach, eine Rasterstelle darin ist oft nur <b>einen Bildpunkt</b> gro&szlig;.
+Trifft Dein Tipp keine Fl&auml;che, sucht die App im Umkreis von f&uuml;nf Bildpunkten die n&auml;chstgelegene &mdash; ein klarer Treffer wird nie umgebogen.
+Kommt trotzdem &bdquo;Dort liegt keine Fl&auml;che des Modells&ldquo;, tippe weiter in der <b>Mitte</b> der Fl&auml;che statt an ihrer Kante.</p>
 <p><b>Was die Begrenzung tut:</b> au&szlig;erhalb gilt der Materialstand als Sollh&ouml;he &mdash; dort ist nichts abzutragen, also f&auml;hrt keine Bahn hin, und
 der <b>Restmaterialbericht meldet dort auch nichts</b>. Der Materialstand bleibt trotzdem stehen: An- und Abfahrten <b>sehen</b> das Material au&szlig;erhalb, ein
 ausgelassener Bereich ist kein leerer Raum. Das gilt f&uuml;r <i>Modell abspanen</i>, <i>Restmaterial abspanen</i>, <i>Schr&auml;gen schlichten</i> und
@@ -21562,10 +21570,35 @@ function fStepWahlStand(){
     : ((STEP.ansicht !== "soll" && STEP.ansicht !== "rest") ? "Ansicht <b>Sollform</b> oder <b>Reststand</b>, dann eine Fl&auml;che antippen"
     : (n ? "<b>" + n + "</b> Fl&auml;che(n) gew&auml;hlt" : "eine Fl&auml;che antippen"));
 }
+// FANG BEIM ANTIPPEN [23.09.2026, an der Konturplatte gemessen]: das
+// Bild der Sollform ist breit und flach (1046 x 256 Bildpunkte fuer
+// 120 x 80 mm), eine Rasterstelle also gut EIN Bildpunkt gross. Wer
+// eine Flaeche nahe an ihrem Rand antippt, landet auf der Nachbar-
+// flaeche oder im Leeren - am Finger noch eher als an der Maus.
+// Trifft der Tipp keine Flaeche, wird deshalb im Umkreis von fuenf
+// BILDpunkten die naechstgelegene gesucht. In Bildpunkten und nicht
+// in Millimetern, weil gezielt wird, was man sieht: derselbe Fang
+// ist am gezoomten Bild feiner und am kleinen groeber.
+// Ein klarer Treffer wird NICHT angefasst - sonst koennte der Fang
+// eine Nachbarflaeche liefern, obwohl man genau getroffen hat.
+function fStepFlaecheBeiKlick(F, p, ab){
+  let i = fStepFlaecheAn(F, p.x, p.y);
+  if(i >= 0) return i;
+  const sc = (ab && ab.sc > 0) ? ab.sc : 1;
+  for(let px = 1; px <= 5; px++){
+    const r = px / sc;
+    for(let k = 0; k < 16; k++){
+      const w = k * Math.PI / 8;
+      const j = fStepFlaecheAn(F, p.x + r * Math.cos(w), p.y + r * Math.sin(w));
+      if(j >= 0) return j;
+    }
+  }
+  return -1;
+}
 function fStepWahlKlick(ev){
   if((STEP.ansicht !== "soll" && STEP.ansicht !== "rest") || !STEP.feld || !STEP.aus) return;
   const p = fStepKlickWelt(ev); if(!p) return;
-  const i = fStepFlaecheAn(STEP.feld, p.x, p.y);
+  const i = fStepFlaecheBeiKlick(STEP.feld, p, STEP.sollAbb);
   if(i < 0){ melde("Dort liegt keine Fläche des Modells."); return; }
   STEP.wahl = STEP.wahl || [];
   const k = STEP.wahl.indexOf(i);
