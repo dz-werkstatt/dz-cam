@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="23.09.2026 11:57 (5a46ec5f)";</script>
+<script>window.__DZ_STAND="23.09.2026 19:42 (5c364635)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3819,6 +3819,19 @@ einer hohen steilen Wand kann der Schaft anstehen, ohne dass die App es sagt: vo
 14.09.2026 im Programm-Test des iTNC-530-Programmierplatzes <b>ohne Meldung durchgelaufen</b> &mdash; die Schr&auml;ge ist in der Grafik
 geschlichtet, das Plateau bleibt stehen (es liegt unter dem Winkelband). Die Steuerung nimmt die S&auml;tze also an.
 <b>An einer Maschine ist noch nichts gefahren.</b></dd>
+<dt id="ba-fk05d-kante">&Uuml;ber die Teilkante hinaus</dt><dd>Eine runde Schneide ber&uuml;hrt eine
+geneigte Fl&auml;che nicht unter sich, sondern seitlich versetzt &mdash; bei einem Kugelfr&auml;ser R5 auf
+45&nbsp;Grad um 3,5&nbsp;mm. Endet die Fl&auml;che an einer Kante und darf die Werkzeugmitte nicht
+dar&uuml;ber hinaus, bleibt dort ein Zwickel stehen (am Rampenblock gemessen: 3,7&nbsp;mm breit,
+1,85&nbsp;mm hoch). Mit <b>ja</b> l&auml;uft die Bahn bis zu einem Werkzeugradius neben das Modell und
+schlichtet die Kante fertig &mdash; danach bleiben dort noch 0,44&nbsp;mm, und das ist die Innenecke,
+in die eine R5-Kugel nicht hineinkommt. Der Weg steigt dabei um rund ein Drittel.
+<br><b>Nur an den Kanten, an denen die Fl&auml;che nach au&szlig;en abf&auml;llt</b> &mdash; l&auml;uft sie waagerecht
+auf die Kante zu, br&auml;chte der &Uuml;berlauf nichts und k&ouml;stete nur Weg.
+<br><b>Es muss daneben frei sein.</b> Die Bahn f&auml;hrt &uuml;ber den Rand des Teils hinaus; Spannmittel,
+Anschl&auml;ge und eine zweite Aufspannung stehen dort im Weg. Die eigene Kollisionspr&uuml;fung sieht
+die Spannbacken aus dem Programmkopf, aber keine Pratze, die niemand eingetragen hat. Mit
+<b>nein</b> bleibt die Bahn &uuml;ber dem Teil.</dd>
 <dt>Was die App NICHT tut</dt><dd>Aus einer <b>Kontur</b> entstehen keine Bahnen von selbst: sie wird erst durch einen Zyklus zur Bahn, und die Tiefe
 tr&auml;gt der Zyklus, nicht das Modell. Eine <b>Bahn aus dem Modell</b> gibt es bei zwei Schritten: <b>Modell abspanen</b> schruppt Z-konstant,
 <b>Schr&auml;gen schlichten</b> f&auml;hrt der Fl&auml;che nach (beide oben). Was beiden fehlt: eine <b>Z-konstante Schlichtbahn</b> f&uuml;r steile Flanken
@@ -5197,7 +5210,10 @@ var F_FELDER = {
   rautiefe:   {name:'Rz Rautiefe (Sollwert)', einheit:'mm', ba:'ba-fk05d-schlichten'},
   tolBahn:    {name:'T Sehnentoleranz der Bahn', einheit:'mm', ba:'ba-fk05d-schlichten'},
   winkelMin:  {name:'α0 flachste Neigung (0 = auch Ebenen)', einheit:'°', mit:'winkel', ba:'ba-fk05d-schlichten'},
-  winkel:     {name:'α1 steilste Neigung', einheit:'°', ba:'ba-fk05d-schlichten'}
+  winkel:     {name:'α1 steilste Neigung', einheit:'°', ba:'ba-fk05d-schlichten'},
+  ueberKante: {name:'Über die Teilkante hinaus', typ:'wahl',
+               wahl:[['1','ja (Kante fertig schlichten)'],['0','nein (nur über dem Teil)']],
+               ba:'ba-fk05d-kante'}
 };
 // Q-Kandidaten je Feld fuer den Zusatz in der Maske und die Vollstaendig-
 // keitspruefung: der erste Kandidat, den die Q-Liste des Zyklus fuehrt,
@@ -5332,11 +5348,11 @@ var F_MASKE = {
       ae:'ae Zeilenabstand am Boden', aeArt:'ae bezogen auf', bahnSinn:'Fräsart (bei Rechtslauf M3)',
       sc2:'SC2 Rückzug über Z0'},
     ohneQ:['t','s','f','fTief','kuehl','q203','tiefe','ebWas','zust','bahnArt','ae','aeArt','bahnSinn','eintauch','sc','sc2']},
-  modellSchlichten:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','winkelMin','winkel','#Mass','rautiefe','tolBahn','strategie','bahnSinn','#!Sicherheit','sc','sc2'],
+  modellSchlichten:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','winkelMin','winkel','#Mass','rautiefe','tolBahn','strategie','bahnSinn','ueberKante','#!Sicherheit','sc','sc2'],
                feldText:{f:'F Vorschub Schlichten', fTief:'FZ Vorschub Zustellen', tiefe:'Z1 unterste Höhe (Bereich)',
                  q203:'Z0 oberste Höhe (Bereich)', strategie:'Zeilenrichtung', bahnSinn:'Fräsart (bei Rechtslauf M3)', sc2:'SC2 Rückzug über Z0'},
                feldWahl:{strategie:[['2','automatisch (quer zum Gefälle)'],['0','Zeilen in X'],['1','Zeilen in Y'],['3','äquidistant (gleicher Abstand auf der Fläche)']]},
-               ohneQ:['t','s','f','fTief','kuehl','q203','tiefe','winkelMin','winkel','rautiefe','tolBahn','strategie','bahnSinn','sc','sc2']}
+               ohneQ:['t','s','f','fTief','kuehl','q203','tiefe','winkelMin','winkel','rautiefe','tolBahn','strategie','bahnSinn','ueberKante','sc','sc2']}
 };
 // Softkey-Gruppen wie an der TNC (CYCL DEF -> Bohren/Gewinde, Taschen/
 // Zapfen/Nuten, ...): ein Knopf je Zyklus, keine Auswahlreihe in der Maske.
@@ -5960,7 +5976,7 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
       // der Rautiefe. Grenzwinkel 45 Grad: steiler wird eine Zeilenbahn
       // ungenau, dort gehoert die Z-konstante Bahn hin (noch nicht gebaut).
       Object.assign(s, {q203:+k.z1 || 0, tiefe:-Math.max(1, fRund((+k.z1 || 0) - (+k.z0 || 0))),
-        rautiefe:0.01, tolBahn:0.005, winkelMin:5, winkel:45, strategie:2, bahnSinn:0,
+        rautiefe:0.01, tolBahn:0.005, winkelMin:5, winkel:45, strategie:2, bahnSinn:0, ueberKante:1,
         f:t.f || 600, fTief:fRund((t.f || 600) * 0.3), ausgabe:'einzel'});
     }
     if(art === 'modellSchlichtenEben'){
@@ -12775,10 +12791,42 @@ function fGeodaetFeld(F, gut, NF){
   }
   return D;
 }
+// DAS SOLLFELD MIT RAND [23.09.2026, Daniels Befund am Rampenblock: "der
+// muesste diese Schraege doch bis ganz runter schlichten koennen"].
+//
+// Eine Kugel beruehrt eine geneigte Flaeche nicht unter sich, sondern um
+// r*sin(alpha) SEITLICH versetzt - auf 45 Grad bei R5 also 3,54 mm. Steht
+// ihre Mitte am Rand des Sollfelds, beruehrt sie die Flaeche erst 3,54 mm
+// weiter innen; alles davor bleibt stehen. Am Rampenblock gemessen: die
+// Bahn endete auf Z-15,78, die Rampe laeuft bis Z-17,85 - ein Zwickel von
+// 3,7 mm Breite und 2,2 mm Hoehe ueber die ganze Teilbreite.
+//
+// Das Sollfeld deckt nur den Huellquader ab; ausserhalb gibt es keine Zelle,
+// ueber der die Mitte stehen koennte. Diese Funktion legt einen Rand darum:
+// Zellen ohne Flaeche, also "hier ist das Teil zu Ende". Die Versatzflaeche
+// rechnet dort das Maximum ueber die Werkzeugkappe und nimmt damit die
+// Flaeche mit, die schraeg darunter liegt - genau das, was gebraucht wird.
+// Das Feld selbst bleibt unangetastet (eine Kopie mit eigenen Feldern
+// h/quelle); Kanten und Ebenen stehen in Weltkoordinaten und gelten
+// unveraendert weiter.
+function fSollfeldRand(F, mm){
+  const m = Math.max(1, Math.ceil(mm / F.raster));
+  const nx = F.nx + 2 * m, ny = F.ny + 2 * m;
+  const h = new Float32Array(nx * ny), quelle = new Uint8Array(nx * ny);
+  h.fill(F.unten);
+  for(let j = 0; j < F.ny; j++) for(let i = 0; i < F.nx; i++){
+    const c = (j + m) * nx + (i + m), o = j * F.nx + i;
+    h[c] = F.h[o]; quelle[c] = F.quelle[o];
+  }
+  return Object.assign({}, F, {x0:F.x0 - m * F.raster, y0:F.y0 - m * F.raster,
+    x1:F.x1 + m * F.raster, y1:F.y1 + m * F.raster,
+    nx:nx, ny:ny, h:h, quelle:quelle, __rand:m});
+}
+
 function fBahnSchlichten(s, tool, prog){
   const warn = [];
   const nein = (g) => ({ok:false, grund:g, bahn:[], warn:warn});
-  const F = F_SOLLFELD;
+  let F = F_SOLLFELD;
   if(!F) return nein('keine Sollform geladen — im STEP-Fenster ein Modell laden und "Sollform ans Programm" druecken');
   // ZWEI RADIEN, und sie sind nicht dasselbe [22.09.2026, Daniels Hinweis,
   // dass er "eher haeufiger Schaftfraeser mit einem Eckenradius" faehrt]:
@@ -12791,6 +12839,21 @@ function fBahnSchlichten(s, tool, prog){
   const rk = (tool && +tool.r2 > 0) ? +tool.r2 : 0;
   const stirn = fWerkzeugStirn(tool);
   if(!(rt > 0)) return nein('Werkzeug-Durchmesser fehlt (Werkzeugtabelle)');
+  // UEBER DIE TEILKANTE HINAUS [23.09.2026]: das Feld bekommt einen Rand von
+  // einem Werkzeugradius plus einer Rasterweite, damit die Mitte dort stehen
+  // darf, wo die Schneide gerade noch die letzte Flaeche des Teils trifft.
+  //
+  // ES IST EIN FELD, und zwar aus zwei Gruenden. Erstens braucht der
+  // Ueberlauf PLATZ neben dem Teil - Spannmittel, Anschlag oder eine zweite
+  // Aufspannung koennen dort stehen, und das weiss nur der Bediener.
+  // Zweitens lassen sich mit 'nein' die Zusicherungen weiter messen, die
+  // fuer eine Bahn UEBER DEM TEIL gelten (jeder Punkt beruehrt die Sollform,
+  // die Zeilen sind quer zum Gefaelle Z-konstant) - und der
+  // Programmierplatz-Beleg DZ15 bleibt gueltig, statt bei jeder Aenderung
+  // neu gezogen werden zu muessen. Vorgabe ist JA: Daniels Ansage zum
+  // Rampenblock war "das baust du so um, dass das funktioniert".
+  const ueberKante = (s.ueberKante === undefined) ? true : (+s.ueberKante === 1);
+  if(ueberKante) F = fSollfeldRand(F, rt + F.raster);
   if(!(rk > 0)) return nein('T' + s.t + ' hat keinen Eckenradius R2 — diese Bahn braucht eine RUNDE Schneidenkante (Kugelfraeser oder Eckenradiusfraeser); ein scharfkantiger Schaftfraeser wuerde mit der Ecke schneiden. R2 in der Werkzeugtabelle eintragen');
   if(rk > rt + 1e-9) return nein('Eckenradius R2 ' + fRund(rk) + ' ist groesser als der Werkzeugradius ' + fRund(rt));
   const rz = +s.rautiefe || 0;
@@ -12870,12 +12933,80 @@ function fBahnSchlichten(s, tool, prog){
     achse = fZeilenAchse(F, gut);
     quer = achse.quer;
   }
+  // DER UEBERLAUF UEBER DIE TEILKANTE [23.09.2026]. Er kommt NACH der
+  // Richtungswahl: die Randzellen tragen keine Flaeche, ihr Gefaelle waere
+  // Unsinn, und sie duerfen die Wahl nicht verfaelschen.
+  //
+  // Eine Zelle OHNE Sollform, von der aus die Schneide noch eine bearbeitete
+  // Stelle erreicht, wird mitgefahren. Die Versatzflaeche rechnet dort das
+  // Maximum ueber die Werkzeugkappe - die Kugel liegt also auf der Flaeche,
+  // die schraeg darunter liegt, und schlichtet sie bis an ihre Kante. Ohne
+  // das bleibt an jeder Aussenkante ein Zwickel von r*sin(alpha) Breite
+  // stehen (am Rampenblock 3,7 mm breit und 2,2 mm hoch).
+  //
+  // Nur Zellen OHNE Flaeche: eine Bohrung oder eine zu flache Stelle MITTEN
+  // im Teil soll die Bahn nicht mitnehmen. Und nur in Reichweite - sonst
+  // faehrt sie rundum ins Leere.
+  let nUeber = 0;   // der Ueberlauf faellt erst mit der Versatzflaeche (s. u.)
   // Bahnabstand aus der Rautiefe: h = s²/(8r) beim Kugelfraeser, also
   // s = wurzel(8 r h) LAENGS der Flaeche. Waagerecht gemessen ist der
   // Abstand auf einer Schraege um cos alpha kleiner — gerechnet wird mit der
   // steilsten wirklich bearbeiteten Stelle, damit die Rautiefe ueberall haelt.
   // Die Versatzflaeche erst JETZT, und nur wo sie gebraucht wird.
-  const BF = fBallFeld(F, rk, fMaskeWeiten(gut, nx, ny, Math.max(2, Math.ceil(3 * Math.sqrt(8 * rk * rz) / r))), stirn);
+  // Die Maske deckt seit dem 23.09.2026 auch den RAND ab (Werkzeugradius
+  // plus zwei Zellen) - ohne Werte dort waere nicht zu entscheiden, ob ein
+  // Ueberlauf ueber die Teilkante etwas bringt.
+  const BF = fBallFeld(F, rk, fMaskeWeiten(gut, nx, ny,
+    Math.max(2, Math.ceil(3 * Math.sqrt(8 * rk * rz) / r), Math.ceil(rt / r) + 2)), stirn);
+  // DER UEBERLAUF UEBER DIE TEILKANTE [23.09.2026, Daniels Befund am
+  // Rampenblock]. Eine Zelle OHNE Sollform kommt dazu, wenn dort die
+  // Versatzflaeche TIEFER liegt als bei ihren Nachbarn im Teil: dann holt
+  // die Kugel von dort noch etwas. Faellt die Flaeche zur Kante hin ab
+  // (Rampenfuss), ist das so; laeuft sie waagerecht auf die Kante zu oder
+  // steht die Zeile quer dazu, bringt der Ueberlauf nichts und wuerde nur
+  // Weg kosten. Gemessen am Rampenblock: rundum 5436 Randstellen und +53 %
+  // Laufzeit, mit dieser Pruefung nur die Stellen am Rampenfuss.
+  if(F.__rand){
+    // DIE SAAT sind die Kanten, an denen die SOLLFORM nach aussen abfaellt,
+    // und die Ausbreitung laeuft GERICHTET - genau in die Richtung, in die
+    // sie faellt.
+    //
+    // Zwei Anlaeufe davor, beide gemessen: (a) jede Randzelle in Reichweite
+    // - die Bahn lief rundum ueber den Rand, 97 % ihrer Punkte lagen dort;
+    // (b) Saat plus RUNDE Ausbreitung (fEdt) - an der Ecke des Teils
+    // greift die Saat aus der X-Kante auch nach Y, und die Zeilen liefen
+    // seitlich hinaus, wo nichts zu holen ist. Die Rampe faellt in X, also
+    // gehoert der Ueberlauf nach X.
+    const k = Math.max(1, Math.ceil(rt / r));
+    const NB = [[1,0],[-1,0],[0,1],[0,-1]];
+    for(let j = 0; j < ny; j++) for(let i = 0; i < nx; i++){
+      const c = j * nx + i;
+      if(!gut[c] || !F.quelle[c]) continue;
+      for(let m = 0; m < 4; m++){
+        const di = NB[m][0], dj = NB[m][1];
+        const ii = i + di, jj = j + dj, i2 = i - di, j2 = j - dj;
+        if(ii < 0 || jj < 0 || ii >= nx || jj >= ny) continue;
+        if(i2 < 0 || j2 < 0 || i2 >= nx || j2 >= ny) continue;
+        if(F.quelle[jj * nx + ii]) continue;        // dort ist noch Teil
+        const p2 = j2 * nx + i2;
+        if(!F.quelle[p2]) continue;                 // und dahinter auch
+        if(!(F.h[c] < F.h[p2] - 1e-6)) continue;    // faellt sie nach aussen?
+        for(let t = 1; t <= k; t++){
+          const qi = i + di * t, qj = j + dj * t;
+          if(qi < 0 || qj < 0 || qi >= nx || qj >= ny) break;
+          const q = qj * nx + qi;
+          if(F.quelle[q]) break;                    // wieder im Teil - Schluss
+          if(gut[q] || !isFinite(BF[q])) continue;
+          gut[q] = 1; nUeber++;
+        }
+      }
+    }
+  }
+  if(nUeber) warn.push('Die Bahn laeuft an ' + nUeber + ' Rasterstelle(n) UEBER DIE TEILKANTE hinaus '
+    + '(bis ' + fRund(rt) + ' mm, der Werkzeugradius) - nur an den Kanten, an denen die bearbeitete '
+    + 'Flaeche nach aussen abfaellt. Eine runde Schneide beruehrt eine Schraege seitlich versetzt; '
+    + 'ohne diesen Ueberlauf bliebe dort ein Zwickel stehen (am Rampenblock 1,85 mm hoch). '
+    + 'Es muss daneben frei sein - Spannmittel und Anschlaege pruefen.');
   const sFlaeche = Math.sqrt(8 * rk * rz);
   const schrittMm = sFlaeche * Math.cos(aMax * Math.PI / 180);
   // ABRUNDEN, nie runden: eine Rasterweite zu viel heisst ein groesserer
@@ -13110,10 +13241,27 @@ function fBahnSchlichten(s, tool, prog){
   // Ausduennung haben daran Anteil (beide nachgemessen).
   warn.push('Rasterweite der Sollform ' + fRund(F.raster) + ' mm. Die KANTEN des Modells gehen exakt in die Bahn ein, nicht nur ueber das Raster; was bleibt, ist die Aufloesung des Feldes auf den Flaechen — rund ' + fRund(F.raster / 40) + ' mm an einer scharfen konvexen Kante (gemessen 0,007 mm bei Raster 0,30). Eine scharfe Kante bildet eine runde Schneidenkante ohnehin nicht ab.');
   warn.push('Geprueft wird nur das SCHNEIDTEIL, nicht der Schaft und nicht der Halter: an einer hohen steilen Wand kann der Schaft anstehen, ohne dass die App es sagt. Vor dem ersten Lauf Programm-Test und Einzelsatz.');
+  // DIE FELDER KOMMEN IN DEN MASSEN DER SOLLFORM ZURUECK [23.09.2026].
+  // Gerechnet wird seit dem Ueberlauf auf einem Feld MIT RAND - wer die
+  // Masken danach ueber i,j anspricht (Pruefstand, Anzeige), traefe sonst
+  // die falsche Zelle. Die Ausschnitte tragen dieselben Indizes wie die
+  // Sollform; die geweiteten Felder bleiben in ballRand/gutRand erreichbar,
+  // samt Feldmassen in feldRand.
+  const zurueck = (A, leer) => {
+    if(!F.__rand) return A;
+    const m = F.__rand, ox = F.nx - 2 * m, oy = F.ny - 2 * m;
+    const B2 = new A.constructor(ox * oy);
+    if(leer !== undefined) B2.fill(leer);
+    for(let j = 0; j < oy; j++) for(let i = 0; i < ox; i++)
+      B2[j * ox + i] = A[(j + m) * F.nx + (i + m)];
+    return B2;
+  };
   return {ok:true, bahn:B, warn:warn, zuege:zuege, punkte:punkte, roh:roh,
     schritt:fRund(istMm), soll:fRund(schrittMm), rz:fRund(istRz), spruenge:spruenge,
     steil:nSteil, flach:nFlach, steht:nSteht, stehtMax:fRund(stehtMax), mitStand:!!SG,
-    aMax:fRund(aMax), ball:BF, neig:NF, gut:gut};
+    aMax:fRund(aMax), ueberlauf:nUeber,
+    ball:zurueck(BF), neig:zurueck(NF), gut:zurueck(gut),
+    ballRand:BF, neigRand:NF, gutRand:gut, feldRand:F};
 }
 
 // ===================================================================
@@ -17025,6 +17173,7 @@ const F_ARBEITSWEISE = [
 // (b) Bericht ueber die erzeugte Bahn: Zahlen zu DIESEM Teil, aber kein
 //     Befund -- niemand muss etwas tun, wenn dort 61 Zuege stehen.
 const F_BAHNBERICHT = [
+  /^Die Bahn laeuft an \d+ Rasterstelle/,   // Ueberlauf ueber die Teilkante (23.09.2026)
   /^Modell abspanen: \d+ Ebene/,
   /^Schraegen schlichten: \d+ Zug/,
   /^\d+ Zustellung\(en\) auf die naechste Ebene/,

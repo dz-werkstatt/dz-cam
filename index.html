@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="23.09.2026 11:57 (5a46ec5f)";</script>
+<script>window.__DZ_STAND="23.09.2026 19:42 (5c364635)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -6429,13 +6429,20 @@ let RZ_RELATIV=false;
 // =================================================================
 // WERKZEUGVERWALTUNG: REVOLVER + LAGER [Daniel, Monforts-Bestueckung]
 // -----------------------------------------------------------------
-// Die Maschine hat 16 FESTE Werkzeugplaetze (T-Nummer = Platz). Die
-// Standard-Bestueckung folgt Daniels Monforts-Aufbau: T1 CNMG Schruppen,
-// T2 DNMG 55 Schlichten, T3 VNMG 35, T4 Stecher, (Luecke), T6 Zentrierer,
-// T7 Bohrer, T8/T9 Innenwerkzeuge. Alles OHNE platz-Feld liegt im LAGER:
-// dort die bisherigen nummerierten Werkzeuge (Testvorlagen nutzen sie
-// weiter) plus unnummerierte Zugaenge (IDs L1, L2, ...) — die tauchen in
-// keiner Belegungsliste auf und liefern beim NC-Bau eine Warnung.
+// Die Maschine hat 16 FESTE Werkzeugplaetze, und die Steuerung liest NUR
+// 1 bis 16 [Daniel, 23.09.2026: "Wir haben Multifix und eine Werkzeugtabelle
+// bei den Monforts, die nur von Platz 1 bis Platz 16 liest ... 1 bis 16 ist
+// an der Maschine frei zu belegen"]. Die Standardbestueckung steht unten
+// Platz fuer Platz; die NUMMER IST DER PLATZ, damit die Tabelle dasselbe
+// sagt wie der Revolver. Alles OHNE platz-Feld liegt im LAGER und traegt
+// eine L-Nummer - es taucht in keiner Belegungsliste auf und liefert beim
+// NC-Bau eine Warnung, weil die Maschine mit einer Lagernummer nichts
+// anfangen kann.
+// VORHER (bis 22.09.2026) standen dieselben Werkzeuge DOPPELT in der
+// Tabelle: T1 und T10 waren derselbe CNMG-Schruppdreher, ebenso T2/T11,
+// T3/T12, T4/T20, T5/T40, T6/T30, T7/T31. Die Vorlagen riefen mal die eine,
+// mal die andere Nummer - und die Lager-Nummern haben an der Maschine keinen
+// Platz. Die Dubletten sind aufgeloest.
 // =================================================================
 // Vc IN DER TABELLE [Daniels Standardwerte fuer die Monforts,
 // 02.09.2026]: Schruppen 180, Schlichten 200 (auch Runddrehmeissel),
@@ -6443,54 +6450,68 @@ let RZ_RELATIV=false;
 // darauf. Bohrer und Gewindestaehle tragen BEWUSST kein Vc: Bohren
 // faehrt feste Drehzahl, das Gewinde G97.
 let toolTable = [
+  // ---- Revolver 1-5: AUSSENBEARBEITUNG ----------------------------
+  // [Daniel, 23.09.2026]: "T1 ist immer der CNMG Schruppdrehmeissel fuer
+  // aussen, Nummer 2 die DNMG-Platte mit 55 Grad Plattenwinkel - eigentlich
+  // auch ein Schruppwerkzeug, man kann damit aber auch schlichten, und Platz 3
+  // waere dann die VBMT, die wir zum Schlichten verwenden. Platz 4 ist ein
+  // Aussenstechdrehmeissel und Platz 5 der Gewindedrehmeissel." Damit ist die
+  // Aussenbearbeitung abgedeckt.
+  // EINSTELLWINKEL: 95 Grad ist der Standardhalter der C-Platte (PCLNR), 93
+  // Grad tragen D- und V-Platte (PDJNR, SVJBR). Daran haengt die Flankengrenze
+  // des Zyklus (toolFlankCapability) - die C-Platte kann deshalb kaum
+  // rueckwaerts (Nebeneinstellwinkel 180-95-80 = 5 Grad), die V-Platte weit.
   {platz:1, t:'1',  name:'Außen Schruppen CNMG 80°', art:'aussen', r:0.8, sl:3, ew:95, sw:80, len:12, vc:180},
-  {platz:2, t:'2',  name:'Außen Schlichten DNMG 55°', art:'aussen', r:0.4, sl:3, ew:93, sw:55, len:10, vc:200},
-  {platz:3, t:'3',  name:'Außen Kopierschlichten VNMG 35°', art:'aussen', r:0.4, sl:3, ew:93, sw:35, len:8, vc:200},
-  {platz:4, t:'4',  name:'Stechdrehmeißel außen 3mm', art:'stechen', r:0.2, sl:3, ew:90, sw:0, len:3, refEdge:'rechts', vc:140},
-  // PLATZ 5 [Daniel, 18.09.2026: "auf Platz 5, der ist aktuell leer,
-  // einen Gewindedrehmeissel fuer aussen"]. An der Maschine sitzt dort
-  // der Gewindestahl — die Luecke in unserer Tabelle war der Grund,
-  // warum die Simulation dort keinen Schneidenradius fand und das
-  // PF-Wort des Zyklussatzes leer blieb. Schneidenlage 3 = Schneide
-  // LINKS UNTEN, wie es die Normplatten fuer das Aussengewinde tragen;
-  // kein Vc, denn Gewinde faehrt G97 (feste Drehzahl).
-  {platz:5, t:'5',  name:'Gewindedrehmeißel außen 60°', art:'gewinde', r:0.1, sl:3, ew:90, sw:60, len:4},
+  {platz:2, t:'2',  name:'Außen Schruppen DNMG 55°', art:'aussen', r:0.8, sl:3, ew:93, sw:55, len:10, vc:180},
+  {platz:3, t:'3',  name:'Außen Schlichten VBMT 35°', art:'aussen', r:0.4, sl:3, ew:93, sw:35, len:8, vc:200},
+  {platz:4, t:'4',  name:'Stechdrehmeißel außen 3,15mm', art:'stechen', r:0.15, sl:3, ew:90, sw:0, len:3.15, refEdge:'rechts', vc:140},
+  // Schneidenlage 3 = Schneide LINKS UNTEN, wie es die Normplatten fuer das
+  // Aussengewinde tragen; kein Vc, denn Gewinde faehrt G97 (feste Drehzahl).
+  {platz:5, t:'5',  name:'Gewindedrehmeißel außen 60°', art:'gewinde', r:0, sl:3, ew:90, sw:60, len:4},
+  // ---- Revolver 6-7: BOHREN ---------------------------------------
+  // ZWEI Plaetze [Daniel: "entweder ein Zentrierbohrer oder Bohrer, vielleicht
+  // brauchen wir auch zwei Plaetze"] - beides zusammen ist der Normalfall, und
+  // der Bohrer laesst sich fuer das jeweilige Teil auswechseln.
   {platz:6, t:'6',  name:'Zentrierbohrer', art:'bohren', r:0, sl:9, ew:0, sw:118, len:8, dm:3.15},
   {platz:7, t:'7',  name:'Spiralbohrer 10mm', art:'bohren', r:0, sl:9, ew:0, sw:118, len:60, dm:10},
-  // SL 4 [Daniel]: Bohrstange kommt von rechts — Koerper rechts,
-  // Schneide vorn links oben (Ausdrehen), nicht SL 2.
-  {platz:8, t:'8',  name:'Innen Schruppen CNMG (Bohrstange)', art:'innen', r:0.8, sl:4, ew:95, sw:80, len:10, vc:180},
-  {platz:9, t:'9',  name:'Innen Schlichten VBMT 35°', art:'innen', r:0.4, sl:4, ew:93, sw:35, len:8, vc:200},
-  // ---- Lager: Altbestand (nummeriert, Testvorlagen) ----
-  {t:'10', name:'Außendrehmeißel Schruppen 80°', art:'aussen', r:0.8, sl:3, ew:93, sw:80, len:12, vc:180},
-  {t:'11', name:'Außendrehmeißel Schlichten 55°', art:'aussen', r:0.4, sl:3, ew:93, sw:55, len:10, vc:200},
-  {t:'12', name:'Schlichtdrehmeißel 35° VBMT', art:'aussen', r:0.4, sl:3, ew:93, sw:35, len:8, vc:200},
-  {t:'13', name:'Runddrehmeißel R4', art:'aussen', r:4, sl:3, ew:90, sw:0, len:8, rund:true, vc:200},
-  {t:'20', name:'Stechdrehmeißel 3mm', art:'stechen', r:0.2, sl:3, ew:90, sw:0, len:3, refEdge:'rechts', vc:140},
-  // 6 mm fuer grosse Teile [Daniel, Punkt 3]: die Rotorwelle hat Nuten
-  // von 10 und 20 mm Breite auf ⌀184 und ⌀300. Mit der 3-mm-Platte
-  // braucht das dreimal so viele Stiche, und eine 3-mm-Klinge auf ⌀300
-  // wuerde an der Maschine niemand einsetzen.
-  {t:'21', name:'Stechdrehmeißel 6mm', art:'stechen', r:0.4, sl:3, ew:90, sw:0, len:6, refEdge:'rechts', vc:140},
-  // INNEN-STECHER [Einstechen innen]: SL4 wie die Bohrstangen — der
-  // Koerper liegt Richtung KLEINERER Durchmesser, also in der Bohrung.
-  // Mit einem Aussenstecher (SL3) waere der Halter dort in der Wand.
-  {t:'22', name:'Stechdrehmeißel innen 3mm (Bohrstange)', art:'stechen', r:0.2, sl:4, ew:90, sw:0, len:3, refEdge:'rechts', vc:140},
-  {t:'30', name:'Zentrierbohrer', art:'bohren', r:0, sl:9, ew:0, sw:118, len:8, dm:3.15},
-  {t:'31', name:'Spiralbohrer 10mm', art:'bohren', r:0, sl:9, ew:0, sw:118, len:60, dm:10},
-  // INNENBEARBEITUNG [Daniel, Testteil "Buchse"]: fuer ein Teil mit
-  // Bohrung fehlten zwei Werkzeuge — ein Bohrer, mit dem sich ueberhaupt
-  // eine ausdrehbare Vorbohrung herstellen laesst (die Bohrstange T8 hat
-  // 10 mm Kopfdurchmesser, in ein ⌀10-Loch kommt sie nicht hinein), und
-  // ein Gewindestahl in Schneidlage 4. Mit T40 (SL 3) waere das
-  // Innengewinde von der falschen Seite geschnitten worden.
-  {t:'33', name:'Wendeplattenbohrer 26mm', art:'bohren', r:0, sl:9, ew:0, sw:140, len:80, dm:26},
-  {t:'41', name:'Gewindebohrstange 60° (innen)', art:'gewinde', r:0.1, sl:4, ew:90, sw:60, len:4},
-  {t:'40', name:'Gewindedrehmeißel 60°', art:'gewinde', r:0.1, sl:3, ew:90, sw:60, len:4},
-  // ---- Lager: unnummerierte Zugaenge ----
+  // ---- Revolver 8-10: INNENBEARBEITUNG ----------------------------
+  // [Daniel]: "Nach diesen Werkzeugen kommt dann die Innenbearbeitung. Da
+  // haben wir ja auch wieder CNMG-Platten, DNMG-Platten und vielleicht auch
+  // VBMT-Platten fuer die Schlichtbearbeitung innen - nach dem aehnlichen
+  // Prinzip wie aussen, nur fuer innen."
+  // SL 4 [Daniel]: Bohrstange kommt von rechts - Koerper rechts, Schneide vorn
+  // links oben (Ausdrehen), nicht SL 2.
+  {platz:8,  t:'8',  name:'Innen Schruppen CNMG 80° (Bohrstange)', art:'innen', r:0.8, sl:4, ew:95, sw:80, len:10, vc:180},
+  {platz:9,  t:'9',  name:'Innen Schruppen DNMG 55° (Bohrstange)', art:'innen', r:0.4, sl:4, ew:93, sw:55, len:8, vc:180},
+  {platz:10, t:'10', name:'Innen Schlichten VBMT 35° (Bohrstange)', art:'innen', r:0.4, sl:4, ew:93, sw:35, len:8, vc:200},
+  // ---- Revolver 11-12: INNEN, SELTENER ----------------------------
+  // [Daniel]: "Inneneinstich kommt eher selten vor, Innengewinde kommt auch
+  // eher selten vor, das kann man optional dazubringen."
+  // Der Innenstecher traegt SL4 wie die Bohrstangen - der Koerper liegt
+  // Richtung KLEINERER Durchmesser, also in der Bohrung. Mit einem
+  // Aussenstecher (SL3) waere der Halter dort in der Wand.
+  {platz:11, t:'11', name:'Stechdrehmeißel innen 3mm (Bohrstange)', art:'stechen', r:0.2, sl:4, ew:90, sw:0, len:3, refEdge:'rechts', vc:140},
+  {platz:12, t:'12', name:'Gewindebohrstange 60° (innen)', art:'gewinde', r:0.8, sl:4, ew:90, sw:60, len:4},
+  // ---- Revolver 13-14: GROSSE TEILE --------------------------------
+  // Beide braucht eine Testvorlage wirklich, und beide sind ein Umruestfall:
+  // die Rotorwelle hat Nuten von 10 und 20 mm Breite auf ⌀184 und ⌀300 - eine
+  // 3-mm-Klinge wuerde dort niemand einsetzen; und um eine Bohrung auf ⌀48
+  // auszudrehen, muss sie erst ⌀26 vorgebohrt sein (die Bohrstange hat 10 mm
+  // Kopfdurchmesser und kommt in ein ⌀10-Loch nicht hinein).
+  {platz:13, t:'13', name:'Stechdrehmeißel außen 6mm', art:'stechen', r:0.4, sl:3, ew:90, sw:0, len:6, refEdge:'rechts', vc:140},
+  {platz:14, t:'14', name:'Wendeplattenbohrer 26mm', art:'bohren', r:0, sl:9, ew:0, sw:140, len:80, dm:26},
+  // PLAETZE 15 und 16 bleiben FREI - dort steckt, was ein bestimmtes Bauteil
+  // braucht. Eine Luecke MITTEN in der Liste bringt dagegen nichts: der Puffer
+  // ist am Ende gesammelt genauso gross, und die Gruppen (1-5 aussen, 6-7
+  // bohren, 8-12 innen) bleiben zusammenhaengend lesbar.
+  // ---- LAGER: kein Revolverplatz, wird bei Bedarf eingewechselt ----
+  // Ein Werkzeug OHNE platz-Feld liegt im Schrank. Ruft ein Programm es
+  // trotzdem, schreibt die NC seine blosse Nummer - die Maschine greift dann
+  // auf ihren Platz mit dieser Zahl. Genau dafuer warnt der Werkzeugabgleich.
   {t:'L1', name:'Gewindeplatte Trapez 30°', art:'gewinde', r:0.1, sl:3, ew:90, sw:30, len:5},
   {t:'L2', name:'Gewindeplatte Zoll 55°', art:'gewinde', r:0.1, sl:3, ew:90, sw:55, len:4},
   {t:'L3', name:'Runddrehmeißel R3', art:'aussen', r:3, sl:3, ew:90, sw:0, len:7, rund:true, vc:200},
+  {t:'L4', name:'Runddrehmeißel R4', art:'aussen', r:4, sl:3, ew:90, sw:0, len:8, rund:true, vc:200},
 ];
 function toolSortiere(){
   toolTable.sort((a,b)=>{
@@ -6514,6 +6535,21 @@ function toolSortiere(){
 // =================================================================
 const WZ_SLOT='et_werkzeuge';
 const WZ_VORGABE=JSON.parse(JSON.stringify(toolTable));
+// DIE SLOT-VERSION [23.09.2026]. Sie ist KEINE Formalie: mit der
+// Standardbestueckung (Plaetze 1-16) hat JEDE Werkzeugnummer eine
+// andere Bedeutung bekommen. Ein gespeicherter Stand von vorher
+// wuerde stumm uebernommen — und die Vorlagen riefen dann fremde
+// Werkzeuge: Daniels Rotorwelle holte sich unter der Nummer 13
+// statt des 6-mm-Stechers den Runddrehmeissel R4, und die
+// Simulation meldete zu Recht 8 Kollisionen und 20 mm Einschnitt
+// (Satz 414, Z-141, ⌀174,348 — gemessen, exakt sein Bild).
+// Deshalb wird ein aelterer Stand VERWORFEN statt migriert: welche
+// alte Nummer heute welches Werkzeug meint, ist nicht rueckrechenbar
+// (aus 20 wurde 4, aus 21 wurde 13, aus 13 wurde ein Lagerwerkzeug).
+// Eine stumme Uebernahme waere die schlimmere Antwort — der Bediener
+// saehe eine Tabelle, die zu seinen Programmen nicht mehr passt.
+const WZ_SLOT_V=4;
+let WZ_SLOT_VERWORFEN=false;
 // EINE BELEGUNG FUER BEIDE MASCHINEN [Daniel, 18.09.2026: "die
 // gleiche Auflistung, die haben auch beide 16 Revolverplaetze, und
 // das moechte ich als Standard so definiert haben"]. Das dreht die
@@ -6529,12 +6565,21 @@ function werkzeugeSpeichern(){
   // Bedeutung (BILDANSICHT statt Werkzeug-Eigenperspektive) vorliegt —
   // sonst wuerde werkzeugeAusSlot sie bei jedem Laden erneut drehen.
   try{ localStorage.setItem(WZ_SLOT, JSON.stringify(
-    {v:3, refEdgeV2:true, werkzeuge:toolTable})); }catch(e){}
+    {v:WZ_SLOT_V, refEdgeV2:true, werkzeuge:toolTable})); }catch(e){}
 }
 function werkzeugeAusSlot(){
   try{
     const s=localStorage.getItem(WZ_SLOT); if(!s) return;
     const roh=JSON.parse(s);
+    // Ein Stand vor der Standardbestueckung faellt auf die Vorgabe
+    // zurueck (s. WZ_SLOT_V). Das blanke Array war das erste Format
+    // (05.09. vormittags) und zaehlt als Version 1.
+    const ver=Array.isArray(roh) ? 1 : (+(roh && roh.v) || 1);
+    if(ver<WZ_SLOT_V){
+      WZ_SLOT_VERWORFEN=true;
+      werkzeugeSpeichern();          // gleich in der neuen Version, sonst meldet es bei jedem Start
+      return;
+    }
     // v2 = {werkzeuge, belegungen}; das erste Format (05.09. vormittags)
     // war das blanke Array.
     const arr=Array.isArray(roh)? roh : (roh && Array.isArray(roh.werkzeuge)? roh.werkzeuge : null);
@@ -6573,6 +6618,14 @@ function werkzeugeAusSlot(){
 }
 werkzeugeAusSlot();
 toolSortiere();
+// Die Meldung kommt erst, wenn die Oberflaeche steht — waehrend des
+// Ladens gibt es das Meldebanner noch nicht.
+if(WZ_SLOT_VERWORFEN) setTimeout(function(){ try{ melde(
+  'Die Werkzeugtabelle wurde auf die STANDARDBESTUECKUNG zurueckgesetzt '+
+  '(Plaetze 1-16, Stand 23.09.2026). Der gespeicherte Stand stammt von vor '+
+  'der Umstellung; dort bedeutete dieselbe Nummer ein anderes Werkzeug. '+
+  'Eigene Werkzeuge bitte neu anlegen — und die Bestueckung vor der '+
+  'NC-Ausgabe gegen die Maschine pruefen.'); }catch(e){} }, 400);
 // LADEN UND ENTLADEN [Daniel, 05.09.2026]. UMGEBAUT am selben Tag:
 // der Vormittagsstand machte die T-Nummer beim Laden zur
 // Platznummer und zog alle Programmreferenzen mit — das trug die
@@ -13797,7 +13850,15 @@ function refreshArbeitsplan(){
 
   // Jede Kontur ist ein eigener Baustein im Arbeitsplan (wie in ShopTurn).
   // ✎ macht sie zur aktiven Kontur und öffnet die grafische Ansicht.
-  contours.forEach((c, ci)=>{
+  // VERSCHIEBBAR SEIT DEM 23.09.2026 [Daniel: "es kann jetzt sein, dass ich
+  // quasi vor der Kontur einen anderen Abspanzyklus einsetzen moechte. Das
+  // geht aktuell noch nicht"]: bis dahin standen ALLE Konturen fest oben,
+  // und ein Zyklus liess sich nicht darueber schieben. c.planPos sagt, vor
+  // welchem Schritt die Zeile steht (0 = ganz oben, wie bisher). Das ist
+  // reine ANZEIGE - der Generator laeuft ueber programSteps und holt sich
+  // die Kontur ueber contourId; an der NC aendert das Verschieben nichts.
+  // Genau deshalb ist es sicher: es ordnet das Blatt, nicht die Bearbeitung.
+  const konturZeile=(c, ci)=>{
     if(!c.els.length) return;
     const row=document.createElement('div');
     row.className='ap-row'+(ci===activeContourIdx?' sel':'');
@@ -13806,7 +13867,9 @@ function refreshArbeitsplan(){
     row.innerHTML = `<div class="ap-icon start">K</div>
       <div class="ap-name">${c.name}</div><div class="ap-detail">${elCount} Element(e) · Start Z${c.els[0].z}/X⌀${c.els[0].x}</div>
       <div class="ap-zeit"></div>
-      <div class="ap-ordzeile"><button class="ap-ord" data-kablage="${ci}" title="in die Ablage legen">⇩</button></div>
+      <div class="ap-ordzeile"><button class="ap-ord" data-kauf="${ci}" title="im Arbeitsplan nach oben">▲</button>
+        <button class="ap-ord" data-kab="${ci}" title="im Arbeitsplan nach unten">▼</button>
+        <button class="ap-ord" data-kablage="${ci}" title="in die Ablage legen">⇩</button></div>
       <button class="ap-edit" data-ci="${ci}">✎</button>
       <button class="ap-del" data-ci="${ci}">✕</button>`;
     const open=()=>{ switchContour(ci); enterGrafischView(); };
@@ -13842,14 +13905,32 @@ function refreshArbeitsplan(){
                                  : ('"'+name+'" in die Ablage gelegt.'));
         else alert('Konnte nicht ablegen: '+r.grund);
       }); }
+    // Verschieben: planPos zaehlt die Schritte, vor denen die Zeile steht.
+    // Geklemmt auf 0..Zahl der Schritte - weiter unten als hinter den
+    // letzten Schritt gibt es nichts.
+    const setzen=(d)=>{
+      const max=programSteps.length;
+      const alt=Math.max(0, Math.min(max, +c.planPos||0));
+      const neu=Math.max(0, Math.min(max, alt+d));
+      if(neu===alt) return;
+      snapshot(); c.planPos=neu; refreshAll();
+    };
+    { const a=row.querySelector('[data-kauf]'); if(a) a.addEventListener('click',()=>setzen(-1)); }
+    { const b=row.querySelector('[data-kab]');  if(b) b.addEventListener('click',()=>setzen(+1)); }
     body.appendChild(row);
+  };
+  // Die Konturen, die VOR dem ersten Schritt stehen.
+  const konturenBei=(i)=>contours.forEach((c,ci)=>{
+    if(Math.max(0, Math.min(programSteps.length, +c.planPos||0))===i) konturZeile(c, ci);
   });
+  konturenBei(0);
   // ZEITBALKEN [Design-Paket 19.09.2026, Idee 2]: je Zeile der Anteil an der
   // laengsten Hauptzeit als CSS-Variable; die Regel dazu steht NUR in der
   // 900er-Query (02-stil.html, D2) - am Handy bleibt die Zeile, wie sie ist.
   const zeitMax=(hauptzeiten && hauptzeiten.proSchritt)
     ? programSteps.reduce((m,s,j)=>Math.max(m, +hauptzeiten.proSchritt[j]||0), 0) : 0;
   programSteps.forEach((st,i)=>{
+    if(i>0) konturenBei(i);            // Konturzeilen zwischen den Schritten
     const row=document.createElement('div');
     row.className='ap-row'+(i===selStepIdx?' sel':'');
     if(zeitMax>0 && row.style && typeof row.style.setProperty==='function' && hauptzeiten.proSchritt[i]!==undefined)
@@ -13964,6 +14045,7 @@ function refreshArbeitsplan(){
     });
     body.appendChild(row);
   });
+  konturenBei(programSteps.length);    // und was hinter dem letzten Schritt steht
   // PROGRAMMENDE [ShopTurn-Bildversion, Bild 10-41]: die Liste
   // schliesst mit der Gesamtzeit ab. Nur wenn es etwas zu summieren
   // gibt — eine leere Liste braucht kein Ende.
@@ -15830,26 +15912,26 @@ function loadDemoStufenbolzen(){
   programSteps=[
     {id:stepCounter++, type:'abspanen_kontur', params:{
       bearbeitung:'beide', richtung:'z-parallel', lage:'aussen', schlRicht:'rl',
-      stock:82, stockZ:2, d:1, ux:0.25, uz:0.3, safeZ:2, t:'10', t2:'11',
+      stock:82, stockZ:2, d:1, ux:0.25, uz:0.3, safeZ:2, t:'1', t2:'2',
       fr:0.25, sr:600, ff:0.12, sf:800
     }},
     {id:stepCounter++, type:'bohren', params:{
       art:'zentrieren', entBearb:'brechen', z0:0, z1:-4, d:4, v2:1,
-      u:1, df:1, t1:0, dt:0.5, safe:2, f:0.08, s:1200, t:'30'
+      u:1, df:1, t1:0, dt:0.5, safe:2, f:0.08, s:1200, t:'6'
     }},
     {id:stepCounter++, type:'bohren', params:{
       art:'tief', entBearb:'spaenebrechen', ausg:'zyklus', z0:0, z1:-28, d:6, v2:2,
-      u:2, df:0.8, t1:1, dt:1, safe:3, f:0.12, s:900, t:'31'
+      u:2, df:0.8, t1:1, dt:1, safe:3, f:0.12, s:900, t:'7'
     }},
     {id:stepCounter++, type:'einstechen', params:{
       ausr:'radial', bearbeitung:'beide', x0:30, z0:-17.5, b1:4, t1:26.4,
       a1:0, a2:0, f1:0.5, f3:0.4, r2:0.4, r4:0.4, n:1, dp:0,   // Kantenbruch an BEIDEN Oberkanten, Grund beidseitig R0.4
-      d:1.5, ux:0.15, uz:0.1, t:'20', fr:0.07, sr:500, ff:0.05, sf:650
+      d:1.5, ux:0.15, uz:0.1, t:'4', fr:0.07, sr:500, ff:0.05, sf:650
     }},
     {id:stepCounter++, type:'gewinde', params:{
       bearbeitung:'beide', lage:'aussen', x0:30, z0:0, z1:-15.5,
       p:1.5, h1:0.92, u:0.05, verf:'B', dz1:0.25, nd:6, n:1,
-      lw:4, lr:1.5, s:420, t:'40', ausg:'zyklus', gart:'metrisch', alpha:29
+      lw:4, lr:1.5, s:420, t:'5', ausg:'zyklus', gart:'metrisch', alpha:29
     }},
   ];
   selectedIdx=-1; selStepIdx=-1; editStepIdx=-1;
@@ -16117,19 +16199,19 @@ function loadDemoHinterschnitt(){
   programSteps=[
     {id:stepCounter++, type:'abspanen_kontur', params:{
       bearbeitung:'schruppen', richtung:'z-parallel', lage:'aussen', schlRicht:'rl',
-      stock:70, stockZ:2, d:1.25, ux:0.25, uz:0.3, safeZ:2, t:'10', t2:'11',
+      stock:70, stockZ:2, d:1.25, ux:0.25, uz:0.3, safeZ:2, t:'1', t2:'2',
       hint:'ja', hintW:5,
       fr:0.28, sr:550, ff:0.12, sf:800
     }},
     {id:stepCounter++, type:'abspanen_kontur', params:{
       bearbeitung:'rest', richtung:'z-parallel', lage:'aussen', schlRicht:'rl',
-      stock:70, stockZ:2, d:0.6, ux:0.15, uz:0.2, safeZ:2, t:'12', t2:'12',
+      stock:70, stockZ:2, d:0.6, ux:0.15, uz:0.2, safeZ:2, t:'3', t2:'3',
       hint:'ja', hintW:45,
       fr:0.15, sr:700, ff:0.08, sf:950
     }},
     {id:stepCounter++, type:'abspanen_kontur', params:{
       bearbeitung:'schlichten', richtung:'z-parallel', lage:'aussen', schlRicht:'rl',
-      stock:70, stockZ:2, d:0.6, ux:0.15, uz:0.2, safeZ:2, t:'12', t2:'12',
+      stock:70, stockZ:2, d:0.6, ux:0.15, uz:0.2, safeZ:2, t:'3', t2:'3',
       hint:'ja', hintW:45,
       fr:0.12, sr:700, ff:0.08, sf:950
     }},
@@ -16192,21 +16274,21 @@ function loadDemoSchmiedeteil(){
     {id:stepCounter++, type:'abspanen_kontur', params:{
       bearbeitung:'schruppen', richtung:'z-parallel', lage:'aussen', schlRicht:'rl',
       contourId: contours[1].id, blankContourId: contours[0].id,
-      stock:72, stockZ:2, d:1.25, ux:0.2, uz:0.25, safeZ:2, t:'10', t2:'12',
+      stock:72, stockZ:2, d:1.25, ux:0.2, uz:0.25, safeZ:2, t:'1', t2:'3',
       hint:'ja', hintW:5,
       fr:0.28, sr:550, ff:0.12, sf:800
     }},
     {id:stepCounter++, type:'abspanen_kontur', params:{
       bearbeitung:'rest', richtung:'z-parallel', lage:'aussen', schlRicht:'rl',
       contourId: contours[1].id, blankContourId: contours[0].id,
-      stock:72, stockZ:2, d:0.6, ux:0.2, uz:0.25, safeZ:2, t:'12', t2:'12',
+      stock:72, stockZ:2, d:0.6, ux:0.2, uz:0.25, safeZ:2, t:'3', t2:'3',
       hint:'ja', hintW:45,
       fr:0.15, sr:700, ff:0.08, sf:950
     }},
     {id:stepCounter++, type:'abspanen_kontur', params:{
       bearbeitung:'schlichten', richtung:'z-parallel', lage:'aussen', schlRicht:'rl',
       contourId: contours[1].id, blankContourId: contours[0].id,
-      stock:72, stockZ:2, d:0.6, ux:0.2, uz:0.25, safeZ:2, t:'12', t2:'12',
+      stock:72, stockZ:2, d:0.6, ux:0.2, uz:0.25, safeZ:2, t:'3', t2:'3',
       hint:'ja', hintW:45,
       fr:0.12, sr:700, ff:0.08, sf:950
     }},
@@ -16253,7 +16335,7 @@ function loadDemoStechdrehen(){
   programSteps=[
     {id:stepCounter++, type:'stechdrehen', params:{
       bearbeitung:'beide', contourId: contours[0].id,
-      stock:64, stockZ:0.15, d:2, ux:0.15, uz:0.15, safeZ:2, t:'20',
+      stock:64, stockZ:0.15, d:2, ux:0.15, uz:0.15, safeZ:2, t:'4',
       fr:0.08, sr:450, fl:0.12, ff:0.06, sf:550
     }},
   ];
@@ -16301,10 +16383,10 @@ function loadDemoAbstechen(){
     {id:stepCounter++, type:'abspanen_kontur', params:{
       bearbeitung:'beide', richtung:'z-parallel', lage:'aussen', schlRicht:'rl',
       contourId: contours[0].id, stock:45, stockZ:0.15, d:1.25, ux:0.15, uz:0.15,
-      safeZ:2, t:'10', t2:'12', fr:0.25, sr:600, ff:0.12, sf:800
+      safeZ:2, t:'1', t2:'3', fr:0.25, sr:600, ff:0.12, sf:800
     }},
     {id:stepCounter++, type:'abstechen', params:{
-      t:'20', x0:40, z0:-36, kaTyp:'fase', ka:1,
+      t:'4', x0:40, z0:-36, kaTyp:'fase', ka:1,
       x1:-1, xd:8, sd:150, fd:0.03, fr:0.06, sr:400
     }},
   ];
@@ -16353,13 +16435,13 @@ function loadDemoKantenwelle(){
   programSteps=[
     {id:stepCounter++, type:'abspanen_einfach', params:{
       bearbeitung:'beide', richtung:'laengs', lage:'aussen',
-      x0:82, z0:0, x1:70, z1:-60, d:1.25, ux:0.25, uz:0.3, t:'10',
+      x0:82, z0:0, x1:70, z1:-60, d:1.25, ux:0.25, uz:0.3, t:'1',
       fr:0.25, sr:500, ff:0.12, sf:700,
       k1Typ:'keine', k1:0, k2Typ:'rundung', k2:2, k3Typ:'fase', k3:1.5
     }},
     {id:stepCounter++, type:'abspanen_einfach', params:{
       bearbeitung:'beide', richtung:'laengs', lage:'aussen',
-      x0:70, z0:0, x1:55, z1:-30, d:1.25, ux:0.25, uz:0.3, t:'10',
+      x0:70, z0:0, x1:55, z1:-30, d:1.25, ux:0.25, uz:0.3, t:'1',
       fr:0.25, sr:600, ff:0.12, sf:800,
       k1Typ:'fase', k1:1, k2Typ:'rundung', k2:1.5, k3Typ:'fase', k3:1
     }},
@@ -16405,7 +16487,7 @@ function loadDemoFreistichwelle(){
   programSteps=[
     {id:stepCounter++, type:'abspanen_einfach', params:{
       bearbeitung:'beide', richtung:'laengs', lage:'aussen',
-      x0:70, z0:0, x1:55, z1:-30, d:1.25, ux:0.25, uz:0.3, t:'10',
+      x0:70, z0:0, x1:55, z1:-30, d:1.25, ux:0.25, uz:0.3, t:'1',
       fr:0.25, sr:600, ff:0.12, sf:800, sMode:'n',
       k1Typ:'fase', k1:1, k2Typ:'keine', k2:0, k3Typ:'keine', k3:0
     }},
@@ -16498,12 +16580,12 @@ function loadDemoRotorwelle(){
     {id:stepCounter++, type:'einstechen', params:{
       ausr:'radial', bearbeitung:'beide', x0:184, z0:-140, b1:10, t1:172,
       a1:0, a2:0, f1:0, f3:0, r2:2, r4:2, n:1, dp:0,
-      d:2, ux:0.3, uz:0.15, t:'21', fr:0.10, sr:200, ff:0.06, sf:240}},
+      d:2, ux:0.3, uz:0.15, t:'13', fr:0.10, sr:200, ff:0.06, sf:240}},
     // Nut 2: Z-330..-350 auf ⌀300, Grund ⌀280, Grundradien R3
     {id:stepCounter++, type:'einstechen', params:{
       ausr:'radial', bearbeitung:'beide', x0:300, z0:-330, b1:20, t1:280,
       a1:0, a2:0, f1:0, f3:0, r2:3, r4:3, n:1, dp:0,
-      d:2, ux:0.3, uz:0.15, t:'21', fr:0.10, sr:200, ff:0.06, sf:240}},
+      d:2, ux:0.3, uz:0.15, t:'13', fr:0.10, sr:200, ff:0.06, sf:240}},
     {id:stepCounter++, type:'abspanen_kontur', params:{
       contourId:contours[0].id, bearbeitung:'schlichten', richtung:'z-parallel',
       lage:'aussen', schlRicht:'rl', stock:305, stockZ:2,
@@ -16602,26 +16684,26 @@ function loadDemoMaster(){
       // d NICHT halbiert [29.08.2026]: bei PLAN ist die Zustellung
       // axial und war schon immer ap — die Radial-Umstellung betraf
       // nur laengs (dort hiess d vorher Durchmesserschritt).
-      d:1.5, ux:0, uz:0, safeZ:2, t:'10',
+      d:1.5, ux:0, uz:0, safeZ:2, t:'1',
       // fr UND ff — der Zyklus faehrt einen Schlichtgang, und ohne ff
       // stuende dort FNaN im Satz. So gefunden, siehe BEFUND-MASTER.md.
       fr:0.2, ff:0.12, sr:500, sf:700 }},
 
     // 2. ZENTRIEREN.
     {id:stepCounter++, type:'bohren', params:{
-      art:'zentrieren', z0:0, z1:-6, dt:0.5, safe:2, f:0.08, s:1200, t:'30' }},
+      art:'zentrieren', z0:0, z1:-6, dt:0.5, safe:2, f:0.08, s:1200, t:'6' }},
 
     // 3. TIEFLOCHBOHREN mit Spaenebrechen — ⌀26 als Vorbohrung.
     {id:stepCounter++, type:'bohren', params:{
       art:'tief', entBearb:'spaenebrechen', ausg:'zyklus',
       z0:0, z1:-65, d:8, v2:2, u:2, df:0.8, t1:1, dt:1, safe:3,
-      f:0.12, s:700, t:'33' }},
+      f:0.12, s:700, t:'14' }},
 
     // 4. AUSSEN SCHRUPPEN, Z-PARALLEL, mit Aufmass.
     {id:stepCounter++, type:'abspanen_kontur', params:{
       bearbeitung:'schruppen', richtung:'z-parallel', lage:'aussen', schlRicht:'rl',
       contourId: contours[0].id,
-      stock:100, stockZ:3, d:1.5, ux:0.3, uz:0.3, safeZ:2, t:'10', t2:'11',
+      stock:100, stockZ:3, d:1.5, ux:0.3, uz:0.3, safeZ:2, t:'1', t2:'2',
       fr:0.3, sr:450, ff:0.12, sf:800 }},
 
     // 5. STECHDREHEN mit EINGRENZEN [neu am 28.08.2026] — raeumt den
@@ -16631,33 +16713,33 @@ function loadDemoMaster(){
       bearbeitung:'schruppen', lage:'aussen',
       contourId: contours[0].id,
       stock:100, stockZ:3, d:1, ux:0.2, uz:0.2, safeZ:2,
-      t:'21', t2:'21', fr:0.08, fl:0.12, ff:0.06, sr:400, sf:500,
+      t:'13', t2:'13', fr:0.08, fl:0.12, ff:0.06, sr:400, sf:500,
       eingrenz:'ja', za:-95, zb:-140 }},
 
     // 6. AUSSEN SCHLICHTEN, KONTURPARALLEL — das Aufmass geht weg.
     {id:stepCounter++, type:'abspanen_kontur', params:{
       bearbeitung:'schlichten', richtung:'konturparallel', lage:'aussen', schlRicht:'rl',
       contourId: contours[0].id,
-      stock:100, stockZ:3, d:0.5, ux:0, uz:0, safeZ:2, t:'11', t2:'11',
+      stock:100, stockZ:3, d:0.5, ux:0, uz:0, safeZ:2, t:'2', t2:'2',
       fr:0.15, sr:700, ff:0.1, sf:900 }},
 
     // 7. INNEN AUSDREHEN mit Aufmass — beide Gaenge.
     {id:stepCounter++, type:'abspanen_kontur', params:{
       bearbeitung:'beide', richtung:'z-parallel', lage:'innen', schlRicht:'rl',
       contourId: contours[1].id,
-      stock:26, stockZ:2, d:0.75, ux:0.2, uz:0.2, safeZ:2, t:'8', t2:'9',
+      stock:26, stockZ:2, d:0.75, ux:0.2, uz:0.2, safeZ:2, t:'8', t2:'10',
       fr:0.12, sr:450, ff:0.08, sf:650 }},
 
     // 8. INNENGEWINDE M32x1,5.
     {id:stepCounter++, type:'gewinde', params:{
       bearbeitung:'beide', lage:'innen', form:'zyl', x0:30.4, z0:0, z1:-20,
       p:1.5, h1:0.81, u:0.05, verf:'B', nd:6, n:1, d:0.3,
-      lw:3, lr:2, s:400, t:'41', ausg:'gcode', gart:'metrisch',
+      lw:3, lr:2, s:400, t:'12', ausg:'gcode', gart:'metrisch',
       alpha:29, flanke:'eine', vr:1.5 }},
 
     // 9. FREISTICH DIN 509 Form E an der Schulter Z-30.
     {id:stepCounter++, type:'freistich', params:{
-      form:'E', x0:36, z0:-30, pm:2, pj:0, t:'12',
+      form:'E', x0:36, z0:-30, pm:2, pj:0, t:'3',
       // Die Maske fuehrt fr/sr und sMode — nicht f/s. Falsche Namen
       // ergaben "G97 Sundefined" und "G95 FNaN" im Satz.
       fr:0.1, sr:600, sMode:'n', i:0, v:0 }},
@@ -16666,19 +16748,19 @@ function loadDemoMaster(){
     {id:stepCounter++, type:'einstechen', params:{
       bearbeitung:'beide', ausr:'radial', lage:'aussen',
       x0:75, z0:-105, b1:6, t1:65, n:1, dp:0,
-      d:1.5, ux:0.2, uz:0.1, a1:0, a2:0, t:'21',
+      d:1.5, ux:0.2, uz:0.1, a1:0, a2:0, t:'13',
       fr:0.08, sr:400, ff:0.06, sf:500 }},
 
     // 11. AUSSENGEWINDE M36x1,5 MIT WECHSELNDER FLANKE [neu].
     {id:stepCounter++, type:'gewinde', params:{
       bearbeitung:'beide', lage:'aussen', form:'zyl', x0:36, z0:2, z1:-26,
       p:1.5, h1:0.92, u:0.05, verf:'B', nd:8, n:1, d:0.3,
-      lw:3, lr:2, s:500, t:'40', ausg:'gcode', gart:'metrisch',
+      lw:3, lr:2, s:500, t:'5', ausg:'gcode', gart:'metrisch',
       alpha:29, flanke:'wechselnd', vr:2 }},
 
     // 12. ABSTECHEN mit Fase.
     {id:stepCounter++, type:'abstechen', params:{
-      t:'20', z0:-170, x0:95, kaTyp:'fase', ka:0.5, x1:0,
+      t:'4', z0:-170, x0:95, kaTyp:'fase', ka:0.5, x1:0,
       // Die Maske fuehrt fr/sr und fd/sd/xd (reduzierter Vorschub zur
       // Mitte) — nicht f/s/fRed/xRed. Falsche Namen ergaben SNaN.
       fr:0.08, sr:400, fd:0.04, sd:300, xd:5 }},
@@ -16742,29 +16824,29 @@ function loadDemoBuchse(){
     {id:stepCounter++, type:'abspanen_kontur', params:{
       bearbeitung:'beide', richtung:'z-parallel', lage:'aussen', schlRicht:'rl',
       contourId: contours[0].id,
-      stock:82, stockZ:2, d:1.25, ux:0.25, uz:0.3, safeZ:2, t:'10', t2:'11',
+      stock:82, stockZ:2, d:1.25, ux:0.25, uz:0.3, safeZ:2, t:'1', t2:'2',
       fr:0.25, sr:600, ff:0.12, sf:800
     }},
     {id:stepCounter++, type:'bohren', params:{
-      art:'zentrieren', z0:0, z1:-5, dt:0.5, safe:2, f:0.08, s:1200, t:'30'
+      art:'zentrieren', z0:0, z1:-5, dt:0.5, safe:2, f:0.08, s:1200, t:'6'
     }},
     {id:stepCounter++, type:'bohren', params:{
       art:'tief', entBearb:'spaenebrechen', ausg:'zyklus', z0:0, z1:-65, d:8, v2:2,
-      u:2, df:0.8, t1:1, dt:1, safe:3, f:0.12, s:700, t:'33'
+      u:2, df:0.8, t1:1, dt:1, safe:3, f:0.12, s:700, t:'14'
     }},
     {id:stepCounter++, type:'abspanen_kontur', params:{
       bearbeitung:'beide', richtung:'z-parallel', lage:'innen', schlRicht:'rl',
       contourId: contours[1].id,
-      stock:26, stockZ:2, d:1, ux:0.2, uz:0.2, safeZ:2, t:'8', t2:'9',
+      stock:26, stockZ:2, d:1, ux:0.2, uz:0.2, safeZ:2, t:'8', t2:'10',
       fr:0.15, sr:500, ff:0.08, sf:700
     }},
     {id:stepCounter++, type:'gewinde', params:{
       bearbeitung:'beide', lage:'innen', x0:48.4, z0:0, z1:-15,
       p:1.5, h1:0.81, u:0.05, verf:'B', dz1:0.25, nd:6, n:1,
-      lw:3, lr:2, s:400, t:'41', ausg:'gcode', gart:'metrisch', alpha:29
+      lw:3, lr:2, s:400, t:'12', ausg:'gcode', gart:'metrisch', alpha:29
     }},
     {id:stepCounter++, type:'abstechen', params:{
-      t:'20', z0:-60, x0:75, kaTyp:'fase', ka:0.5,
+      t:'4', z0:-60, x0:75, kaTyp:'fase', ka:0.5,
       x1:25, xd:35, sd:200, fd:0.04, fr:0.06, sr:400
     }},
   ];
@@ -16814,15 +16896,15 @@ function loadDemoBallen(){
   programSteps=[
     {id:stepCounter++, type:'abspanen_einfach', params:{
       richtung:'plan', bearbeitung:'schruppen', z0:2, z1:0, x0:207, x1:0, d:1.5, ux:0.1, uz:0.1, safeZ:2,
-      t:'11', fr:0.25, ff:0.12, sr:600, sf:800
+      t:'2', fr:0.25, ff:0.12, sr:600, sf:800
     }},
     {id:stepCounter++, type:'abspanen_kontur', params:{
       contourId:cid, bearbeitung:'schruppen', richtung:'z-parallel', lage:'aussen', schlRicht:'rl',
-      stock:205, stockZ:0.1, d:1.5, ux:0.3, uz:0.1, safeZ:2, t:'11', fr:0.25, sr:600, ff:0.12, sf:800
+      stock:205, stockZ:0.1, d:1.5, ux:0.3, uz:0.1, safeZ:2, t:'2', fr:0.25, sr:600, ff:0.12, sf:800
     }},
     {id:stepCounter++, type:'stechdrehen', params:{
       bearbeitung:'beide', lage:'aussen', contourId:cid, stock:158, stockZ:2, d:1.5, ux:0.2, uz:0.2, safeZ:2,
-      t:'21', t2:'21', fr:0.08, fl:0.12, ff:0.06, sr:400, sf:500, eingrenz:'ja', za:-130.25, zb:-240.35
+      t:'13', t2:'13', fr:0.08, fl:0.12, ff:0.06, sr:400, sf:500, eingrenz:'ja', za:-130.25, zb:-240.35
     }},
     {id:stepCounter++, type:'abspanen_einfach', params:{
       richtung:'plan', bearbeitung:'schlichten', z0:0.1, z1:0, x0:42.6, x1:0, planBis:0, d:1.5, ux:0, uz:0, safeZ:2,
@@ -30457,12 +30539,31 @@ function buildProgram(){
         }
       }
     }
-    // LAGER-WARNUNG [Daniel]: Werkzeuge ohne Revolverplatz (L-Kennung)
-    // haben keinen T-Aufruf an der Maschine.
+    // LAGERWERKZEUG IST EIN BLOCKER [23.09.2026, am eigenen Programm
+    // gesehen]. Bis dahin war es eine Warnung — und die NC schrieb dabei
+    // einen Satz, der schlimmer ist als gar keiner: tSatz() macht aus einer
+    // nicht numerischen Nummer wie 'L4' ein **T0**, und T0 ist an beiden
+    // Monforts die WERKZEUG-ABWAHL (DV 610 S. 5-3: "T 00 Abwahl"). Das
+    // Programm liefe ab dort ohne Laengen- und Radiuskorrektur weiter — ein
+    // Crash mit Ansage. Ein Werkzeug, das nicht im Revolver steckt, kann
+    // nicht gerufen werden; also entsteht kein Programm, wie beim
+    // NaN-Waechter (28.08.2026). Der Weg dahin steht in der Meldung.
+    // Gefragt ist NICHT die Nummer, sondern was im T-Satz landet: hat das
+    // Werkzeug einen Revolverplatz, ruft die NC diesen (wzPlatzNr), und
+    // dann ist alles in Ordnung - auch bei einer Nummer wie 'L4'. Erst
+    // OHNE Platz gilt die Nummer selbst, und die muss eine positive Zahl
+    // sein. (Erster Bau fragte /^L/ und blockierte ein Lagerwerkzeug, das
+    // laengst auf einem Platz lag.)
     ['t','t2'].forEach(k=>{
       const tw=st.params && st.params[k];
-      if(tw && /^L/.test(String(tw)))
-        warnings.push('Schritt '+(idx+1)+': Werkzeug '+tw+' liegt im LAGER ohne Revolverplatz — erst auf einen Platz (1-16) legen.');
+      if(tw===undefined || tw===null || tw==='') return;
+      const wz=(typeof toolTable!=='undefined' && toolTable)
+        ? toolTable.find(x=>x && String(x.t)===String(tw)) : null;
+      const ruf=(wz && wz.platz) ? wz.platz : tw;
+      if(+ruf > 0) return;
+      warnings.push('NC-FEHLER: Schritt '+(idx+1)+': Werkzeug '+tw+' hat keinen Revolverplatz — '+
+        'die Steuerung kennt keine Lagernummern und bekaeme T0 (Werkzeug-ABWAHL). '+
+        'Erst im Werkzeugfenster auf einen Platz 1-16 legen.');
     });
     if(st.type==='abspanen_einfach'){
       genAbspanenEinfach(mitReitstock(st.params, idx, warnings), N, bump, lines, warnings);
@@ -30755,7 +30856,13 @@ function buildProgram(){
       const m=/^N\d+ \(WERKZEUG\) (\S+)/.exec(l);
       if(!m) return;
       const tnr=String(m[1]).replace(/^T/,'');
-      const w=(typeof wzVonPlatz==='function') ? wzVonPlatz(tnr) : null;
+      // RUECKFALL AUF DIE NUMMER: wzVonPlatz sucht den Revolverplatz, und
+      // ein Lagerwerkzeug hat keinen. Ohne den Rueckfall blieb die Zeile
+      // genau dort weg, wo sie am noetigsten ist - beim Lagerwerkzeug, das
+      // die Maschine als Platz derselben Zahl liest.
+      let w=(typeof wzVonPlatz==='function') ? wzVonPlatz(tnr) : null;
+      if(!w && typeof toolTable!=='undefined' && toolTable)
+        w=toolTable.find(x=>x && String(x.t)===String(tnr)) || null;
       if(!w) return;
       const nm=String(w.name||'').replace(/[()]/g,'')
         .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue')
@@ -35068,7 +35175,20 @@ function draw3D(opt){
     // Backen bei 120 Grad Teilung nicht schneiden. Gilt am Handy wie am
     // Laptop - dieselbe Zeichnung (Daniel: "ich weiss nicht, ob das auf der
     // Mobilansicht genauso ist" - ja, war es).
-    const klotz=(am,tB,r1,r2,z1,z2,rgb)=>{
+    // EINE BACKE, KEIN STAPEL [Daniels Befund 23.09.2026: "die sehen aus
+    // wie einzelne Elemente, aber nicht ein zusammenhaengender Backen im
+    // Dreibackenfutter ... wie wenn das einzelne Bloecke waeren,
+    // aufeinander geschichtet"]. Jede Stufe wurde als GESCHLOSSENER Klotz
+    // gemalt - mit voller Stirn vorn (hell, 0,70) UND voller Rueckseite
+    // (dunkel, 0,38). Wo zwei Stufen aneinanderstossen, liegen beide
+    // Flaechen INNERHALB des Koerpers uebereinander; welche die
+    // Tiefensortierung nach vorn holt, ist Zufall - daher die hellen und
+    // dunklen Streifen quer ueber die Backe. Eine Stufenbacke ist aber
+    // EIN Koerper: zwischen zwei Stufen gehoert nur der ABSATZ dorthin,
+    // der Ring vom Radius des Nachbarn bis zum eigenen. rVor/rNach sind
+    // die Radien der angrenzenden Stufen (null = dort endet die Backe,
+    // dann steht die volle Stirnflaeche).
+    const klotz=(am,tB,r1,r2,z1,z2,rgb,rVor,rNach)=>{
       const ca=Math.cos(am), sa=Math.sin(am);
       // Backenkoordinaten: u laengs der Backenachse (radial), t quer dazu
       const P=(u,t,z)=>proj(z, u*ca - t*sa, u*sa + t*ca);
@@ -35090,11 +35210,21 @@ function draw3D(opt){
         const phm=am+Math.asin(Math.max(-1,Math.min(1,tm/r1)));
         p=[P(uIn(t1),t1,z1),P(uIn(t2),t2,z1),P(uIn(t2),t2,z2),P(uIn(t1),t1,z2)];
         halt(0, -Math.cos(phm), -Math.sin(phm), mitte4(p), p, 0.26+0.22*lamB(phm+Math.PI));
-        // Stirn vorn (zum Werkstueck hin, +Z) und Rueckseite (-Z)
-        p=[P(uIn(t1),t1,z2),P(uIn(t2),t2,z2),P(r2,t2,z2),P(r2,t1,z2)];
-        halt(1,0,0, mitte4(p), p, 0.70);
-        p=[P(uIn(t1),t1,z1),P(uIn(t2),t2,z1),P(r2,t2,z1),P(r2,t1,z1)];
-        halt(-1,0,0, mitte4(p), p, 0.38);
+        // Stirn vorn (+Z) und hinten (-Z): der Innenrand ist die
+        // Spannflaeche, solange die Backe dort endet - grenzt eine
+        // Nachbarstufe an, bleibt nur der sichtbare Absatzring stehen.
+        // Ist der Nachbar hoeher (rNach >= r2), gibt es dort gar keine
+        // Flaeche: die Backe laeuft einfach durch.
+        const innen=(nachbar,t)=> nachbar===null||nachbar===undefined
+          ? uIn(t) : Math.max(uIn(t), Math.min(nachbar, r2));
+        if(innen(rNach,tm)<r2-1e-9){
+          p=[P(innen(rNach,t1),t1,z2),P(innen(rNach,t2),t2,z2),P(r2,t2,z2),P(r2,t1,z2)];
+          halt(1,0,0, mitte4(p), p, 0.70);
+        }
+        if(innen(rVor,tm)<r2-1e-9){
+          p=[P(innen(rVor,t1),t1,z1),P(innen(rVor,t2),t2,z1),P(r2,t2,z1),P(r2,t1,z1)];
+          halt(-1,0,0, mitte4(p), p, 0.38);
+        }
       }
       // Flanken: parallele Ebenen bei t = -tB und +tB, Normale quer zur
       // Backenachse und vom Klotz weg
@@ -35111,8 +35241,10 @@ function draw3D(opt){
     const zStufe=G.zStufe;
     // Dreistufige Backe: ein Klotz je Stufe, Hoehen aus G.stufen.
     [Math.PI/2, Math.PI/2+2*Math.PI/3, Math.PI/2+4*Math.PI/3].forEach(am=>{
-      G.stufen.forEach(st2=>{
-        klotz(am, tB, rSpann, st2.r, st2.zVon, st2.zBis, stahlB);
+      G.stufen.forEach((st2,si)=>{
+        const vor =si>0 ? G.stufen[si-1].r : null;              // Nachbar in -Z
+        const nach=si<G.stufen.length-1 ? G.stufen[si+1].r : null;  // Nachbar in +Z
+        klotz(am, tB, rSpann, st2.r, st2.zVon, st2.zBis, stahlB, vor, nach);
       });
     });
   })();
