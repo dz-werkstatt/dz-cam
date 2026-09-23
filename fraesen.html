@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="23.09.2026 19:42 (5c364635)";</script>
+<script>window.__DZ_STAND="23.09.2026 20:14 (68221ea1)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -8835,7 +8835,7 @@ function fPlanFraeser(prog, zweck){
 // Sollfeld: wie tief es unter die Oberkante geht und wieviel davon im
 // Winkelband liegt, das eine Zeilenbahn schlichten kann.
 function fPlanFlaechenBefund(A, F, winkelMin, winkelMax, loecher){
-  const b = {spanne:0, tiefste:0, zellen:0, imBand:0, zuSteil:0, zuFlach:0, tief:0, tiefFrei:0};
+  const b = {spanne:0, tiefste:0, zellen:0, imBand:0, zuSteil:0, zuFlach:0, tief:0, tiefFrei:0, tiefLeer:0};
   if(!F) return b;
   let hMax = -1e9, hMin = 1e9;
   for(let c = 0; c < F.h.length; c++){
@@ -8851,11 +8851,27 @@ function fPlanFlaechenBefund(A, F, winkelMin, winkelMax, loecher){
   // liegen und NICHT in einer erkannten Bohrung. Ohne diese Trennung
   // schlaegt der Planer an jeder gebohrten Platte ein Abspanen vor
   // (gemessen: 26 von 72 Vorschlaegen an Daniels Teilen).
+  // UND DER RAUM NEBEN DEM TEIL ZAEHLT MIT [23.09.2026, Daniels Befund:
+  // "das ist eine Vollkatastrophe"]. Bis dahin sprang die Schleife ueber
+  // jede Zelle, die im Modell KEINE Flaeche traegt - und genau dort liegt
+  // bei einem Teil mit AUSSENKONTUR fast das ganze Material: zwischen der
+  // Kontur und dem Rohteilquader. Eine senkrechte Wand ist in einem
+  // Hoehenfeld nur ein Sprung zwischen zwei Zellen, sie traegt selbst keine
+  // Flaeche. An seiner Huelse 40x40x54 gemessen: 2995 Zellen mit Flaeche,
+  // 14961 ohne - der Planer bewertete 17 % des Teils und hielt den Rest fuer
+  // nicht vorhanden. Er schlug Planen und Bohren vor und KEIN Abspanen,
+  // obwohl der halbe Quader weg muss; von Hand angelegt raeumt dieselbe Bahn
+  // das Teil in 14 Ebenen mit 478 Zuegen sauber aus.
+  //
+  // Eine Zelle ohne Flaeche traegt in der Sollform die Unterkante: dort ist
+  // bis ganz unten zu fraesen. Ausgenommen bleibt, was in einer erkannten
+  // Bohrung liegt - die gehoert dem Bohrer, nicht der Fraesbahn.
   const L = loecher || [];
   for(let j = 0; j < F.ny; j++) for(let i = 0; i < F.nx; i++){
     const c = j * F.nx + i;
-    if(!F.quelle[c] || F.h[c] > hMax - 0.5) continue;
-    b.tief++;
+    const leer = !F.quelle[c];
+    if(!leer && F.h[c] > hMax - 0.5) continue;
+    b.tief++; if(leer) b.tiefLeer++;
     const x = F.x0 + (i + 0.5) * F.raster, y = F.y0 + (j + 0.5) * F.raster;
     let drin = false;
     for(let q = 0; q < L.length; q++){
