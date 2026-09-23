@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="23.09.2026 09:51 (72972af0)";</script>
+<script>window.__DZ_STAND="23.09.2026 11:57 (5a46ec5f)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3587,6 +3587,17 @@ Unterschieden wird an der <b>Neigung der Sollform</b> unter der Stelle (5 bis 80
 <br><b>Warum das ein Befund war:</b> der Ausschlu&szlig; des Aufma&szlig;streifens ma&szlig; den Abstand zur Wand in der <b>letzten</b> Ebene. &Uuml;ber einer Stufe ist dort alles
 gesperrt, der Abstand also null &mdash; und jede Stelle galt als Aufma&szlig;streifen. Die Bahn meldete &bdquo;kein Restmaterial: das Werkzeug erreicht &uuml;berall die Sollform
 samt Aufma&szlig;&ldquo;, w&auml;hrend 4 mm stehen blieben. Eine falsche Zusicherung ist schlimmer als keine. Gemessen wird jetzt auf der <b>H&ouml;he der Stelle selbst</b>.</dd>
+<dt id="ba-fk05c-konturschnitt">Konturschnitt: das Aufma&szlig; an der Wand gleich machen (23.09.2026)</dt><dd>Der Zeilen-M&auml;ander endet an einer
+Rasterstelle. An einer geraden Wand f&auml;llt das nicht auf &mdash; an einer <b>schr&auml;gen oder runden</b> endet jede Zeile woanders, und das Aufma&szlig;
+schwankt. <b>Gemessen</b> an einer runden Insel (r 12, Fr&auml;ser &#x2300;10, UXY 0,5): das Aufma&szlig; an der Wand liegt zwischen <b>0,2 und 8,0 mm</b> &mdash;
+also zwischen dem Sollwert und der vollen Rohteilh&ouml;he.
+<br>Der <b>Konturschnitt</b> f&auml;hrt einen Zug auf der Grenze der Ebenenmaske, dort, wo auch der letzte Ring des konturparallelen Schruppens l&auml;uft.
+Danach steht das Aufma&szlig; <b>&uuml;berall auf 0,2</b>. Das kostet an derselben Insel <b>8 %</b> mehr Schnittweg (1518 statt 1406 mm) &mdash; konturparallel
+k&auml;me auf dasselbe Ergebnis, aber mit <b>102 %</b> (2844 mm).
+<br><b>Jede Ebene oder nur die letzte?</b> An einer <i>durchgehenden</i> Wand gen&uuml;gt die letzte. An einer <b>gestuften</b> nicht: dort gemessen (zwei
+Abs&auml;tze) bleibt der obere mit <b>bis zu 4 mm</b> stehen, wenn nur die letzte Ebene den Zug bekommt; <i>jede Ebene</i> macht alle W&auml;nde gleich und
+kostet daf&uuml;r 3 Prozentpunkte mehr (10 statt 7 %). <b>Vorgabe ist aus</b> &mdash; es kostet Weg, und die App entscheidet das nicht f&uuml;r Dich; die
+Meldung nennt die Zahl. Beim <i>konturparallelen</i> Schruppen ist das Feld ohne Wirkung: dort <b>ist</b> der letzte Ring dieser Zug.</dd>
 <dt id="ba-fk05c-stufenhoehe">Stufenh&ouml;he: die Treppe an Schr&auml;gen flacher machen (23.09.2026)</dt><dd>Z-konstantes Schruppen l&auml;&szlig;t an einer Schr&auml;ge eine
 Treppe stehen, die so hoch ist wie die <b>Zustellung</b>. Wer sie flacher will, m&uuml;&szlig;te enger zustellen &mdash; und zahlt das auf der <b>ganzen</b> Fl&auml;che,
 obwohl nur die Schr&auml;ge es braucht.
@@ -3612,6 +3623,54 @@ ist die Wirkung dagegen fast umsonst zu haben. Die App l&auml;&szlig;t nichts un
 liest im Bericht nach, wieviel dadurch stehen bleibt.
 <br><b>Was stehen bleibt, ist ein Befund</b> &mdash; kein Treppenabsatz: eine Treppe ist h&ouml;chstens eine Zustellung hoch, alles dar&uuml;ber steht im Restmaterial.
 <br><i>Vorbild:</i> hyperMILLs <i>minimaler Materialabtrag</i>; an seinen Trainingsjobs 14/15 gemessen 1219 gegen 777 S&auml;tze am selben Teil.</dd>
+<dt id="ba-fk05c-fvoll">Vorschub nach Eingriff: langsamer im Vollschnitt (23.09.2026)</dt><dd>Ein Schaftfr&auml;ser h&auml;lt seinen Vorschub aus, solange er einen
+Streifen <b>ae</b> nimmt. F&auml;hrt er in eine <b>Nut</b> oder in eine <b>Ecke</b>, steigt die Eingriffsbreite auf den vollen Durchmesser: dreimal so viel Span, der
+Zahn doppelt so lange im Eingriff, und die W&auml;rme bleibt in der Schneide. Das ist die Stelle, an der ein Fr&auml;ser stirbt &mdash; und sie dauert oft nur
+wenige Zentimeter.
+<br>Das Feld <b>F im Vollschnitt</b> ist der Anteil des Bahnvorschubs, der dort gilt. <b>100 % ist die Vorgabe und schaltet es ab</b>; dann bleibt die Ausgabe Satz
+f&uuml;r Satz dieselbe. Mit einem kleineren Wert wird jeder Zug an den Stellen <b>geteilt</b>, an denen die gemessene Eingriffsbreite &uuml;ber <b>0,8 &times;
+Werkzeugdurchmesser</b> steigt &mdash; die Geometrie der Bahn &auml;ndert sich nicht, nur das F-Wort.
+<br><b>Gemessen wird senkrecht zur Bahn:</b> wie breit steht neben dem Werkzeug noch Material &uuml;ber der Ebene? In einer Nut auf beiden Seiten (voller
+Durchmesser), beim M&auml;ander nur der frische Streifen. Ma&szlig;gebend ist der Stand <i>in diesem Augenblick</i> &mdash; was die Nachbarzeile eben genommen hat,
+z&auml;hlt nicht mehr mit. Warum 0,8 und nicht 1,0: die Messung l&auml;uft auf dem Raster, und eine Zelle am Rand des Werkzeugbands f&auml;llt je nach Lage heraus.
+<br><b>Gemessen an vier Formen</b> (⌀10, ae 4 mm): eine 12-mm-Nut 50 % des Schnittwegs im Vollschnitt (der Hinweg r&auml;umt sie, der R&uuml;ckweg schabt nur noch
+0,5 mm ab), eine Tasche 8 %, eine Insel 0,3 %, eine offene Fl&auml;che <b>0 %</b> &mdash; dort sagt die Meldung ausdr&uuml;cklich, da&szlig; das Feld nichts &auml;ndert.
+Der Bericht nennt immer beide Wege in Millimetern und das F-Wort, mit dem gefahren wird.
+<br><i>Vorbild:</i> hyperMILL f&uuml;hrt daf&uuml;r einen eigenen Vorschub; im gelesenen Job ein F&uuml;nfzehntel des Bahnvorschubs. Ein Anhaltswert sind 30 bis 50 %.</dd>
+<dt id="ba-fk05c-equi">&Auml;quidistant schlichten: gleicher Abstand auf der Fl&auml;che (23.09.2026)</dt><dd>Die Zeilenbahn h&auml;lt ihren Abstand in der
+<b>Draufsicht</b>. Auf einer geneigten Fl&auml;che ist der Abstand <i>entlang der Fl&auml;che</i> dadurch gr&ouml;&szlig;er &mdash; und die Rautiefe w&auml;chst mit.
+Damit sie &uuml;berall h&auml;lt, rechnet die Bahn mit der <b>steilsten</b> bearbeiteten Stelle: auf allem, was flacher ist, f&auml;hrt sie unn&ouml;tig eng.
+<br>Die vierte Stellung der <b>Zeilenrichtung</b> hei&szlig;t <b>&auml;quidistant</b>. Dann sind die Bahnen keine Zeilen, sondern <b>H&ouml;henlinien des
+Abstands vom Rand &mdash; auf der Fl&auml;che gemessen</b>. Sie laufen konzentrisch nach innen, mit &uuml;berall demselben Abstand auf dem Werkst&uuml;ck: auf dem
+Flachen weiter, an der Steile enger.
+<br><b>Gemessen</b> an einem Prüfk&ouml;rper mit flacher Kuppe (5&deg;), 40&deg;-Flanke und flachem Grund (Kugelfr&auml;ser R4, Rautiefe 0,01 &mdash; erlaubt sind
+0,566 mm auf der Fl&auml;che):
+<table class="batab"><tr><th></th><th>Zeilen</th><th>&auml;quidistant</th></tr>
+<tr><td>Schnittweg</td><td>16364 mm</td><td><b>11927 mm</b></td></tr>
+<tr><td>Abstand auf der Fl&auml;che (Median)</td><td>0,401 mm</td><td>0,545 mm</td></tr>
+<tr><td>S&auml;tze</td><td>7280</td><td>9274</td></tr></table>
+Also <b>27 % weniger Schnittweg</b> bei gleicher Rautiefe. Daf&uuml;r mehr S&auml;tze: ein Kreis braucht mehr St&uuml;tzpunkte als eine Gerade.
+<br><b>Wo es sich lohnt:</b> bei wechselnder Neigung &mdash; Formen, Mulden, Kuppen. Auf einem Teil, das &uuml;berall gleich steil ist, kommt dasselbe heraus wie
+mit Zeilen. <b>Die Vorgabe bleibt deshalb die Zeilenbahn.</b>
+<br><b>Grenze, ehrlich:</b> das Abstandsfeld wird auf dem Raster der Sollform gel&ouml;st. Im Mittel und auf 90 % der Bahn h&auml;lt der Abstand das Ma&szlig;;
+einzelne Stellen liegen dar&uuml;ber (gemessen 1,13 mm an einer Stelle, wo eine H&ouml;henlinie abrei&szlig;t). Die Zeilenbahn hat dieselbe Art von
+Ausrei&szlig;ern (dort 0,80 mm). Wer die Rautiefe an einer bestimmten Stelle garantiert braucht, mi&szlig;t sie am Teil.</dd>
+<dt id="ba-fk05c-ecken">Ecken verrunden: der Vorschub, den Du eintr&auml;gst (23.09.2026)</dt><dd>Eine <b>scharfe Ecke</b> f&auml;hrt die Steuerung nur, indem sie auf nahezu
+Null abbremst &mdash; der eingetragene Vorschub wird dort nie erreicht, und die Belastung springt. Die Zeilenbahn hat davon an jedem Zeilenwechsel zwei; an drei
+Pr&uuml;fk&ouml;rpern gez&auml;hlt <b>40 bis 96 rechte Winkel je Programm</b>.
+<br>Das Feld <b>Ecken verrunden</b> ist der gew&uuml;nschte Radius in Millimetern; <b>0 ist die Vorgabe und schaltet es ab</b>. Die Ecke wird durch einen
+tangentialen <b>Kreisbogen</b> ersetzt (im Programm ein echter Bogensatz, kein Vieleck). Der Radius wird auf die <b>halbe Schenkell&auml;nge</b> und auf den
+Werkzeugradius begrenzt; der Bericht nennt den Radius, der wirklich gefahren wird.
+<br><b>Verrundet wird nur, wo nichts verlorengeht.</b> Eine Rundung schneidet die Ecke ab &mdash; liegt dort Material, das der Fr&auml;ser nehmen soll, bliebe es
+stehen. Die App rechnet das Zelle f&uuml;r Zelle nach: welche Stelle war vorher unter dem Werkzeug und ist es nachher nicht mehr? Ist dort etwas abzutragen,
+<b>bleibt die Ecke scharf</b>, und der Bericht sagt, wie viele das sind (meist an einer Wand). Am Zeilenende im <b>&Uuml;berlauf neben dem Rohteil</b> ist
+dagegen nichts zu verlieren &mdash; und dort liegen die meisten Ecken.
+<br><b>Gemessen</b> (⌀10, ae 4 mm, R2): offene Fl&auml;che 96 von 96 Ecken verrundet, Insel 76 von 84, Tasche 20 von 40 &mdash; und das <b>Restmaterial ist in
+allen drei F&auml;llen Zelle f&uuml;r Zelle dasselbe</b> wie ohne Verrundung. Das Programm wird l&auml;nger (jede Ecke kostet zwei S&auml;tze statt einem); der Weg
+bleibt fast gleich.
+<br><b>Die Pr&uuml;fung ist vorsichtig:</b> sie kennt nur die eine Ecke, nicht die &uuml;brige Bahn. Eine Stelle, die der Nachbarzug ohnehin r&auml;umt, z&auml;hlt
+trotzdem als Verlust &mdash; an einer Tasche bleibt dadurch etwa die H&auml;lfte der Ecken scharf, obwohl dort nichts verlorenginge. Das ist die sichere Richtung.
+<br><i>Vorbild:</i> hyperMILL verrundet die Bahnecken ebenfalls &mdash; dort mit dem Ziel, h&ouml;here Vorschübe fahren zu k&ouml;nnen.</dd>
 <dt id="ba-fk05c-kontur">Bahnart: Zeilen oder konturparallel (20.09.2026)</dt><dd>Beide Schruppschritte (Modell abspanen, Restmaterial abspanen) haben das Feld <b>Bahnart</b>.
 <b>Zeilen</b> ist der M&auml;ander wie bisher. <b>Konturparallel</b> f&auml;hrt je Z-Ebene Ringe um die Sollform: jeder Ring ist eine H&ouml;henlinie des Abstands zur
 Form, der Ringabstand ist ae, gefahren wird von au&szlig;en nach innen (bei einer Tasche von der Mitte zur Wand) &mdash; die Schneide nimmt so immer nur den Streifen ae
@@ -4949,6 +5008,15 @@ var F_FELDER = {
   bahnArt:    {name:'Bahnart', typ:'wahl',
                wahl:[['zeilen','Zeilen (Mäander)'],['kontur','konturparallel (Ringe)']],
                ba:'ba-fk05c-kontur'},
+  // KONTURSCHNITT [23.09.2026]: der Zeilen-Maeander endet an einer
+  // Rasterstelle, an einer runden Wand also jede Zeile woanders. Gemessen
+  // an einer runden Insel: das Aufmass schwankt zwischen 0,2 und 8,0 mm.
+  // Ein Zug auf der Grenze der Ebenenmaske macht es ueberall gleich.
+  // Bei den Ringen ist der letzte Ring per Bau genau dieser Zug.
+  konturSchnitt:{name:'Konturschnitt', typ:'wahl',
+               wahl:[['aus','aus'],['letzte','nur letzte Ebene'],['jede','jede Ebene']],
+               nurWenn:(s) => String(s.bahnArt || 'zeilen') !== 'kontur',
+               ba:'ba-fk05c-konturschnitt'},
   // DIE EBENEN AUF DIE FLAECHEN [22.09.2026]. "gleichmaessig" ist die alte
   // Folge - jede Vorlage und der Programmierplatz-Beleg DZ14 haengen daran.
   ebenenArt:  {name:'Zustellung', typ:'wahl',
@@ -4966,7 +5034,23 @@ var F_FELDER = {
                ba:'ba-fk05c-stufenhoehe'},
   abtragMin:  {name:'Mindest-Eingriff', einheit:'mm', typ:'zahl',
                ba:'ba-fk05c-abtrag'},
-  ebWas:      {name:'Was schlichten', typ:'wahl',
+
+  // VORSCHUB NACH EINGRIFF [23.09.2026, Punkt 2 der hyperMILL-Liste]. Ein
+  // Fraeser haelt seinen Vorschub aus, solange er einen Streifen ae nimmt.
+  // In einem Kanal oder einer Ecke steigt die Eingriffsbreite auf den vollen
+  // Durchmesser - dreimal so viel Span, der Zahn doppelt so lange im
+  // Eingriff. Das ist die Stelle, an der ein Fraeser stirbt, und sie dauert
+  // oft nur Zentimeter. 100 % = aus (die Ausgabe bleibt Satz fuer Satz
+  // dieselbe); der Zug wird nur dort geteilt, wo die GEMESSENE
+  // Eingriffsbreite ueber 0,8 x Durchmesser liegt.
+  fVoll:      {name:'F im Vollschnitt', einheit:'%', typ:'zahl',
+               ba:'ba-fk05c-fvoll'}, 
+  // BAHNECKEN VERRUNDEN [23.09.2026, Punkt 3 der hyperMILL-Liste]. Eine
+  // scharfe Ecke faehrt die Steuerung nur, indem sie auf nahezu Null
+  // abbremst. 0 = aus (Vorgabe, Ausgabe bitgenau); gerundet wird nur dort,
+  // wo die Rundung nichts stehen laesst.
+  eckenR:     {name:'Ecken verrunden', einheit:'mm', typ:'zahl',
+               ba:'ba-fk05c-ecken'}, ebWas:      {name:'Was schlichten', typ:'wahl',
                wahl:[['beide','Böden und Wände'],['boeden','nur Böden'],['waende','nur Wände']],
                ba:'ba-fk05c-boeden'},
   posArt:     {name:'Position', typ:'wahl',
@@ -5219,7 +5303,7 @@ var F_MASKE = {
   // eintauchen in das Bauteil, sondern seitlich zustellen im freien Raum"]:
   // die dritte Stellung laesst jeden Zug aus, der ein Eintauchen im Material
   // braeuchte - das Material bleibt stehen und steht im Restmaterial.
-  modellSchruppen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','stufeMax','aufSeite','aufTiefe','#Bahn','bahnArt','ae','aeArt','bahnSinn','abtragMin','eintauch','#!Sicherheit','sc','sc2'],
+  modellSchruppen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','stufeMax','aufSeite','aufTiefe','#Bahn','bahnArt','konturSchnitt','ae','aeArt','bahnSinn','abtragMin','fVoll','eckenR','eintauch','#!Sicherheit','sc','sc2'],
                feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd'],['3','nur von außen: kein Eintauchen, Unerreichbares bleibt stehen'],['0','über SC anfahren, senkrecht eintauchen']]},
                feldText:{f:'F Vorschub Fräsen', fTief:'FZ Vorschub Eintauchen', zust:'D Zustellung in Z',
                  eintauch:'Anfahren & Eintauchen',
@@ -5230,7 +5314,7 @@ var F_MASKE = {
   // Restmaterial abspanen: dieselben Felder wie das Abspanen plus die
   // Restschwelle. Der BEZUG ist kein Feld - er ist immer der letzte
   // Schruppschritt davor, und die Maske nennt ihn im Kopf.
-  modellRest:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','stufeMax','aufSeite','aufTiefe','#Bahn','bahnArt','ae','aeArt','bahnSinn','restAb','abtragMin','eintauch','#!Sicherheit','sc','sc2'],
+  modellRest:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','stufeMax','aufSeite','aufTiefe','#Bahn','bahnArt','konturSchnitt','ae','aeArt','bahnSinn','restAb','abtragMin','fVoll','eckenR','eintauch','#!Sicherheit','sc','sc2'],
                feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd'],['3','nur von außen: kein Eintauchen, Unerreichbares bleibt stehen'],['0','über SC anfahren, senkrecht eintauchen']]},
                feldText:{f:'F Vorschub Fräsen', fTief:'FZ Vorschub Eintauchen', zust:'D Zustellung in Z',
                  eintauch:'Anfahren & Eintauchen',
@@ -5251,7 +5335,7 @@ var F_MASKE = {
   modellSchlichten:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','winkelMin','winkel','#Mass','rautiefe','tolBahn','strategie','bahnSinn','#!Sicherheit','sc','sc2'],
                feldText:{f:'F Vorschub Schlichten', fTief:'FZ Vorschub Zustellen', tiefe:'Z1 unterste Höhe (Bereich)',
                  q203:'Z0 oberste Höhe (Bereich)', strategie:'Zeilenrichtung', bahnSinn:'Fräsart (bei Rechtslauf M3)', sc2:'SC2 Rückzug über Z0'},
-               feldWahl:{strategie:[['2','automatisch (quer zum Gefälle)'],['0','Zeilen in X'],['1','Zeilen in Y']]},
+               feldWahl:{strategie:[['2','automatisch (quer zum Gefälle)'],['0','Zeilen in X'],['1','Zeilen in Y'],['3','äquidistant (gleicher Abstand auf der Fläche)']]},
                ohneQ:['t','s','f','fTief','kuehl','q203','tiefe','winkelMin','winkel','rautiefe','tolBahn','strategie','bahnSinn','sc','sc2']}
 };
 // Softkey-Gruppen wie an der TNC (CYCL DEF -> Bohren/Gewinde, Taschen/
@@ -5858,7 +5942,7 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
       // und Tiefe aus dem Rohteil.
       // ausgabe steht fest auf einzel: einen Zyklus gibt es nicht.
       Object.assign(s, {q203:+k.z1 || 0, tiefe:-Math.max(1, fRund((+k.z1 || 0) - (+k.z0 || 0))),
-        zust:2, aufSeite:0.5, aufTiefe:0.2, ae:40, aeArt:'%', bahnArt:'zeilen', bahnSinn:0, ebenenArt:'flaechen', abtragMin:0, stufeMax:0, dVor:0, fTief:fRund(s.f * 0.3), ausgabe:'einzel'});
+        zust:2, aufSeite:0.5, aufTiefe:0.2, ae:40, aeArt:'%', bahnArt:'zeilen', konturSchnitt:'aus', bahnSinn:0, ebenenArt:'flaechen', abtragMin:0, fVoll:100, eckenR:0, stufeMax:0, dVor:0, fTief:fRund(s.f * 0.3), ausgabe:'einzel'});
       if(art === 'modellRest'){
         // Der Bezug ist der letzte Schruppschritt im Arbeitsplan: seine
         // Tiefe, seine Aufmasse und seine Bahnwerte sind die Vorgabe - wer
@@ -10818,6 +10902,123 @@ function fStufenEbenen(haupt, zOben, stufeMax){
   aus.zwischen = zw;
   return aus;
 }
+// BAHNECKEN VERRUNDEN [23.09.2026, Punkt 3 der hyperMILL-Liste]. Die
+// Zeilenbahn hat an jedem Zeilenwechsel zwei rechte Winkel (an drei
+// Pruefkoerpern gezaehlt: 40 bis 96 je Programm). Eine Steuerung faehrt eine
+// scharfe Ecke nur, indem sie auf nahezu Null abbremst - der eingetragene
+// Vorschub wird dort nie erreicht, und die Belastung springt.
+//
+// Ersetzt wird die Ecke durch einen tangentialen Kreisbogen (a:kreis, also
+// C/CC im Klartext und G2/G3 bei Siemens - beide Schreiber und die eigene
+// Simulation koennen ihn seit den Formen).
+//
+// DIE PLATZFRAGE ENTSCHEIDET, und sie wird gerechnet, nicht geraten: eine
+// Verrundung schneidet die Ecke ab. Fuer jede Zelle im Umkreis wird der
+// Abstand zur ALTEN und zur NEUEN Bahn bestimmt; faellt sie aus dem
+// Werkzeugband heraus und ist dort etwas abzutragen (im Rohteil UND
+// Sollform samt Aufmass unter dieser Ebene), bleibt die Ecke scharf.
+// Warum nicht gegen den Materialstand: die Verrundung laeuft als Nachlauf
+// ueber die fertige Bahn, und dann ist alles schon geraeumt - der Stand
+// wuerde jede Ecke durchwinken. Die Sollform gilt dagegen unabhaengig davon,
+// wann gemessen wird.
+//
+// SIE IST KONSERVATIV, und das ist gemessen: die Probe kennt nur DIESE Ecke,
+// nicht die uebrige Bahn. Eine Stelle, die der Nachbarzug ohnehin raeumt,
+// zaehlt trotzdem als Verlust - an einer Tasche bleibt dadurch rund die
+// Haelfte der Ecken scharf, obwohl dort nichts verlorenginge. An KEINEM der
+// Pruefkoerper (offene Flaeche, Tasche, Insel, Keil mit schraeger Wand, spitze
+// Ecke konturparallel, Zeilenabstaende von 40 bis 100 % und Radien bis zum
+// Werkzeugradius) haette auch ihr Fehlen Material stehen lassen: dafuer sorgt
+// schon die Klemme T <= 0,45 x Schenkellaenge. Sie bleibt trotzdem, weil
+// "es ging bisher immer gut" keine Zusicherung ist - der Preis sind ein paar
+// Ecken, die scharf bleiben, und der Bericht nennt sie.
+function fBahnEckenRunden(B, G, rt, radius, uZ){
+  const aus = {n:0, abgelehnt:0, mm:0};
+  if(!(radius > 0) || !G || !G.soll || !B || B.length < 3) return aus;
+  const r = G.raster, halb = r * Math.SQRT1_2, grenz = rt + halb;
+  const dSeg = (px, py, ax, ay, bx, by) => {
+    const dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy;
+    let t = (L2 < 1e-12) ? 0 : ((px - ax) * dx + (py - ay) * dy) / L2;
+    t = Math.max(0, Math.min(1, t));
+    return Math.hypot(px - (ax + dx * t), py - (ay + dy * t));
+  };
+  // Abstand zu einem Kreisbogen: im Sektor der Abstand zur Kreislinie,
+  // ausserhalb der Abstand zum naeheren Endpunkt.
+  const dBog = (px, py, mx, my, rad, a0, a1, dr) => {
+    let a = Math.atan2(py - my, px - mx);
+    const norm = (w) => { while(w < 0) w += 2 * Math.PI; while(w >= 2 * Math.PI) w -= 2 * Math.PI; return w; };
+    const sp = norm(dr > 0 ? (a1 - a0) : (a0 - a1));
+    const rel = norm(dr > 0 ? (a - a0) : (a0 - a));
+    if(rel <= sp) return Math.abs(Math.hypot(px - mx, py - my) - rad);
+    return Math.min(Math.hypot(px - (mx + rad * Math.cos(a0)), py - (my + rad * Math.sin(a0))),
+                    Math.hypot(px - (mx + rad * Math.cos(a1)), py - (my + rad * Math.sin(a1))));
+  };
+  const raus = [];
+  let x = 0, y = 0, z = 0;
+  for(let i = 0; i < B.length; i++){
+    const m = B[i], nx2 = (m.x == null ? x : m.x), ny2 = (m.y == null ? y : m.y), nz = (m.z == null ? z : m.z);
+    const m2 = B[i + 1];
+    let getan = false;
+    // Ecke = Punkt zwischen zwei geraden Vorschubzuegen auf gleicher Hoehe.
+    if(m.a === "vor" && m2 && m2.a === "vor" && Math.abs(nz - z) < 1e-9 &&
+       Math.abs((m2.z == null ? nz : m2.z) - nz) < 1e-9){
+      const cx2 = (m2.x == null ? nx2 : m2.x), cy2 = (m2.y == null ? ny2 : m2.y);
+      const L1 = Math.hypot(nx2 - x, ny2 - y), L2 = Math.hypot(cx2 - nx2, cy2 - ny2);
+      if(L1 > 1e-6 && L2 > 1e-6){
+        const ux = (nx2 - x) / L1, uy = (ny2 - y) / L1, vx = (cx2 - nx2) / L2, vy = (cy2 - ny2) / L2;
+        const kreuz = ux * vy - uy * vx, punkt = Math.max(-1, Math.min(1, ux * vx + uy * vy));
+        const abl = Math.acos(punkt);                       // 0 = geradeaus
+        // Unter 20 Grad lohnt es nicht (die Steuerung faehrt das ohnehin
+        // durch), ueber 170 Grad ist es eine Kehrtwende - dafuer gibt es
+        // keinen Bogen, der nicht neben die Bahn ausholt.
+        if(abl > 20 * Math.PI / 180 && abl < 170 * Math.PI / 180){
+          const alpha = Math.PI - abl;                      // Innenwinkel
+          const tanH = Math.tan(alpha / 2);
+          let T = radius / tanH;
+          const Tmax = 0.45 * Math.min(L1, L2);
+          if(T > Tmax) T = Tmax;
+          const rad = T * tanH;
+          if(rad >= r){                                     // unter einer Rasterweite ist es keine Rundung
+            const p1x = nx2 - ux * T, p1y = ny2 - uy * T;
+            const p2x = nx2 + vx * T, p2y = ny2 + vy * T;
+            const dr = (kreuz > 0) ? 1 : -1;                 // Linkskurve = gegen den Uhrzeigersinn
+            const mx = p1x - uy * dr * rad, my = p1y + ux * dr * rad;
+            const a0 = Math.atan2(p1y - my, p1x - mx), a1 = Math.atan2(p2y - my, p2x - mx);
+            // Was faellt aus dem Werkzeugband heraus, und ist dort etwas
+            // abzutragen?
+            let verlust = false;
+            const spw = rt + T + rad;
+            const i0 = Math.max(0, Math.floor((nx2 - spw - G.x0) / r)), i1 = Math.min(G.nx - 1, Math.ceil((nx2 + spw - G.x0) / r));
+            const j0 = Math.max(0, Math.floor((ny2 - spw - G.y0) / r)), j1 = Math.min(G.ny - 1, Math.ceil((ny2 + spw - G.y0) / r));
+            for(let j = j0; j <= j1 && !verlust; j++) for(let p = i0; p <= i1; p++){
+              const c = j * G.nx + p;
+              if(!G.imRoh || !G.imRoh[c]) continue;
+              if(!(G.soll[c] + uZ < nz - 1e-9)) continue;   // dort ist nichts abzutragen
+              const qx = G.x0 + (p + 0.5) * r, qy = G.y0 + (j + 0.5) * r;
+              const alt = Math.min(dSeg(qx, qy, x, y, nx2, ny2), dSeg(qx, qy, nx2, ny2, cx2, cy2));
+              if(alt > grenz) continue;                     // war ohnehin nicht unter dem Werkzeug
+              const neu = Math.min(dSeg(qx, qy, x, y, p1x, p1y), dSeg(qx, qy, p2x, p2y, cx2, cy2),
+                                   dBog(qx, qy, mx, my, rad, a0, a1, dr));
+              if(neu > grenz){ verlust = true; break; }
+            }
+            if(!verlust){
+              raus.push(Object.assign({}, m, {x:fRund(p1x), y:fRund(p1y)}));
+              raus.push({a:"kreis", x:fRund(p2x), y:fRund(p2y), cx:fRund(mx), cy:fRund(my), dr:dr,
+                         z:fRund(nz), f:(m2.f != null ? m2.f : m.f), verb:(m.verb && m2.verb) ? true : undefined});
+              B[i + 1] = Object.assign({}, m2, {x:fRund(cx2), y:fRund(cy2)});
+              aus.n++; aus.mm += rad;
+              getan = true;
+            } else aus.abgelehnt++;
+          }
+        }
+      }
+    }
+    if(!getan) raus.push(m);
+    x = nx2; y = ny2; z = nz;
+  }
+  if(aus.n){ B.length = 0; raus.forEach((m) => B.push(m)); }
+  return aus;
+}
 function fBahnModell(s, tool, prog){
   const warn = [];
   const nein = (g) => ({ok:false, grund:g, bahn:[], warn:warn});
@@ -10843,6 +11044,11 @@ function fBahnModell(s, tool, prog){
   const nurAussen = Math.round(+s.eintauch || 0) === 3;
   // KONTURPARALLEL [20.09.2026]: Ringe statt Zeilen (siehe ringDurchgang).
   const konturparallel = String(s.bahnArt || 'zeilen') === 'kontur';
+  // KONTURSCHNITT: aus | letzte Ebene | jede Ebene. Beim konturparallelen
+  // Schruppen laeuft der letzte Ring per Bau auf genau dieser Linie - ein
+  // zweiter Zug darauf waere Weg ohne Schnitt.
+  const kSchnitt = konturparallel ? 'aus' : String(s.konturSchnitt || 'aus');
+  let kSchnittZuege = 0;
   const verbinden = pendeln || nurAussen;
   // RESTMATERIAL-SCHRITT [19.09.2026]: dieselbe Rechnung, mit Bezug.
   const istRest = !!(F_ZYKLEN[s.art] && F_ZYKLEN[s.art].rest);
@@ -11147,7 +11353,7 @@ function fBahnModell(s, tool, prog){
     }
     return Pk[Pk.length - 1];
   };
-  const ringDurchgang = (z, zr) => {
+  const ringDurchgang = (z, zr, nurRand) => {
     const maske = new Uint8Array(n); let nM = 0;
     for(let q = 0; q < n; q++){ if(erlaubt[q] && d2M[q] <= rr2 + 1e-9){ maske[q] = 1; nM++; } }
     if(!nM) return 0;
@@ -11158,7 +11364,7 @@ function fBahnModell(s, tool, prog){
     const dRing = Math.max(1e-6, Math.min(2 * rt, aeMm) / r);
     // __nurRing0: nur der innerste Ring an der Wand - so faehrt "Boeden und
     // Waende schlichten" seine Wandringe (ein Ring je Z-Schritt).
-    const K = s.__nurRing0 ? 0 : Math.max(0, Math.floor((Dmax - L0) / dRing));
+    const K = (s.__nurRing0 || nurRand) ? 0 : Math.max(0, Math.floor((Dmax - L0) / dRing));
     const Dbei = (px, py) => { const i = Math.max(0, Math.min(nx - 1, Math.floor((px - G.x0) / r))), j = Math.max(0, Math.min(ny - 1, Math.floor((py - G.y0) / r))); return D[j * nx + i]; };
     // Ringe sammeln, aussen zuerst
     const ringe = [];
@@ -11562,7 +11768,37 @@ function fBahnModell(s, tool, prog){
           if(tief > 1e-6){ vor({z:zr, f:fZ}); senkrecht++; }   // senkrecht eintauchen
           else frei++;                     // dort steht nichts: von aussen oder ueber Freiem angefahren
         }
-        vor({x:xb, y:yb, z:zr, f:f});
+        // DER SCHNITTZUG. Mit "Vorschub nach Eingriff" wird er dort
+        // geteilt, wo die Eingriffsbreite ueber die Schwelle steigt:
+        // gemessen wird stueckweise (eine Rasterweite), benachbarte
+        // Stuecke derselben Klasse werden wieder zusammengefasst - sonst
+        // stuenden je Zug hundert Saetze mit demselben F.
+        if(fVollProz < 100){
+          const Lz = Math.hypot(xb - xa, yb - ya);
+          const nT = Math.max(1, Math.round(Lz / Math.max(r, 1e-9)));
+          if(nT > 1 && Lz > 1e-9){
+            const klasse = new Uint8Array(nT);
+            for(let q = 0; q < nT; q++){
+              const t0 = q / nT, t1 = (q + 1) / nT;
+              const ax = xa + (xb - xa) * t0, ay = ya + (yb - ya) * t0;
+              const bx2 = xa + (xb - xa) * t1, by2 = ya + (yb - ya) * t1;
+              const Ls = Math.hypot(bx2 - ax, by2 - ay);
+              klasse[q] = (Ls > 1e-9 && eingriffJetzt(ax, ay, bx2, by2, z, Ls) >= aeVollMm) ? 1 : 0;
+            }
+            let q0 = 0;
+            while(q0 < nT){
+              let q1 = q0; while(q1 + 1 < nT && klasse[q1 + 1] === klasse[q0]) q1++;
+              const t1 = (q1 + 1) / nT;
+              const ex = (q1 + 1 >= nT) ? xb : fRund(xa + (xb - xa) * t1);
+              const ey = (q1 + 1 >= nT) ? yb : fRund(ya + (yb - ya) * t1);
+              const lStk = Lz * (q1 + 1 - q0) / nT;
+              if(klasse[q0]){ vollStuecke++; vollMm += lStk; vor({x:ex, y:ey, z:zr, f:fRund(f * fVollProz / 100)}); }
+              else { normalMm += lStk; vor({x:ex, y:ey, z:zr, f:f}); }
+              q0 = q1 + 1;
+            }
+          } else { vor({x:xb, y:yb, z:zr, f:f}); normalMm += Lz; }
+        }
+        else vor({x:xb, y:yb, z:zr, f:f});
         fStandStempel(G, xa, ya, xb, yb, rt, z);
         x = xb; y = yb; zAkt = zr; getan++; zuege++;
       });
@@ -11592,6 +11828,20 @@ function fBahnModell(s, tool, prog){
   // Handel ist Zeit gegen einen duennen Grat, den der naechste Schritt
   // ohnehin nimmt. 0 schaltet es ab.
   const abtragMin = (+s.abtragMin > 0) ? +s.abtragMin : 0;
+  // VORSCHUB NACH EINGRIFF [23.09.2026]: Prozent des Bahnvorschubs, die im
+  // VOLLSCHNITT gelten. 100 = aus, dann wird kein Zug geteilt und die
+  // Ausgabe bleibt Satz fuer Satz dieselbe. Die Schwelle ist die
+  // Eingriffsbreite, ab der ein Zug als Vollschnitt gilt: 0,8 x
+  // Werkzeugdurchmesser. Warum nicht der volle: die Messung laeuft auf dem
+  // Stempelraster, und eine Zelle am Rand des Werkzeugbands faellt je nach
+  // Lage heraus - mit 1,0 als Schwelle wuerde der Vollschnitt nie erkannt.
+  const fVollProz = (+s.fVoll > 0 && +s.fVoll < 100) ? +s.fVoll : 100;
+  const aeVollMm = 0.8 * 2 * rt;
+  // BAHNECKEN VERRUNDEN [23.09.2026]: Radius in Millimetern, 0 = aus (dann
+  // bleibt die Ausgabe Satz fuer Satz dieselbe). Gerundet wird nur, wo
+  // dadurch nichts stehen bleibt - siehe fBahnEckenRunden.
+  const eckenRmm = (+s.eckenR > 0) ? Math.min(+s.eckenR, rt) : 0;
+  let vollStuecke = 0, vollMm = 0, normalMm = 0;
   let kratzer = 0, kratzerMm = 0;
   // DER ABSTAND ZUR WAND GILT JE ZELLE AUF IHRER EIGENEN HOEHE
   // [22.09.2026, gefunden beim Bau der Flaechenerkennung]. Der
@@ -11647,6 +11897,41 @@ function fBahnModell(s, tool, prog){
       }
     }
     return zellen * r * r / L;
+  };
+  // DIE EINGRIFFSBREITE IM AUGENBLICK DES ZUGES [23.09.2026]. Gleiche
+  // Rechnung, andere Bezugsgroesse: der LAUFENDE Stand statt des Standes zu
+  // Beginn der Ebene. Die erste Fassung des Vorschubs nach Eingriff nahm
+  // eingriffBreite und meldete an einer gewoehnlichen Tasche 100 %
+  // Vollschnitt - weil dort jede Zeile das volle Rohteil sieht, auch wo die
+  // Nachbarzeile schon geraeumt hat. Der Fraeser sieht aber den Stand, wie
+  // er IST; fStandStempel laeuft nach dem Zug, also ist G.stand hier genau
+  // dieser Augenblick.
+  // DIE EINGRIFFSBREITE AN EINER STELLE DER BAHN [23.09.2026]. Nicht
+  // "Flaeche je Laenge" - diese Formel gilt nur fuer lange Zuege; bei einem
+  // Stueck von einer Rasterweite ueberstreicht das Werkzeug seine ganze
+  // Kreisflaeche, und 78 mm2 / 0,5 mm ergeben 157 "mm Eingriffsbreite" bei
+  // einem ⌀10 (so gemessen, bevor die Formel stand).
+  // Gemessen wird stattdessen auf der Geraden SENKRECHT zur Fahrtrichtung
+  // durch den Werkzeugmittelpunkt: wie breit steht dort Material ueber der
+  // Ebene? Im Kanal beidseitig (ae = D), beim Maeander nur der frische
+  // Streifen (ae = Zeilenabstand). Bezug ist der LAUFENDE Stand - der
+  // Fraeser sieht, was im Augenblick des Zuges steht, und fStandStempel
+  // laeuft nach dem Zug.
+  const eingriffJetzt = (xa, ya, xb, yb, z, L) => {
+    if(!(L > 1e-9)) return 0;
+    const ux = (xb - xa) / L, uy = (yb - ya) / L;
+    const px = (xa + xb) / 2, py = (ya + yb) / 2;
+    const nxv = -uy, nyv = ux;
+    const nS = Math.max(8, Math.ceil(2 * rt / Math.max(r / 2, 1e-9)));
+    let mat = 0;
+    for(let q = 0; q <= nS; q++){
+      const t = -rt + 2 * rt * q / nS;
+      const cx = px + nxv * t, cy = py + nyv * t;
+      const i = Math.floor((cx - G.x0) / r), j = Math.floor((cy - G.y0) / r);
+      if(i < 0 || j < 0 || i >= nx || j >= ny) continue;
+      if(G.stand[j * nx + i] > z + 0.001) mat++;
+    }
+    return 2 * rt * mat / (nS + 1);
   };
   // WO ERREICHT DAS WERKZEUG EINE SCHRAEGE? Die Werkzeugmitte steht nie
   // AUF der Schraege - die Ebenenmaske haelt sie Werkzeugradius plus
@@ -11787,6 +12072,16 @@ function fBahnModell(s, tool, prog){
       // Auch der Querdurchgang gilt auf einer Zwischenebene nur den Schraegen.
       inEbene += durchgang(1 - haupt, z, zr, (q) => erlaubt[q] && d2R[q] <= rr2 + 1e-9 && (!nurSchraeg || schraegHier(q)), null, 2);
     }
+    // KONTURSCHNITT [23.09.2026, Daniels "Ja, alles"]: ein Zug auf der
+    // Grenze der Ebenenmaske, nach den Zeilen und dem Querdurchgang. Das
+    // ist derselbe Weg, den der letzte Ring des konturparallelen
+    // Durchgangs faehrt - deshalb ruft er dieselbe Funktion mit nurRand,
+    // statt die Hoehenlinie ein zweites Mal zu formulieren.
+    if(kSchnitt === "jede" || (kSchnitt === "letzte" && z <= zEnde + 1e-9)){
+      const vorher = zuege;
+      inEbene += ringDurchgang(z, zr, true);
+      if(zuege > vorher) kSchnittZuege += zuege - vorher;
+    }
     if(inEbene){ ebenen++; if(haupt) ebenenY++; else ebenenX++; }
     if(z <= zEnde + 1e-9) break;
   }
@@ -11902,11 +12197,27 @@ function fBahnModell(s, tool, prog){
   }
   G.restInfo = {zellen:restZellen, flaeche:flaeche, restMax:fRund(restMax), breit:fRund(breit), x:fRund(restX), y:fRund(restY),
                 saum:fRund(saumZellen * r * r), schwelle:fRund(restAbMm), zOben:zOben, zEnde:zEnde, rt:rt};
+  // Die Verrundung laeuft als NACHLAUF ueber die fertige Bahn: erst dann
+  // steht fest, welcher Zug auf welchen folgt.
+  const eckRund = fBahnEckenRunden(B, G, rt, eckenRmm, uZ);
+  if(eckenRmm > 0) warn.push(eckRund.n
+    ? ('BAHNECKEN VERRUNDET: ' + eckRund.n + ' Ecke(n) laufen als Kreisbogen (im Mittel R' + fRund(eckRund.mm / eckRund.n)
+       + ', gewuenscht R' + fRund(eckenRmm) + ') - die Steuerung muss dort nicht auf Null abbremsen.'
+       + (eckRund.abgelehnt ? ' ' + eckRund.abgelehnt + ' weitere bleiben SCHARF: dort wuerde die Rundung Material stehen lassen, das abzutragen ist (meist an einer Wand).' : ''))
+    : ('BAHNECKEN: keine Ecke verrundet - an allen ' + eckRund.abgelehnt + ' Stelle(n) wuerde die Rundung Material stehen lassen, das abzutragen ist. Verrundet wird nur, wo nichts verlorengeht (im Ueberlauf neben dem Rohteil, ueber schon Geraeumtem).'));
   warn.push((istRest ? 'Restmaterial abspanen: ' : 'Modell abspanen: ') + ebenen + ' Ebene(n) mit ' + zuege + ' Zuegen, Zeilenabstand ' + fRund(schritt * r)
     + ' mm, Arbeitsraster ' + fRund(r) + ' mm. Zeilenweise im Zickzack mit Querdurchgang an den Waenden, Zeilen '
     + (ebenenX && ebenenY ? ('in X (' + ebenenX + ' Ebenen) und in Y (' + ebenenY + ' Ebenen)') : (ebenenY ? 'in Y' : 'in X'))
     + ' — je Ebene die Richtung mit den wenigsten Zuegen.'
     + (stiche ? ' ' + stiche + ' Stelle(n) waeren nur ein senkrechter Stich ohne Fraesweg gewesen und sind ausgelassen — ein Schaftfraeser soll nicht bohren; was dort steht, ist im Restmaterial enthalten.' : ''));
+  if(fVollProz < 100){
+    const ges = vollMm + normalMm;
+    warn.push('VORSCHUB NACH EINGRIFF: ' + (vollStuecke
+      ? (fRund(vollMm) + ' mm von ' + fRund(ges) + ' mm Schnittweg (' + fRund(100 * vollMm / Math.max(1e-9, ges)) + ' %) liegen im VOLLSCHNITT (Eingriffsbreite ueber ' + fRund(aeVollMm) + ' mm = 0,8 x Werkzeugdurchmesser) und laufen mit ' + fVollProz + ' % des Bahnvorschubs, also F' + fRund(f * fVollProz / 100) + ' statt F' + fRund(f) + '; ' + vollStuecke + ' Stueck(e).')
+      : ('kein Stueck der Bahn erreicht ' + fRund(aeVollMm) + ' mm Eingriffsbreite (0,8 x Werkzeugdurchmesser) - hier gibt es keinen Vollschnitt, das Feld aendert nichts.')));
+  }
+  if(kSchnittZuege) warn.push('KONTURSCHNITT: ' + kSchnittZuege + ' Zug/Zuege auf der Grenze der Ebenenmaske ('
+    + (kSchnitt === 'jede' ? 'jede Ebene' : 'nur die letzte Ebene') + '). Ohne ihn endet jede Zeile an einer Rasterstelle - an einer schraegen oder runden Wand also jede woanders, und das Aufmass schwankt (an einer runden Insel gemessen: 0,2 bis 8,0 mm statt ueberall 0,2). Der Zug laeuft dort, wo auch der letzte Ring des konturparallelen Schruppens laeuft.');
   if(sinn) warn.push('Fraesart: NUR ' + (sinn > 0 ? 'GLEICHLAUF' : 'GEGENLAUF') + ' (bei Rechtslauf M3, Material in Fahrtrichtung ' + (sinn > 0 ? 'rechts' : 'links') + ' vom Werkzeug): jede Zeile in derselben Richtung — nach jedem Zug Rueckzug auf SC ueber das Material, zurueck zum Anfang, seitlich zustellen, wieder hinein; ' + rueck + ' Rueckzuege, keine Verbindung unten.');
   if(G.rohform) warn.push('ROHFORM aus dem Rohteil-Modell: Material nur, wo die Rohform ueber der Sollform liegt — nicht der Quader der BLK FORM.');
   if(konturparallel) warn.push('KONTURPARALLEL: ' + ringeGesamt + ' Ring(e) auf ' + ebenen + ' Ebene(n), Ringabstand ae ' + fRund(aeMm) + ' mm - jeder Ring ist eine Hoehenlinie des Abstands zur Sollform, von aussen nach innen (bei einer Tasche von der Mitte zur Wand); der letzte Ring laeuft im Abstand Werkzeugradius + UXY an der Wand. Kein Querdurchgang: es bleibt kein Kamm.');
@@ -12413,6 +12724,57 @@ function fZugKette(seg, eps){
   }
   return zuege;
 }
+// DER GEODAETISCHE ABSTAND AUF DER FLAECHE [23.09.2026, Punkt 4]. Gesucht
+// ist ein Feld D, dessen Hoehenlinien auf der FLAECHE ueberall denselben
+// Abstand haben. In der Draufsicht heisst das: ein Schritt dx kostet auf der
+// Flaeche dx / cos(alpha), also |grad D| = 1 / cos(alpha) - eine
+// Eikonalgleichung mit oertlicher Geschwindigkeit.
+//
+// Geloest mit FAST SWEEPING: D ist 0 am Rand des Gebiets und unendlich
+// sonst; danach laeuft das Godunov-Schema viermal ueber das Raster, in allen
+// vier Ecken-Richtungen. Jede Richtung traegt die Information einmal quer
+// durchs Feld - nach wenigen Runden aendert sich nichts mehr. Das ist
+// billiger als Fast Marching und braucht keine Vorrangwarteschlange.
+function fGeodaetFeld(F, gut, NF){
+  const nx = F.nx, ny = F.ny, r = F.raster, n = nx * ny;
+  const D = new Float64Array(n).fill(Infinity);
+  // Startlinie: der Rand des Gebiets. Von dort laufen die Bahnen nach innen.
+  for(let j = 0; j < ny; j++) for(let i = 0; i < nx; i++){
+    const c = j * nx + i; if(!gut[c]) continue;
+    const rand = (i === 0 || j === 0 || i === nx - 1 || j === ny - 1)
+              || !gut[c - 1] || !gut[c + 1] || !gut[c - nx] || !gut[c + nx];
+    if(rand) D[c] = 0;
+  }
+  // Die oertliche Geschwindigkeit. NF ist die Neigung in Grad; bei 89 Grad
+  // waere 1/cos gegen 60 - gedeckelt, sonst sprengt eine fast senkrechte
+  // Randzelle die Rechnung (solche Stellen gehoeren ohnehin der
+  // Z-konstanten Bahn).
+  const Fg = new Float32Array(n);
+  for(let c = 0; c < n; c++) if(gut[c]) Fg[c] = Math.min(20, 1 / Math.max(0.05, Math.cos(NF[c] * Math.PI / 180)));
+  const loes = (c, i, j) => {
+    if(!gut[c]) return;
+    const a = Math.min(i > 0 && gut[c - 1] ? D[c - 1] : Infinity, i < nx - 1 && gut[c + 1] ? D[c + 1] : Infinity);
+    const b = Math.min(j > 0 && gut[c - nx] ? D[c - nx] : Infinity, j < ny - 1 && gut[c + nx] ? D[c + nx] : Infinity);
+    const f = Fg[c] * r;
+    let neu;
+    if(!isFinite(a) && !isFinite(b)) return;
+    else if(!isFinite(a) || !isFinite(b) || Math.abs(a - b) >= f) neu = Math.min(a, b) + f;
+    else neu = (a + b + Math.sqrt(2 * f * f - (a - b) * (a - b))) / 2;
+    if(neu < D[c]) D[c] = neu;
+  };
+  for(let runde = 0; runde < 6; runde++){
+    let vor = 0;
+    for(let c = 0; c < n; c++) if(isFinite(D[c])) vor += D[c];
+    for(let j = 0; j < ny; j++) for(let i = 0; i < nx; i++) loes(j * nx + i, i, j);
+    for(let j = 0; j < ny; j++) for(let i = nx - 1; i >= 0; i--) loes(j * nx + i, i, j);
+    for(let j = ny - 1; j >= 0; j--) for(let i = 0; i < nx; i++) loes(j * nx + i, i, j);
+    for(let j = ny - 1; j >= 0; j--) for(let i = nx - 1; i >= 0; i--) loes(j * nx + i, i, j);
+    let nach = 0;
+    for(let c = 0; c < n; c++) if(isFinite(D[c])) nach += D[c];
+    if(runde && Math.abs(nach - vor) < 1e-6 * Math.max(1, Math.abs(nach))) break;
+  }
+  return D;
+}
 function fBahnSchlichten(s, tool, prog){
   const warn = [];
   const nein = (g) => ({ok:false, grund:g, bahn:[], warn:warn});
@@ -12446,6 +12808,9 @@ function fBahnSchlichten(s, tool, prog){
   // Die Wahl faellt erst, wenn feststeht, WELCHE Zellen bearbeitet werden —
   // deshalb hier nur der Modus, der Rest unten hinter der Zellenauswahl.
   const stratW = Math.round(+s.strategie || 0);
+  // 3 = AEQUIDISTANT [23.09.2026]: keine Zeilen, sondern Hoehenlinien des
+  // geodaetischen Abstands vom Rand - konstanter Abstand auf der FLAECHE.
+  const equi = (stratW === 3);
   let quer = (stratW === 1), achse = null;
   // FRAESART [17.09.2026 spaet abends]: 0 = Zickzack, 1 = nur Gleichlauf,
   // -1 = nur Gegenlauf (siehe unten bei der Reihenfolge der Stuecke).
@@ -12515,13 +12880,19 @@ function fBahnSchlichten(s, tool, prog){
   const schrittMm = sFlaeche * Math.cos(aMax * Math.PI / 180);
   // ABRUNDEN, nie runden: eine Rasterweite zu viel heisst ein groesserer
   // Bahnabstand als erlaubt, und damit eine groessere Rautiefe als bestellt.
-  const schritt = Math.max(1, Math.floor(schrittMm / r + 1e-9));
+  let schritt = Math.max(1, Math.floor(schrittMm / r + 1e-9));
   // Was wirklich gefahren wird — der Abstand kann nur ein Vielfaches der
   // Rasterweite sein. Ist schon EINE Rasterweite zu gross, ist die Rautiefe
   // nicht zu halten; das sagt die App, statt stumm groeber zu fahren.
-  const istMm = schritt * r;
-  const istFlaeche = istMm / Math.max(0.05, Math.cos(aMax * Math.PI / 180));
-  const istRz = istFlaeche * istFlaeche / (8 * rk);
+  let istMm = schritt * r;
+  let istFlaeche = istMm / Math.max(0.05, Math.cos(aMax * Math.PI / 180));
+  let istRz = istFlaeche * istFlaeche / (8 * rk);
+  // AEQUIDISTANT: der Abstand auf der Flaeche IST das Mass - er wird nicht
+  // auf das Raster gerundet, weil die Hoehenlinie zwischen den Zellenmitten
+  // interpoliert. Gefahren wird damit genau die bestellte Rautiefe; in der
+  // Draufsicht schwankt der Abstand zwischen s (waagerecht) und s x cos(alpha)
+  // (an der steilsten Stelle).
+  if(equi){ istFlaeche = sFlaeche; istMm = sFlaeche; istRz = rz; }
   const nAus = quer ? nx : ny, nIn = quer ? ny : nx;
   const zelle = (a, b) => quer ? (b * nx + a) : (a * nx + b);
   const wx = (a, b) => F.x0 + ((quer ? a : b) + 0.5) * r;
@@ -12547,7 +12918,30 @@ function fBahnSchlichten(s, tool, prog){
   // SCHNITT aendert das nichts - es sind dieselben Stuecke, nur in anderer
   // Folge und Richtung.
   const alle = [];
-  for(let a = 0; a < nAus; a += schritt){
+  // AEQUIDISTANT: die Zuege sind die Hoehenlinien des geodaetischen Feldes
+  // im Abstand s (auf der Flaeche gemessen). Alles danach - Reihenfolge,
+  // Fraesart, Verbindungen, Rueckzuege - ist dieselbe erprobte Ausgabe wie
+  // bei den Zeilen: gesammelt wird hier nur anders.
+  let equiRinge = 0, equiDMax = 0;
+  if(equi){
+    const D = fGeodaetFeld(F, gut, NF);
+    for(let c = 0; c < nx * ny; c++) if(gut[c] && isFinite(D[c]) && D[c] > equiDMax) equiDMax = D[c];
+    // Die erste Linie liegt eine HALBE Teilung vom Rand - genau wie die
+    // erste Zeile eines Maeanders nicht auf der Kante liegt.
+    for(let d = sFlaeche / 2; d <= equiDMax; d += sFlaeche){
+      equiRinge++;
+      const L = fHoehenlinie(D, nx, ny, F.x0, F.y0, r, d, gut);
+      L.forEach((Z) => {
+        const P = []; P.zeile = equiRinge;
+        Z.forEach((p) => {
+          const zw = fBFWert(BF, F, p[0], p[1]);
+          if(isFinite(zw)) P.push([fRund(p[0]), fRund(p[1]), fRund(zw - rk)]);
+        });
+        if(P.length >= 2) alle.push(P);
+      });
+    }
+  }
+  for(let a = 0; !equi && a < nAus; a += schritt){
     let P = null;
     for(let b = 0; b < nIn; b++){
       const c = zelle(a, b);
@@ -12670,11 +13064,14 @@ function fBahnSchlichten(s, tool, prog){
   if(flaechig) warn.push(flaechig + ' Zeilenwechsel laufen auf der FLAECHE weiter, im Vorschub, ohne Abheben — die Gerade vom Zugende zum naechsten Zuganfang bleibt nachweislich ueber der Versatzflaeche.');
   if(sinn) warn.push('Fraesart: NUR ' + (sinn > 0 ? 'GLEICHLAUF' : 'GEGENLAUF') + ' (bei Rechtslauf M3, Material in Fahrtrichtung ' + (sinn > 0 ? 'rechts' : 'links') + '): jede Zeile in derselben Richtung, kein Zickzack — zurueck geht es im Eilgang ueber die Versatzflaeche.');
   eil({z:sicher});
+  if(equi) warn.push('AEQUIDISTANT: ' + equiRinge + ' Bahn(en) als Hoehenlinien des geodaetischen Abstands vom Rand des Gebiets, Abstand ' + fRund(sFlaeche)
+    + ' mm AUF DER FLAECHE (aus Rautiefe ' + fRund(rz) + ' und Eckenradius ' + fRund(rk) + '). In der Draufsicht heisst das ' + fRund(sFlaeche) + ' mm auf dem Flachen und ' + fRund(sFlaeche * Math.cos(aMax * Math.PI / 180))
+    + ' mm an der steilsten bearbeiteten Stelle (' + fRund(aMax) + ' Grad) - die Zeilenbahn faehrt ueberall den kleineren Wert, hier also ' + fRund(100 * (1 / Math.max(0.05, Math.cos(aMax * Math.PI / 180)) - 1)) + ' % mehr Bahnen, als noetig waeren.');
   warn.push('Schraegen schlichten: ' + zuege + ' Zug/Zuege, ' + punkte + ' Punkte (roh ' + roh
-    + ', mit Sehnentoleranz ' + fRund(tol) + ' mm ausgeduennt). Bahnabstand ' + fRund(istMm)
+    + ', mit Sehnentoleranz ' + fRund(tol) + ' mm ausgeduennt).' + (equi ? '' : (' Bahnabstand ' + fRund(istMm)
     + ' mm aus Rautiefe ' + fRund(rz) + ' und Eckenradius ' + fRund(rk)
     + ' (erlaubt waeren ' + fRund(schrittMm) + ' mm bei der steilsten bearbeiteten Stelle '
-    + fRund(aMax) + ' Grad; gefahrene Rautiefe ' + fRund(istRz) + ' mm).');
+    + fRund(aMax) + ' Grad; gefahrene Rautiefe ' + fRund(istRz) + ' mm).')));
   // Die Zeilenrichtung ist keine Nebensache — sie entscheidet, ob die Kugel
   // mit der Flanke oder mit der Spitze schneidet. Deshalb steht sie im
   // Klartext im Bericht, samt dem gemessenen Gefaelle.
@@ -12683,7 +13080,7 @@ function fBahnSchlichten(s, tool, prog){
       + ' Rasterstellen: Gefaelle in X ' + fRund(achse.sx / Math.max(1, achse.n))
       + ', in Y ' + fRund(achse.sy / Math.max(1, achse.n)) + ' je Zelle).'
     : ' — von Hand gewaehlt. Quer zum Gefaelle bleibt Z auf der Zeile nahezu konstant und die Kugel schneidet mit der Flanke; laengs dazu faehrt sie die Schraege hinauf und hinunter.'));
-  if(istRz > rz + 1e-9) warn.push('Die Rautiefe ' + fRund(rz) + ' mm ist mit diesem Raster NICHT zu halten: der Bahnabstand kann nur ein Vielfaches der Rasterweite ' + fRund(r) + ' mm sein, gefahren wird ' + fRund(istMm) + ' mm und damit ' + fRund(istRz) + ' mm Rautiefe. Kleineres Modell-Raster waehlen oder groesseren Eckenradius.');
+  if(!equi && istRz > rz + 1e-9) warn.push('Die Rautiefe ' + fRund(rz) + ' mm ist mit diesem Raster NICHT zu halten: der Bahnabstand kann nur ein Vielfaches der Rasterweite ' + fRund(r) + ' mm sein, gefahren wird ' + fRund(istMm) + ' mm und damit ' + fRund(istRz) + ' mm Rautiefe. Kleineres Modell-Raster waehlen oder groesseren Eckenradius.');
   if(nSteil) warn.push(nSteil + ' Rasterstelle(n) sind steiler als der Grenzwinkel ' + fRund(grenz)
     + ' Grad — sie bekommen im selben Schritt die Z-konstante Bahn (seit 16.09.2026).');
   if(nFlach) warn.push(nFlach + ' Rasterstelle(n) sind flacher als ' + fRund(grenzU)
