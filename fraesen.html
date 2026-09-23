@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="23.09.2026 21:12 (8f81fe66)";</script>
+<script>window.__DZ_STAND="23.09.2026 22:18 (48027118)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2945,6 +2945,16 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <div class="stufe" id="stufeForm"><span class="tit">Form aus Blister</span><span class="lbl">Rand</span><input type="number" id="formRand" step="any" value="15" title="Wieviel Platte um den Blister herum stehen bleibt, in mm je Seite. Hier wird gespannt und abgedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Boden</span><input type="number" id="formBoden" step="any" value="15" title="Wieviel Platte unter der tiefsten Stelle der Kavit&auml;t bleibt, in mm. Durch diesen Boden gehen sp&auml;ter die Vakuumbohrungen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Entformung</span><input type="number" id="formEntform" step="any" value="5" title="Geforderter Entformungswinkel in Grad, gemessen von der Senkrechten. Die App PR&Uuml;FT ihn nur und nennt jede Stelle, die steiler steht &mdash; die Formschr&auml;ge geh&ouml;rt ins CAD, nicht ins CAM." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Schr&auml;ge</span><select id="formKorr" title="Was tun, wenn eine Wand steiler steht, als der Entformungswinkel erlaubt? MELDEN (Vorgabe) l&auml;sst die Form wie das Modell und nennt die Stellen. BODEN VERJ&Uuml;NGEN neigt die W&auml;nde, indem der Boden kleiner wird. &Ouml;FFNUNG WEITEN neigt sie, indem die &Ouml;ffnung gr&ouml;&szlig;er wird &mdash; das frisst in den Flansch. Beides &auml;ndert das BAUTEIL; die Meldung nennt die Fl&auml;che vorher und nachher." style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:150px;"><option value="aus">nur melden</option><option value="boden">Boden verj&uuml;ngen</option><option value="oeffnung">&Ouml;ffnung weiten</option></select><button class="gcbtn" id="btnStepForm" title="Aus dem Modell des fertigen Blisters die Platte machen, in der er tiefgezogen wird: Kavit&auml;t = Au&szlig;enfl&auml;che des Blisters, Platte drumherum, Sollform ans Programm">Form ableiten</button></div>
           <div class="stufe" id="stufeVakuum"><span class="tit">Vakuumbohrungen</span><span class="lbl">&#x2300;</span><input type="number" id="vakD" step="any" value="1" title="Durchmesser der Vakuumbohrung in mm. Ueblich sind 0,5 bis 1 mm &mdash; gross genug fuer die Luft, klein genug, dass sich die Folie nicht hineinzieht und einen Pickel macht." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Abstand</span><input type="number" id="vakAbstand" step="any" value="30" title="Groesster Abstand zweier Bohrungen in mm. Die App setzt zuerst in die Ecken, dann fuellt sie auf, bis nirgends mehr als dieser Abstand bleibt." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Tiefe</span><input type="number" id="vakTiefe" step="any" value="0" title="Bohrtiefe ab der Kavitaetsflaeche in mm. 0 = durch die ganze Platte. Bei duennen Bohrungen ist das ueblicherweise nicht machbar: dann hier 1 bis 2 mm eintragen und die Kammer von der Rueckseite aufbohren (zweite Aufspannung, die plant die App nicht)." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepVakuum" title="Die Entlueftung setzen: in jede ebene Flaeche der Kavitaet, von der es nicht weiter nach unten geht, kommen Punkte in die Ecken und dazwischen. Daraus werden Bohrbilder und &mdash; wenn ein passender Bohrer in der Tabelle steht &mdash; Bohrschritte vor dem Schlichten.">Vakuumbohrungen setzen</button></div>
           <div class="stufe" id="stufeRueck"><span class="tit">R&uuml;ckseite</span><span class="lbl">Wand</span><input type="number" id="rsWand" step="any" value="3" title="Restwandst&auml;rke zwischen dem tiefsten Punkt der Kavit&auml;t und der Decke der Absaugkammer, in mm. Sie bestimmt zugleich, wie tief die Vakuumbohrungen von oben noch sein m&uuml;ssen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Spannkante</span><input type="number" id="rsSpann" step="any" value="15" title="Breite des Randes, der ringsum stehen bleibt, in mm. Dort wird die Form eingebaut und gedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepRueck" title="Die zweite Aufspannung als eigenes Programm: die gewendete Platte als Rohteil und die Absaugkammer als Rechtecktasche. Das Programm der Vorderseite kommt vorher in die Ablage.">R&uuml;ckseite als Programm</button></div>
+          <!-- AUSWAHL [23.09.2026]: der Schritt vom Autopilot zum Werkzeug.
+               In der Sollform-Ansicht waehlt ein Tipp die Flaeche, die dort
+               oben liegt; aus ihrem Rand wird eine Begrenzungskontur, und ein
+               Modell-Schritt mit dieser Kontur arbeitet NUR dort. -->
+          <div class="stufe" id="stufeBereich"><span class="tit">Bereich</span>
+            <span class="small-hint" id="bereichStand" style="min-width:150px;">Ansicht <b>Sollform</b>, dann eine Fl&auml;che antippen</span>
+            <button class="gcbtn" id="btnBereichKontur" title="Aus den gew&auml;hlten Fl&auml;chen Begrenzungskonturen anlegen. Danach in der Maske eines Modell-Schritts unter &bdquo;Bereich&ldquo; anhaken - dieser Schritt arbeitet dann nur dort.">Als Begrenzung &uuml;bernehmen</button>
+            <button class="gcbtn" id="btnBereichSchritt" title="Legt gleich einen Schritt &bdquo;Restmaterial abspanen&ldquo; an, der nur in diesem Bereich arbeitet - mit dem Werkzeug, das dort hineinpasst.">Schritt nur hier</button>
+            <button class="gcbtn" id="btnBereichLeeren" title="Auswahl verwerfen">leeren</button>
+          </div>
           <div class="stufe" id="stufeProgramm"><span class="nr">4</span><span class="tit">Programm</span><button class="gcbtn primary" id="btnStepPlan" title="Der ganze Vorschlag in einem Zug: planen, schruppen, bohren, schlichten &mdash; in dieser Reihenfolge und mit so wenig Werkzeugwechseln wie m&ouml;glich">Programm vorschlagen</button><button class="gcbtn" id="btnStepEinzeln" title="Nur Teile des Vorschlags: die Fl&auml;chen, die Bohrungen oder die Konturen einer Z-Ebene">einzeln &#x25BE;</button></div>
           <div class="stufe stufe-ansicht"><span class="tit">Ansicht</span><span style="display:inline-flex;gap:2px;"><button class="gcbtn primary" id="btnStepDraht" title="Drahtbild des Modells">Drahtbild</button><button class="gcbtn" id="btnStepSoll" title="Sollform von oben: die Höhe, auf die gefräst werden muss">Sollform</button><button class="gcbtn" id="btnStepRest" title="Materialstand nach dem letzten Schruppschritt des Arbeitsplans (Modell abspanen / Restmaterial abspanen) — rot, was über der Sollform samt Aufmaß steht: das Restmaterial für den nächsten Schritt">Reststand</button></span><button class="gcbtn" id="btnStepHilfe" title="Anleitung Kap. 5c: Aufspannung, Sollform, Raster, Genauigkeit">&#x24D8;</button></div>
           <div class="stufe stufe-einzeln" id="stepEinzeln" style="display:none;"><span class="tit">einzeln &uuml;bernehmen</span><button class="gcbtn" id="btnStepFlaechen" title="Nur die Fl&auml;chen: planen, Modell abspanen, Schr&auml;gen schlichten &mdash; die Schritte stehen danach VOR den Bohrungen">Fl&auml;chen übernehmen</button><button class="gcbtn" id="btnStepBohren" title="Die Bohrungen des Modells als Bohrbilder und Schritte anlegen: ein Zentrierschritt über alle Stellen, danach je Durchmesser einer — größter zuerst">Bohrungen übernehmen</button><span class="lbl">Z-Ebene</span><select id="stepEbene" style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:210px;"></select><button class="gcbtn" id="btnStepKonturen" title="Die Schleifen dieser Ebene als XY-Konturen in den Arbeitsplan legen">Konturen übernehmen</button></div>
@@ -3744,6 +3754,32 @@ senkrechte Stellen stehen in derselben Zahl. Der <b>kleinste Radius</b> der Form
 5 Grad Formschr&auml;ge mit <b>85 Grad</b> &mdash; beide liegen au&szlig;erhalb der Vorgabe 5 bis 45 Grad von <i>Schr&auml;gen schlichten</i>, und die Bahn w&auml;re fast leer, ohne
 dass es auff&auml;llt. Am Testblister gemessen: mit 5 bis 45 Grad entstehen 81 Bahnpunkte, mit <b>0 bis 90 Grad</b> 5584 &mdash; die ganze Kavit&auml;t. F&uuml;r eine Form geh&ouml;rt
 das Band also auf 0 bis 90.</dd>
+<dt id="ba-fk05d-auswahl">Nur hier bearbeiten &mdash; die Auswahl (23.09.2026)</dt><dd>Bis hierher war jeder Modell-Schritt eine Aussage &uuml;ber das
+<b>ganze Teil</b>: die Bahn f&auml;hrt alles, was &uuml;ber der Sollform steht. Das reicht f&uuml;r ein Teil, das in einem Zug fertig wird. Wer <b>eine einzelne
+Tasche</b> mit einem kleineren Fr&auml;ser nachsetzen, <b>eine Fl&auml;che</b> zuletzt schlichten oder einen Bereich bewusst <b>auslassen</b> will, sagt der App das
+&uuml;ber eine <b>Begrenzung</b>.
+<p><b>Der Weg:</b> im STEP-Fenster auf <i>Ansicht &rarr; Sollform</i> schalten und die gew&uuml;nschte Fl&auml;che <b>antippen</b> (nochmal tippen w&auml;hlt sie ab;
+mehrere Fl&auml;chen gehen). Sie wird orange markiert. Dann in der Zeile <b>Bereich</b>:</p>
+<ul><li><b>Als Begrenzung &uuml;bernehmen</b> legt aus dem Rand der Fl&auml;che eine oder mehrere <b>Konturen</b> im Programm an. Diese hakst Du in der Maske eines
+Modell-Schritts unter <b>Bereich</b> an &mdash; der Schritt arbeitet dann nur dort.</li>
+<li><b>Schritt nur hier</b> nimmt Dir beides ab: die App legt einen fertigen Schritt an und w&auml;hlt daf&uuml;r <b>den gr&ouml;&szlig;ten Fr&auml;ser, der in den
+Bereich hineinkommt</b> (gemessen als gr&ouml;&szlig;ter Kreis, der in die Begrenzung passt, samt Seitenaufma&szlig;). Steht im Arbeitsplan schon ein Schruppschritt,
+wird es ein <i>Restmaterial abspanen</i> (er sieht dessen Stand), sonst ein <i>Modell abspanen</i>.</li></ul>
+<p><b>Was die Begrenzung tut:</b> au&szlig;erhalb gilt der Materialstand als Sollh&ouml;he &mdash; dort ist nichts abzutragen, also f&auml;hrt keine Bahn hin, und
+der <b>Restmaterialbericht meldet dort auch nichts</b>. Der Materialstand bleibt trotzdem stehen: An- und Abfahrten <b>sehen</b> das Material au&szlig;erhalb, ein
+ausgelassener Bereich ist kein leerer Raum. Das gilt f&uuml;r <i>Modell abspanen</i>, <i>Restmaterial abspanen</i>, <i>Schr&auml;gen schlichten</i> und
+<i>B&ouml;den &amp; W&auml;nde schlichten</i>; bei den W&auml;nden entscheidet die <b>Mitte</b> der Wand, ob sie im Bereich liegt.</p>
+<p><b>Die Begrenzung ist eine ganz gew&ouml;hnliche XY-Kontur.</b> Der Kontureditor kann sie nachbessern, die Ablage speichert sie, und ein DXF liefert eine:
+wer einen Bereich lieber zeichnet als antippt, zeichnet ihn. Sie ist <b>Geometrie</b> und kein Verweis auf eine Fl&auml;chennummer &mdash; damit &uuml;berlebt sie
+auch einen neuen Export desselben Modells.</p>
+<p><b>Mehrere Konturen</b> werden mit <i>gerade/ungerade</i> verrechnet: zwei Konturen nebeneinander sind zusammen ein Bereich, eine Kontur <b>innerhalb</b> einer
+anderen ist ein <b>Loch</b> &mdash; eine Insel mitten in einer Tasche wird also von selbst ausgespart. Hat die angetippte Fl&auml;che L&ouml;cher, kommen sie
+gleich mit.</p>
+<p><b>Grenzen, ehrlich:</b> gew&auml;hlt wird eine <b>Fl&auml;che des Modells</b>, wie das CAD sie geteilt hat &mdash; ein gro&szlig;er Boden kann aus mehreren
+St&uuml;cken bestehen, dann tippst Du sie nacheinander an. Der Bereich begrenzt <b>in XY</b>, nicht in der H&ouml;he: wie tief gefahren wird, sagen weiterhin Z0
+und Z1 des Schritts. Und eine Begrenzung, die neben dem Teil liegt, wird <b>gemeldet</b> statt still zu einer leeren Bahn zu f&uuml;hren.</p>
+<p>Angetippt wird in der <b>Draufsicht</b> (Ansicht <i>Sollform</i>) &mdash; im gedrehten Drahtbild wird gedreht, nicht gew&auml;hlt. Einzelne <b>Kanten</b>
+antippen geht noch nicht; wer eine Begrenzung braucht, die keine Modellfl&auml;che ist, zeichnet sie im Kontureditor oder l&auml;dt sie als DXF.</p></dd>
 <dt id="ba-fk05c-rest">Restmaterial abspanen &mdash; der n&auml;chste Schritt mit dem kleineren Werkzeug</dt><dd>Der zweite Zyklus der Gruppe STEP-Modell (seit 19.09.2026).
 Er rechnet wie <i>Modell abspanen</i>, aber mit einem <b>Bezug</b>: dem <b>letzten Schruppschritt davor im Arbeitsplan</b> (Modell abspanen oder ein weiteres
 Restmaterial abspanen). Das ist kein Feld &mdash; die Schritte werden nacheinander abgearbeitet, also ist der Bezug immer der Schritt davor, und der Maskenkopf nennt ihn.
@@ -5086,6 +5122,10 @@ var F_FELDER = {
   // Konturen des Programms (der Zyklus 14 nimmt 12 Teilkonturen, also
   // Tasche + hoechstens 11 Inseln).
   inseln:     {name:'Inseln (Konturen XY)', typ:'konturen', ba:'ba-fk06c-sl'},
+  // AUSWAHL [23.09.2026]: die Begrenzung eines Modell-Schritts. Leer heisst
+  // "das ganze Teil" - so laufen alle Vorlagen und jedes gespeicherte
+  // Programm unveraendert weiter.
+  gebiet:     {name:'Begrenzung (Konturen XY)', typ:'konturen', ba:'ba-fk05d-auswahl'},
   q8:         {name:'R Rundungsradius an Innenecken', einheit:'mm', ba:'ba-fk06c-sl'},
   // Paket E: Gewindefraesen
   // Kurzer Name: der volle Satz wurde im Feld abgeschnitten (Bild 14.09.2026);
@@ -5319,7 +5359,7 @@ var F_MASKE = {
   // eintauchen in das Bauteil, sondern seitlich zustellen im freien Raum"]:
   // die dritte Stellung laesst jeden Zug aus, der ein Eintauchen im Material
   // braeuchte - das Material bleibt stehen und steht im Restmaterial.
-  modellSchruppen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','stufeMax','aufSeite','aufTiefe','#Bahn','bahnArt','konturSchnitt','ae','aeArt','bahnSinn','abtragMin','fVoll','eckenR','eintauch','#!Sicherheit','sc','sc2'],
+  modellSchruppen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','stufeMax','aufSeite','aufTiefe','#Bereich','gebiet','#Bahn','bahnArt','konturSchnitt','ae','aeArt','bahnSinn','abtragMin','fVoll','eckenR','eintauch','#!Sicherheit','sc','sc2'],
                feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd'],['3','nur von außen: kein Eintauchen, Unerreichbares bleibt stehen'],['0','über SC anfahren, senkrecht eintauchen']]},
                feldText:{f:'F Vorschub Fräsen', fTief:'FZ Vorschub Eintauchen', zust:'D Zustellung in Z',
                  eintauch:'Anfahren & Eintauchen',
@@ -5330,7 +5370,7 @@ var F_MASKE = {
   // Restmaterial abspanen: dieselben Felder wie das Abspanen plus die
   // Restschwelle. Der BEZUG ist kein Feld - er ist immer der letzte
   // Schruppschritt davor, und die Maske nennt ihn im Kopf.
-  modellRest:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','stufeMax','aufSeite','aufTiefe','#Bahn','bahnArt','konturSchnitt','ae','aeArt','bahnSinn','restAb','abtragMin','fVoll','eckenR','eintauch','#!Sicherheit','sc','sc2'],
+  modellRest:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Tiefe & Aufmaß','q203','tiefe','zust','ebenenArt','stufeMax','aufSeite','aufTiefe','#Bereich','gebiet','#Bahn','bahnArt','konturSchnitt','ae','aeArt','bahnSinn','restAb','abtragMin','fVoll','eckenR','eintauch','#!Sicherheit','sc','sc2'],
                feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd'],['3','nur von außen: kein Eintauchen, Unerreichbares bleibt stehen'],['0','über SC anfahren, senkrecht eintauchen']]},
                feldText:{f:'F Vorschub Fräsen', fTief:'FZ Vorschub Eintauchen', zust:'D Zustellung in Z',
                  eintauch:'Anfahren & Eintauchen',
@@ -5341,14 +5381,14 @@ var F_MASKE = {
   // Stufe 4: wie beim Abspanen traegt kein Feld ein Q-Wort. Der Bereich
   // Z0..Z1 waehlt aus, WELCHE Flaechen geschlichtet werden — nicht wie tief
   // gefahren wird; die Hoehe kommt aus dem Modell.
-  modellSchlichtenEben:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','ebWas','#Bahn','zust','bahnArt','ae','aeArt','bahnSinn','eintauch','#!Sicherheit','sc','sc2'],
+  modellSchlichtenEben:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','ebWas','#Bereich','gebiet','#Bahn','zust','bahnArt','ae','aeArt','bahnSinn','eintauch','#!Sicherheit','sc','sc2'],
     feldWahl:{eintauch:[['2','im Schnitt: unten verbinden, sonst pendelnd'],['3','nur von außen: kein Eintauchen, Unerreichbares bleibt stehen'],['0','über SC anfahren, senkrecht eintauchen']]},
     feldText:{f:'F Vorschub Schlichten', fTief:'FZ Vorschub Eintauchen', zust:'Z-Schritt der Wände',
       q203:'Z0 oberste Höhe (Bereich)', tiefe:'Z1 unterste Höhe (Bereich)', eintauch:'Anfahren & Eintauchen',
       ae:'ae Zeilenabstand am Boden', aeArt:'ae bezogen auf', bahnSinn:'Fräsart (bei Rechtslauf M3)',
       sc2:'SC2 Rückzug über Z0'},
     ohneQ:['t','s','f','fTief','kuehl','q203','tiefe','ebWas','zust','bahnArt','ae','aeArt','bahnSinn','eintauch','sc','sc2']},
-  modellSchlichten:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','winkelMin','winkel','#Mass','rautiefe','tolBahn','strategie','bahnSinn','ueberKante','#!Sicherheit','sc','sc2'],
+  modellSchlichten:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','winkelMin','winkel','#Mass','rautiefe','tolBahn','strategie','bahnSinn','ueberKante','#Bereich','gebiet','#!Sicherheit','sc','sc2'],
                feldText:{f:'F Vorschub Schlichten', fTief:'FZ Vorschub Zustellen', tiefe:'Z1 unterste Höhe (Bereich)',
                  q203:'Z0 oberste Höhe (Bereich)', strategie:'Zeilenrichtung', bahnSinn:'Fräsart (bei Rechtslauf M3)', sc2:'SC2 Rückzug über Z0'},
                feldWahl:{strategie:[['2','automatisch (quer zum Gefälle)'],['0','Zeilen in X'],['1','Zeilen in Y'],['3','äquidistant (gleicher Abstand auf der Fläche)']]},
@@ -5957,7 +5997,8 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
       // Werkzeug-Durchmesser (= 0,8 x R, wie vorher), Zickzack, Oberflaeche
       // und Tiefe aus dem Rohteil.
       // ausgabe steht fest auf einzel: einen Zyklus gibt es nicht.
-      Object.assign(s, {q203:+k.z1 || 0, tiefe:-Math.max(1, fRund((+k.z1 || 0) - (+k.z0 || 0))),
+      // gebiet [] = das ganze Teil (AUSWAHL, 23.09.2026).
+      Object.assign(s, {gebiet:[], q203:+k.z1 || 0, tiefe:-Math.max(1, fRund((+k.z1 || 0) - (+k.z0 || 0))),
         zust:2, aufSeite:0.5, aufTiefe:0.2, ae:40, aeArt:'%', bahnArt:'zeilen', konturSchnitt:'aus', bahnSinn:0, ebenenArt:'flaechen', abtragMin:0, fVoll:100, eckenR:0, stufeMax:0, dVor:0, fTief:fRund(s.f * 0.3), ausgabe:'einzel'});
       if(art === 'modellRest'){
         // Der Bezug ist der letzte Schruppschritt im Arbeitsplan: seine
@@ -5976,7 +6017,7 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
       // der Rautiefe. Grenzwinkel 45 Grad: steiler wird eine Zeilenbahn
       // ungenau, dort gehoert die Z-konstante Bahn hin (noch nicht gebaut).
       Object.assign(s, {q203:+k.z1 || 0, tiefe:-Math.max(1, fRund((+k.z1 || 0) - (+k.z0 || 0))),
-        rautiefe:0.01, tolBahn:0.005, winkelMin:5, winkel:45, strategie:2, bahnSinn:0, ueberKante:1,
+        gebiet:[], rautiefe:0.01, tolBahn:0.005, winkelMin:5, winkel:45, strategie:2, bahnSinn:0, ueberKante:1,
         f:t.f || 600, fTief:fRund((t.f || 600) * 0.3), ausgabe:'einzel'});
     }
     if(art === 'modellSchlichtenEben'){
@@ -5985,7 +6026,7 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
       // Konturzug je Z-Schritt; Gleichlauf als Vorgabe, Bereich das ganze
       // Rohteil, Anfahren im Schnitt (Verbindung unten, Stich ins Aufmass).
       Object.assign(s, {q203:+k.z1 || 0, tiefe:-Math.max(1, fRund((+k.z1 || 0) - (+k.z0 || 0))),
-        zust:2, aufSeite:0, aufTiefe:0, ae:40, aeArt:'%', bahnArt:'zeilen', bahnSinn:1, eintauch:2, ebWas:'beide',
+        gebiet:[], zust:2, aufSeite:0, aufTiefe:0, ae:40, aeArt:'%', bahnArt:'zeilen', bahnSinn:1, eintauch:2, ebWas:'beide',
         f:t.f || 600, fTief:fRund((t.f || 600) * 0.3), fSchl:t.f || 600, ausgabe:'einzel'});
     }
     if(art === 'planfraesen'){
@@ -9333,6 +9374,86 @@ function fStepEbeneKonturen(ebene, basis){
   return {konturen:konturen, hinweise:hinweise};
 }
 
+// AUSWAHL: welche Flaeche liegt an dieser Stelle oben? F.wer fuehrt je Zelle
+// den Index in A.flaechen — dieselbe Angabe, mit der die Form aus dem
+// Blister ihre Aussenhaut sucht. -1 = dort liegt keine Flaeche.
+function fStepFlaecheAn(F, x, y){
+  if(!F || !F.wer) return -1;
+  const i = fStepSollIdx(F, x, y);
+  return i >= 0 ? F.wer[i] : -1;
+}
+
+// Die Begrenzungskontur(en) einer Flaeche. Genommen werden ALLE ihre
+// Schleifen: die aeussere und jedes Loch. Weil das Gebiet mit
+// GERADE/UNGERADE gefuellt wird, ist ein Loch damit von selbst ein Loch —
+// eine Insel mitten in einer Tasche wird also ausgespart, ohne dass jemand
+// sie einzeln abwaehlen muesste.
+function fStepFlaecheKonturen(A, idx, name){
+  const f = ((A && A.flaechen) || [])[idx];
+  if(!f || !f.rand || !f.rand.length) return {konturen:[], hinweise:["Diese Flaeche hat keinen auswertbaren Rand."]};
+  const konturen = [], hinweise = [];
+  let knapp = 0, halb = 0, frei = 0, n = 0;
+  f.rand.forEach(lo => {
+    n++;
+    const r = fStepKontur(lo, (name || "Bereich") + (f.rand.length > 1 ? " " + n : ""));
+    if(!r) return;
+    knapp += r.knapp; halb += r.halb; frei += r.frei;
+    konturen.push(r.kontur);
+  });
+  if(knapp) hinweise.push(knapp + " Element(e) ohne Laenge weggelassen.");
+  if(halb) hinweise.push(halb + " Bogenradius/-radien um bis zu 0,001 mm angehoben (Halbkreis).");
+  if(frei) hinweise.push(frei + " Kante(n) waren weder Gerade noch Kreis und stehen als Streckenzug.");
+  return {konturen:konturen, hinweise:hinweise, art:f.art, z:(f.ort ? fRund(f.ort[2]) : null)};
+}
+
+// AUSWAHL, zweiter Knopf: aus der Begrenzung gleich einen SCHRITT machen.
+// Zwei Entscheidungen nimmt die App dem Bediener dabei ab, und beide sind
+// gerechnet, nicht geraten:
+//  - WELCHE FAMILIE: steht im Arbeitsplan schon ein Schruppschritt, ist der
+//    neue ein RESTMATERIAL-Schritt (er sieht dessen Stand und faehrt nur,
+//    wo wirklich noch etwas steht); sonst ein gewoehnliches Abspanen.
+//  - WELCHES WERKZEUG: der groesste Fraeser, der in das Gebiet hineinkommt.
+//    Gemessen wird der groesste einbeschriebene Kreis der Begrenzung ueber
+//    dieselbe Abstandsverwandlung, mit der auch die Bahn ihre Ebenenmaske
+//    baut - ein Fraeser, der nur knapp passt, schneidet nichts mehr.
+function fBereichRadius(polys){
+  const F = F_SOLLFELD;
+  if(!F || !polys || !polys.length) return null;
+  const m = fGebietMaske(F, polys);
+  const n = F.nx * F.ny, aus = new Uint8Array(n);
+  for(let c = 0; c < n; c++) if(!m[c]) aus[c] = 1;
+  let drin = 0; for(let c = 0; c < n; c++) if(m[c]) drin++;
+  if(!drin) return {r:0, zellen:0};
+  const d2 = new Float64Array(n);
+  fEdt(aus, F.nx, F.ny, d2);
+  let best = 0;
+  for(let c = 0; c < n; c++) if(m[c] && d2[c] > best) best = d2[c];
+  return {r:Math.sqrt(best) * F.raster, zellen:drin};
+}
+
+function fBereichSchritt(prog, idx){
+  if(!F_SOLLFELD) return "Erst die Sollform ans Programm geben (Stufe 3) — ohne sie kann kein Modell-Schritt rechnen.";
+  const polys = fGebietPolys(prog, {gebiet:idx});
+  if(!polys) return "Aus der Auswahl ist keine Begrenzung entstanden.";
+  const R = fBereichRadius(polys);
+  if(!R || !R.zellen) return "Die Begrenzung trifft das Teil nicht: im Gebiet liegt keine Rasterstelle.";
+  // Der Fraeser muss samt Seitenaufmass hineinpassen.
+  const uXY = 0.5;
+  const kand = (prog.werkzeuge || []).filter(w => w.art === "fraeser" && +w.d > 0 && !fPlanIstKugel(w) && (+w.angle || 0) > 0)
+    .sort((a, b) => (+b.d || 0) - (+a.d || 0));
+  const passt = kand.find(w => (+w.d / 2) + uXY <= R.r + 1e-9);
+  if(!passt) return "In diesen Bereich passt keiner der Fraeser: der groesste Kreis darin hat nur " + fRund(2 * R.r) +
+    " mm Durchmesser, der kleinste Fraeser mit Eintauchwinkel braucht " + (kand.length ? fRund(+kand[kand.length - 1].d + 2 * uXY) : "?") +
+    " mm samt Aufmass. Ein kleineres Werkzeug in die Tabelle legen.";
+  const hatSchrupp = (prog.schritte || []).some(sp => fIstSchruppschritt(sp));
+  const art = hatSchrupp ? "modellRest" : "modellSchruppen";
+  const st = fSchrittNeu(prog, art, +passt.nr);
+  st.t = +passt.nr; st.gebiet = idx.slice();
+  prog.schritte = (prog.schritte || []).concat([st]);
+  return "Schritt " + prog.schritte.length + " angelegt: " + (F_ZYKLEN[art] || {}).wort + " mit " + passt.name +
+    " (⌀" + fRund(+passt.d) + ") — er arbeitet NUR in der Begrenzung (groesster Kreis darin ⌀" + fRund(2 * R.r) +
+    ", " + R.zellen + " Rasterstellen)." + (hatSchrupp ? "" : " Im Arbeitsplan steht noch kein Schruppschritt, deshalb ein gewoehnliches Abspanen.");
+}
 // ---- Stufe 3 Teil A: die Sollform als Hoehenfeld ----------------------
 // Fuer jeden Rasterpunkt in XY die Hoehe des FERTIGEN Teils — die obere
 // Huelle. Alles darueber ist Zugabe und wird beim Abspanen weggenommen.
@@ -9437,7 +9558,13 @@ function fStepSollfeld(A, raster, opt){
   // Schlichtbahn laege dann um die Folienstaerke zu hoch. Deshalb wird hier
   // je Zelle vermerkt, welche Flaeche gewonnen hat, und weiter unten
   // wandern nur die Kanten und Ebenen genau dieser Flaechen mit.
-  if(unten){ F.wer = new Int32Array(nx * ny); F.wer.fill(-1); }
+  // Gefuehrt wird das IMMER: die Form aus dem Blister braucht es (nur die
+  // gewinnende Flaeche gibt ihre Kanten weiter), und seit dem 23.09.2026
+  // haengt die AUSWAHL daran - ein Tipp in die Sollform-Ansicht fragt ueber
+  // F.wer, welche Flaeche dort oben liegt. Ein Int32Array je Zelle kostet
+  // 4 Byte; neben h (4) und quelle (1) faellt das nicht ins Gewicht, und
+  // das Feld nachtraeglich zu rechnen hiesse, es ganz neu zu bauen.
+  F.wer = new Int32Array(nx * ny); F.wer.fill(-1);
   let exakt = 0, geschaetzt = 0;
   A.flaechen.forEach((f, fi) => {
     const G = fStepFlaechePoly(f);
@@ -9461,8 +9588,15 @@ function fStepSollfeld(A, raster, opt){
   // WELCHE FLAECHEN zaehlen ab hier? Bei der oberen Huelle alle (nichts
   // aendert sich gegenueber dem Bestand), bei der unteren nur die, die
   // wirklich eine Zelle gewonnen haben.
+  // ACHTUNG, hier stand ein Fehler [23.09.2026]: die Bedingung war blosses
+  // F.wer - und das gab es bis dahin NUR bei der unteren Huelle. Seit die
+  // AUSWAHL es immer fuehrt, griff der Filter auch oben, und dort gewinnt
+  // eine nach UNTEN zeigende Flaeche nie eine Zelle: die Ebene Z-12 der
+  // T-Tasche verschwand samt ihren Konturen, und mit ihr die Waende, die
+  // "Boeden & Waende schlichten" daraus faehrt. Der Haken in Abschnitt 17
+  // hat es im ersten Lauf gemeldet.
   let FL = A.flaechen || [];
-  if(F.wer){
+  if(unten && F.wer){
     const drin = {};
     for(let q = 0; q < F.wer.length; q++) if(F.wer[q] >= 0) drin[F.wer[q]] = 1;
     FL = FL.filter((f, fi) => drin[fi]);
@@ -10344,7 +10478,91 @@ function fEdt(verboten, nx, ny, aus){
 // Werkzeugmitte ueber die Rohteilkante hinausfahren darf. Ausserhalb der
 // Sollform gilt ihre Unterkante (dort muss nichts stehen bleiben),
 // ausserhalb des Rohteils steht kein Material.
-function fModellGitter(F, k, rand){
+// ===== DIE AUSWAHL: NUR HIER BEARBEITEN [23.09.2026] =====================
+// Bis hierher war jeder Modell-Schritt eine Aussage ueber das GANZE Teil:
+// die Bahn faehrt alles, was ueber der Sollform steht. Das ist der
+// Autopilot, und er reicht fuer ein Teil, das in einem Zug fertig wird. Wer
+// eine einzelne Tasche mit einem kleineren Fraeser nachsetzen, eine Flaeche
+// zuletzt schlichten oder einen Bereich bewusst auslassen will, braucht die
+// Frage WO — und die beantwortet eine Begrenzungskontur.
+//
+// Gespeichert wird sie als gewoehnliche XY-Kontur des Programms. Damit
+// ueberlebt die Auswahl einen Wechsel des Modells: sie ist GEOMETRIE und
+// kein Verweis auf eine Flaechennummer, die im naechsten Export eine andere
+// sein kann. Der Kontureditor kann sie nachbessern, die Ablage speichert
+// sie, ein DXF liefert sie — nichts davon musste dafuer gebaut werden.
+//
+// Gewirkt wird an EINER Stelle: im Stand-Gitter wird ausserhalb des Gebiets
+// die Sollhoehe auf den Materialstand gesetzt. Dort ist dann nichts
+// abzutragen, und die ganze uebrige Bahnlogik — Ebenen, Zeilen, Ringe,
+// Anfahren, Rueckzuege, Restmaterialbericht — bleibt unveraendert. Eine
+// zweite Bahnrechnung "mit Begrenzung" waere die Sorte Zwilling, die
+// driftet.
+
+// Eine Kontur als geschlossenes Polygon (Boegen abgetastet).
+function fKonturPolygon(kt){
+  const r = fKonturSegmente(kt);
+  if(!r.seg.length) return null;
+  const p = [];
+  r.seg.forEach(sg => { const q = fSegPunkte(sg); for(let i = (p.length ? 1 : 0); i < q.length; i++) p.push([q[i].x, q[i].y]); });
+  // Offen gezeichnete Konturen werden geschlossen — als BEGRENZUNG ist eine
+  // offene Linie bedeutungslos, und der Kontureditor laesst sie zu.
+  if(p.length > 2 && (Math.abs(p[0][0] - p[p.length - 1][0]) > 1e-9 || Math.abs(p[0][1] - p[p.length - 1][1]) > 1e-9)) p.push([p[0][0], p[0][1]]);
+  return p.length > 3 ? p : null;
+}
+
+// Die Polygone der Begrenzung eines Schritts. s.gebiet ist eine Liste von
+// Kontur-Indizes; leer heisst "das ganze Teil".
+function fGebietPolys(prog, s){
+  const idx = (s && s.gebiet) || [];
+  if(!idx.length) return null;
+  const kt = (prog && prog.konturen) || [], out = [];
+  idx.forEach(i => { const p = kt[i] ? fKonturPolygon(kt[i]) : null; if(p) out.push(p); });
+  return out.length ? out : null;
+}
+
+// Liegt ein einzelner Punkt im Gebiet? Gerade/ungerade wie die Maske.
+function fImGebiet(polys, x, y){
+  let n = 0;
+  polys.forEach(p => {
+    for(let i = 1; i < p.length; i++){
+      const ya = p[i - 1][1], yb = p[i][1];
+      if((ya > y) === (yb > y)) continue;
+      if(p[i - 1][0] + (y - ya) / (yb - ya) * (p[i][0] - p[i - 1][0]) > x) n++;
+    }
+  });
+  return (n % 2) === 1;
+}
+
+// Welche Zellen des Gitters liegen im Gebiet? Gezaehlt wird GERADE/UNGERADE
+// ueber alle Polygone zusammen: zwei Konturen nebeneinander sind damit eine
+// Vereinigung, eine Kontur INNERHALB einer anderen ein Loch — beides ohne
+// Sonderfall, solange sich die Konturen nicht ueberschneiden.
+function fGebietMaske(G, polys){
+  const m = new Uint8Array(G.nx * G.ny);
+  const r = G.raster, xs = [];
+  for(let j = 0; j < G.ny; j++){
+    const cy = G.y0 + (j + 0.5) * r, o = j * G.nx;
+    xs.length = 0;
+    polys.forEach(p => {
+      for(let i = 1; i < p.length; i++){
+        const ya = p[i - 1][1], yb = p[i][1];
+        if((ya > cy) === (yb > cy)) continue;
+        xs.push(p[i - 1][0] + (cy - ya) / (yb - ya) * (p[i][0] - p[i - 1][0]));
+      }
+    });
+    if(xs.length < 2) continue;
+    xs.sort((a, b) => a - b);
+    for(let k2 = 0; k2 + 1 < xs.length; k2 += 2){
+      let i0 = Math.ceil((xs[k2] - G.x0) / r - 0.5), i1 = Math.floor((xs[k2 + 1] - G.x0) / r - 0.5);
+      if(i0 < 0) i0 = 0; if(i1 > G.nx - 1) i1 = G.nx - 1;
+      for(let q = i0; q <= i1; q++) m[o + q] = 1;
+    }
+  }
+  return m;
+}
+
+function fModellGitter(F, k, rand, polys){
   let r = F.raster;
   const fx1 = F.x0 + F.nx * r, fy1 = F.y0 + F.ny * r;
   const x0 = Math.min(F.x0, +k.x0) - rand, x1 = Math.max(fx1, +k.x1) + rand;
@@ -10383,6 +10601,21 @@ function fModellGitter(F, k, rand){
       G.imRoh[o + q] = im ? 1 : 0;
       G.stand[o + q] = st;
     }
+  }
+  // AUSSERHALB DER BEGRENZUNG gilt der Materialstand als Sollhoehe: dort ist
+  // nichts abzutragen, also faehrt keine Bahn hin, und der
+  // Restmaterialbericht meldet dort auch nichts. Der Stand bleibt stehen,
+  // damit Rueckzuege und Anfahrten das Material trotzdem SEHEN — ein
+  // ausgelassener Bereich ist kein leerer Raum.
+  if(polys && polys.length){
+    const m = fGebietMaske(G, polys);
+    G.gebiet = m;
+    let drin = 0;
+    for(let c = 0; c < n; c++){
+      if(m[c]){ drin++; continue; }
+      if(G.soll[c] < G.stand[c]) G.soll[c] = G.stand[c];
+    }
+    G.gebietZellen = drin;
   }
   return G;
 }
@@ -10691,7 +10924,11 @@ function fBahnSchlichtenEben(s, tool, prog){
   const f = +s.f || 0; if(!(f > 0)) return nein('Vorschub fehlt');
   const r = F.raster;
   const B = [];
-  const Z = {waende:0, ebenenW:0, boeden:0, zuege:0, ausgelassen:0, ohneMaterial:0, anBoden:0, schraegen:0, gemischt:0, gemischtOrte:[], uebersprungen:[]};
+  const Z = {waende:0, ebenenW:0, boeden:0, zuege:0, ausgelassen:0, ohneMaterial:0, anBoden:0, schraegen:0, gemischt:0, gemischtOrte:[], uebersprungen:[], wandAus:0};
+  // AUSWAHL: die Begrenzung des Schritts. Waende fragen ihre Mitte, der
+  // Boden erbt sie ueber den synthetischen Schritt (Object.assign nimmt
+  // gebiet mit) und laeuft damit durch fModellGitter wie jeder andere.
+  const polysE = fGebietPolys(prog, s);
   const anhaengen = (b) => { if(B.length) B.push({a:'eil', z:sicher}); b.bahn.forEach(m => B.push(m)); };
   const ebenen = (F.ebenen || []).filter(e => e.z <= zOben + 1e-6 && e.z >= zTief - 1e-6);
   // ---- Waende: je SEGMENT der Schleifen ----
@@ -10741,6 +10978,11 @@ function fBahnSchlichtenEben(s, tool, prog){
       // der gescheiterte Lauf aus der oberen Flaeche denselben Mittelpunkt wie
       // der gute Lauf der Bodenschleife und verdeckte ihn (20.09.2026).
       if(gesehen.has(key)) return;
+      // AUSWAHL: eine Wand ausserhalb der Begrenzung wird nicht gefahren.
+      // Gefragt wird ihre MITTE — eine Wand ist eine Linie und hat keine
+      // Rasterzelle, und an einer Kante der Begrenzung waere jeder andere
+      // Punkt Zufall.
+      if(polysE && !fImGebiet(polysE, m.x, m.y)){ Z.wandAus++; return; }
       const ktW = {name:kt.name + (geschlossen ? '' : ' Wand'), geschlossen:geschlossen, x0:fRund(S2[0].x0), y0:fRund(S2[0].y0), elemente:S2.map(segZuElement)};
       const o = geschlossen ? fKonturUmlauf(S2) : 0;
       const sK = Object.assign({}, s, {art:'konturzug', kontur:0, q203:oben, tiefe:fRund(unten - oben), zust:dzW, zustSchl:dzW, umfang:2, aufSeite:0, fSchl:f,
@@ -11146,7 +11388,15 @@ function fBahnModell(s, tool, prog){
   // des Rasters, damit die Zellenmitten dieselben bleiben wie ohne sie;
   // sonst verschoebe sich jede Bahn um einen Bruchteil einer Zelle.
   const luftAussen = 2;
-  const G = fModellGitter(F, k, rt + uXY + 2 * F.raster + Math.ceil((rt + luftAussen) / F.raster) * F.raster);
+  // AUSWAHL [23.09.2026]: liegt eine Begrenzung am Schritt, gilt ausserhalb
+  // der Materialstand als Sollhoehe — dort ist nichts abzutragen, und die
+  // uebrige Bahnlogik merkt von der Begrenzung nichts (siehe fModellGitter).
+  const polys = fGebietPolys(prog, s);
+  const G = fModellGitter(F, k, rt + uXY + 2 * F.raster + Math.ceil((rt + luftAussen) / F.raster) * F.raster, polys);
+  if(polys && !G.gebietZellen) return nein("Die BEGRENZUNG trifft das Teil nicht: im gewaehlten Gebiet liegt keine " +
+    "einzige Rasterstelle. Pruefe, ob die Kontur zum Modell passt (gleicher Nullpunkt, gleiche Lage).");
+  if(polys) warn.push("BEGRENZT auf die gewaehlte Kontur (" + polys.length + " Stueck, " + G.gebietZellen +
+    " Rasterstellen). Ausserhalb faehrt dieser Schritt nichts — dort meldet auch der Restmaterialbericht nichts.");
   // SPANNBACKEN: neben dem Rohteil darf das Werkzeug nur stehen, wo keine
   // Backe ist - oder ueber ihr. Ohne Spannmittel im Kopf gibt es nichts zu
   // pruefen (fSpannBacken liefert dann null).
@@ -12950,9 +13200,15 @@ function fBahnSchlichten(s, tool, prog){
   // liest das Gefaelle abwechselnd 45,000019 und 44,999973 Grad. Ohne
   // Toleranz faellt jede zweite Zelle einer solchen Flaeche heraus.
   const gut = new Uint8Array(nx * ny);
+  // AUSWAHL: die Begrenzung schneidet die Maske. Gerechnet wird sie auf DEM
+  // Feld, das die Bahn benutzt — mit Ueberlauf ueber die Kante ist das das
+  // gerandete, und dessen Zellen liegen anders (siehe fSollfeldRand).
+  const polysS = fGebietPolys(prog, s), GMS = polysS ? fGebietMaske(F, polysS) : null;
+  let nAusserhalb = 0;
   let nGut = 0, nSteil = 0, nFlach = 0, aMax = 0, nSteht = 0, stehtMax = 0;
   for(let q = 0; q < nx * ny; q++){
     if(!F.quelle[q]) continue;
+    if(GMS && !GMS[q]){ nAusserhalb++; continue; }
     const h = F.h[q];
     if(h > zOben + 1e-6 || h < zTief - 1e-6) continue;
     if(NF[q] > grenz + F_WINKEL_TOL){ nSteil++; continue; }
@@ -12967,6 +13223,8 @@ function fBahnSchlichten(s, tool, prog){
     gut[q] = 1; nGut++;
     if(NF[q] > aMax) aMax = NF[q];
   }
+  if(!nGut && GMS) return nein('in der BEGRENZUNG liegt keine Flaeche, die dieser Schritt schlichten kann (' + nAusserhalb +
+    ' Rasterstellen liegen ausserhalb der Kontur) — pruefe Kontur, Winkelband und Z1..Z0');
   if(!nGut) return nein(nSteht
     ? 'im Winkelband liegt Flaeche, aber an jeder Stelle steht nach dem Schruppen noch mehr Material, als Zustellung und Aufmass erklaeren (bis '
       + fRund(stehtMax) + ' mm ueber der Sollform) — dort erst mit einem kleineren Werkzeug schruppen'
@@ -13357,9 +13615,11 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
   // Zellen dieser Bahn: STEILER als der Grenzwinkel, Sollhoehe im Bereich,
   // und nach dem Schruppen darf dort nicht mehr stehen als erklaerbar.
   const gut = new Uint8Array(nx * ny);
+  const polysZ = fGebietPolys(prog, s), GMZ = polysZ ? fGebietMaske(F, polysZ) : null;
   let nGut = 0, aMin = 90, nSteht = 0, stehtMax = 0;
   for(let q = 0; q < nx * ny; q++){
     if(!F.quelle[q]) continue;
+    if(GMZ && !GMZ[q]) continue;
     const h = F.h[q];
     if(h > zOben + 1e-6 || h < zTief - 1e-6) continue;
     // ECHT STEILER ALS DER GRENZWINKEL. Die Toleranz liegt hier auf DERSELBEN
@@ -18579,15 +18839,25 @@ function fZyklusWerkzeugeFuellen(tNr, art){
 // Paket D3: Haekchenliste der Inseln. Es stehen alle GESCHLOSSENEN Konturen
 // darin ausser der gewaehlten Tasche — eine offene Kontur kann keine Insel
 // sein (der Zyklus 14 braucht geschlossene Teilkonturen).
+// Eine Haekchenliste ueber Konturen. Zwei Felder benutzen sie, und sie
+// fragen VERSCHIEDENES: die INSELN der SL-Zyklen sind die geschlossenen
+// Konturen ausser der Tasche selbst; die BEGRENZUNG eines Modell-Schritts
+// nimmt jede Kontur, auch eine offene (die schliesst fKonturPolygon) und
+// auch die, die anderswo als Tasche dient.
 function fZyklusInselnFuellen(){
-  const box = document.getElementById('zf_inseln'); if(!box) return;
-  const tasche = Math.round(getNum('zf_kontur', -1));
-  const an = (box.__wahl || []).slice();
-  const zeilen = (fProg.konturen || []).map((kt, i) => {
-    if(i === tasche || !kt.geschlossen) return '';
-    return '<label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" data-i="' + i + '"' + (an.indexOf(i) >= 0 ? ' checked' : '') + '> ' + esc(kt.name) + ' — ' + esc(fKonturText(kt)) + '</label>';
-  }).filter(Boolean);
-  box.innerHTML = zeilen.join('') || '<span class="small-hint">keine weitere geschlossene Kontur</span>';
+  document.querySelectorAll('.konturliste').forEach(box => {
+    const feld = String(box.id || '').replace(/^zf_/, '');
+    const alle = (feld === 'gebiet');
+    const tasche = alle ? -1 : Math.round(getNum('zf_kontur', -1));
+    const an = (box.__wahl || []).slice();
+    const zeilen = (fProg.konturen || []).map((kt, i) => {
+      if(!alle && (i === tasche || !kt.geschlossen)) return '';
+      return '<label style="display:flex;align-items:center;gap:6px;font-size:13px;"><input type="checkbox" data-i="' + i + '"' + (an.indexOf(i) >= 0 ? ' checked' : '') + '> ' + esc(kt.name) + ' — ' + esc(fKonturText(kt)) + '</label>';
+    }).filter(Boolean);
+    box.innerHTML = zeilen.join('') || (alle
+      ? '<span class="small-hint">keine Kontur im Programm — im STEP-Fenster eine Flaeche antippen oder im Kontureditor zeichnen</span>'
+      : '<span class="small-hint">keine weitere geschlossene Kontur</span>');
+  });
 }
 // Werkzeugvorschlag je Zyklus. Die App kennt fuenf Arten (F_WERKZEUGARTEN);
 // Bohrstange (TOOL.T-Typ BOR) und Rueckwaertssenker (BCKBOR) laufen als
@@ -20913,6 +21183,11 @@ function fStepAusrichtenJetzt(){
   STEP.ebenen = fStepEbenen(A);
   STEP.ebene = STEP.ebenen.length ? 0 : -1;
   STEP.feld = null; STEP.bild = null; STEP.form = null;   // Sollform (und eine abgeleitete Form) wird bei Bedarf neu gerechnet
+  // AUSWAHL: mit dem Modell (oder seiner Lage) wechseln die Flaechennummern -
+  // eine alte Auswahl zeigte danach auf etwas anderes. Die BEGRENZUNGS-
+  // KONTUREN bleiben: sie sind Geometrie und gelten weiter.
+  STEP.wahl = [];
+  if(typeof fStepWahlStand === "function") fStepWahlStand();
   fStepEbenenFuellen();
   fStepBericht(); fStepZeichnen();
 }
@@ -21145,6 +21420,7 @@ function fStepSollZeichnen(){
   const rand = 22, bw = F.nx * F.raster, bh = F.ny * F.raster;
   const sc = Math.min((w - 2 * rand) / bw, (h - 2 * rand) / bh);
   const ox = (w - bw * sc) / 2, oy = (h + bh * sc) / 2;
+  STEP.sollAbb = {ox:ox, oy:oy, sc:sc, x0:F.x0, y0:F.y0};
   if(!STEP.bild){
     const off = document.createElement('canvas'); off.width = F.nx; off.height = F.ny;
     const oc = off.getContext('2d');
@@ -21168,6 +21444,20 @@ function fStepSollZeichnen(){
     STEP.bild = off;
   }
   try{ c.imageSmoothingEnabled = false; c.drawImage(STEP.bild, ox, oy - bh * sc, bw * sc, bh * sc); }catch(e){}
+  // AUSWAHL: die gewaehlten Flaechen orange ueberlegen. Gezeichnet wird aus
+  // F.wer — also genau das, was auch die Begrenzung erzeugen wuerde; ein
+  // eigener Weg dafuer koennte anders aussehen als das Ergebnis.
+  if((STEP.wahl || []).length && F.wer && c.fillRect){
+    const w1 = {};
+    STEP.wahl.forEach(i => { w1[i] = 1; });
+    c.save(); c.fillStyle = "rgba(230,126,34,0.42)";
+    const px2 = F.raster * sc;
+    for(let j = 0; j < F.ny; j++) for(let i2 = 0; i2 < F.nx; i2++){
+      if(!w1[F.wer[j * F.nx + i2]]) continue;
+      c.fillRect(ox + i2 * px2, oy - (j + 1) * px2, px2 + 0.5, px2 + 0.5);
+    }
+    c.restore();
+  }
   c.strokeStyle = '#3d5a73'; c.lineWidth = 1; c.strokeRect(ox, oy - bh * sc, bw * sc, bh * sc);
   // Nullpunkt
   const px = ox + (0 - F.x0) * sc, py = oy - (0 - F.y0) * sc;
@@ -21201,6 +21491,7 @@ function fStepRestZeichnen(){
   const rand = 22, bw = G.nx * G.raster, bh = G.ny * G.raster;
   const sc = Math.min((w - 2 * rand) / bw, (h - 2 * rand - 18) / bh);
   const ox = (w - bw * sc) / 2, oy = 18 + (h - 18 + bh * sc) / 2;
+  STEP.sollAbb = {ox:ox, oy:oy, sc:sc, x0:G.x0, y0:G.y0};
   if(!STEP.restBild || STEP.restBild.G !== G){
     const off = document.createElement('canvas'); off.width = G.nx; off.height = G.ny;
     const oc = off.getContext('2d');
@@ -21224,6 +21515,22 @@ function fStepRestZeichnen(){
     STEP.restBild = {G:G, off:off};
   }
   try{ c.imageSmoothingEnabled = false; c.drawImage(STEP.restBild.off, ox, oy - bh * sc, bw * sc, bh * sc); }catch(e){}
+  // AUSWAHL: dieselbe Markierung wie in der Sollform-Ansicht. Rot ist hier
+  // schon vergeben (das Restmaterial), deshalb liegt das Orange nur als
+  // Rahmen darauf statt als Flaeche - sonst waere nicht mehr zu sehen, was
+  // man gerade auswaehlt.
+  if((STEP.wahl || []).length && STEP.feld && STEP.feld.wer && c.fillRect){
+    const w1 = {};
+    STEP.wahl.forEach(i => { w1[i] = 1; });
+    c.save(); c.fillStyle = "rgba(230,126,34,0.34)";
+    const px2 = G.raster * sc;
+    for(let j = 0; j < G.ny; j++) for(let i2 = 0; i2 < G.nx; i2++){
+      const wx = G.x0 + (i2 + 0.5) * G.raster, wy = G.y0 + (j + 0.5) * G.raster;
+      if(!w1[fStepFlaecheAn(STEP.feld, wx, wy)]) continue;
+      c.fillRect(ox + i2 * px2, oy - (j + 1) * px2, px2 + 0.5, px2 + 0.5);
+    }
+    c.restore();
+  }
   c.strokeStyle = '#3d5a73'; c.lineWidth = 1; c.strokeRect(ox, oy - bh * sc, bw * sc, bh * sc);
   const px = ox + (0 - G.x0) * sc, py = oy - (0 - G.y0) * sc;
   c.save(); c.strokeStyle = '#111'; c.lineWidth = 1.4;
@@ -21235,6 +21542,55 @@ function fStepRestZeichnen(){
     : 'kein Restmaterial über der Sollform samt Aufmaß');
   c.fillStyle = '#25405a'; c.font = '11.5px system-ui, sans-serif'; c.textAlign = 'left'; c.fillText(txt, 6, 13);
 }
+// ===== DIE AUSWAHL IM FENSTER [23.09.2026] ==============================
+// Welche Weltkoordinate liegt unter dem Tipp? Die Sollform-Ansicht rechnet
+// ihren Massstab bei jedem Bild neu; damit der Klick dieselbe Abbildung
+// benutzt, merkt sie ihn sich (STEP.sollAbb) statt ihn ein zweites Mal
+// herzuleiten — zwei Formulierungen derselben Abbildung driften.
+function fStepKlickWelt(ev){
+  const cv = document.getElementById("stepCv"), ab = STEP.sollAbb;
+  if(!cv || !cv.getBoundingClientRect || !ab) return null;
+  const r = cv.getBoundingClientRect();
+  const x = (ev.clientX - r.left - ab.ox) / ab.sc + ab.x0;
+  const y = (ab.oy - (ev.clientY - r.top)) / ab.sc + ab.y0;
+  return {x:x, y:y};
+}
+function fStepWahlStand(){
+  const e = document.getElementById("bereichStand"); if(!e) return;
+  const n = (STEP.wahl || []).length;
+  e.innerHTML = !STEP.feld ? "erst ein Modell laden"
+    : ((STEP.ansicht !== "soll" && STEP.ansicht !== "rest") ? "Ansicht <b>Sollform</b> oder <b>Reststand</b>, dann eine Fl&auml;che antippen"
+    : (n ? "<b>" + n + "</b> Fl&auml;che(n) gew&auml;hlt" : "eine Fl&auml;che antippen"));
+}
+function fStepWahlKlick(ev){
+  if((STEP.ansicht !== "soll" && STEP.ansicht !== "rest") || !STEP.feld || !STEP.aus) return;
+  const p = fStepKlickWelt(ev); if(!p) return;
+  const i = fStepFlaecheAn(STEP.feld, p.x, p.y);
+  if(i < 0){ melde("Dort liegt keine Fläche des Modells."); return; }
+  STEP.wahl = STEP.wahl || [];
+  const k = STEP.wahl.indexOf(i);
+  if(k >= 0) STEP.wahl.splice(k, 1); else STEP.wahl.push(i);
+  fStepWahlStand();
+  if(STEP.ansicht === 'rest') fStepRestZeichnen(); else fStepSollZeichnen();
+}
+// Aus der Auswahl Begrenzungskonturen. Sie landen im Programm wie jede
+// andere Kontur — der Kontureditor kann sie nachbessern, die Ablage
+// speichert sie, und sie ueberleben einen Wechsel des Modells.
+function fStepBereichKonturen(){
+  if(!(STEP.wahl || []).length || !STEP.aus) return null;
+  const neu = [], hin = [];
+  STEP.wahl.forEach((i, n) => {
+    const R = fStepFlaecheKonturen(STEP.aus, i, "Bereich " + ((fProg.konturen || []).length + n + 1));
+    R.konturen.forEach(k => neu.push(k));
+    R.hinweise.forEach(h => { if(hin.indexOf(h) < 0) hin.push(h); });
+  });
+  if(!neu.length){ melde("Aus dieser Auswahl entsteht keine Kontur: " + (hin.join(" ") || "die Flaeche hat keinen auswertbaren Rand.")); return null; }
+  const von = (fProg.konturen || []).length;
+  fProg.konturen = (fProg.konturen || []).concat(neu);
+  const idx = neu.map((k, n) => von + n);
+  return {idx:idx, hinweise:hin};
+}
+
 function fStepAnsicht(a){
   STEP.ansicht = a;
   ['Draht', 'Soll', 'Rest'].forEach(k => { const b = document.getElementById('btnStep' + k); if(b) b.classList.toggle('primary', k.toLowerCase() === a); });
@@ -21242,8 +21598,8 @@ function fStepAnsicht(a){
 }
 // Drahtbild: Drehung um Z (az) und Neigung (el), danach senkrechte Projektion.
 function fStepZeichnen(){
-  if(STEP.ansicht === 'soll'){ fStepSollZeichnen(); return; }
-  if(STEP.ansicht === 'rest'){ fStepRestZeichnen(); return; }
+  if(STEP.ansicht === 'soll'){ fStepSollZeichnen(); fStepWahlStand(); return; }
+  if(STEP.ansicht === 'rest'){ fStepRestZeichnen(); fStepWahlStand(); return; }
   const cv = document.getElementById('stepCv');
   if(!cv || !cv.getContext) return;
   const dpr = window.devicePixelRatio || 1;
@@ -21664,6 +22020,20 @@ function fStepRohUebernehmen(){
   on('btnStepDraht', ()=>fStepAnsicht('draht'));
   on('btnStepSoll', ()=>{ fStepAnsicht('soll'); fStepBericht(); });
   on('btnStepRest', ()=>{ STEP.restBild = null; fStepAnsicht('rest'); });
+  on('btnBereichLeeren', ()=>{ STEP.wahl = []; fStepWahlStand(); if(STEP.ansicht === 'soll') fStepSollZeichnen(); else if(STEP.ansicht === 'rest') fStepRestZeichnen(); });
+  on('btnBereichKontur', ()=>{
+    const R = fStepBereichKonturen(); if(!R) return;
+    const nam = R.idx.map(i2 => fProg.konturen[i2].name).join(', ');
+    melde('Aus der Auswahl sind ' + R.idx.length + ' Begrenzungskontur(en) entstanden (' + nam +
+      '). Sie stehen jetzt im Programm: in der Maske eines Modell-Schritts unter BEREICH anhaken — ' +
+      'dieser Schritt arbeitet dann nur dort.' + (R.hinweise.length ? ' ' + R.hinweise.join(' ') : ''));
+    fRender();
+  });
+  on('btnBereichSchritt', ()=>{
+    const R = fStepBereichKonturen(); if(!R) return;
+    melde(fBereichSchritt(fProg, R.idx));
+    fRender();
+  });
   const sel = document.getElementById('stepEbene');
   if(sel && sel.addEventListener) sel.addEventListener('change', ()=>{ STEP.ebene = +sel.value; fStepZeichnen(); });
   const fi = document.getElementById('stepFile');
@@ -21694,6 +22064,12 @@ function fStepRohUebernehmen(){
     document.addEventListener('pointerup', ()=>{ STEP.zieh = null; cv.style.cursor = 'grab'; });
     cv.addEventListener('wheel', (e)=>{ e.preventDefault(); STEP.zoom = Math.max(0.2, Math.min(12, STEP.zoom * (e.deltaY < 0 ? 1.12 : 1 / 1.12))); fStepZeichnen(); });
     cv.addEventListener('dblclick', ()=>{ STEP.az = -0.7; STEP.el = 0.5; STEP.zoom = 1; fStepZeichnen(); });
+    cv.addEventListener('pointerdown', (e)=>{ STEP.tippAb = {x:e.clientX, y:e.clientY}; });
+    cv.addEventListener('click', (e)=>{
+      const a = STEP.tippAb;
+      if(a && Math.hypot(e.clientX - a.x, e.clientY - a.y) > 4) return;   // das war ein Zug, kein Tipp
+      fStepWahlKlick(e);
+    });
   }
   try{ window.addEventListener('resize', ()=>{ const m = document.getElementById('maskStep'); if(m && m.classList.contains('show')) fStepZeichnen(); }); }catch(e){}
 }
