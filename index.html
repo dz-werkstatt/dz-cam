@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="24.09.2026 16:07 (b32e9aaa)";</script>
+<script>window.__DZ_STAND="24.09.2026 17:12 (1f9b7255)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3747,7 +3747,7 @@ ersten Satz, dessen Start UND Ziel &uuml;ber dem Grenz-&empty; liegen, und der S
 muss seit der Anwahl vom Programm selbst angefahren worden sein. Unter der
 Klemme entfernt die Wache die S-W&ouml;rter (Vorschubsatz, SSV-Stufen) &mdash; dort
 l&auml;uft n konstant auf NMAX, die Drehzahlvariation setzt &uuml;ber der Grenze
-wieder ein. Bogen-Scheitel zwischen Start und Ziel pr&uuml;ft sie nicht. <b>Leer =
+wieder ein. Bogen-Scheitel zwischen Start und Ziel pr&uuml;ft sie nicht. <b>Seit dem 24.09.2026 auch vor einem ZYKLUSSATZ</b> (G71 bis G80): ein Zyklus f&auml;hrt seine Bahn in der Steuerung selbst, deshalb z&auml;hlt der kleinste &empty;, der im Satz (X/I) oder in seiner Simulationsbahn vorkommt. Liegt er unter der Grenze &mdash; oder ist keiner zu finden &mdash;, steht vor dem Zyklus <b>(NMAX) G97 S&lt;Grenze&gt;</b> und der ganze Zyklus l&auml;uft mit fester Drehzahl. Anlass war der G72 an der 1500er: das Werkzeug stand davor auf X300, die Wache schaltete dort auf G96, und der Zyklus drehte bis &empty;40 herunter &mdash; &bdquo;Drehzahl Maximalwert erreicht&ldquo;, gehalten nur vom Drehzahlw&auml;chter der Maschine. <b>Leer =
 keine Wache</b>: die Ampel sagt es bei jedem G96-Programm an; Daniels Wert an der
 1000er war 600 U/min.</dd>
 </dl>
@@ -22040,7 +22040,7 @@ const MASCHINEN_PROFILE = {
     // 03.09.2026; hier nur der Fahrtest-Ertrag des Termins.)
     fahrtests:'gefahren 03.09.2026: Wiedereinstieg per Satzvorlauf (G96-Drehzahl exakt, CRC aktiv), Drehzahlvariation SSV fliegend, Spanbrechen G04 F2; Uebertragung in beide Richtungen',
     fahrtestsOffen:'kein Zyklussatz je am Teil gelaufen — ersten Lauf je Familie im Einzelsatz; aus der Maske fehlen Form E innen (kein Lage-Feld) und die Stirnnut (22.09. an der Werkzeuglage gescheitert); G77 nur am Handbuch',
-    termine:'03.09.2026 — Uebertragung 9600/7/N/1 bewiesen, 42 Bestandsprogramme gesichert, G72 innen und mit Winkeln sowie G71 aus der Zyklen-Maske gezogen, Futter gemessen (Bauhoehe 95, Backen 32) · 18.09.2026 — App-Weg hin belegt (MINI O9903, BALLEN 645 Zeilen), O-Zeile muss zuerst stehen, T33 gibt 152 unzulaessiges Zahlenformat, G71-Einstich mit T4 GEFAHREN, Spanbrechen G04 und Drehzahlvariation GEFAHREN (T62 O9173) · 22.09.2026 — zehn Maskensaetze (O987): PK/PL sind die Flankenwinkel des G71 (keine Herleitung mehr), PZ ist der Stichabstand, im Gewinde PR=E PS=Q PV=variable Steigung, bei Flankenwinkel 0 entfallen PP/PX/P236, PL im G78 ist Z1; O9021 aus der App eingelesen — der 144-Zeichen-Satz kommt vollstaendig an; Backenueberstand 41,5 gemessen, WZ-KORR aller 16 Plaetze fotografiert',
+    termine:'03.09.2026 — Uebertragung 9600/7/N/1 bewiesen, 42 Programme gesichert, G72/G71 aus der Zyklen-Maske, Futter gemessen · 18.09.2026 — App-Weg belegt, O-Zeile muss zuerst stehen, T bis 16, G71 mit T4, Spanbrechen und Drehzahlvariation GEFAHREN · 22.09.2026 — zehn Maskensaetze (O987): PK/PL Flankenwinkel, PZ Stichabstand, PR/PS/PV im Gewinde, PL im G78 = Z1; 144-Zeichen-Satz kommt an; Backenueberstand 41,5, WZ-KORR aller 16 Plaetze · 24.09.2026 — in der Luft gefahren: G75 (PO negativ = aussen, erster Schnitt D+E, Rueckzug um V, 146 Zeichen), Bezugsschneide LINKS (App = G71), PF wird gegen die WZ-KORR geprueft; Zyklus unter G96 ueberdrehte - NMAX-Wache klemmt seither Zyklussaetze · Einzelheiten in maschinentermin/ERGEBNISSE-<Datum>.md',
     statusZeilen:[
       '(PROFIL: Monforts 1500 - EuroTurn | Zyklussyntax aus DV 610-0C belegt,)',
       '(  Maschinenkonfiguration aus Daniels IBN-Sicherung - Stand 22.01.2004.)',
@@ -22469,7 +22469,7 @@ const PP_FEST=[
   'Passt der Schneidenradius in die Kontur? Die Ampel misst auf den fertigen Bahnen, ob eine Hohlkehle enger ist als die Schneide und ob ein Element kuerzer ist als die Radiusschuld r/tan(theta/2) seiner konkaven Enden - beides weist die Steuerung als Konturverletzung zurueck (18.09.2026 am Masterteil: Innenstufe 0,7 mm gegen Nasenradius 1,2). Hinweis, kein Blocker.',
   'Werkzeugliste im Programmkopf (24.09.2026): eine Zeile je Werkzeug nach Platz sortiert - Art und Lage, SL, Schneidenradius (Bohrer: Durchmesser), beim Stecher Klingenbreite und Bezugsschneide. Sie ueberlebt das schlanke Senden und steht damit in der Datei an der Maschine; vor dem Start gegen die WZ-KORR halten.',
   'Werkzeug-Abgleich gegen die WZ-KORR der Maschine: die Ampel vergleicht jeden gerufenen Platz mit der abgelesenen Korrekturtabelle (1500er 22.09.2026 alle 16 Plaetze, 1000er 16.09.2026 sechs Plaetze) und meldet abweichenden Schneidenradius (er geht als PF in den Zyklussatz), abweichende Werkzeugart (die Steuerung weist den Zyklus zurueck) und Lagerwerkzeuge ohne Platz. Hinweis, kein Blocker — die Referenz ist ein Foto, wer umgeruestet hat, hat recht.',
-  'NMAX-Drehzahlgrenze (Programmkopf): jede G96-Anwahl steht als G97 S<NMAX>, G96 erst vor dem ersten Satz, dessen Start und Ziel ueber dem Grenz-Durchmesser liegen; unter der Klemme keine S-Woerter (10.09.2026: Alarm 007 an der 1000er, G96 am kleinen X angewaehlt). Leer = keine Wache, die Ampel sagt es an.',
+  'NMAX-Drehzahlgrenze (Programmkopf): jede G96-Anwahl steht als G97 S<NMAX>, G96 erst vor dem ersten Satz, dessen Start und Ziel ueber dem Grenz-Durchmesser liegen; unter der Klemme keine S-Woerter (10.09.2026: Alarm 007 an der 1000er, G96 am kleinen X angewaehlt). Seit 24.09.2026 auch vor jedem Zyklussatz G71-G80, der unter den Grenz-Durchmesser faehrt (kleinster DM aus X/I des Satzes und seiner SIM-Bahn): der Zyklus laeuft ganz auf G97 S<NMAX> (Anlass: G72 an der 1500er, Drehzahl Maximalwert erreicht). Leer = keine Wache, die Ampel sagt es an.',
   'Vorschub je Konturelement (Kontureditor, Feld F an Gerade und Kreis): im Schlichtzug des Konturzyklus steht vor den Saetzen des Elements (VORSCHUB) G95 F<f>, danach zurueck auf den Schlichtvorschub; Schruppen, Stechdrehen und Ecke lesen es nicht (ShopTurn-Vorbild, 10.09.2026).',
   'Zwischenschritt Bemerkung / M-Befehl (Arbeitsplan, Softkey Zyklen): die Bemerkung steht als Kommentarzeile (BEMERKUNG: ...) an ihrer Stelle im NC, M-Befehle einzeln als (M-BEFEHL)-Saetze in fester Folge Kuehlmittel, Spindel, Halt (DV 610 Kap. 4.1); wahlweise vorher zum Wechselpunkt. Der naechste Werkzeugaufruf schreibt M03/M07 wieder - Kuehlmittel an bleibt die Vorgabe; je Zyklus schaltet der Schalter bei F/S auf aus (Kopfsatz M09 statt M07). Seit dem 10.09.2026 auch beim Abstechen und nach dem Wechsel auf T2 (vorher ohne Kuehlmittelwort).',
   'WIEDEREINSTIEG: nach jedem T-Aufruf stehen G94-Eilgangvorschub, Drehzahl, M03/M07 und G95-F neu im Programm — ein Satzvorlauf mitten hinein findet alles Modale vor (Daniels Ansage; G94-F belegt am Originalprogramm 01.10.2025).',
@@ -30116,7 +30116,7 @@ function nmaxWache(lines, warnings){
   if(!(nmax>0)) return;
   // wunsch: das Programm will G96 mit Vc=sVc; clamp: wir halten G97
   // S<NMAX>; cx: letztes programmiertes X (null = unbekannt).
-  let wunsch=false, sVc=0, cx=null, clamp=false, anz=0, anwahl=0, sWeg=0, sBleibt=0;
+  let wunsch=false, sVc=0, cx=null, clamp=false, anz=0, anwahl=0, sWeg=0, sBleibt=0, zyk=0;
   const out=[];
   const nrVor=(L)=>'N'+String(Math.max(1,(+L.slice(1,5))-5)).padStart(4,'0');
   // Ersetzen NUR im Satzteil hinter dem Satzart-Tag, nie im Kommentar.
@@ -30150,6 +30150,29 @@ function nmaxWache(lines, warnings){
       if(mS && !fahrsatz) sVc=+mS[1];
       if(basis>0){
         const dGrenz=basis*1000/(Math.PI*nmax);
+        // (4) ZYKLUSSATZ [Daniel an O9032, 1500er, 24.09.2026: "Drehzahl
+        // Maximalwert erreicht"]. Die Wache sah bis dahin nur Fahrsaetze
+        // G00-G03. Vor dem G72 stand das Werkzeug auf X300 - ueber der
+        // Grenze, also schaltete sie auf G96 zurueck -, und der Zyklus
+        // selbst drehte in der Steuerung bis Durchmesser 40 herunter: bei
+        // Vc 180 rund 1430 U/min. Gehalten hat nur der Drehzahlwaechter der
+        // Maschine, und auf den verlassen wir uns nicht. Ein Zyklus faehrt
+        // seine Bahn selbst; welcher Durchmesser darin vorkommt, steht in
+        // den X/I-Woertern des Satzes und in seinen (SIM:)-Zeilen. Das
+        // KLEINSTE davon zaehlt. Liegt es unter der Grenze - oder ist
+        // keines zu finden -, laeuft der ganze Zyklus unter G97 S<NMAX>.
+        if(!fahrsatz && /\bG(7[1-9]|80)\b/.test(kern)){
+          let dMin=Infinity;
+          (kern.match(/\b[XI]-?\d+\.?\d*/g)||[]).forEach(w=>{ dMin=Math.min(dMin, Math.abs(+w.slice(1))); });
+          for(let j=i+1;j<lines.length && !/^N\d\d\d\d /.test(lines[j]);j++){
+            if(!/^\(SIM:/.test(lines[j])) continue;
+            (lines[j].match(/\bX-?\d+\.?\d*/g)||[]).forEach(w=>{ dMin=Math.min(dMin, Math.abs(+w.slice(1))); });
+          }
+          if(!clamp && !(dMin >= dGrenz-1e-9)){
+            out.push(nrVor(L)+' (NMAX    ) G97 S'+fmt(nmax)); clamp=true; anz++; zyk++;
+          }
+          cx=null;   // wo der Zyklus endet, sagt der Satz nicht
+        }
         if(fahrsatz && zielX!==null){
           const unterZiel=zielX < dGrenz-1e-9;
           const unterStart=(cx===null) || cx < dGrenz-1e-9;   // unbekannt = unter
@@ -30178,7 +30201,7 @@ function nmaxWache(lines, warnings){
   if(sWeg>0 && sBleibt===0 && willSSV)
     warnings.push("Drehzahlvariation ohne Wirkung: der Zug laeuft unter dem Grenz-Durchmesser, dort haelt die NMAX-Wache die Spindel fest auf "+fmt(nmax)+" U/min und entfernt jedes S-Wort ("+sWeg+" Stueck). Wer die Variation sehen will: NMAX anheben oder Vc senken.");
   if(anz>0 || sWeg>0){
-    warnings.push('NMAX-Wache: '+anwahl+' G96-Anwahl/en als G97 S'+fmt(nmax)+' geschrieben (Anwahlfalle: am Programmstart und beim Wiedereinstieg ist X unbekannt - 10.09.2026 lief die 1000er so in Alarm 007), '+(anz-anwahl)+' Umschaltsaetze eingefuegt (G97 unter dem Grenz-Durchmesser, G96 erst wenn Start UND Ziel drueber liegen)'+(sWeg? '; '+sWeg+' S-Woerter unter der Klemme entfernt (Vorschubsatz/SSV - dort laeuft n konstant auf NMAX)':'')+'. Drehzahlwaechter der Maschine bleibt die zweite Sicherung.');
+    warnings.push('NMAX-Wache: '+anwahl+' G96-Anwahl/en als G97 S'+fmt(nmax)+' geschrieben (Anwahlfalle: am Programmstart und beim Wiedereinstieg ist X unbekannt - 10.09.2026 lief die 1000er so in Alarm 007), '+(anz-anwahl)+' Umschaltsaetze eingefuegt (G97 unter dem Grenz-Durchmesser, G96 erst wenn Start UND Ziel drueber liegen)'+(zyk? ', davon '+zyk+' vor Zyklussatz/Zyklussaetzen (der Zyklus faehrt unter den Grenz-Durchmesser und laeuft ganz auf G97 S'+fmt(nmax)+')':'')+(sWeg? '; '+sWeg+' S-Woerter unter der Klemme entfernt (Vorschubsatz/SSV - dort laeuft n konstant auf NMAX)':'')+'. Drehzahlwaechter der Maschine bleibt die zweite Sicherung.');
     lines.length=0;
     out.forEach(z=>lines.push(z));
   }
