@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="24.09.2026 01:15 (bb0bdbeb)";</script>
+<script>window.__DZ_STAND="24.09.2026 16:07 (b32e9aaa)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -5195,6 +5195,22 @@ Zyklen. Falsche Winkel = falsche Warnungen.</dd>
 <dd>Der Schneidenradius geht in die Schneidenradiuskorrektur der Simulation und in den
 Ma&szlig;bericht &mdash; die Maschine bekommt G41/G42 und rechnet mit ihrem
 Offset.</dd>
+<dt id="ba-wz-liste">Die Werkzeugliste im Programmkopf (seit 24.09.2026)</dt>
+<dd>Ganz oben in jedem Programm steht unter <code>(WERKZEUGE - VOR DEM START GEGEN DIE
+WZ-KORR PRUEFEN)</code> eine Zeile je Werkzeug, nach Platznummer sortiert &mdash; so
+l&auml;sst sie sich direkt neben die Werkzeugkorrektur der Steuerung halten:
+<br><code>(WZ T4  Stecher aussen  SL3 RS0.15 B3.15 Bezug LINKS - Stechdrehmeisse)</code>
+<br>Platz, Werkzeugart und Lage (au&szlig;en/innen), Schneidenlage, Schneidenradius
+(beim Bohrer der Durchmesser) und beim Stecher die <b>Klingenbreite</b> und die
+<b>Bezugsschneide</b>. Genau diese Angaben entscheiden, ob die Steuerung einen Zyklus
+annimmt (Werkzeugart und Lage), welche Zahl als <code>PF</code> im Satz steht
+(Schneidenradius) und wo eine Nut sitzt (Bezugsschneide &mdash; steht das Werkzeug an der
+Maschine auf der anderen Kante, liegt jede Nut der Einzels&auml;tze um eine Klingenbreite
+daneben). Liegt ein Lagerwerkzeug auf einem Platz, steht der Platz vorn und die
+Lagernummer dahinter.
+<br>Die Zeilen &uuml;berleben das schlanke Senden (wie die Zeile <code>(WZ ...)</code>
+hinter jedem Werkzeugaufruf) &mdash; sie stehen also auch in der Datei an der Maschine,
+wo sie gebraucht werden.</dd>
 <dt id="ba-wz-abgleich">Abgleich gegen die Werkzeugkorrektur der Maschine (seit 22.09.2026)</dt>
 <dd>Die App f&uuml;hrt <b>eine</b> Werkzeugtabelle f&uuml;r beide Monforts. Die Maschine
 f&uuml;hrt ihre eigene (WZ-KORR), und wenn beide auseinanderlaufen, geht das zweimal
@@ -22451,6 +22467,7 @@ const PP_FEST=[
   'Schneidenradiuskorrektur automatisch: Schruppen ohne, Schlichten G41/G42 nach Lage.',
   'Bezugsschneide der Stecher: ab Werk LINKS (Bildansicht - der programmierte Punkt ist die linke Klingenkante). Die Z-Worte der Stech-, Einstech- und Abstechzyklen liegen dadurch um die Klingenbreite niedriger; das Teil ist dasselbe (Hoehenfeld Spalte fuer Spalte identisch, 24.09.2026). Der ZYKLUSSATZ bleibt unveraendert - dort steht die Nutgeometrie, die Steuerung bekommt die Meisselbreite im Satz. Die Stirnnut (axial) wird nicht verschoben: dort liegt die Breite radial. An der Maschine muss das Werkzeug ebenso eingemessen sein.',
   'Passt der Schneidenradius in die Kontur? Die Ampel misst auf den fertigen Bahnen, ob eine Hohlkehle enger ist als die Schneide und ob ein Element kuerzer ist als die Radiusschuld r/tan(theta/2) seiner konkaven Enden - beides weist die Steuerung als Konturverletzung zurueck (18.09.2026 am Masterteil: Innenstufe 0,7 mm gegen Nasenradius 1,2). Hinweis, kein Blocker.',
+  'Werkzeugliste im Programmkopf (24.09.2026): eine Zeile je Werkzeug nach Platz sortiert - Art und Lage, SL, Schneidenradius (Bohrer: Durchmesser), beim Stecher Klingenbreite und Bezugsschneide. Sie ueberlebt das schlanke Senden und steht damit in der Datei an der Maschine; vor dem Start gegen die WZ-KORR halten.',
   'Werkzeug-Abgleich gegen die WZ-KORR der Maschine: die Ampel vergleicht jeden gerufenen Platz mit der abgelesenen Korrekturtabelle (1500er 22.09.2026 alle 16 Plaetze, 1000er 16.09.2026 sechs Plaetze) und meldet abweichenden Schneidenradius (er geht als PF in den Zyklussatz), abweichende Werkzeugart (die Steuerung weist den Zyklus zurueck) und Lagerwerkzeuge ohne Platz. Hinweis, kein Blocker — die Referenz ist ein Foto, wer umgeruestet hat, hat recht.',
   'NMAX-Drehzahlgrenze (Programmkopf): jede G96-Anwahl steht als G97 S<NMAX>, G96 erst vor dem ersten Satz, dessen Start und Ziel ueber dem Grenz-Durchmesser liegen; unter der Klemme keine S-Woerter (10.09.2026: Alarm 007 an der 1000er, G96 am kleinen X angewaehlt). Leer = keine Wache, die Ampel sagt es an.',
   'Vorschub je Konturelement (Kontureditor, Feld F an Gerade und Kreis): im Schlichtzug des Konturzyklus steht vor den Saetzen des Elements (VORSCHUB) G95 F<f>, danach zurueck auf den Schlichtvorschub; Schruppen, Stechdrehen und Ecke lesen es nicht (ShopTurn-Vorbild, 10.09.2026).',
@@ -31078,19 +31095,62 @@ function ncLesbarMachen(text){
         // Stelle, an der man VOR dem Start sieht, ob App und WZ-KORR
         // dieselben Werkzeuge meinen. Ohne RS fehlt genau die Zahl, die
         // in jedem Zyklussatz als PF steht.
-        const rs=w? (' RS'+fmt(+w.r||0)) : '';
-        wz.push(w? (tk+nm+rs) : m[1]);
+        wz.push({w:w, tk:tk, satz:m[1], nm:nm});
       });
       const kopf=[ibn[0]];              // (=== ZIELMASCHINE ... ===) bleibt vorn
-      // Werkzeugzeilen auf ~70 Zeichen brechen — eine 200er-Zeile
-      // liest an der Steuerung niemand.
-      let zeile='(WERKZEUGE: ';
-      wz.forEach((w,i)=>{
-        const teil=(i? ' | ':'')+w;
-        if((zeile+teil).length>72){ kopf.push(zeile+')'); zeile='(  '+w; }
-        else zeile+=teil;
-      });
-      if(wz.length) kopf.push(zeile+')');
+      // DIE EINRICHTLISTE [Daniel 24.09.2026, vor der 1500er stehend:
+      // 'dann kann ich das auch immer ueberpruefen, bevor ich laufen
+      // lasse, ob die Werkzeuge so eingemessen und platziert sind, wie
+      // wir das fuer das Programm brauchen'].
+      //
+      // Der Schneidenradius allein reicht dafuer nicht. Was die Steuerung
+      // ZURUECKWEIST, ist die falsche WERKZEUGLAGE - am 22.09.2026 die
+      // Stirnnut mit T7, weil dort ein Stecher steckt und kein Bohrer.
+      // Und seit dem 24.09.2026 haengt an der BEZUGSSCHNEIDE der Stecher
+      // jede Z-Koordinate ihrer Zyklen: steht das Werkzeug an der
+      // Maschine auf der anderen Kante, sitzt die Nut um eine
+      // Klingenbreite daneben.
+      //
+      // Eine Zeile je Werkzeug, nach PLATZNUMMER sortiert - so laesst
+      // sich die Liste neben die WZ-KORR der Steuerung halten, und die
+      // Aufrufreihenfolge steht ohnehin in den Schrittkoepfen.
+      const wzLage=(w)=>{
+        if(!w) return '?';
+        const innen = (w.sl===4 || w.art==='innen');
+        if(w.art==='bohren')  return 'Bohrer zentr.';
+        if(w.art==='stechen') return 'Stecher '+(innen?'innen ':'aussen');
+        if(w.art==='gewinde') return 'Gewinde '+(innen?'innen ':'aussen');
+        return 'Dreher  '+(innen?'innen ':'aussen');
+      };
+      const nachNr=(a,b)=>{
+        const za=parseInt(String(a.satz).replace(/[^0-9]/g,''),10);
+        const zb=parseInt(String(b.satz).replace(/[^0-9]/g,''),10);
+        return (isNaN(za)?9999:za)-(isNaN(zb)?9999:zb);
+      };
+      if(wz.length){
+        // Die Zeilen beginnen mit '(WERKZEUGE' bzw. '(WZ ' - nur diese
+        // Kommentare laesst der Sendefilter (bemerkungenWeg, 94-dnc.js)
+        // durch. Mit einem anderen Anfang stuenden sie in der App und
+        // FEHLTEN in der Datei an der Maschine, wo sie gebraucht werden.
+        kopf.push('(WERKZEUGE - VOR DEM START GEGEN DIE WZ-KORR PRUEFEN)');
+        wz.slice().sort(nachNr).forEach(e=>{
+          const w=e.w;
+          if(!w){ kopf.push('(WZ '+e.satz+'  -- nicht in der Werkzeugtabelle --)'); return; }
+          let t='(WZ '+(e.tk||('T'+w.t))+'  '+wzLage(w)+'  SL'+(w.sl!=null?w.sl:'?');
+          if(w.art==='bohren' && +w.dm) t+=' D'+fmt(+w.dm);
+          else t+=' RS'+fmt(+w.r||0);
+          // Beim Stecher entscheidet die BREITE, ob die Klinge in die Nut
+          // passt, und die Bezugsschneide, wo ihr programmierter Punkt
+          // sitzt. Beides steht in keiner Maschinentabelle - deshalb hier.
+          if(w.art==='stechen'){
+            t+=' B'+fmt(+w.len||0);
+            t+=' Bezug '+((w.refEdge==='links')?'LINKS':'rechts');
+          }
+          const rest=72-(t.length+4);
+          if(rest>6 && e.nm) t+=' -'+String(e.nm).slice(0,rest);
+          kopf.push(t+')');
+        });
+      }
       z.splice(von, 0, ...kopf);
       // IBN-Block hinter M30 — nachschlagbar, aber nicht im Weg.
       const m30=z.findIndex(l=>/\bM30\b/.test(l));
