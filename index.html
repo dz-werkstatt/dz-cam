@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="25.09.2026 10:08 (1f048394)";</script>
+<script>window.__DZ_STAND="25.09.2026 11:03 (88529ea7)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4963,7 +4963,7 @@ Bei rechtwinkliger Ecke schreibt die 1500er <b>weder PM/PN noch die Winkel</b> &
 schreibt sie auch dort; beides ist gezogen.
 <br><b>Hergeleitet</b> (plausibel, an der 1500er zu pr&uuml;fen): nur noch der Einstich mit
 <b>Flankenwinkeln</b> (PK/PL) und die <b>Form F</b> (G78 &mdash; ihr Satz tr&auml;gt ein
-ungedeutetes <code>PL47</code>). Stirnnut, N&nbsp;gr&ouml;&szlig;er 1 und die Freistich-Sonderlagen
+ungedeutetes <code>PL47</code>). Mehrere Stiche (N&nbsp;gr&ouml;&szlig;er 1) schreibt die App seit dem 25.09.2026 als Zyklussatz mit <code>PY</code>/<code>PZ</code> &mdash; der Maskensatz lag seit dem 22.09. vor (O987). Stirnnut und die Freistich-Sonderlagen
 fallen mit Ansage auf Einzels&auml;tze zur&uuml;ck: f&uuml;r sie fehlt der Maskensatz.
 <br>Am selben Abend kamen <code>G74</code> Bohren, <code>G75</code> L&auml;ngs- und
 <code>G76</code> Kegelgewinde dazu: auch sie stehen jetzt in der Form aus O6789. F&uuml;nf
@@ -22089,7 +22089,7 @@ const MASCHINEN_PROFILE = {
     // aus der App eingespielt, G74 (130 Zeichen) und G75 (135) bestehen
     // 'Prog. Pruefen' - Lauf am Teil offen.
     fahrtests:'gefahren: Kantenwelle O9016 komplett (NMAX 600), Spanbrechen G04 F2, NMAX-Wache haelt die G96-Anwahl (Alarm 007 bleibt aus), SSV auf DM130 pendelt fliegend, M00-Messhalt haelt, Vorschub je Element wirkt, Bemerkung hinter dem Stopp, G33-Gewinde zieht in der Steigung',
-    fahrtestsOffen:'Laeufe der Realformen O9167 (G75), O9168 (G74), O9169 (G71); G72, G76, G77 und Form E sind am Satz belegt, aber nie GEFAHREN — ersten Lauf im Einzelsatz; einzige hergeleitete Form bleibt Form F (G78), sie erst nach dem Maskensatz fahren',
+    fahrtestsOffen:'Laeufe der Realformen O9167 (G75), O9168 (G74), O9169 (G71); G72, G76, G77 und Form E sind am Satz belegt, aber nie GEFAHREN — ersten Lauf im Einzelsatz; Form F (G78) ist am Maskensatz belegt (O412/O413)',
     termine:'07.09.2026 — Uebertragung 9600/7/E/2 RTS/CTS bewiesen, 17 Bestandsprogramme gesichert · 09.09.2026 — Web-Serial beide Richtungen, Fortsetzungszeilen tot, G71 mit Winkeln und D · 10.09.2026 — Zeichenbremse, M30 kommt an, erster kompletter Lauf, Alarm 007 = Anwahlfalle · 11.09.2026 — SSV, M00, Realformen G75/G74/G71, Backenueberstand 65 · 16.09.2026 — Realformen G72/G77/G78/G76 aus der Zyklen-Maske, drei Plausibilitaetspruefungen der Steuerung, PF = Schneidenradius aus der WZ-KORR, PQ = Richtung, PY/PZ = Anzahl und Abstand der Stiche · 18.09.2026 — O411: PL=W und PM=D am G74 (war Annahme), PS1 = Fase an Ecke 1, G73-Woerter, Form F als Realform (widerlegt die Herleitung), G75 innen ohne Lage-Wort, keine Gangzahl, kein Kegelwinkel; Backen der 1500er gemessen · Einzelheiten je Termin in maschinentermin/ERGEBNISSE-<Datum>.md',
     // P5105=1: X = Durchmesserachse -> der ABSOLUTE X-Mittelpunkt I wird
     // unter G90 ebenfalls im DURCHMESSERMASS ausgegeben (IBN-belegt).
@@ -22386,8 +22386,8 @@ function ppMerkmale(){
     M.push({t:'Bohrzyklen G81 ff', s:'disabled',
       w:'gesperrt — im Handbuch dokumentiert, aber Option A019G lt. IBN nicht freigeschaltet (N9177=0); Ausgabe als G74'});
     M.push({t:'Einstechzyklus G71', s:'machine_syntax',
-      w:'freigegeben (IBN N9150) — Realform an O6789 N0200 belegt (18.09.2026, Maskensatz gezogen): Z = LINKE Nutkante, PF = Schneidenradius, PG = U, PJ1 innen, PM/PN = B/T, PO-PR = Mass der vier Ecken, PS/PT/PU/PV = Flag "Ecke ist eine FASE", PW und P230 = BS, PY = Anzahl, PZ = ABSTAND (bei P 0 kein PZ), PE1 = Sicherheitsabstand; Flankenwinkel (PK/PL) HERGELEITET; Stirnnut und N>1 als Einzelsaetze',
-      offen:'Lauf am Teil (T8_G71_EINSTICH); Maskensatz mit Flankenwinkel und mit N>1 ziehen (Probenzettel 351). Kegelwinkel W: die Maske hat KEIN Feld (Daniel am Geraet 18.09.2026, beide Monforts) — kegelige Nuten bleiben G-Einzelsaetze'});
+      w:'freigegeben (IBN N9150) — Realform an O6789 N0200 belegt (18.09.2026, Maskensatz gezogen): Z = LINKE Nutkante, PF = Schneidenradius, PG = U, PJ1 innen, PM/PN = B/T, PO-PR = Mass der vier Ecken, PS/PT/PU/PV = Flag "Ecke ist eine FASE", PW und P230 = BS, PY = Anzahl, PZ = ABSTAND (bei P 0 kein PZ; N>1 an O987 belegt), PE1 = Sicherheitsabstand; Flankenwinkel (PK/PL) HERGELEITET; Stirnnut als Einzelsaetze',
+      offen:'Lauf am Teil; N>1 mit Fasen in der Luft gefahren (O9038, 25.09.2026); Maskensatz mit Flankenwinkel ziehen (Probenzettel 351). Kegelwinkel W: die Maske hat KEIN Feld (Daniel am Geraet 18.09.2026, beide Monforts) — kegelige Nuten bleiben G-Einzelsaetze'});
     // PE1 [11.09.2026 spaet]: die Einstich-Parameterliste in MTC0.EXE beginnt
     // mit SAFETY_GAP, und die IBN 2004 fuehrt N5205 Sicherheitsabstand
     // Abspanen = 1,000 mm — exakt das PE1 des gezogenen G72-Satzes.
@@ -22395,8 +22395,8 @@ function ppMerkmale(){
       w:'freigegeben (IBN N9180) — Realform an O6789 N0030/N0040 zeichengenau belegt (18.09.2026), AUSSEN WIE INNEN: PF = Schneidenradius, PG = D, PI = U, PK/PL = Strecken, PO = Mass der Ecke am Schenkel-Schnittpunkt, PR1 = die Ecke ist eine FASE, PQ2 laengs / PQ1 plan; PM/PN und die Winkel P236/P237 stehen nur bei schraegen Schenkeln im Satz; Stirn- und Auslaufkante fallen auf Einzelsaetze zurueck',
       offen:'Lauf am Teil; P235:6 ungedeutet; die Zyklusmaske hat genau EIN Kantenfeld (Bild 40 zu O6789) — fuer Stirn- und Auslaufkante gibt es kein Wort'});
     M.push({t:'Freistichzyklen G78/G79/G73', s:'machine_syntax',
-      w:'freigegeben (IBN N9160) — G73 (O6789 N0150) und Form E G79 (N0160) am gezogenen Maskensatz belegt: PH = V/2 ABSOLUT, P227:90, PF = Schneidenradius; beim G79 ist X der Wellen-Durchmesser und I wie PK das Mass X1. Form F (G78, N0180) traegt ein ungedeutetes PL47 und bleibt HERGELEITET. Sonderlagen (innen, Schulter rechts) fallen auf G-Einzelsaetze zurueck',
-      offen:'PL47 im G78 deuten; Maskensatz je Lage ziehen; keiner der drei Saetze ist bisher am Teil gefahren'});
+      w:'freigegeben (IBN N9160) — G73 (O6789 N0150) und Form E G79 (N0160) am gezogenen Maskensatz belegt: PH = V/2 ABSOLUT, P227:90, PF = Schneidenradius; beim G79 ist X der Wellen-Durchmesser und I wie PK das Mass X1. Form F (G78) seit O987 N0100/N0110 belegt: PK/I = X1, PL/K = Z1 (das PL47 aus O6789 war ein Z1 von 47). Sonderlagen (innen, Schulter rechts) fallen auf G-Einzelsaetze zurueck',
+      offen:'Form E und Form F in der Luft (O9037/O9039, 25.09.2026), am Teil nicht geschnitten; Maskensatz je Lage ziehen'});
     M.push({t:'Plangewinde G77', s:'machine_syntax',
       w:'Realform am Maskensatz O815 belegt (25.09.2026): F und PU/P250 = Steigung, G90 hinter G77, I und PK = X1 INK (Radialstrecke), PO negativ, PP = I Breite der Flanke, P236 = -atan(PP/K), PR = E, PS = Q, PT = V, PW1 degressiv, P232:1 und P237:2 fest. Die Handbuchform (PT aus SC, I absolut) war falsch',
       offen:'Luftlauf O9034 (25.09.2026): schneidet von INNEN nach AUSSEN, X = Innen-DM, I = Radialstrecke; am Teil nicht geschnitten; P237:2 ungedeutet; das Steigungsfeld der Maske steht auf Zoll'});
@@ -26790,11 +26790,17 @@ function genFreistich(p, N, bump, lines, warnings){
     const x1Fs15=+(p.i||0);
     const vFs15=(+p.v>0)? +p.v : (+p.x0)+10;
     if(formF){
-      // Form F der 1500er: O6789 N0180 traegt G78 G90 X40 Z-27 G91 I0.5
-      // G90 K20 PF1.2PJ1PK0.5PL47PM6. PL47 ist noch UNGEDEUTET, deshalb
-      // bleibt die Form F hier bei der bisherigen Schreibweise, mit Ansage.
-      warnings.push('Freistich Form F (G78) der 1500er: der gezogene Maskensatz O6789 N0180 traegt ein Wort PL47, das wir noch nicht deuten koennen — die Ausgabe ist deshalb weiter HERGELEITET. Ersten Lauf im Einzelsatz.');
-      lines.push(`${N()} (FREISTI ) G78 G90 X${fmt(p.x0)} Z${fmt(p.z0)} G91 I${fmt(x1Fs15)} ${[(rs15>0?'PF'+fmt(rs15):null),(innW?'PJ1':null),'PK'+fmt(x1Fs15),'PM'+p.pm].filter(Boolean).join('')}`); bump();
+      // FORM F DER 1500er, REALFORM [Daniels Maskensaetze O987 N0100/N0110,
+      // 22.09.2026 - zweimal derselbe Zyklus, nur die Normgroesse umgestellt]:
+      //   G78 G90 X34 Z-22 G91 I0.5 K0.2 PF0.4PK0.5PL0.2PM5
+      // PK = I = X1, PL = K = Z1 (inkremental), PM = Normzeile. Damit ist das
+      // PL47 aus O6789 N0180 gedeutet: dort stand ein Z1 von 47 (die Maschine
+      // schrieb K dort absolut hinter G90: -27 + 47 = 20). Bis zum 25.09.
+      // fehlten K und PL in unserer Ausgabe, und der Zyklus lief als
+      // HERGELEITET - obwohl der Beleg seit dem 22.09. vorlag.
+      const z1Fs15=+(p.k||0);
+      lines.push('(1500er-REALFORM aus O987 N0100/N0110, 22.09.2026: I und PK = X1, K und PL = Z1, PM = Normzeile)');
+      lines.push(`${N()} (FREISTI ) G78 G90 X${fmt(p.x0)} Z${fmt(p.z0)} G91 I${fmt(x1Fs15)} K${fmt(z1Fs15)} ${[(rs15>0?'PF'+fmt(rs15):null),(innW?'PJ1':null),'PK'+fmt(x1Fs15),'PL'+fmt(z1Fs15),'PM'+p.pm].filter(Boolean).join('')}`); bump();
     } else {
       lines.push('(1500er-REALFORM aus O6789 N0160, 18.09.2026: X = Wellen-DM, I und PK = X1, PH = V/2, PM = Normzeile)');
       lines.push(`${N()} (FREISTI ) G79 X${fmt(p.x0)} Z${fmt(p.z0)} G91 I${fmt(x1Fs15)} ${[(rs15>0?'PF'+fmt(rs15):null),'PH'+fmt(vFs15/2),'PK'+fmt(x1Fs15),'PM'+p.pm,'P227:90'].filter(Boolean).join('')}`); bump();
@@ -26864,8 +26870,10 @@ function genFreistich(p, N, bump, lines, warnings){
   // p.z0 ist hier der ORT der Kerbe, nicht die Werkstueckstirn.
   lines.push(`${N()} (GERADE  ) G94 G00 G90 X${fmt(Math.max(fsV||p.x0+6, p.x0+pkSC()))}`); bump();
   lines.push(`${N()} (GERADE  ) G00 Z${fmt(p.z0+4+pkSC())}`); bump();
-  lines.push(`${N()} (M-BEFEHL) M09`); bump();
-  lines.push(`${N()} (M-BEFEHL) M05`); bump();
+  // KEIN M09/M05 mehr am Zyklusende [Daniels Befund an O9037, 25.09.2026:
+  // "warum M9 M5 doppelt?"]. Danach folgt immer entweder die Abfahrt zum
+  // Werkzeugwechsel oder das Programmende - beide schreiben M09/M05 selbst,
+  // und ein Folgeschritt mit demselben Werkzeug schreibt M03/M07 in seinem Kopf.
   // Lagen-Nachlauf: JETZT wird gespiegelt — ueber alle Saetze dieses
   // Zyklus, einschliesslich Anfahrt und Endrueckzug (nur der
   // FREISTI-Zyklussatz bleibt, s. fsLageWandeln). Bei PJ0 ist die
@@ -26996,8 +27004,10 @@ function genFreistich76(p, N, bump, lines, warnings){
   }
   lines.push(`${N()} (GERADE  ) G94 G00 G90 X${fmt(Math.max(fsV||p.x0+6, p.x0+pkSC()))}`); bump();
   lines.push(`${N()} (GERADE  ) G00 Z${fmt(p.z0+4+pkSC())}`); bump();
-  lines.push(`${N()} (M-BEFEHL) M09`); bump();
-  lines.push(`${N()} (M-BEFEHL) M05`); bump();
+  // KEIN M09/M05 mehr am Zyklusende [Daniels Befund an O9037, 25.09.2026:
+  // "warum M9 M5 doppelt?"]. Danach folgt immer entweder die Abfahrt zum
+  // Werkzeugwechsel oder das Programmende - beide schreiben M09/M05 selbst,
+  // und ein Folgeschritt mit demselben Werkzeug schreibt M03/M07 in seinem Kopf.
   // Lagen-Nachlauf wie beim 509er: PJ0 laesst jede Zeile unberuehrt.
   if(pjW) for(let i=fsLi0;i<lines.length;i++) lines[i]=fsLageWandeln(lines[i], spW, innW, p.x0, p.z0);
 }
@@ -27128,8 +27138,10 @@ function genFreistichGW(p, N, bump, lines, warnings){
   }
   lines.push(`${N()} (GERADE  ) G94 G00 G90 X${fmt(Math.max(vG, x0+pkSC()))}`); bump();
   lines.push(`${N()} (GERADE  ) G00 Z${fmt(z1+4+pkSC())}`); bump();
-  lines.push(`${N()} (M-BEFEHL) M09`); bump();
-  lines.push(`${N()} (M-BEFEHL) M05`); bump();
+  // KEIN M09/M05 mehr am Zyklusende [Daniels Befund an O9037, 25.09.2026:
+  // "warum M9 M5 doppelt?"]. Danach folgt immer entweder die Abfahrt zum
+  // Werkzeugwechsel oder das Programmende - beide schreiben M09/M05 selbst,
+  // und ein Folgeschritt mit demselben Werkzeug schreibt M03/M07 in seinem Kopf.
   // Lagen-Nachlauf wie bei den anderen Formen: PJ0 laesst alles stehen.
   const spW=(pjW===2||pjW===3), innW=(pjW===1||pjW===3);
   if(pjW) for(let i=fsLi0;i<lines.length;i++) lines[i]=fsLageWandeln(lines[i], spW, innW, x0, z0);
@@ -27319,10 +27331,10 @@ function genEinstechen71(p, N, bump, lines, warnings){
   // 'PZ ist dort der Bahnpunkt' ist mit O6789 N0200 widerlegt (Maske
   // P 0 -> gar kein PZ im Satz). Es fehlt schlicht der Maskensatz mit
   // N>1 an dieser Maschine.
-  if(zyk && (+p.n||1)>1 && !mtck){
-    warnings.push('G71-Zyklussatz der 1500er: mehrere Stiche (N>1) sind an dieser Maschine nicht gezogen. Die Woerter dafuer sind an der 1000er belegt (O112255 N0120: PY = Anzahl, PZ = Abstand) und die Satzfamilie ist seit O6789 als dieselbe belegt — trotzdem fehlt der Maskensatz mit N>1. Ausgabe erfolgt als G-Einzelsaetze (Probenzettel 351).');
-    zyk=false;
-  }
+  // [25.09.2026] Der Maskensatz mit N>1 an der 1500er LAG LAENGST VOR
+  // (O987 N0080 vom 22.09.2026: N 2, P 21 -> "PY2PZ21") - der Rueckfall
+  // stand trotzdem noch hier und ist erst beim Testprogramm O9038
+  // aufgefallen (Offen-Listen-Falle). Kein Rueckfall mehr.
   if(zyk && (+p.w||0)!==0){
     warnings.push('G71-Zyklussatz: der Kegelwinkel W hat kein belegtes Satzwort — Ausgabe erfolgt als G-Einzelsaetze.');
     zyk=false;
@@ -27472,7 +27484,12 @@ function genEinstechen71(p, N, bump, lines, warnings){
     let z=tmp[i2];
     // Der letzte Fahrsatz ist der Endrueckzug — er bleibt echt, damit
     // das Werkzeug auch im Zyklusbetrieb definiert aus dem Schnitt geht.
-    if(z && z[0] !== '(' && i2!==letzterSatz) z='(SIM: '+z.replace(/\(([^)]*)\)/g,'').replace(/  +/g,' ')+')';
+    // 1500er: KEIN echter Endrueckzug [Daniels Lauf O9038, 25.09.2026]. Der
+    // Zyklus zieht sich selbst auf seinen Startpunkt zurueck (Anzeige nach
+    // dem Zyklus: X48.442 Z20) - unser G00 X42 fuhr danach wieder RADIAL AUF
+    // DAS TEIL ZU, bevor die Abfahrt kam. Die 1000er behaelt ihn, weil er
+    // dort das modale G91 des Zyklussatzes mit G90 zuruecknimmt.
+    if(z && z[0] !== '(' && (i2!==letzterSatz || !mtck)) z='(SIM: '+z.replace(/\(([^)]*)\)/g,'').replace(/  +/g,' ')+')';
     // 1000er: G91 des Zyklussatzes ist modal — der echte Endrueckzug
     // schaltet auf G90 zurueck (Daniels eigene 1000er-Programme schreiben
     // hinter jedem G70/G72 ein explizites G90 im naechsten Fahrsatz).
@@ -30181,6 +30198,39 @@ function bettKompWache(lines, warnings){
 // mit 180 U/min). Dort laeuft n konstant auf NMAX, die Variation setzt
 // ueber der Grenze wieder ein. (3) Bogen-Scheitel zwischen Start und
 // Ziel prueft die Wache weiter nicht.
+// ZYKLUS-VORSCHUB-WACHE [Daniels Lauf O9035 an der 1500er, 25.09.2026: "lief
+// durch, aber der Bohrer im Eilgang"]. Ein Zyklussatz erbt den MODALEN
+// Vorschubmodus. Der Eilgang der Monforts laeuft ueber G94 F5000 - steht
+// zwischen dem VORSCHUB-Satz und dem Zyklus eine Anfahrt mit G94, faehrt der
+// Zyklus mit 5000 mm/min. Am selben Tag an O9037 gesehen: der Freistich G79
+// haette genauso gelaufen. Deshalb EINE Stelle fuer alle Zyklen ohne eigenes
+// F-Wort vorn (G71-G74, G78-G83): steht davor G94 in Kraft, kommt ein
+// (VORSCHUB) G95 F mit dem letzten G95-Vorschub dazwischen. Die Gewinde
+// G75-G77 tragen ihre Steigung selbst als F-Wort VOR dem G-Wort und sind am
+// 24./25.09. richtig gelaufen - sie bleiben unberuehrt.
+function zyklusVorschubWache(lines, warnings){
+  let modus=95, f95=null, anz=0;
+  const out=[];
+  const nrVor=(L)=>'N'+String(Math.max(1,(+L.slice(1,5))-5)).padStart(4,'0');
+  for(const L of lines){
+    if(!/^N\d\d\d\d /.test(L)){ out.push(L); continue; }
+    const t=L.replace(/\([^)]*\)/g,' ').trim().split(/\s+/).slice(1);
+    let zyk=false;
+    for(let k=0;k<t.length;k++){
+      const w=t[k];
+      if(w==='G94') modus=94;
+      else if(w==='G95') modus=95;
+      else if(/^F[\d.]+$/.test(w) && modus===95) f95=w.slice(1);
+      else if(/^G(7[1-4]|7[89]|80|8[1-3])$/.test(w) && modus===94) zyk=true;
+    }
+    if(zyk){
+      if(f95!==null){ out.push(nrVor(L)+' (VORSCHUB) G95 F'+f95); anz++; modus=95; }
+      else warnings.push('NC-FEHLER: Zyklussatz unter G94 ohne bekannten G95-Vorschub ('+L.slice(0,40)+') — er liefe im Eilgangvorschub.');
+    }
+    out.push(L);
+  }
+  if(anz){ lines.length=0; out.forEach(l=>lines.push(l)); }
+}
 function nmaxWache(lines, warnings){
   const nmax=+((document.getElementById('pkNmax')||{}).value)||0;
   if(!(nmax>0)) return;
@@ -31056,6 +31106,7 @@ function buildProgram(){
     });
     lines.length=0; ausW.forEach(l=>lines.push(l));
   }
+  zyklusVorschubWache(lines, warnings);
   nmaxWache(lines, warnings);
   bettKompWache(lines, warnings);
   // T-NUMMERN-WACHE [Termin 10.09.2026]: die 1000er nimmt nur T1-T32 -
