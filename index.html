@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="25.09.2026 09:47 (9600fa9e)";</script>
+<script>window.__DZ_STAND="25.09.2026 10:08 (1f048394)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -28148,6 +28148,15 @@ function genBohren(p, N, bump, lines, warnings){
           'P229:'+fmt(boVorlauf(p)),
           'P230:'+fmt(p.r230>0?p.r230:boVorlauf(p))
         ].filter(Boolean);
+        // G95 F DIREKT VOR DEM ZYKLUSSATZ [Daniels Lauf O9035 an der 1500er,
+        // 25.09.2026: "lief durch, aber der Bohrer im Eilgang"]. Zwischen dem
+        // VORSCHUB-Satz des Kopfes und dem Zyklus stehen die Anfahrten, und jede
+        // schreibt G94 (der Eilgang der Monforts laeuft ueber G94 F5000). Der
+        // Zyklus erbte damit G94 mit F5000 mm/min - das PD im Satz der 1500er hat
+        // daran nichts geaendert, und die 1000er traegt gar keinen Vorschub im
+        // Satz. Beim G71/G72 stand der VORSCHUB-Satz schon unmittelbar davor
+        // (O9031/O9032 liefen richtig); hier wird er nachgereicht.
+        lines.push(`${N()} (VORSCHUB) G95 F${fmt(p.f||0)}`); bump();
         lines.push('(=== DIN-BOHRZYKLUS '+g+' - DV 610 Kap. 3.43, nur EuroTurn ===)');
         lines.push('(PQ relativ/positiv, PR Sekunden aus t2/S, P229 SV / P230 R getrennt)');
         lines.push(`${N()} (BOHREN  ) ${worte.join(' ')}`); bump();
@@ -28213,6 +28222,15 @@ function genBohren(p, N, bump, lines, warnings){
       ].filter(Boolean).join('');
       worte = ['G74','X0','Z'+fmt(p.z0), pblock15];
     }
+    // G95 F DIREKT VOR DEM ZYKLUSSATZ [Daniels Lauf O9035 an der 1500er,
+    // 25.09.2026: "lief durch, aber der Bohrer im Eilgang"]. Zwischen dem
+    // VORSCHUB-Satz des Kopfes und dem Zyklus stehen die Anfahrten, und jede
+    // schreibt G94 (der Eilgang der Monforts laeuft ueber G94 F5000). Der
+    // Zyklus erbte damit G94 mit F5000 mm/min - das PD im Satz der 1500er hat
+    // daran nichts geaendert, und die 1000er traegt gar keinen Vorschub im
+    // Satz. Beim G71/G72 stand der VORSCHUB-Satz schon unmittelbar davor
+    // (O9031/O9032 liefen richtig); hier wird er nachgereicht.
+    lines.push(`${N()} (VORSCHUB) G95 F${fmt(p.f||0)}`); bump();
     lines.push('(=== NATIVER G74-BOHRZYKLUS - Ablauf macht die Steuerung ===)');
     if(MASCHINENPROFIL.id==='MONFORTS_1000_MTC_K_6624B')
       lines.push('(1000er-REALFORM 11.09.2026: PK1 nur Spaenebrechen, PR/PT 95, PW90 PY1 PZ1 fest)');
