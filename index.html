@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="25.09.2026 11:03 (88529ea7)";</script>
+<script>window.__DZ_STAND="25.09.2026 18:34 (a79f2cfa)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4947,7 +4947,7 @@ liegt auch als Datei: &bdquo;1500 Monforts/UEBERTRAGUNG-EINSTELLUNGEN.md&ldquo;.
 Diese Werte stehen zudem in der G-Code-Maske unter &bdquo;Merkmale&ldquo;.</dd>
 <dl>
 <dt id="ba-ma-1500">Monforts 1500 EuroTurn</dt>
-<dd><b>Stand 18.09.2026.</b> Die Chronik steht in <code>maschinentermin/ERGEBNISSE-2026-09-18.md</code>;
+<dd><b>Stand 25.09.2026.</b> Die Chronik steht in <code>maschinentermin/ERGEBNISSE-2026-09-25.md</code>;
 die Merkmale (Knopf in der G-Code-Ansicht) zeigen denselben Stand in drei Gruppen.
 <br><b>Best&auml;tigt an der Maschine (03.09.2026):</b> &Uuml;bertragung 9600/7/N/1 mit Xon/Xoff in
 beide Richtungen; Wiedereinstieg per Satzvorlauf (G96-Drehzahl exakt, CRC aktiv);
@@ -4961,9 +4961,8 @@ Rundung), <b>G71 Einstich</b> (au&szlig;en wie innen), <b>G73 DIN&nbsp;76</b> un
 Wort f&uuml;r Wort belegt. Zwei S&auml;tze baut die App zeichengenau nach (O6789 N0030/N0040).
 Bei rechtwinkliger Ecke schreibt die 1500er <b>weder PM/PN noch die Winkel</b> &mdash; die 1000er
 schreibt sie auch dort; beides ist gezogen.
-<br><b>Hergeleitet</b> (plausibel, an der 1500er zu pr&uuml;fen): nur noch der Einstich mit
-<b>Flankenwinkeln</b> (PK/PL) und die <b>Form F</b> (G78 &mdash; ihr Satz tr&auml;gt ein
-ungedeutetes <code>PL47</code>). Mehrere Stiche (N&nbsp;gr&ouml;&szlig;er 1) schreibt die App seit dem 25.09.2026 als Zyklussatz mit <code>PY</code>/<code>PZ</code> &mdash; der Maskensatz lag seit dem 22.09. vor (O987). Stirnnut und die Freistich-Sonderlagen
+<br><b>Nichts mehr hergeleitet (22.09.2026):</b> der Einstich mit <b>Flankenwinkeln</b>
+(PK/PL, Maskensatz O987) und die <b>Form F</b> (G78, <code>PL</code> ist Z1) sind belegt. Mehrere Stiche (N&nbsp;gr&ouml;&szlig;er 1) schreibt die App seit dem 25.09.2026 als Zyklussatz mit <code>PY</code>/<code>PZ</code> &mdash; der Maskensatz lag seit dem 22.09. vor (O987). Stirnnut und die Freistich-Sonderlagen
 fallen mit Ansage auf Einzels&auml;tze zur&uuml;ck: f&uuml;r sie fehlt der Maskensatz.
 <br>Am selben Abend kamen <code>G74</code> Bohren, <code>G75</code> L&auml;ngs- und
 <code>G76</code> Kegelgewinde dazu: auch sie stehen jetzt in der Form aus O6789. F&uuml;nf
@@ -4973,6 +4972,13 @@ Lage steckt im Vorzeichen von <code>PO</code>, wie an der 1000er am Teil bewiese
 das Kegelgewinde. Beim Bohren ist damit auch ein alter Fehler weg: die Handbuchform
 schaltete mit <code>G91</code> auf inkremental und nie zur&uuml;ck.
 <br><b>Plangewinde G77 (25.09.2026):</b> seit Daniels Maskensatz O815 h&auml;ngt kein Zyklus der 1500er mehr am Handbuch. Der Satz ist die Form der 1000er plus die Zusatzw&ouml;rter der 1500er: Steigung im <code>F</code>-Wort und als <code>PU</code>/<code>P250</code>, <code>G91 I</code> = die Radialstrecke <b>X1 INK</b>, <code>PO</code> negativ, <code>PP</code> = die <b>Breite der Flanke</b> (die Maske hat kein Winkelfeld; die App rechnet sie aus &alpha;), <code>PT</code> = V. Die Handbuchform, die bis dahin geschrieben wurde, war in fast jedem Wort falsch. <b>Im Luftlauf O9034 (25.09.2026) gekl&auml;rt:</b> der Zyklus f&auml;hrt am <b>kleinen</b> Durchmesser ein und schneidet <b>von innen nach au&szlig;en</b>; <code>X</code> im Satz ist der Innen-&empty;, <code>I</code> die <b>Radialstrecke</b> nach au&szlig;en (X48 I18 trat bei X84 aus). In der App bleibt <b>X0 der Au&szlig;en-</b> und <b>X1 der Innen-&empty;</b> des Gewindes; der Vorlauf W liegt innen, der Auslauf R au&szlig;en &mdash; wie in der Maske. Die G33-Einzels&auml;tze laufen dieselbe Richtung. Geschnitten am Teil ist noch nichts. <b>Vorsicht an der Maske:</b> das Steigungsfeld kann auf Zoll (<code>in/U</code>) stehen &mdash; 1,75 wurde dort zu <code>F44.45</code>.
+<br><b>Luftl&auml;ufe am 25.09.2026:</b> G71 mit zwei Stichen und Fasen, G72 (vor dem Zyklus
+<code>G97 S</code> aus der NMAX-Wache), G74, G76, G77, Form&nbsp;E und Form&nbsp;F sind in der Luft
+gefahren; geschnitten am Teil ist davon nichts. <b>Vor jedem Zyklussatz steht jetzt
+<code>(VORSCHUB) G95 F</code>:</b> der erste G74-Lauf bohrte im Eilgang, weil der Zyklus das
+<code>G94 F5000</code> der Anfahrs&auml;tze erbte. Der G71 zieht sich an der 1500er selbst auf seinen
+Startpunkt zur&uuml;ck; die App schreibt dort keinen eigenen Endr&uuml;ckzug mehr. Beim Freistich
+stehen M09/M05 nur noch einmal.
 <br><b>Mehrg&auml;ngige Gewinde an der 1500er (22.09.2026):</b> die App schreibt
 <b>je Gang einen eigenen Zyklusaufruf</b> mit versetztem Startwinkel &mdash; bei zwei
 G&auml;ngen also zwei S&auml;tze, der zweite mit <code>PS180</code>. Das folgt der
@@ -5032,17 +5038,17 @@ dort wird die Rundung sonst stumm gr&ouml;&szlig;er als gezeichnet.
 <br>&bull; <i>Unzul&auml;ssige Geometriewerte</i> &mdash; beim Abspanen mit Schenkelwinkeln
 muss sich der Schnittpunkt der beiden Schenkel INNERHALB der Ecke ergeben. Flacherer
 Winkel oder l&auml;ngere Ecke l&ouml;st es.
-<br><b>Der Schneidenradius kommt aus der Maschine.</b> Die Steuerung schreibt ihn beim
-Teach-In als <code>PF</code> aus ihrer eigenen Werkzeugkorrektur (Spalte RS) in den Satz.
-Die App schreibt ihn NICHT &mdash; sie kennt diese Tabelle nicht, und ein eigener Wert
-w&uuml;rde die Korrektur der Maschine &uuml;berschreiben. <b>Offen:</b> ob die Steuerung bei
-fehlendem PF mit Radius 0 rechnet; an einer Fase oder Rundung w&auml;re das ein Ma&szlig;fehler.
-<br><b>Hergeleitet &mdash; plausibel, an der Maschine zu pr&uuml;fen:</b> Freistich Form F
-(G78, aus dem Form-E-Satz) und Kegelgewinde G76 (aus der G75-Realform, I = X1&minus;X0).
-Beide tragen im Programm die Zeile HERGELEITET und eine gelbe Warnung: <b>vor dem ersten
-Lauf den Maskensatz ziehen</b> (Probenzettel 231, 251/252) und mit der App-Ausgabe vergleichen.
-<br><b>Noch zu testen:</b> W ungleich D beim Bohren, N&nbsp;2 und Fasen beim Einstich,
-Gewinde innen, die drei anderen Freistich-Formen, die L&auml;ufe O9167&ndash;O9169.
+<br><b>Der Schneidenradius <code>PF</code>:</b> Die Steuerung schreibt ihn beim Teach-In aus
+ihrer Werkzeugkorrektur (Spalte RS). Die App schreibt ihn seit dem 16.09.2026 aus
+<b>ihrer</b> Werkzeugtabelle (G71 radial, G72, G78/G79; nie bei G74/G75/G76). Deshalb m&uuml;ssen
+beide Tabellen &uuml;bereinstimmen: die 1500er lehnt eine Abweichung ab (24.09.2026), und die
+Ampel vergleicht jeden gerufenen Platz mit der abgelesenen WZ-KORR.
+<br><b>Seit dem 16.09.2026 ebenfalls belegt:</b> Kegelgewinde G76 (<code>I</code> und
+<code>PK</code> = Gewindeschr&auml;ge als Radiusma&szlig;, <code>PW1</code> = degressiv) und Freistich
+Form F G78 (<code>PJ1</code> = innen); dazu mehrere Stiche (<code>PY</code>/<code>PZ</code>) und
+Fasen an den Nutecken (<code>PS/PT/PU/PV</code>, 18.09.2026).
+<br><b>Noch zu testen:</b> W ungleich D beim Bohren, der Lauf am Teil je Zyklus, der G80 am
+Teil, die L&auml;ufe O9168 und O9169.
 <br><b>Dateiregeln:</b> ASCII, CR LF, Kommentare bis 62 Zeichen ohne innere Klammer
 (Fehler 153), T nur bis 32 (Fehler 152, real 16 Pl&auml;tze &mdash; Lagerwerkzeuge im
 Werkzeuglager auf Pl&auml;tze legen, dann ruft die NC den Platz), Fortsetzungszeilen setzt
@@ -5061,12 +5067,12 @@ Maskens&auml;tzen belegt, und seit dem 18.09.2026 ist dort <b>kein Wort mehr off
 Fase, einmal mit Radius), und die vier Nutecken tragen ihr eigenes Flag
 <code>PS/PT/PU/PV</code> (O416). Offen bleiben: der erste Lauf des G80 am Teil, die
 Ma&szlig;probe der Nut aus O9169, <code>PX1/PW90/PY1/PZ1</code> ungedeutet, Abfahrt
-X-zuerst au&szlig;en. <b>1500er:</b> G72, G71, G73 und G79 sind an der Zyklen-Maske
-gegengepr&uuml;ft (O6789) und laufen in der Realform; <b>offen</b> sind der Einbau von
-G74/G75/G76 (S&auml;tze liegen vor), das ungedeutete <code>PL47</code> der Form F, der
-Lauf am Teil, die Kompensationsseite innen (die Probe O9181 lief in beiden Varianten
-durch) und der Backen&uuml;berstand. <b>Beide:</b> Reitstock und Backen-Stufentiefen,
-Standard-Werkzeugtabelle (Pl&auml;tze 1&ndash;5 und 11&ndash;16, alle linke Schneide). Die
+X-zuerst au&szlig;en. <b>1500er:</b> alle Zyklen laufen in der Realform aus gezogenen Maskens&auml;tzen
+(O6789, O987, O815) und sind bis auf G73 in der Luft gefahren (24./25.09.2026);
+<b>offen</b> sind der Lauf am Teil, <code>P235:6</code>/<code>P237</code> ungedeutet, die
+Stirnnut und Form&nbsp;E innen aus der Maske und die Kompensationsseite innen (die Probe
+O9181 lief in beiden Varianten durch). <b>Beide:</b> Reitstock je Aufspannung im
+Programmkopf, die Backen-Stufentiefen der 1500er. Die
 vollst&auml;ndige Liste steht in MASCHINENTERMIN.md.</dd>
 </dl>
 
@@ -22048,9 +22054,9 @@ const MASCHINEN_PROFILE = {
              g73:'machine_syntax', g77:'machine_syntax' },
     // (uebertragung steht weiter oben im Profil — am Geraet bewiesen
     // 03.09.2026; hier nur der Fahrtest-Ertrag des Termins.)
-    fahrtests:'gefahren 03.09.2026: Wiedereinstieg per Satzvorlauf (G96-Drehzahl exakt, CRC aktiv), Drehzahlvariation SSV fliegend, Spanbrechen G04 F2; Uebertragung in beide Richtungen',
-    fahrtestsOffen:'kein Zyklussatz je am Teil gelaufen — ersten Lauf je Familie im Einzelsatz; aus der Maske fehlen Form E innen (kein Lage-Feld) und die Stirnnut (22.09. an der Werkzeuglage gescheitert); G77 nur am Handbuch',
-    termine:'03.09.2026 — Uebertragung 9600/7/N/1 bewiesen, 42 Programme gesichert, G72/G71 aus der Zyklen-Maske, Futter gemessen · 18.09.2026 — App-Weg belegt, O-Zeile muss zuerst stehen, T bis 16, G71 mit T4, Spanbrechen und Drehzahlvariation GEFAHREN · 22.09.2026 — zehn Maskensaetze (O987): PK/PL Flankenwinkel, PZ Stichabstand, PR/PS/PV im Gewinde, PL im G78 = Z1; 144-Zeichen-Satz kommt an; Backenueberstand 41,5, WZ-KORR aller 16 Plaetze · 24.09.2026 — in der Luft gefahren: G75 (PO negativ = aussen, erster Schnitt D+E, Rueckzug um V, 146 Zeichen), Bezugsschneide LINKS (App = G71), PF wird gegen die WZ-KORR geprueft; Zyklus unter G96 ueberdrehte - NMAX-Wache klemmt seither Zyklussaetze · 25.09.2026 — NMAX-Wache am G72 bestaetigt, G77: Maskensatz O815 und Luftlauf (innen nach aussen, I radial) · Einzelheiten in maschinentermin/ERGEBNISSE-<Datum>.md',
+    fahrtests:'gefahren 03.09.2026: Wiedereinstieg per Satzvorlauf (G96-Drehzahl exakt, CRC aktiv), Drehzahlvariation SSV fliegend, Spanbrechen G04 F2; Uebertragung in beide Richtungen · 24./25.09.2026 in der Luft: G71 (N>1, Fasen), G72, G74, G75, G76, G77, G78, G79',
+    fahrtestsOffen:'kein Zyklussatz je am Teil gelaufen — ersten Lauf je Familie im Einzelsatz; aus der Maske fehlen Form E innen (kein Lage-Feld) und die Stirnnut (22.09. an der Werkzeuglage gescheitert); G73 DIN 76 noch nie gelaufen',
+    termine:'03.09.2026 — Uebertragung 9600/7/N/1 bewiesen, 42 Programme gesichert, G72/G71 aus der Zyklen-Maske, Futter gemessen · 18.09.2026 — App-Weg belegt, O-Zeile muss zuerst stehen, T bis 16, G71 mit T4, Spanbrechen und Drehzahlvariation GEFAHREN · 22.09.2026 — zehn Maskensaetze (O987): PK/PL Flankenwinkel, PZ Stichabstand, PR/PS/PV im Gewinde, PL im G78 = Z1; 144-Zeichen-Satz kommt an; Backenueberstand 41,5, WZ-KORR aller 16 Plaetze · 24.09.2026 — in der Luft gefahren: G75 (PO negativ = aussen, 146 Zeichen), Bezugsschneide LINKS (App = G71), PF wird gegen die WZ-KORR geprueft; Zyklus unter G96 ueberdrehte - NMAX-Wache klemmt seither Zyklussaetze · 25.09.2026 — NMAX-Wache am G72 bestaetigt, G77: Maskensatz O815 und Luftlauf (innen nach aussen, I radial); G74-Eilgang behoben (G95 F vor jedem Zyklus), weitere Zyklen in der Luft · Einzelheiten in maschinentermin/ERGEBNISSE-<Datum>.md',
     statusZeilen:[
       '(PROFIL: Monforts 1500 - EuroTurn | Zyklussyntax aus DV 610-0C belegt,)',
       '(  Maschinenkonfiguration aus Daniels IBN-Sicherung - Stand 22.01.2004.)',
@@ -22379,15 +22385,15 @@ function ppMerkmale(){
   if(e){
     M.push({t:'Bohrzyklus G74', s:'machine_syntax',
       w:'freigegeben (IBN N9170) — Realform an O6789 N0060/N0070 belegt (18.09.2026): PC95 und PD = der VORSCHUB (die 1000er traegt keinen F im Satz), PK1 NUR bei Rueckzug um Betrag V, PL = W Vorlauf, PM = D, PN = DF, PO = Tiefe, PP = U, PQ = V, PR/PT = Zeitbasis 95, PW90 PY1 PZ1 fest. Kein G90/G91 im Satz — die alte Handbuchform schaltete auf inkremental und nie zurueck',
-      offen:'nie gefahren (Probenzettel 1500er); D = volle Tiefe beim Zentrieren bleibt Annahme — beide Belegsaetze waren Tieflochbohren'});
+      offen:'in der Luft gefahren (O9035, 25.09.2026 — der erste Lauf bohrte im Eilgang, seit dem G95-F-Fix im Vorschub), am Teil nicht; D = volle Tiefe beim Zentrieren bleibt Annahme — beide Belegsaetze waren Tieflochbohren'});
     M.push({t:'Gewindezyklus G75', s:'machine_syntax',
       w:'freigegeben (IBN N9220/9230) — Realform an O6789 N0090/N0110/N0130 belegt (18.09.2026): Steigung im F-WORT vor dem G-Wort und als PU, PO traegt die LAGE im Vorzeichen (aussen negativ, innen positiv — jetzt an beiden Maschinen belegt), PP = Flankenversatz mit demselben Vorzeichen, PG = U, PM = W, PN = R, PQ = D, PR = E, PT = V aus der MASKE (nicht Kopf-SC), PW1 nur degressiv, PX = alpha; Kegel G76 mit I = End-DM und PK radial',
-      offen:'mehrgaengig = je Gang ein Aufruf mit PS (hergeleitet, nie gezogen); P232/P235/P237 ungedeutet (immer 1); Kegel G76 nie gefahren'});
+      offen:'mehrgaengig = je Gang ein Aufruf mit PS (hergeleitet, nie gezogen); P232/P235/P237 ungedeutet (immer 1); Kegel G76 in der Luft gefahren (O9036, 25.09.2026), am Teil nicht'});
     M.push({t:'Bohrzyklen G81 ff', s:'disabled',
       w:'gesperrt — im Handbuch dokumentiert, aber Option A019G lt. IBN nicht freigeschaltet (N9177=0); Ausgabe als G74'});
     M.push({t:'Einstechzyklus G71', s:'machine_syntax',
-      w:'freigegeben (IBN N9150) — Realform an O6789 N0200 belegt (18.09.2026, Maskensatz gezogen): Z = LINKE Nutkante, PF = Schneidenradius, PG = U, PJ1 innen, PM/PN = B/T, PO-PR = Mass der vier Ecken, PS/PT/PU/PV = Flag "Ecke ist eine FASE", PW und P230 = BS, PY = Anzahl, PZ = ABSTAND (bei P 0 kein PZ; N>1 an O987 belegt), PE1 = Sicherheitsabstand; Flankenwinkel (PK/PL) HERGELEITET; Stirnnut als Einzelsaetze',
-      offen:'Lauf am Teil; N>1 mit Fasen in der Luft gefahren (O9038, 25.09.2026); Maskensatz mit Flankenwinkel ziehen (Probenzettel 351). Kegelwinkel W: die Maske hat KEIN Feld (Daniel am Geraet 18.09.2026, beide Monforts) — kegelige Nuten bleiben G-Einzelsaetze'});
+      w:'freigegeben (IBN N9150) — Realform an O6789 N0200 belegt (18.09.2026, Maskensatz gezogen): Z = LINKE Nutkante, PF = Schneidenradius, PG = U, PJ1 innen, PM/PN = B/T, PO-PR = Mass der vier Ecken, PS/PT/PU/PV = Flag "Ecke ist eine FASE", PW und P230 = BS, PY = Anzahl, PZ = ABSTAND (bei P 0 kein PZ; N>1 an O987 belegt), PE1 = Sicherheitsabstand; Flankenwinkel PK/PL an O987 belegt (22.09.2026); Stirnnut als Einzelsaetze',
+      offen:'Lauf am Teil; N>1 mit Fasen in der Luft gefahren (O9038, 25.09.2026). Kegelwinkel W: die Maske hat KEIN Feld (Daniel am Geraet 18.09.2026, beide Monforts) — kegelige Nuten bleiben G-Einzelsaetze'});
     // PE1 [11.09.2026 spaet]: die Einstich-Parameterliste in MTC0.EXE beginnt
     // mit SAFETY_GAP, und die IBN 2004 fuehrt N5205 Sicherheitsabstand
     // Abspanen = 1,000 mm — exakt das PE1 des gezogenen G72-Satzes.
@@ -22467,6 +22473,7 @@ const PP_FEST=[
   'Passt der Schneidenradius in die Kontur? Die Ampel misst auf den fertigen Bahnen, ob eine Hohlkehle enger ist als die Schneide und ob ein Element kuerzer ist als die Radiusschuld r/tan(theta/2) seiner konkaven Enden - beides weist die Steuerung als Konturverletzung zurueck (18.09.2026 am Masterteil: Innenstufe 0,7 mm gegen Nasenradius 1,2). Hinweis, kein Blocker.',
   'Werkzeugliste im Programmkopf (24.09.2026): eine Zeile je Werkzeug nach Platz sortiert - Art und Lage, SL, Schneidenradius (Bohrer: Durchmesser), beim Stecher Klingenbreite und Bezugsschneide. Sie ueberlebt das schlanke Senden und steht damit in der Datei an der Maschine; vor dem Start gegen die WZ-KORR halten.',
   'Werkzeug-Abgleich gegen die WZ-KORR der Maschine: die Ampel vergleicht jeden gerufenen Platz mit der abgelesenen Korrekturtabelle (1500er 22.09.2026 alle 16 Plaetze; die 1000er fuehrt seit dem 25.09.2026 dieselbe Referenz - die Werkzeuge beider Maschinen sind identisch) und meldet abweichenden Schneidenradius (er geht als PF in den Zyklussatz), abweichende Werkzeugart (die Steuerung weist den Zyklus zurueck) und Lagerwerkzeuge ohne Platz. Hinweis, kein Blocker — die Referenz ist ein Foto, wer umgeruestet hat, hat recht.',
+  'ZYKLUS-VORSCHUB: direkt vor jedem Zyklussatz steht (VORSCHUB) G95 F — ein Zyklus erbt den modalen Vorschubmodus; nach den G94-Anfahrten bohrte der G74 sonst im Eilgangvorschub (25.09.2026, O9035 an der 1500er).',
   'NMAX-Drehzahlgrenze (Programmkopf): jede G96-Anwahl steht als G97 S<NMAX>, G96 erst vor dem ersten Satz, dessen Start und Ziel ueber dem Grenz-Durchmesser liegen; unter der Klemme keine S-Woerter (10.09.2026: Alarm 007 an der 1000er, G96 am kleinen X angewaehlt). Seit 24.09.2026 auch vor jedem Zyklussatz G71-G80, der unter den Grenz-Durchmesser faehrt (kleinster DM aus X/I des Satzes und seiner SIM-Bahn): der Zyklus laeuft ganz auf G97 S<NMAX> (Anlass: G72 an der 1500er, Drehzahl Maximalwert erreicht). Leer = keine Wache, die Ampel sagt es an.',
   'Vorschub je Konturelement (Kontureditor, Feld F an Gerade und Kreis): im Schlichtzug des Konturzyklus steht vor den Saetzen des Elements (VORSCHUB) G95 F<f>, danach zurueck auf den Schlichtvorschub; Schruppen, Stechdrehen und Ecke lesen es nicht (ShopTurn-Vorbild, 10.09.2026).',
   'Zwischenschritt Bemerkung / M-Befehl (Arbeitsplan, Softkey Zyklen): die Bemerkung steht als Kommentarzeile (BEMERKUNG: ...) an ihrer Stelle im NC, M-Befehle einzeln als (M-BEFEHL)-Saetze in fester Folge Kuehlmittel, Spindel, Halt (DV 610 Kap. 4.1); wahlweise vorher zum Wechselpunkt. Der naechste Werkzeugaufruf schreibt M03/M07 wieder - Kuehlmittel an bleibt die Vorgabe; je Zyklus schaltet der Schalter bei F/S auf aus (Kopfsatz M09 statt M07). Seit dem 10.09.2026 auch beim Abstechen und nach dem Wechsel auf T2 (vorher ohne Kuehlmittelwort).',
