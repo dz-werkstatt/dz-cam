@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="24.09.2026 17:12 (1f9b7255)";</script>
+<script>window.__DZ_STAND="25.09.2026 09:47 (9600fa9e)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4972,7 +4972,7 @@ Bohrzyklus (sie unterscheidet ein einziges Wort), Gewinde au&szlig;en und innen 
 Lage steckt im Vorzeichen von <code>PO</code>, wie an der 1000er am Teil bewiesen) und
 das Kegelgewinde. Beim Bohren ist damit auch ein alter Fehler weg: die Handbuchform
 schaltete mit <code>G91</code> auf inkremental und nie zur&uuml;ck.
-<br><b>Nur am Handbuch</b> h&auml;ngt jetzt noch <code>G77</code> Plangewinde.
+<br><b>Plangewinde G77 (25.09.2026):</b> seit Daniels Maskensatz O815 h&auml;ngt kein Zyklus der 1500er mehr am Handbuch. Der Satz ist die Form der 1000er plus die Zusatzw&ouml;rter der 1500er: Steigung im <code>F</code>-Wort und als <code>PU</code>/<code>P250</code>, <code>G91 I</code> = die Radialstrecke <b>X1 INK</b>, <code>PO</code> negativ, <code>PP</code> = die <b>Breite der Flanke</b> (die Maske hat kein Winkelfeld; die App rechnet sie aus &alpha;), <code>PT</code> = V. Die Handbuchform, die bis dahin geschrieben wurde, war in fast jedem Wort falsch. <b>Im Luftlauf O9034 (25.09.2026) gekl&auml;rt:</b> der Zyklus f&auml;hrt am <b>kleinen</b> Durchmesser ein und schneidet <b>von innen nach au&szlig;en</b>; <code>X</code> im Satz ist der Innen-&empty;, <code>I</code> die <b>Radialstrecke</b> nach au&szlig;en (X48 I18 trat bei X84 aus). In der App bleibt <b>X0 der Au&szlig;en-</b> und <b>X1 der Innen-&empty;</b> des Gewindes; der Vorlauf W liegt innen, der Auslauf R au&szlig;en &mdash; wie in der Maske. Die G33-Einzels&auml;tze laufen dieselbe Richtung. Geschnitten am Teil ist noch nichts. <b>Vorsicht an der Maske:</b> das Steigungsfeld kann auf Zoll (<code>in/U</code>) stehen &mdash; 1,75 wurde dort zu <code>F44.45</code>.
 <br><b>Mehrg&auml;ngige Gewinde an der 1500er (22.09.2026):</b> die App schreibt
 <b>je Gang einen eigenen Zyklusaufruf</b> mit versetztem Startwinkel &mdash; bei zwei
 G&auml;ngen also zwei S&auml;tze, der zweite mit <code>PS180</code>. Das folgt der
@@ -5225,8 +5225,8 @@ auch, wenn ein Werkzeug aus dem <b>Lager</b> ohne Platz gerufen wird: die Maschi
 keine Lagernummern &mdash; sie greift auf ihren Revolverplatz mit dieser Zahl, und dort
 steckt etwas anderes.
 <br><b>Das ist ein Hinweis, kein Blocker, und das hat einen Grund:</b> die Referenz ist
-das Foto eines bestimmten Tages (1500er 22.09.2026, alle 16 Pl&auml;tze; 1000er
-16.09.2026, nur sechs abgelesene Pl&auml;tze). Wer seither umger&uuml;stet hat, hat recht
+das Foto eines bestimmten Tages (1500er 22.09.2026, alle 16 Pl&auml;tze; die 1000er
+f&uuml;hrt seit dem 25.09.2026 dieselbe Referenz &mdash; die Werkzeuge beider Maschinen sind identisch). Wer seither umger&uuml;stet hat, hat recht
 und die Referenz unrecht. Deshalb steht in jeder Meldung das Ablesedatum und beide
 Zahlen &mdash; entscheiden musst Du. &Uuml;ber Pl&auml;tze, die nie abgelesen wurden,
 sagt die App ausdr&uuml;cklich nichts.</dd>
@@ -5454,7 +5454,7 @@ vorschruppen.</dd>
      TT.MM.JJJJ" ergaenzt, MUSS dieses Datum mitziehen — sonst schlaegt
      der Pruefstand an. [Daniels Befund 06.09.2026: die Anleitung war
      inhaltlich nachgezogen, das Standdatum stand noch auf 31.08.] -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 24.09.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 25.09.2026. Sie
 w&auml;chst mit der App &mdash; das Inhaltsverzeichnis wird aus den Kapiteln
 erzeugt und ist damit immer vollst&auml;ndig.</p>
 
@@ -21925,6 +21925,32 @@ function _profilBasis(){
     },
   };
 }
+// WZ-KORR-REFERENZ DER MONFORTS [Foto der Geometrieseite der 1500er,
+// 22.09.2026]. EINE Tabelle fuer beide Maschinen: Daniel am 25.09.2026 an
+// der Maschine - "Werkzeuge an der 1000er sind identisch mit der 1500er,
+// das kannst du so uebernehmen". Vorher fuehrte die 1000er einen eigenen
+// Ausschnitt von sechs Plaetzen (Foto 16.09.2026, Spalte RS), die uebrigen
+// zehn waren ungeprueft. Wer an einer Maschine umruestet, trennt die
+// Tabellen wieder - bis dahin gilt: eine Bestueckung, eine Referenz.
+const WZKORR_MONFORTS = {
+  plaetze:{
+    1:{art:'dreher', lage:'aussen', rs:1.2},
+    2:{art:'dreher', lage:'aussen', rs:0.8},
+    3:{art:'dreher', lage:'aussen', rs:0.4},
+    4:{art:'stecher', lage:'aussen', rs:0.15},
+    5:{art:'dreher', lage:'aussen', rs:0},
+    6:{art:'bohrer', lage:'zentrisch', rs:0},
+    7:{art:'stecher', lage:'aussen', rs:0.15},
+    8:{art:'dreher', lage:'innen', rs:0, unsicher:true},
+    9:{art:'bohrer', lage:'zentrisch', rs:10},
+    10:{leer:true}, 11:{leer:true},
+    12:{art:'dreher', lage:'innen', rs:1.2},
+    13:{art:'dreher', lage:'innen', rs:0.4},
+    14:{leer:true},
+    15:{art:'dreher', lage:'innen', rs:0.4},
+    16:{art:'dreher', lage:'aussen', rs:0.4}
+  }
+};
 const MASCHINEN_PROFILE = {
   MONFORTS_1500_EUROTURN: Object.assign(_profilBasis(), {
     id:'MONFORTS_1500_EUROTURN',
@@ -21971,23 +21997,7 @@ const MASCHINEN_PROFILE = {
     wzKorr:{
       stand:'22.09.2026',
       quelle:'Foto der WZ-KORR-Geometrieseite (alle 16 Plaetze)',
-      plaetze:{
-        1:{art:'dreher', lage:'aussen', rs:1.2},
-        2:{art:'dreher', lage:'aussen', rs:0.8},
-        3:{art:'dreher', lage:'aussen', rs:0.4},
-        4:{art:'stecher', lage:'aussen', rs:0.15},
-        5:{art:'dreher', lage:'aussen', rs:0},
-        6:{art:'bohrer', lage:'zentrisch', rs:0},
-        7:{art:'stecher', lage:'aussen', rs:0.15},
-        8:{art:'dreher', lage:'innen', rs:0, unsicher:true},
-        9:{art:'bohrer', lage:'zentrisch', rs:10},
-        10:{leer:true}, 11:{leer:true},
-        12:{art:'dreher', lage:'innen', rs:1.2},
-        13:{art:'dreher', lage:'innen', rs:0.4},
-        14:{leer:true},
-        15:{art:'dreher', lage:'innen', rs:0.4},
-        16:{art:'dreher', lage:'aussen', rs:0.4}
-      }
+      plaetze:WZKORR_MONFORTS.plaetze
     },
     // DREHZAHLGRENZE [Daniel, 22.09.2026: "Drehzahl machst du wie bei der
     // Tausender die Begrenzung"]. Der Wert ist die Einstellung des
@@ -22035,12 +22045,12 @@ const MASCHINEN_PROFILE = {
              /* G73 seit dem 18.09.2026 ebenfalls am gezogenen Maskensatz
                 belegt (O6789) — der Nachzug blieb damals liegen.
                 G77 Plangewinde haengt als einziger noch am Handbuch. */
-             g73:'machine_syntax', g77:'documented_for_control' },
+             g73:'machine_syntax', g77:'machine_syntax' },
     // (uebertragung steht weiter oben im Profil — am Geraet bewiesen
     // 03.09.2026; hier nur der Fahrtest-Ertrag des Termins.)
     fahrtests:'gefahren 03.09.2026: Wiedereinstieg per Satzvorlauf (G96-Drehzahl exakt, CRC aktiv), Drehzahlvariation SSV fliegend, Spanbrechen G04 F2; Uebertragung in beide Richtungen',
     fahrtestsOffen:'kein Zyklussatz je am Teil gelaufen — ersten Lauf je Familie im Einzelsatz; aus der Maske fehlen Form E innen (kein Lage-Feld) und die Stirnnut (22.09. an der Werkzeuglage gescheitert); G77 nur am Handbuch',
-    termine:'03.09.2026 — Uebertragung 9600/7/N/1 bewiesen, 42 Programme gesichert, G72/G71 aus der Zyklen-Maske, Futter gemessen · 18.09.2026 — App-Weg belegt, O-Zeile muss zuerst stehen, T bis 16, G71 mit T4, Spanbrechen und Drehzahlvariation GEFAHREN · 22.09.2026 — zehn Maskensaetze (O987): PK/PL Flankenwinkel, PZ Stichabstand, PR/PS/PV im Gewinde, PL im G78 = Z1; 144-Zeichen-Satz kommt an; Backenueberstand 41,5, WZ-KORR aller 16 Plaetze · 24.09.2026 — in der Luft gefahren: G75 (PO negativ = aussen, erster Schnitt D+E, Rueckzug um V, 146 Zeichen), Bezugsschneide LINKS (App = G71), PF wird gegen die WZ-KORR geprueft; Zyklus unter G96 ueberdrehte - NMAX-Wache klemmt seither Zyklussaetze · Einzelheiten in maschinentermin/ERGEBNISSE-<Datum>.md',
+    termine:'03.09.2026 — Uebertragung 9600/7/N/1 bewiesen, 42 Programme gesichert, G72/G71 aus der Zyklen-Maske, Futter gemessen · 18.09.2026 — App-Weg belegt, O-Zeile muss zuerst stehen, T bis 16, G71 mit T4, Spanbrechen und Drehzahlvariation GEFAHREN · 22.09.2026 — zehn Maskensaetze (O987): PK/PL Flankenwinkel, PZ Stichabstand, PR/PS/PV im Gewinde, PL im G78 = Z1; 144-Zeichen-Satz kommt an; Backenueberstand 41,5, WZ-KORR aller 16 Plaetze · 24.09.2026 — in der Luft gefahren: G75 (PO negativ = aussen, erster Schnitt D+E, Rueckzug um V, 146 Zeichen), Bezugsschneide LINKS (App = G71), PF wird gegen die WZ-KORR geprueft; Zyklus unter G96 ueberdrehte - NMAX-Wache klemmt seither Zyklussaetze · 25.09.2026 — NMAX-Wache am G72 bestaetigt, G77: Maskensatz O815 und Luftlauf (innen nach aussen, I radial) · Einzelheiten in maschinentermin/ERGEBNISSE-<Datum>.md',
     statusZeilen:[
       '(PROFIL: Monforts 1500 - EuroTurn | Zyklussyntax aus DV 610-0C belegt,)',
       '(  Maschinenkonfiguration aus Daniels IBN-Sicherung - Stand 22.01.2004.)',
@@ -22064,25 +22074,13 @@ const MASCHINEN_PROFILE = {
     // Prog. Pruefen; real hat die Maschine 16 Plaetze (Daniel). Die Wache
     // in buildProgram und im Exportfilter haengt daran.
     tMax:32, plaetze:16, tMaxBeleg:'10.09.2026 am Geraet: T32 angenommen, T33 Fehler 152; real 16 Plaetze',
-    // WZ-KORR DER MASCHINE [Daniels Foto der Werkzeugkorrektur, Spalte RS,
-    // 16.09.2026]. HIER STEHT NUR EIN AUSSCHNITT, und das ist wichtig:
-    // belegt sind die sechs Plaetze, die an jenem Tag in einem Zyklussatz
-    // vorkamen (dort war PF 21-mal von 21 genau dieser RS). Die uebrigen
-    // zehn Plaetze wurden nie abgelesen — sie fehlen deshalb, und der
-    // Abgleich schweigt zu ihnen, statt etwas zu behaupten.
-    // Die ART ist an der 1000er NICHT erfasst (das Foto zeigte die
-    // Radien-Spalte, nicht die Lagesymbole) — nur der Radius wird verglichen.
+    // WZ-KORR DER MASCHINE: dieselbe Referenz wie die 1500er (Daniel am
+    // 25.09.2026: die Werkzeuge beider Maschinen sind identisch). Bis dahin
+    // stand hier ein Ausschnitt von sechs Plaetzen vom 16.09.2026.
     wzKorr:{
-      stand:'16.09.2026',
-      quelle:'Foto der WZ-KORR (Spalte RS) — nur die sechs Plaetze der Zyklussaetze',
-      plaetze:{
-        1:{rs:1.2},
-        3:{rs:0},
-        5:{rs:0},
-        7:{rs:0.2},
-        12:{rs:1.2},
-        14:{rs:0}
-      }
+      stand:'25.09.2026',
+      quelle:'wie die 1500er: WZ-KORR-Foto vom 22.09.2026 (Daniel 25.09.2026: Werkzeuge der 1000er identisch)',
+      plaetze:WZKORR_MONFORTS.plaetze
     },
     // Derselbe Wert wie an der 1500er — mit ihm ist die Kantenwelle O9016
     // am 10.09.2026 komplett gelaufen (s. fahrtests).
@@ -22384,7 +22382,7 @@ function ppMerkmale(){
       offen:'nie gefahren (Probenzettel 1500er); D = volle Tiefe beim Zentrieren bleibt Annahme — beide Belegsaetze waren Tieflochbohren'});
     M.push({t:'Gewindezyklus G75', s:'machine_syntax',
       w:'freigegeben (IBN N9220/9230) — Realform an O6789 N0090/N0110/N0130 belegt (18.09.2026): Steigung im F-WORT vor dem G-Wort und als PU, PO traegt die LAGE im Vorzeichen (aussen negativ, innen positiv — jetzt an beiden Maschinen belegt), PP = Flankenversatz mit demselben Vorzeichen, PG = U, PM = W, PN = R, PQ = D, PR = E, PT = V aus der MASKE (nicht Kopf-SC), PW1 nur degressiv, PX = alpha; Kegel G76 mit I = End-DM und PK radial',
-      offen:'nie gefahren; mehrgaengig faellt auf G33 zurueck (alle drei Belegsaetze hatten EINEN Gang); P232/P235/P237 ungedeutet (immer 1); ob P236 bei alpha 0 entfaellt, ist nicht gezogen'});
+      offen:'mehrgaengig = je Gang ein Aufruf mit PS (hergeleitet, nie gezogen); P232/P235/P237 ungedeutet (immer 1); Kegel G76 nie gefahren'});
     M.push({t:'Bohrzyklen G81 ff', s:'disabled',
       w:'gesperrt — im Handbuch dokumentiert, aber Option A019G lt. IBN nicht freigeschaltet (N9177=0); Ausgabe als G74'});
     M.push({t:'Einstechzyklus G71', s:'machine_syntax',
@@ -22399,9 +22397,9 @@ function ppMerkmale(){
     M.push({t:'Freistichzyklen G78/G79/G73', s:'machine_syntax',
       w:'freigegeben (IBN N9160) — G73 (O6789 N0150) und Form E G79 (N0160) am gezogenen Maskensatz belegt: PH = V/2 ABSOLUT, P227:90, PF = Schneidenradius; beim G79 ist X der Wellen-Durchmesser und I wie PK das Mass X1. Form F (G78, N0180) traegt ein ungedeutetes PL47 und bleibt HERGELEITET. Sonderlagen (innen, Schulter rechts) fallen auf G-Einzelsaetze zurueck',
       offen:'PL47 im G78 deuten; Maskensatz je Lage ziehen; keiner der drei Saetze ist bisher am Teil gefahren'});
-    M.push({t:'Plangewinde G77', s:'documented_for_control',
-      w:'Freigabe unter A016 angenommen — Satz nach DV 610 S. 3-58/59',
-      offen:'nie gefahren; Maskensatz ziehen (Probenzettel 1500er)'});
+    M.push({t:'Plangewinde G77', s:'machine_syntax',
+      w:'Realform am Maskensatz O815 belegt (25.09.2026): F und PU/P250 = Steigung, G90 hinter G77, I und PK = X1 INK (Radialstrecke), PO negativ, PP = I Breite der Flanke, P236 = -atan(PP/K), PR = E, PS = Q, PT = V, PW1 degressiv, P232:1 und P237:2 fest. Die Handbuchform (PT aus SC, I absolut) war falsch',
+      offen:'Luftlauf O9034 (25.09.2026): schneidet von INNEN nach AUSSEN, X = Innen-DM, I = Radialstrecke; am Teil nicht geschnitten; P237:2 ungedeutet; das Steigungsfeld der Maske steht auf Zoll'});
     // STEUERUNGSSOFTWARE GELESEN [11.09.2026 spaet, Daniels Frage "kommt man
     // von aussen in die Software?"]: maschinentermin/MTC0-ZEICHENKETTEN-1500er.md.
     M.push({t:'Steuerungssoftware 7.210i', s:'software_read',
@@ -22468,7 +22466,7 @@ const PP_FEST=[
   'Bezugsschneide der Stecher: ab Werk LINKS (Bildansicht - der programmierte Punkt ist die linke Klingenkante). Die Z-Worte der Stech-, Einstech- und Abstechzyklen liegen dadurch um die Klingenbreite niedriger; das Teil ist dasselbe (Hoehenfeld Spalte fuer Spalte identisch, 24.09.2026). Der ZYKLUSSATZ bleibt unveraendert - dort steht die Nutgeometrie, die Steuerung bekommt die Meisselbreite im Satz. Die Stirnnut (axial) wird nicht verschoben: dort liegt die Breite radial. An der Maschine muss das Werkzeug ebenso eingemessen sein.',
   'Passt der Schneidenradius in die Kontur? Die Ampel misst auf den fertigen Bahnen, ob eine Hohlkehle enger ist als die Schneide und ob ein Element kuerzer ist als die Radiusschuld r/tan(theta/2) seiner konkaven Enden - beides weist die Steuerung als Konturverletzung zurueck (18.09.2026 am Masterteil: Innenstufe 0,7 mm gegen Nasenradius 1,2). Hinweis, kein Blocker.',
   'Werkzeugliste im Programmkopf (24.09.2026): eine Zeile je Werkzeug nach Platz sortiert - Art und Lage, SL, Schneidenradius (Bohrer: Durchmesser), beim Stecher Klingenbreite und Bezugsschneide. Sie ueberlebt das schlanke Senden und steht damit in der Datei an der Maschine; vor dem Start gegen die WZ-KORR halten.',
-  'Werkzeug-Abgleich gegen die WZ-KORR der Maschine: die Ampel vergleicht jeden gerufenen Platz mit der abgelesenen Korrekturtabelle (1500er 22.09.2026 alle 16 Plaetze, 1000er 16.09.2026 sechs Plaetze) und meldet abweichenden Schneidenradius (er geht als PF in den Zyklussatz), abweichende Werkzeugart (die Steuerung weist den Zyklus zurueck) und Lagerwerkzeuge ohne Platz. Hinweis, kein Blocker — die Referenz ist ein Foto, wer umgeruestet hat, hat recht.',
+  'Werkzeug-Abgleich gegen die WZ-KORR der Maschine: die Ampel vergleicht jeden gerufenen Platz mit der abgelesenen Korrekturtabelle (1500er 22.09.2026 alle 16 Plaetze; die 1000er fuehrt seit dem 25.09.2026 dieselbe Referenz - die Werkzeuge beider Maschinen sind identisch) und meldet abweichenden Schneidenradius (er geht als PF in den Zyklussatz), abweichende Werkzeugart (die Steuerung weist den Zyklus zurueck) und Lagerwerkzeuge ohne Platz. Hinweis, kein Blocker — die Referenz ist ein Foto, wer umgeruestet hat, hat recht.',
   'NMAX-Drehzahlgrenze (Programmkopf): jede G96-Anwahl steht als G97 S<NMAX>, G96 erst vor dem ersten Satz, dessen Start und Ziel ueber dem Grenz-Durchmesser liegen; unter der Klemme keine S-Woerter (10.09.2026: Alarm 007 an der 1000er, G96 am kleinen X angewaehlt). Seit 24.09.2026 auch vor jedem Zyklussatz G71-G80, der unter den Grenz-Durchmesser faehrt (kleinster DM aus X/I des Satzes und seiner SIM-Bahn): der Zyklus laeuft ganz auf G97 S<NMAX> (Anlass: G72 an der 1500er, Drehzahl Maximalwert erreicht). Leer = keine Wache, die Ampel sagt es an.',
   'Vorschub je Konturelement (Kontureditor, Feld F an Gerade und Kreis): im Schlichtzug des Konturzyklus steht vor den Saetzen des Elements (VORSCHUB) G95 F<f>, danach zurueck auf den Schlichtvorschub; Schruppen, Stechdrehen und Ecke lesen es nicht (ShopTurn-Vorbild, 10.09.2026).',
   'Zwischenschritt Bemerkung / M-Befehl (Arbeitsplan, Softkey Zyklen): die Bemerkung steht als Kommentarzeile (BEMERKUNG: ...) an ihrer Stelle im NC, M-Befehle einzeln als (M-BEFEHL)-Saetze in fester Folge Kuehlmittel, Spindel, Halt (DV 610 Kap. 4.1); wahlweise vorher zum Wechselpunkt. Der naechste Werkzeugaufruf schreibt M03/M07 wieder - Kuehlmittel an bleibt die Vorgabe; je Zyklus schaltet der Schalter bei F/S auf aus (Kopfsatz M09 statt M07). Seit dem 10.09.2026 auch beim Abstechen und nach dem Wechsel auf T2 (vorher ohne Kuehlmittelwort).',
@@ -28341,7 +28339,7 @@ function genBohren(p, N, bump, lines, warnings){
 function genGewindePlan(p, N, bump, lines, warnings){
   const doRough = p.bearbeitung!=='schlichten';
   const doFinish = p.bearbeitung!=='schruppen';
-  warnings.push('Plangewinde ist neu (01.09.2026) und an keiner Maschine gelaufen — ersten Lauf unbedingt im Einzelsatz und mit Einzelsatz-Taste fahren.');
+  warnings.push('Plangewinde: am Teil noch nicht geschnitten (1500er am 25.09.2026 nur in der Luft gefahren) — ersten Schnitt im Einzelsatz.');
   warnings.push('Gewinde Plan: konstante Drehzahl (G97) ist zwingend — Drehzahl waehrend des G33-Schnitts NICHT aendern.');
   if((+p.alpha||0)>0) warnings.push('Plangewinde: Flankenzustellung (alpha '+fmt(p.alpha)+' Grad) ist beim Plangewinde nicht umgesetzt — es wird RADIAL zugestellt (axial in -Z, ohne Versatz).');
   if(p.lage==='innen') warnings.push('Plangewinde: die Lage innen/aussen hat auf der Stirn keine Bedeutung — das Gewinde laeuft von X0 aussen nach X1 innen.');
@@ -28349,12 +28347,22 @@ function genGewindePlan(p, N, bump, lines, warnings){
     warnings.push('Plangewinde: X1 (End-⌀ '+fmt(p.x1)+') muss KLEINER sein als X0 ('+fmt(p.x0)+') — das Gewinde laeuft von aussen nach innen. Kein NC erzeugt.');
     return;
   }
-  const xStart = p.x0 + 2*(p.lw||0);   // Vorlauf W radial -> im Durchmesser doppelt
-  let   xEnd   = p.x1 - 2*(p.lr||0);   // Auslauf R ueber den End-⌀ hinaus
-  if(xEnd < 0){
-    warnings.push('Plangewinde: Auslauf LR '+fmt(p.lr||0)+' fuehrt ueber die Drehmitte (Ziel-⌀ '+fmt(xEnd)+') — er wird auf X0 gekappt.');
-    xEnd = 0;
+  // RICHTUNG: VON INNEN NACH AUSSEN [Daniels Luftlauf O9034 an der 1500er,
+  // 25.09.2026]. Der Zyklus faehrt am KLEINEN Durchmesser ein, zieht die
+  // Spirale nach aussen und tritt am grossen aus: bei X48 G91 I18 trat er
+  // bei X~84 aus = 48 + 2*18. Damit ist X im Satz der INNEN-Durchmesser und
+  // I die RADIALstrecke nach aussen. Bis dahin lief die App von aussen nach
+  // innen - bei gleicher Drehrichtung ist das die GEGENlaeufige Spirale.
+  // Die App fuehrt X0 weiter als den AUSSEN- und X1 als den INNEN-⌀ des
+  // Gewindes; der Vorlauf W liegt damit innen, der Auslauf R aussen - wie
+  // in der Maske der Steuerung. Die Einzelsaetze laufen dieselbe Richtung.
+  let   xStart = p.x1 - 2*(p.lw||0);   // Vorlauf W radial, innen vor dem Gewinde
+  const xEnd   = p.x0 + 2*(p.lr||0);   // Auslauf R radial, aussen hinter dem Gewinde
+  if(xStart < 0){
+    warnings.push('Plangewinde: Vorlauf W '+fmt(p.lw||0)+' fuehrt ueber die Drehmitte (Start-⌀ '+fmt(xStart)+') — er wird auf X0 gekappt.');
+    xStart = 0;
   }
+  if(p.lage!=='innen') warnings.push('Plangewinde: der Zyklus schneidet von INNEN (⌀'+fmt(p.x1)+') nach AUSSEN (⌀'+fmt(p.x0)+') — am 25.09.2026 an der 1500er in der Luft gefahren. Bei M03 bestimmt diese Richtung den Drehsinn der Spirale.');
   const zSafe = p.z0 + 2;
   lines.push(`${N()} (WERKZEUG) ${MASCHINENPROFIL.tSatz(p.t)}`); bump();
   lines.push(`${N()} (EILGANG ) G94 F${fmt(eilgangMmMin())}`); bump();
@@ -28420,9 +28428,9 @@ function genGewindePlan(p, N, bump, lines, warnings){
       // und K0 (das Plangewinde hat keine Z-Laenge).
       // PO ist hier POSITIV - die 1500er schreibt es negativ.
       // PT = V (Rueckzugsweg), NICHT der Programmkopf-SC.
-      const iPl = Math.abs((+p.x1) - (+p.x0));
+      const iPl = Math.abs((+p.x0) - (+p.x1)) / 2;   // RADIALstrecke (Luftlauf 25.09.2026)
       worte=[
-        'F'+fmt(p.p),'G77','X'+fmt(p.x0),'Z'+fmt(p.z0),
+        'F'+fmt(p.p),'G77','X'+fmt(p.x1),'Z'+fmt(p.z0),
         'G91','I'+fmt(iPl),'G90','K0',
         ['PG'+fmt(p.u||0),
          'PK'+fmt(iPl),
@@ -28442,22 +28450,66 @@ function genGewindePlan(p, N, bump, lines, warnings){
       ];
       lines.push('(=== NATIVER G77-PLANGEWINDEZYKLUS - Schnittaufteilung macht die Steuerung ===)');
       lines.push('(REALFORM vom Maskensatz 16.09.2026: Steigung im F-Wort und als PU, I = Radialstrecke inkremental, PO positiv, PT = V)');
-      lines.push('(OFFEN: das Vorzeichen von I - Daniels Satz laeuft von aussen nach innen und schreibt +I)');
+      lines.push('(X = INNEN-DM, I = RADIALSTRECKE NACH AUSSEN - an der 1500er am 25.09.2026 gefahren, fuer die 1000er hergeleitet)');
     } else {
-    worte=[
-      'G77','G90','X'+fmt(p.x0),'Z'+fmt(p.z0),'I'+fmt(p.x1),
-      'F'+fmt(p.p),
-      'PG'+fmt(p.u||0),
-      'PM'+fmt(p.lw||0),'PN'+fmt(p.lr||0),
-      'PO'+fmt(-K),
-      'PQ'+fmt(p.dz1||0.3),
-      'PT'+fmt(pkSC()),
-      'PW'+degr,
-      ((p.n||1)>1?'PY'+p.n:null),
-      (p.bearbeitung==='beide'?'P240:1':null)
-    ].filter(Boolean);
-    lines.push('(=== NATIVER G77-PLANGEWINDEZYKLUS - Schnittaufteilung macht die Steuerung ===)');
-    lines.push('(PO negativ nach Beispielsatz S. 3-59; PT aus dem Programmkopf-SC wie beim G75)');
+      // REALFORM DER 1500er [Daniels Maskensatz O815, 25.09.2026]. Getippt
+      // mit eindeutigen Werten je Feld (F 1,75 / X0 72 / Z0 -1,5 / X1 34 INK /
+      // W 2,2 / R 1,3 / K 1,07 / I 0,59 / D 0,21 / E 0,13 / V 2,4 / U 0,06 /
+      // Q 17), die Maschine schrieb:
+      //   F44.45 G77 G90 X72 Z-1.5 G91 I34 G90 K0 PG0.06PK34PM2.2PN1.3PO-1.07
+      //   PP0.59PQ0.21PR0.13PS17PT2.4PU44.45PW1PZ0.21P232:1P236:-28.872424
+      //   P237:2P240:1P250:44.45
+      // (F44.45 = 1,75 ZOLL: das Pitch-Feld der Maske stand auf in/U, die
+      // Steuerung rechnet in mm um. Fuer die Satzform ohne Belang.)
+      // Die Handbuchform, die hier bis dahin stand (G77 G90 X Z I F ... PT aus
+      // SC), war in fast jedem Wort falsch - dieselbe Lage wie beim G75 am
+      // 18.09. Es ist die 1000er-Form plus die Zusatzwoerter der 1500er:
+      // G90 hinter G77, PO NEGATIV (aussen, wie beim G75), PS = Q Startwinkel,
+      // P232:1, P236 = -atan(PP/K) (die Steuerung rechnet den Flankenwinkel
+      // aus dem Masken-I zurueck: atan(0,59/1,07) = 28,872424), P237:2 (beim
+      // G75 1 - UNGEDEUTET), P250 = Steigung. Die Maske hat KEIN Winkelfeld,
+      // sondern I 'Breite der Flanke' = PP; wir rechnen es aus alpha: K*tan.
+      // X1 steht in der Maske als INK. OFFEN: ob I34 Radius- oder
+      // Durchmesserstrecke ist - wir schreiben wie an der 1000er die
+      // Durchmesserdifferenz |X1-X0|; der erste Luftlauf klaert es (Endlage X).
+      const iPl = Math.abs((+p.x0) - (+p.x1)) / 2;   // RADIALstrecke (Luftlauf 25.09.2026)
+      const ppPl = (+p.alpha>0) ? Math.round(Math.tan(Math.max(0, Math.min(45, +p.alpha))*Math.PI/180)*K*1000)/1000 : 0;
+      const fmt6p = v => String(Math.round(v*1e6)/1e6);
+      const qStartPl = +p.qStart || 0;
+      const gaengePl = Math.max(1, Math.round(+p.n||1));
+      const machPl = (qs) => [
+        'F'+fmt(p.p),'G77','G90','X'+fmt(p.x1),'Z'+fmt(p.z0),
+        'G91','I'+fmt(iPl),'G90','K0',
+        ['PG'+fmt(p.u||0),
+         'PK'+fmt(iPl),
+         'PM'+fmt(p.lw||0),'PN'+fmt(p.lr||0),
+         'PO'+fmt(-K),
+         (ppPl?'PP'+fmt(ppPl):null),
+         'PQ'+fmt(p.dz1||0.3),
+         (ePl?'PR'+fmt(ePl):null),
+         (qs?'PS'+fmt(qs):null),
+         'PT'+fmt(vrPl),
+         'PU'+fmt(p.p),
+         (degr?'PW1':null),
+         'PZ'+fmt(p.dz1||0.3),
+         'P232:1',
+         (ppPl?'P236:'+fmt6p(-Math.atan(ppPl/K)*180/Math.PI):null),
+         'P237:2',
+         (p.bearbeitung==='beide'?'P240:1':null),
+         'P250:'+fmt(p.p)
+        ].filter(Boolean).join('')
+      ];
+      lines.push('(=== NATIVER G77-PLANGEWINDEZYKLUS - Schnittaufteilung macht die Steuerung ===)');
+      lines.push('(1500er-REALFORM aus Maskensatz O815, 25.09.2026: Steigung im F-Wort und als PU/P250, I = Radialstrecke inkremental, PO negativ, PT = V)');
+      lines.push('(X = INNEN-DM, I = RADIALSTRECKE NACH AUSSEN - Luftlauf O9034 25.09.2026)');
+      warnings.push('Plangewinde G77 der 1500er: Satzform am Maskensatz O815 belegt, Richtung und Radialstrecke im Luftlauf O9034 (25.09.2026) - am Teil noch nicht geschnitten.');
+      // Mehrgaengig wie beim G75 der 1500er: je Gang ein Aufruf, nur PS
+      // wandert (Daniels Entscheid 22.09.2026). Bei EINEM Gang genau ein Satz.
+      if(gaengePl>1) lines.push('(MEHRGAENGIG: '+gaengePl+' Gaenge als '+gaengePl+' Zyklusaufrufe, Startwinkel je Gang um '+fmt(360/gaengePl)+' Grad versetzt)');
+      for(let g=0; g<gaengePl-1; g++){
+        lines.push(`${N()} (GEWINDE ) ${machPl(qStartPl + g*(360/gaengePl)).join(' ')}`); bump();
+      }
+      worte = machPl(qStartPl + (gaengePl-1)*(360/gaengePl));
     }
     lines.push(`${N()} (GEWINDE ) ${worte.join(' ')}`); bump();
     lines.push('(--- SIM-EXPANSION: nur fuer die CAM-Simulation, Maschine ignoriert Kommentare ---)');
