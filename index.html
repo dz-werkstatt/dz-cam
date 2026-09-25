@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="25.09.2026 18:34 (a79f2cfa)";</script>
+<script>window.__DZ_STAND="25.09.2026 21:19 (e774fdd8)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3835,12 +3835,20 @@ der App als Durchmesser gef&uuml;hrt (2&middot;|y|).</dd>
 selbst:</p>
 <dl>
 <dt id="ba-pdf-vektor">CAD-Export (Vektor-PDF)</dt>
-<dd>Tr&auml;gt die Zeichnung als echte Linien mit echten Koordinaten. Die App liest die
-Pfade direkt, findet die Drehachse &uuml;ber die Symmetrie des Profils und
-&uuml;bernimmt die Halbkontur wie beim DXF &mdash; gemessen liefert dieselbe Zeichnung
-als PDF und als DXF <b>bitgleich dieselbe Kontur</b>. Voraussetzung: die Zeichnung ist
-1:1 geplottet (bei krummen Ma&szlig;en den Ma&szlig;stab pr&uuml;fen). Ist das Profil
-nicht achsensymmetrisch, r&auml;t die App die Achse NICHT, sondern sagt es.</dd>
+<dd>Tr&auml;gt die Zeichnung als echte Linien mit echten Koordinaten &mdash; so kommt
+fast jede Zeichnung aus einem CAD-System (seit 25.09.2026 gemessen an 94
+CAD-Zeichnungen: SolidWorks, Inventor, CATIA, AutoCAD). Die App legt die Seite als
+<b>Unterlage</b> hinter den Editor, genau wie ein Foto, und f&uuml;hrt durch dieselben
+drei Tipps (Achse, bekanntes Ma&szlig;, Nullpunkt). Der Unterschied: <b>jeder Tipp
+rastet ein</b> &mdash; auf die n&auml;chste Linie, beim bekannten Ma&szlig; auf die
+Ecke der dicken Konturlinie. Die Statuszeile sagt dann &bdquo;rastet ein&ldquo;. Damit
+ist das Ma&szlig; exakt und nicht mehr so gut, wie der Finger trifft. Danach rechnet
+<b>Kontur ableiten</b> die Kontur aus den Linien (unten).<br>
+Nur ein <b>reiner Profil-Plot</b> (das Blatt tr&auml;gt nichts als den geschlossenen,
+achsensymmetrischen Umriss, 1:1 geplottet) wird wie fr&uuml;her direkt als Kontur
+&uuml;bernommen &mdash; dieselbe Zeichnung als PDF und als DXF ergibt dort bitgleich
+dieselbe Kontur. In einer echten Zeichnung ist der l&auml;ngste Zug der
+Blattrahmen; deshalb gilt dort der Weg &uuml;ber die Unterlage.</dd>
 <dt id="ba-pdf-scan">Scan-PDF (fotografierte/eingescannte Seite)</dt>
 <dd>Die App schneidet das Seitenbild heraus und behandelt es wie ein Foto &mdash;
 weiter mit der Zeichnungsunterlage unten. Bei Fax-komprimierten Scans, die sich nicht
@@ -3870,8 +3878,24 @@ Handskizze ist nicht ma&szlig;stabsgetreu &mdash; exakt stimmen nur Achse, Nullp
 und das eine angetippte Ma&szlig;; der Rest ist Merkhilfe.</div>
 <dl>
 <dt id="ba-ul-ableiten">&#9651; Kontur ableiten</dt>
-<dd>Scannt die ausgerichtete Zeichnung und legt automatisch einen groben Konturzug als
-NEUE Kontur an (&bdquo;aus Zeichnung&ldquo;). Der Scan verfolgt je Z-Spalte den ersten
+<dd><b>Bei einer Vektor-PDF</b> kommt die Kontur aus den LINIEN der Zeichnung, nicht
+aus den Pixeln. Die App nimmt die dicke Konturlinie am Nullpunkt und alle Linien
+derselben Strichst&auml;rke, die daran h&auml;ngen (auch mit T-Sto&szlig;, wie eine
+Bohrung, die mitten auf der Stirnlinie endet). Ma&szlig;-, Schraffur-, Hilfs- und
+Mittellinien sind d&uuml;nner und fallen weg, ebenso Rahmen und Schriftfeld, weil sie
+das Teil nicht ber&uuml;hren. Die Achse wird aus der Symmetrie des Umrisses
+nachgerechnet &mdash; ein Tipp einen Millimeter daneben schadet nicht. Beim
+<b>Halbschnitt</b> (nur eine H&auml;lfte gezeichnet) gibt es keine Symmetrie; dann gilt
+die getippte Achse, die Meldung sagt es. Heraus kommen zwei neue Konturen:
+<b>Au&szlig;en</b> (Stirn bis Bund) und, wo das Teil im Schnitt gezeichnet ist,
+<b>Innen</b> (die Bohrung). Rundungen werden zu echten Kreisb&ouml;gen, sonst
+Geraden. Liegt der Nullpunkt auf einer Ma&szlig;- oder Hilfslinie statt auf der
+Planfl&auml;che, sagt die App es, statt etwas zu erfinden. Die Ma&szlig;e sind die
+der Zeichnung, gerechnet mit dem angetippten Ma&szlig; &mdash; stimmt der
+Ma&szlig;stab, stimmen sie auf die Tausendstel; ein Blick auf die Bema&szlig;ung
+geh&ouml;rt trotzdem dazu.<br>
+<b>Bei Foto und Scan</b> scannt die App die ausgerichtete Zeichnung und legt
+automatisch einen groben Konturzug als NEUE Kontur an (&bdquo;aus Zeichnung&ldquo;). Der Scan verfolgt je Z-Spalte den ersten
 Tintenlauf &uuml;ber der Achse; Ma&szlig;pfeile, Mittellinie und Ma&szlig;linien
 &uuml;ber dem Teil werden herausgefiltert, Senkrechte und Waagerechte gefangen, alles
 auf 0,1 mm gerundet. <b>Das sind Scan-Ma&szlig;e</b> &mdash; jeden Punkt gegen die
@@ -3886,8 +3910,9 @@ Was knapp ist, wird bewusst verworfen (lieber keine Zahl als eine falsche);
 Handschrift liest diese Stufe nicht.</dd>
 <dt id="ba-ul-flip">&#8596; Zeichnung umdrehen / &#10005; entfernen</dt>
 <dd>Umdrehen spiegelt nur die Z-Richtung der Unterlage (oben bleibt oben); Entfernen
-wirft sie weg. Die Unterlage &uuml;berlebt kein Neuladen der App &mdash; sie ist
-Arbeitshilfe, kein Bestand.</dd>
+wirft sie weg. Die Unterlage bleibt im Browserspeicher und &uuml;berlebt das Neuladen
+der App (bei einer Vektor-PDF auch ihre Linien, damit der Fang weiter einrastet) &mdash;
+sie ist trotzdem Arbeitshilfe, kein Bestand: sie steht in keiner Programmdatei.</dd>
 </dl>
 
 
@@ -7425,6 +7450,10 @@ function unterlageZeichnen(){
 }
 function unterlageStatusText(){
   const u=unterlage;
+  const t=unterlageStatusTextRoh(u);
+  return (t && u && u.vek)? t+' (rastet ein)' : t;
+}
+function unterlageStatusTextRoh(u){
   if(u.schritt==="a1") return "Zeichnung 1/3 — ersten Punkt AUF DER MITTELACHSE antippen";
   if(u.schritt==="a2") return "Zeichnung 1/3 — zweiten Punkt auf der Mittelachse antippen (weit entfernt)";
   if(u.schritt==="m1") return "Zeichnung 2/3 — bekanntes Maß: ersten Punkt antippen";
@@ -7434,8 +7463,11 @@ function unterlageStatusText(){
 }
 function unterlageKlick(sx,sy){
   const u=unterlage; if(!u || u.schritt==="fertig" || !u.fit) return;
-  const q={x:(sx-u.fit.ox)/u.fit.f, y:(sy-u.fit.oy)/u.fit.f};
+  let q={x:(sx-u.fit.ox)/u.fit.f, y:(sy-u.fit.oy)/u.fit.f};
   if(q.x<0||q.y<0||q.x>u.w||q.y>u.h) return;
+  // Vektor-PDF: der Tipp rastet auf die naechste Linie (beim bekannten
+  // Mass auf den naechsten Eckpunkt) — dann ist das Mass exakt.
+  if(u.vek && typeof pdfvTippFangen==='function') q=pdfvTippFangen(u, q);
   if(u.schritt==="a1"){ u.a1=q; u.schritt="a2"; }
   else if(u.schritt==="a2"){ u.a2=q; u.schritt="m1"; }
   else if(u.schritt==="m1"){ u.m1=q; u.schritt="m2"; }
@@ -7489,13 +7521,15 @@ function unterlageWiederherstellen(){
     unterlage=Object.assign({img:im}, d.meta);
     ['a1','a2','m1','m2','p0'].forEach(k=>{ if(d.meta[k]) unterlage[k]=d.meta[k]; });
     if(unterlage.schritt==='fertig') unterlageRechnen(unterlage);
+    // die Linien einer Vektor-PDF liegen in einem eigenen Slot
+    if(typeof pdfvLaden==='function'){ const vk=pdfvLaden(unterlage); if(vk) unterlage.vek=vk; }
     skImport=true;   // die Gruppe traegt Ableiten/Entfernen — auf, wie beim Setzen
     renderSoftkeys(); draw();
   };
   im.src=d.bild;
 }
 function unterlageEntfernen(){ unterlage=null;
-  try{ localStorage.removeItem('et_unterlage'); }catch(e){}
+  try{ localStorage.removeItem('et_unterlage'); localStorage.removeItem('et_unterlage_vek'); }catch(e){}
   renderSoftkeys(); draw(); }
 
 // Z-Richtung der aktiven Kontur drehen: z -> -z. Die Kette laeuft
@@ -7542,6 +7576,8 @@ function unterlageBildSetzen(im){
     const c=document.createElement('canvas'); c.width=w; c.height=h;
     c.getContext('2d').drawImage(im,0,0,w,h); img=c; }
   unterlage={img, w, h, schritt:'a1', flip:false};
+  // ein Foto hat keine Linien: alte Vektor-Linien weg (die PDF setzt ihre danach)
+  try{ localStorage.removeItem('et_unterlage_vek'); }catch(e){}
   skImport=true;   // Gruppe auf: dort liegen Ableiten und Entfernen
   unterlageSpeichern();
   renderSoftkeys(); draw();
@@ -7921,6 +7957,8 @@ function ocrTemplates(){
 function unterlageKonturAbleiten(){
   const u=unterlage;
   if(!u || u.schritt!=='fertig'){ alert('Erst die Zeichnung ausrichten (Achse, Ma\u00df, Nullpunkt).'); return; }
+  // Vektor-PDF: die Kontur kommt aus den LINIEN, nicht aus den Pixeln
+  if(u.vek && typeof pdfvKonturAbleiten==='function'){ pdfvKonturAbleiten(u); return; }
   let els=null;
   try{
     const pix=unterlagePixel();
@@ -8438,6 +8476,601 @@ function autoFit(){
   }
   draw();
 }
+// =================================================================
+// VEKTOR-PDF: ECHTE ZEICHNUNGEN [Daniel, 25.09.2026: "einen PDF-Leser
+// bauen, der Zeichnungen im PDF-Format sieht und damit die Kontur in
+// die App laedt — das koennen wir anhand von ganz vielen Drehteil-PDFs
+// testen"].
+//
+// WAS DER ALTE LESER NICHT KONNTE (gemessen an 94 CAD-Zeichnungen auf
+// Daniels Rechner): er nahm den LAENGSTEN Linienzug im Massstab 1:1.
+// In einer echten Zeichnung ist das der Blattrahmen. Er kannte keine
+// Linienbreite, kein Strichmuster, keine Formulare (XObject), keine
+// Objektstroeme und kein LZW — drei CATIA-Zeichnungen blieben leer.
+//
+// DER WEG JETZT, und warum er halbautomatisch ist: in einer Zeichnung
+// stehen Mass-, Hilfs-, Schraffur- und Mittellinien, Text als
+// Linienzuege, mehrere Ansichten, Rahmen und Schriftfeld. Die
+// Mittellinie ist in CATIA- und SolidWorks-Exporten oft KEINE
+// Strichlinie, sondern Einzelstriche. Eine vollautomatische Erkennung
+// raet deshalb zu oft. Stattdessen:
+//   1. die Seite wird als Unterlage gezeichnet (Linien, nicht Pixel),
+//   2. die drei bekannten Tipps (Achse, bekanntes Mass, Planflaeche)
+//      RASTEN auf die Linien ein — ein Eckpunkt ist exakt,
+//   3. "Kontur ableiten" nimmt die Linie unter dem Nullpunkt-Tipp als
+//      Konturlinie, sammelt alle zusammenhaengenden Linien GLEICHER
+//      BREITE (die Kanten zeichnet jedes CAD mit einem Stift, Mass-,
+//      Schraffur- und Mittellinien duenner), richtet die Achse an der
+//      Symmetrie dieser Linien aus und rechnet die obere Huelle
+//      (Aussenkontur) und die untere (Bohrung im Schnitt) EXAKT aus den
+//      Strecken. Rundungen (Bezier) werden wieder zu Kreisboegen.
+// Alles bis pdfvUnterlage* ist DOM-frei und im Pruefstand gerechnet.
+// =================================================================
+
+// ---------- Objektparser ----------
+function pdfvLatin1(u8){ let t=''; for(let i=0;i<u8.length;i+=8192) t+=String.fromCharCode.apply(null,u8.subarray(i,i+8192)); return t; }
+function pdfvObj(s, pos){
+  const ws=()=>{ while(pos<s.length){ const c=s[pos];
+    if(c==='%'){ while(pos<s.length && s[pos]!=='\n' && s[pos]!=='\r') pos++; }
+    else if(c===' '||c==='\n'||c==='\r'||c==='\t'||c==='\f'||c==='\0') pos++; else break; } };
+  ws();
+  const c=s[pos];
+  if(c==='<' && s[pos+1]==='<'){
+    pos+=2; const d={};
+    for(let n=0;n<100000;n++){ ws(); if(s[pos]==='>' && s[pos+1]==='>'){ pos+=2; break; } if(pos>=s.length) break;
+      const [k,p1]=pdfvObj(s,pos); pos=p1; const [v,p2]=pdfvObj(s,pos); pos=p2;
+      if(k && k.name!==undefined) d[k.name]=v; }
+    return [d,pos];
+  }
+  if(c==='['){ pos++; const a=[]; for(let n=0;n<1000000;n++){ ws(); if(s[pos]===']'){ pos++; break; } if(pos>=s.length) break; const [v,p]=pdfvObj(s,pos); pos=p; a.push(v); } return [a,pos]; }
+  if(c==='/'){ let e=pos+1; while(e<s.length && !/[\s\/\[\]<>()%{}]/.test(s[e])) e++; return [{name:s.slice(pos+1,e)}, e]; }
+  if(c==='('){ let d=1, e=pos+1; while(e<s.length && d>0){ if(s[e]==='\\') e+=2; else { if(s[e]==='(') d++; else if(s[e]===')') d--; e++; } } return [{str:s.slice(pos+1,e-1)}, e]; }
+  if(c==='<'){ const e=s.indexOf('>',pos); return [{hex:s.slice(pos+1,e)}, e+1]; }
+  let e=pos; while(e<s.length && !/[\s\/\[\]<>()%]/.test(s[e])) e++;
+  const w=s.slice(pos,e);
+  if(/^[-+.0-9]+$/.test(w)){
+    const m=/^\s+(\d+)\s+R(?=[\s\/\[\]<>()%]|$)/.exec(s.slice(e,e+20));
+    if(m && /^\d+$/.test(w)) return [{ref:+w}, e+m[0].length];
+    return [parseFloat(w), e];
+  }
+  if(w==='true') return [true,e]; if(w==='false') return [false,e]; if(w==='null') return [null,e];
+  return [{kw:w}, e===pos? pos+1 : e];
+}
+// LZW (PDF, EarlyChange 1): drei CATIA-Zeichnungen auf Daniels Rechner
+// sind so gepackt — ohne das blieben sie leer.
+function pdfvLzw(d, early){
+  early=(early===0)?0:1;
+  const out=[]; let dict=[], bits=9, pos=0, prev=null;
+  const reset=()=>{ dict=[]; for(let i=0;i<256;i++) dict.push([i]); dict.push(null,null); bits=9; };
+  reset();
+  const total=d.length*8;
+  while(pos+bits<=total){
+    let code=0; for(let i=0;i<bits;i++){ code=(code<<1)|((d[(pos+i)>>3]>>(7-((pos+i)&7)))&1); }
+    pos+=bits;
+    if(code===256){ reset(); prev=null; continue; }
+    if(code===257) break;
+    let e;
+    if(code<dict.length && dict[code]) e=dict[code];
+    else if(prev) e=prev.concat([prev[0]]);
+    else break;
+    for(const x of e) out.push(x);
+    if(prev) dict.push(prev.concat([e[0]]));
+    prev=e;
+    const n=dict.length+early;
+    bits = n>=2048? 12 : n>=1024? 11 : n>=512? 10 : 9;
+  }
+  return new Uint8Array(out);
+}
+function pdfvPngPraediktor(d, cols){
+  const rw=cols+1, rows=Math.floor(d.length/rw), out=new Uint8Array(rows*cols); let prev=new Uint8Array(cols);
+  for(let r=0;r<rows;r++){ const ft=d[r*rw]; const cur=new Uint8Array(cols);
+    for(let i=0;i<cols;i++){ const x=d[r*rw+1+i], a=i?cur[i-1]:0, b=prev[i], c=i?prev[i-1]:0; let v;
+      if(ft===0) v=x; else if(ft===1) v=x+a; else if(ft===2) v=x+b; else if(ft===3) v=x+((a+b)>>1);
+      else { const p=a+b-c, pa=Math.abs(p-a), pb=Math.abs(p-b), pc=Math.abs(p-c); v=x+((pa<=pb&&pa<=pc)?a:(pb<=pc?b:c)); }
+      cur[i]=v&255; }
+    out.set(cur, r*cols); prev=cur; }
+  return out;
+}
+// Stroeme finden: eine Stelle fuer den Vorentpacker (async, Browser)
+// und den Leser (sync) — sonst stimmen die Byte-Lagen nicht ueberein.
+function pdfvStromLage(t, j, wert){
+  let von=j+6; if(t[von]==='\r') von++; if(t[von]==='\n') von++;
+  const len=(wert && typeof wert.Length==='number')? wert.Length : -1;
+  let bis=len>=0? von+len : -1;
+  if(bis<0 || bis>t.length || !/^\s*endstream/.test(t.slice(bis,bis+14))) bis=t.indexOf('endstream', von);
+  return {von, bis};
+}
+// Ganze Datei lesen. inflate(bytes) ist synchron (Node: zlib; Browser:
+// vorher entpackte Tabelle, s. pdfvVorentpacken).
+function pdfvLesen(bytes, inflate){
+  const t=pdfvLatin1(bytes);
+  const objs={};
+  const re=/(\d+)\s+(\d+)\s+obj\b/g; let m;
+  while((m=re.exec(t))){
+    const nr=+m[1]; let wert, p2;
+    try{ [wert,p2]=pdfvObj(t, m.index+m[0].length); }catch(x){ continue; }
+    let j=p2; while(j<t.length && /\s/.test(t[j])) j++;
+    const o={wert};
+    if(t.startsWith('stream', j)){
+      const L=pdfvStromLage(t, j, wert);
+      if(L.bis>L.von){ o.roh=bytes.subarray(L.von, L.bis); re.lastIndex=L.bis; }
+    }
+    objs[nr]=o;
+  }
+  const loese=v=>{ let n=0; while(v && v.ref!==undefined && n++<20){ const o=objs[v.ref]; v=o? o.wert : null; } return v; };
+  const daten=o=>{
+    if(!o || !o.roh) return null; if(o._daten!==undefined) return o._daten;
+    let d=o.roh; const f=loese(o.wert.Filter);
+    const fl=Array.isArray(f)? f.map(x=>(loese(x)||{}).name) : (f? [f.name] : []);
+    try{
+      for(const n of fl){
+        if(n==='FlateDecode') d=inflate(d);
+        else if(n==='ASCII85Decode') d=pdfA85Dekodieren(pdfvLatin1(d));
+        else if(n==='LZWDecode') d=pdfvLzw(d, (loese(o.wert.DecodeParms)||{}).EarlyChange);
+        else { o._daten=null; return null; }     // Bildfilter: kein Inhalt
+      }
+      const dp=loese(o.wert.DecodeParms);
+      if(dp && dp.Predictor && dp.Predictor>=10) d=pdfvPngPraediktor(d, dp.Columns||1);
+    }catch(x){ o._daten=null; return null; }
+    o._daten=d; return d;
+  };
+  // Objektstroeme (PDF 1.5): Seiten und Formulare stecken oft darin
+  Object.keys(objs).forEach(nr=>{
+    const o=objs[nr], w=o.wert;
+    if(!(w && w.Type && w.Type.name==='ObjStm')) return;
+    const d=daten(o); if(!d) return; const s=pdfvLatin1(d);
+    const first=w.First; const kopf=s.slice(0,first).trim().split(/\s+/).map(Number);
+    for(let k=0;k+1<kopf.length;k+=2){
+      if(objs[kopf[k]]) continue;
+      try{ const [v]=pdfvObj(s, first+kopf[k+1]); objs[kopf[k]]={wert:v}; }catch(x){}
+    }
+  });
+  return {objs, loese, daten};
+}
+function pdfvSeiten(P){
+  const {objs, loese}=P; const seiten=[];
+  let root=null; for(const nr in objs){ const w=objs[nr].wert; if(w && w.Type && w.Type.name==='Catalog'){ root=w; break; } }
+  const lauf=(kn, erbe, tiefe)=>{
+    kn=loese(kn); if(!kn || tiefe>30) return;
+    const e=Object.assign({}, erbe);
+    ['MediaBox','Resources','Rotate','CropBox'].forEach(k=>{ if(kn[k]!==undefined) e[k]=kn[k]; });
+    if((kn.Type && kn.Type.name==='Pages') || kn.Kids) (loese(kn.Kids)||[]).forEach(k=>lauf(k,e,tiefe+1));
+    else seiten.push(Object.assign({knoten:kn}, e));
+  };
+  if(root) lauf(root.Pages, {}, 0);
+  if(!seiten.length) for(const nr in objs){ const w=objs[nr].wert;
+    if(w && w.Type && w.Type.name==='Page') seiten.push({knoten:w, MediaBox:w.MediaBox, Resources:w.Resources, Rotate:w.Rotate}); }
+  return seiten;
+}
+// Inhalt einer Seite -> Strecken in Papier-mm (y nach OBEN), je Strecke
+// Breite (mm), Strichmuster, gestrichen/gefuellt. Text (BT..ET) faellt
+// weg; Kurven werden achtfach unterteilt und behalten ihre Bezier-Punkte
+// (bz), damit die Kontur sie spaeter wieder als Kreisbogen erkennt.
+function pdfvSeiteLesen(P, seite){
+  const {loese, daten, objs}=P;
+  const MM=25.4/72;
+  const mb=(loese(seite.CropBox)||loese(seite.MediaBox)||[0,0,595,842]).map(v=>+loese(v));
+  const segs=[];
+  const mul=(A,B)=>[A[0]*B[0]+A[1]*B[2], A[0]*B[1]+A[1]*B[3], A[2]*B[0]+A[3]*B[2], A[2]*B[1]+A[3]*B[3], A[4]*B[0]+A[5]*B[2]+B[4], A[4]*B[1]+A[5]*B[3]+B[5]];
+  const inhaltVon=c=>{ const v=loese(c); const arr=Array.isArray(v)? v : [c]; let s='';
+    for(const r of arr){ const o=(r && r.ref!==undefined)? objs[r.ref] : null; const d=o? daten(o) : null; if(d) s+=pdfvLatin1(d)+'\n'; } return s; };
+  let tiefe=0, kurve=0;
+  const lauf=(inhalt, res, M0)=>{
+    if(++tiefe>12){ tiefe--; return; }
+    res=loese(res)||{}; const xo=loese(res.XObject)||{};
+    let gs={M:M0.slice(), w:1, dash:false}; const stapel=[];
+    let pfad=[], cur=null, start=null, inText=false, arr=null, name=null;
+    const zahlen=[];
+    const T=(x,y)=>[gs.M[0]*x+gs.M[2]*y+gs.M[4], gs.M[1]*x+gs.M[3]*y+gs.M[5]];
+    const skal=()=>Math.sqrt(Math.abs(gs.M[0]*gs.M[3]-gs.M[1]*gs.M[2]));
+    const malen=(st, fi)=>{
+      const wmm=gs.w*skal()*MM;
+      for(const q of pfad) segs.push({a:[q.a[0]*MM, q.a[1]*MM], b:[q.b[0]*MM, q.b[1]*MM], w:wmm, dash:gs.dash, s:st, f:fi,
+        bz:q.bz? q.bz.map(p=>[p[0]*MM, p[1]*MM]) : null, kv:q.kv});
+      pfad=[]; cur=null; start=null;
+    };
+    const tok=/\/[^\s\/\[\]()<>{}%]*|\((?:[^\\)]|\\[\s\S])*\)|<<|>>|<[0-9A-Fa-f\s]*>|[-+]?(?:\d+\.?\d*|\.\d+)|[A-Za-z'"*]+|\[|\]|%[^\n\r]*/g;
+    let mm;
+    while((mm=tok.exec(inhalt))){
+      const tk=mm[0];
+      if(tk[0]==='%') continue;
+      if(/^[-+]?(?:\d|\.\d)/.test(tk)){ zahlen.push(parseFloat(tk)); continue; }
+      if(tk==='['){ arr=[]; zahlen.length=0; continue; }
+      if(tk===']'){ arr=zahlen.slice(); zahlen.length=0; continue; }
+      if(tk==='BI'){ const e=inhalt.indexOf('EI', tok.lastIndex); if(e>0) tok.lastIndex=e+2; zahlen.length=0; continue; }
+      if(tk[0]==='/'){ name=tk.slice(1); continue; }
+      if(tk[0]==='(' || tk[0]==='<') continue;
+      const n=zahlen, k=n.length;
+      switch(tk){
+        case 'BT': inText=true; break;
+        case 'ET': inText=false; break;
+        case 'q': stapel.push({M:gs.M.slice(), w:gs.w, dash:gs.dash}); break;
+        case 'Q': if(stapel.length) gs=stapel.pop(); break;
+        case 'cm': if(k>=6) gs.M=mul(n.slice(k-6), gs.M); break;
+        case 'w': if(k>=1) gs.w=n[k-1]; break;
+        case 'd': gs.dash=!!(arr && arr.length && arr.some(v=>v>0)); arr=null; break;
+        case 'm': if(!inText && k>=2){ cur=T(n[k-2],n[k-1]); start=cur; } break;
+        case 'l': if(!inText && k>=2 && cur){ const q2=T(n[k-2],n[k-1]); pfad.push({a:cur,b:q2}); cur=q2; } break;
+        case 'c': case 'v': case 'y': if(!inText && cur){
+          let P1,P2,P3;
+          if(tk==='c' && k>=6){ P1=T(n[k-6],n[k-5]); P2=T(n[k-4],n[k-3]); P3=T(n[k-2],n[k-1]); }
+          else if(tk==='v' && k>=4){ P1=cur; P2=T(n[k-4],n[k-3]); P3=T(n[k-2],n[k-1]); }
+          else if(tk==='y' && k>=4){ P1=T(n[k-4],n[k-3]); P2=T(n[k-2],n[k-1]); P3=P2; }
+          else break;
+          kurve++; let vor=cur; const bz=[cur,P1,P2,P3];
+          for(let tt=1;tt<=8;tt++){ const u=tt/8, w1=1-u;
+            const q=[w1*w1*w1*cur[0]+3*w1*w1*u*P1[0]+3*w1*u*u*P2[0]+u*u*u*P3[0], w1*w1*w1*cur[1]+3*w1*w1*u*P1[1]+3*w1*u*u*P2[1]+u*u*u*P3[1]];
+            pfad.push({a:vor, b:q, bz, kv:kurve}); vor=q; }
+          cur=P3; } break;
+        case 're': if(!inText && k>=4){ const [x,y,w2,h2]=n.slice(k-4); const A=T(x,y),B=T(x+w2,y),C=T(x+w2,y+h2),D=T(x,y+h2);
+          pfad.push({a:A,b:B},{a:B,b:C},{a:C,b:D},{a:D,b:A}); cur=A; start=A; } break;
+        case 'h': if(cur && start){ pfad.push({a:cur,b:start}); cur=start; } break;
+        case 'S': malen(true,false); break;
+        case 's': if(cur && start) pfad.push({a:cur,b:start}); malen(true,false); break;
+        case 'f': case 'F': case 'f*': malen(false,true); break;
+        case 'B': case 'B*': malen(true,true); break;
+        case 'b': case 'b*': if(cur && start) pfad.push({a:cur,b:start}); malen(true,true); break;
+        case 'n': pfad=[]; cur=null; start=null; break;
+        case 'Do': {
+          const r=name? xo[name] : null; const o=(r && r.ref!==undefined)? objs[r.ref] : null;
+          if(o && o.wert && o.wert.Subtype && o.wert.Subtype.name==='Form'){
+            const d=daten(o);
+            if(d){ const fm=(loese(o.wert.Matrix)||[1,0,0,1,0,0]).map(v=>+loese(v)); lauf(pdfvLatin1(d), o.wert.Resources||res, mul(fm, gs.M)); }
+          }
+          break; }
+      }
+      zahlen.length=0;
+    }
+    tiefe--;
+  };
+  lauf(inhaltVon(seite.knoten.Contents), seite.Resources, [1,0,0,1,0,0]);
+  return {segs, mb:mb.map(v=>v*MM)};
+}
+// Die Seite mit den meisten gestrichenen Linien — mehrseitige CATIA-
+// Exporte tragen auf Seite 2 oft die Stueckliste oder ein Detail.
+function pdfvZeichnungLesen(bytes, inflate){
+  const P=pdfvLesen(bytes, inflate);
+  let best=null, bn=-1;
+  pdfvSeiten(P).forEach((s,i)=>{ let sl; try{ sl=pdfvSeiteLesen(P,s); }catch(e){ return; }
+    const n=sl.segs.filter(q=>q.s).length; if(n>bn){ bn=n; best=Object.assign({seite:i}, sl); } });
+  return best;
+}
+
+// ---------- Kern: Fang, Konturlinien, Achse, Huelle ----------
+function pdfvAbstand(p, s){
+  const dx=s.b[0]-s.a[0], dy=s.b[1]-s.a[1], L2=dx*dx+dy*dy;
+  let t=L2>0? ((p[0]-s.a[0])*dx+(p[1]-s.a[1])*dy)/L2 : 0; t=Math.max(0,Math.min(1,t));
+  const q=[s.a[0]+t*dx, s.a[1]+t*dy];
+  return {d:Math.hypot(p[0]-q[0], p[1]-q[1]), q};
+}
+// Fang eines Tipps. ecke=true: naechster Streckenendpunkt (fuer das
+// bekannte Mass), sonst Fusspunkt auf der naechsten Linie. Weiter weg als
+// maxD: der Tipp bleibt, wie er ist — kein Fang ins Blaue.
+function pdfvFang(segs, p, maxD, ecke){
+  if(ecke){
+    // Eckpunkt der DICKSTEN Linie in Reichweite: an einer Teilecke enden
+    // auch Mass-Hilfslinien und Schraffur — deren Enden sind nicht die Ecke
+    // (erster Browserlauf: 1 % Massstabsfehler am Druckring).
+    let best=null, bw=-1, bd=1e18;
+    for(const s of segs){ if(!s.s || s.dash) continue; for(const q of [s.a,s.b]){ const d=Math.hypot(q[0]-p[0], q[1]-p[1]); if(d>maxD) continue;
+      if(s.w>bw+1e-6 || (Math.abs(s.w-bw)<=1e-6 && d<bd)){ bw=s.w; bd=d; best=q; } } }
+    if(best) return {x:best[0], y:best[1], gefangen:'ecke'};
+  }
+  let best=-1, bd=maxD;
+  segs.forEach((s,k)=>{ if(!s.s) return; const d=pdfvAbstand(p,s).d; if(d<bd){ bd=d; best=k; } });
+  if(best<0) return {x:p[0], y:p[1], gefangen:null};
+  const q=pdfvAbstand(p, segs[best]).q;
+  return {x:q[0], y:q[1], gefangen:'linie', seg:best};
+}
+// Startlinie der Kontur am Nullpunkt-Tipp: unter den durchgezogenen
+// Linien in Reichweite die BREITESTE (Hilfs- und Masslinien an der
+// Planflaeche sind duenner), bei gleicher Breite die naechste.
+function pdfvStartlinie(segs, p, maxD){
+  let best=-1, bw=-1, bd=1e18;
+  segs.forEach((s,k)=>{ if(!s.s || s.dash) return; const d=pdfvAbstand(p,s).d; if(d>maxD) return;
+    if(s.w>bw+1e-6 || (Math.abs(s.w-bw)<=1e-6 && d<bd)){ bw=s.w; bd=d; best=k; } });
+  return best;
+}
+function pdfvRaster(segs, zelle){
+  const g=new Map(), gross=[];
+  const key=(i,j)=>i*100003+j;
+  segs.forEach((s,k)=>{
+    const x0=Math.floor(Math.min(s.a[0],s.b[0])/zelle), x1=Math.floor(Math.max(s.a[0],s.b[0])/zelle);
+    const y0=Math.floor(Math.min(s.a[1],s.b[1])/zelle), y1=Math.floor(Math.max(s.a[1],s.b[1])/zelle);
+    if((x1-x0+1)*(y1-y0+1)>4000){ gross.push(k); return; }
+    for(let i=x0;i<=x1;i++) for(let j=y0;j<=y1;j++){ const kk=key(i,j); let l=g.get(kk); if(!l) g.set(kk,l=[]); l.push(k); }
+  });
+  return { nahe(x,y,r){ return this.box(x-r,y-r,x+r,y+r); },
+    box(xa,ya,xb,yb){ const out=new Set(gross);
+    const i0=Math.floor(xa/zelle), i1=Math.floor(xb/zelle), j0=Math.floor(ya/zelle), j1=Math.floor(yb/zelle);
+    for(let i=i0;i<=i1;i++) for(let j=j0;j<=j1;j++){ const l=g.get(key(i,j)); if(l) l.forEach(k=>out.add(k)); }
+    return out; } };
+}
+// Zusammenhaengende Konturlinien gleicher Breite (0,02 mm oder 12 %),
+// verbunden ueber Endpunkte und T-Stoesse im Abstand tol.
+function pdfvKomponente(segs, seed, tol){
+  const w0=segs[seed].w;
+  const passt=s=>s.s && !s.dash && Math.abs(s.w-w0)<=Math.max(0.02, 0.12*w0);
+  const idx=[]; segs.forEach((s,k)=>{ if(passt(s)) idx.push(k); });
+  const sub=idx.map(k=>segs[k]);
+  const R=pdfvRaster(sub, Math.max(tol*4, 1e-6));
+  const drin=new Uint8Array(sub.length); const st=idx.indexOf(seed);
+  if(st<0) return [];
+  const q=[st]; drin[st]=1; const out=[];
+  while(q.length){
+    const i=q.pop(); out.push(idx[i]); const s=sub[i];
+    // T-Stoss in BEIDE Richtungen: ein Ende von t auf der Linie s (die
+    // Bohrung endet mitten auf der Stirnlinie) oder ein Ende von s auf t.
+    const kand=R.box(Math.min(s.a[0],s.b[0])-tol, Math.min(s.a[1],s.b[1])-tol, Math.max(s.a[0],s.b[0])+tol, Math.max(s.a[1],s.b[1])+tol);
+    for(const j of kand){
+      if(drin[j]) continue; const t=sub[j];
+      const d=Math.min(pdfvAbstand(t.a,s).d, pdfvAbstand(t.b,s).d, pdfvAbstand(s.a,t).d, pdfvAbstand(s.b,t).d);
+      if(d<=tol){ drin[j]=1; q.push(j); }
+    }
+  }
+  return out;
+}
+// Achse: Richtung aus den Tipps, fein aus der laengsten Kontur-Kante
+// innerhalb 8 Grad (Kanten eines Drehteils laufen achsparallel). Lage
+// aus der Symmetrie: Mitte zwischen groesstem und kleinstem Normal-
+// abstand der Konturlinien. Zeigt die Zeichnung nur EINE Haelfte
+// (Halbschnitt), bleibt die getippte Achse — geraten wird nicht.
+function pdfvAchse(segs, komp, a1, a2){
+  let ux=a2.x-a1.x, uy=a2.y-a1.y; const L=Math.hypot(ux,uy)||1; ux/=L; uy/=L;
+  let best=null, bl=0;
+  komp.forEach(k=>{ const s=segs[k]; const dx=s.b[0]-s.a[0], dy=s.b[1]-s.a[1], l=Math.hypot(dx,dy);
+    if(l<=bl) return; if(Math.abs(dx*ux+dy*uy)/l > Math.cos(8*Math.PI/180)){ bl=l; best=[dx/l, dy/l]; } });
+  if(best){ if(best[0]*ux+best[1]*uy<0) best=[-best[0],-best[1]]; ux=best[0]; uy=best[1]; }
+  const nx=uy, ny=-ux;
+  let vmin=1e18, vmax=-1e18;
+  komp.forEach(k=>{ const s=segs[k]; for(const p of [s.a,s.b]){ const v=(p[0]-a1.x)*nx+(p[1]-a1.y)*ny; if(v<vmin) vmin=v; if(v>vmax) vmax=v; } });
+  let c=0, sym=false;
+  if(vmin<0 && vmax>0){ const mitte=(vmin+vmax)/2, halb=(vmax-vmin)/2; if(Math.abs(mitte)<0.25*halb){ c=mitte; sym=true; } }
+  return {A:{x:a1.x+nx*c, y:a1.y+ny*c}, u:{x:ux, y:uy}, n:{x:nx, y:ny}, sym};
+}
+// Huellen ueber z: aussen = groesster, innen = kleinster Radius aller
+// Konturlinien. Senkrechte Linien tragen keinen Wert (sie sind die
+// Spruenge dazwischen). Knicke im Innern eines Abschnitts (zwei Linien
+// kreuzen sich) werden durch Halbieren gefunden.
+function pdfvHuelle(linien){
+  const zs=[]; linien.forEach(l=>{ zs.push(l.z1, l.z2); }); zs.sort((a,b)=>a-b);
+  const bp=[]; zs.forEach(z=>{ if(!bp.length || z-bp[bp.length-1]>1e-4) bp.push(z); });
+  const wert=(z,max)=>{ let v=max? -1 : 1e18;
+    for(const l of linien){ const lo=Math.min(l.z1,l.z2), hi=Math.max(l.z1,l.z2);
+      if(z<lo-1e-9 || z>hi+1e-9 || hi-lo<1e-6) continue;
+      const r=l.r1+(z-l.z1)/(l.z2-l.z1)*(l.r2-l.r1); if(max? r>v : r<v) v=r; }
+    return (max? v>=0 : v<1e17)? v : null; };
+  const zug=max=>{ const pts=[];
+    const add=(z,r,kv)=>{ if(r===null) return; const q=pts[pts.length-1]; if(q && Math.abs(q.z-z)<1e-6 && Math.abs(q.r-r)<1e-6) return; pts.push({z,r}); };
+    for(let i=0;i+1<bp.length;i++){
+      const za=bp[i], zb=bp[i+1], eps=Math.min(1e-4, (zb-za)/4);
+      const teil=(z0,z1,t)=>{ const r0=wert(z0,max), r1=wert(z1,max); if(r0===null || r1===null) return;
+        const zm=(z0+z1)/2, rm=wert(zm,max);
+        if(t<12 && rm!==null && Math.abs(rm-(r0+r1)/2)>5e-4){ teil(z0,zm,t+1); teil(zm,z1,t+1); return; }
+        add(z0,r0); add(z1,r1); };
+      teil(za+eps, zb-eps, 0);
+    }
+    return pts; };
+  return {aussen:zug(true), innen:zug(false), wert};
+}
+function pdfvVereinfachen(pts, tol){
+  if(pts.length<3) return pts.slice();
+  const halt=new Set([0, pts.length-1]);
+  const teile=(i0,i1)=>{ if(i1-i0<2) return; const A=pts[i0], B=pts[i1], dz=B.z-A.z, dr=B.r-A.r, L=Math.hypot(dz,dr)||1e-12; let bd=0, w=-1;
+    for(let i=i0+1;i<i1;i++){ const d=Math.abs((pts[i].z-A.z)*dr-(pts[i].r-A.r)*dz)/L; if(d>bd){ bd=d; w=i; } }
+    if(bd>tol){ halt.add(w); teile(i0,w); teile(w,i1); } };
+  teile(0, pts.length-1);
+  return [...halt].sort((a,b)=>a-b).map(i=>pts[i]);
+}
+// Kreis durch drei Punkte (z,r)
+function pdfvKreis3(A,B,C){
+  const d=2*(A.z*(B.r-C.r)+B.z*(C.r-A.r)+C.z*(A.r-B.r)); if(Math.abs(d)<1e-12) return null;
+  const a2=A.z*A.z+A.r*A.r, b2=B.z*B.z+B.r*B.r, c2=C.z*C.z+C.r*C.r;
+  const z=(a2*(B.r-C.r)+b2*(C.r-A.r)+c2*(A.r-B.r))/d, r=(a2*(C.z-B.z)+b2*(A.z-C.z)+c2*(B.z-A.z))/d;
+  return {z, r, R:Math.hypot(A.z-z, A.r-r)};
+}
+// Punktfolge (von rechts nach links) -> Konturelemente. Laeufe kurzer
+// Stuecke auf einem gemeinsamen Kreis werden EIN Kreisbogen — die
+// Rundungen stehen in der PDF als Bezierkurven und kamen als acht
+// Sehnen je Viertel an.
+function pdfvElemente(pts, startAufAchse){
+  const R3=v=>Math.round(v*1000)/1000;
+  const els=[];
+  const gerade=p=>{ const q={kind:'gerade', z:R3(p.z), x:R3(2*p.r), trans:{type:'none',val:0}};
+    const v=els[els.length-1]; if(Math.abs(v.z-q.z)<0.001 && Math.abs(v.x-q.x)<0.001) return; els.push(q); };
+  if(startAufAchse){ els.push({kind:'start', z:R3(pts[0].z), x:0, trans:{type:'none',val:0}}); gerade(pts[0]); }
+  else els.push({kind:'start', z:R3(pts[0].z), x:R3(2*pts[0].r), trans:{type:'none',val:0}});
+  // Drehung zwischen zwei Stuecken (Vorzeichen und Betrag in Grad)
+  const dreh=(a,b,c)=>{ const u1=b.z-a.z, v1=b.r-a.r, u2=c.z-b.z, v2=c.r-b.r;
+    return Math.atan2(u1*v2-v1*u2, u1*u2+v1*v2)*180/Math.PI; };
+  let prev=0, i=1;
+  while(i<pts.length){
+    let bestJ=-1, bestK=null;
+    for(let j=prev+3;j<pts.length;j++){
+      if(Math.hypot(pts[j].z-pts[j-1].z, pts[j].r-pts[j-1].r)>4) break;
+      // gleichsinnig und sanft: je Stueck hoechstens 25 Grad (ein
+      // Viertelkreis kommt in acht Stuecken zu 11,25 Grad)
+      let sgn=0, gut=true;
+      for(let t=prev+1;t<j;t++){ const d=dreh(pts[t-1],pts[t],pts[t+1]); if(Math.abs(d)>25 || Math.abs(d)<0.05){ gut=false; break; }
+        const s=Math.sign(d); if(sgn && s!==sgn){ gut=false; break; } sgn=s; }
+      if(!gut) break;
+      const K=pdfvKreis3(pts[prev], pts[Math.floor((prev+j)/2)], pts[j]);
+      if(!K || K.R>500 || K.R<0.05) break;
+      let ok=true; for(let t=prev+1;t<j;t++){ if(Math.abs(Math.hypot(pts[t].z-K.z, pts[t].r-K.r)-K.R)>0.01){ ok=false; break; } }
+      if(!ok) break;
+      bestJ=j; bestK=K;
+    }
+    if(bestJ>0){
+      const A=pts[prev], M=pts[Math.floor((prev+bestJ)/2)], B=pts[bestJ];
+      const kreuz=(M.z-A.z)*(B.r-M.r)-(M.r-A.r)*(B.z-M.z);
+      els.push({kind:'kreis', z:R3(B.z), x:R3(2*B.r), cz:R3(bestK.z), cx:R3(2*bestK.r), cw:kreuz<0, trans:{type:'none',val:0}});
+      prev=bestJ; i=bestJ+1; continue;
+    }
+    gerade(pts[i]); prev=i; i++;
+  }
+  return els;
+}
+// Ganze Rechnung auf Bildpixeln der Unterlage:
+// opt {a1,a2 (Achstipps), p0 (Nullpunkt), s (Welt-mm je Pixel), flip, tol (Pixel)}
+function pdfvKonturRechnen(segs, opt){
+  const tol=opt.tol||1;
+  const seed=pdfvStartlinie(segs, [opt.p0.x, opt.p0.y], opt.fang||tol*20);
+  if(seed<0) return {fehler:'Am Nullpunkt liegt keine Konturlinie. Den Nullpunkt AUF die Planfläche (Kante des Teils) tippen.'};
+  // Der Nullpunkt liegt AUF der Startlinie (Fusspunkt) — sonst verschiebt
+  // ein Tipp neben die Planflaeche die ganze Kontur in Z.
+  { const q=pdfvAbstand([opt.p0.x, opt.p0.y], segs[seed]).q; opt=Object.assign({}, opt, {p0:{x:q[0], y:q[1]}}); }
+  const komp=pdfvKomponente(segs, seed, tol);
+  if(komp.length<3) return {fehler:'Am Nullpunkt hängen nur '+komp.length+' Linie(n) — das ist keine Teilkontur. Den Nullpunkt auf die Planfläche des Teils tippen, nicht auf eine Maßlinie.'};
+  const ax=pdfvAchse(segs, komp, opt.a1, opt.a2);
+  // +z zeigt im Bild nach rechts (wie unterlageRechnen), flip dreht
+  if(ax.u.x<0 || (Math.abs(ax.u.x)<1e-9 && ax.u.y>0)){ ax.u={x:-ax.u.x, y:-ax.u.y}; ax.n={x:-ax.n.x, y:-ax.n.y}; }
+  // Ein Drehteil hat IMMER eine Mantellinie laengs der Achse. Haengen am
+  // Nullpunkt nur Quer-Linien (Masslinie mit ihren Hilfslinien), entstuende
+  // aus ihrer Schraeglage zur getippten Achse ein Fantasie-Zug von 1 mm
+  // Laenge — gemessen am Pruefkoerper, deshalb die Absage.
+  const laengs=komp.some(k=>{ const t=segs[k]; const dx=t.b[0]-t.a[0], dy=t.b[1]-t.a[1], l=Math.hypot(dx,dy);
+    return l*opt.s>0.5 && Math.abs(dx*ax.u.x+dy*ax.u.y)/l>Math.cos(30*Math.PI/180); });
+  if(!laengs) return {fehler:'Die Linien am Nullpunkt bilden keinen Zug über Z — den Nullpunkt auf die Planfläche des Teils tippen, nicht auf eine Maß- oder Hilfslinie.'};
+  const sg=opt.flip? -1 : 1;
+  const z0=(opt.p0.x-ax.A.x)*ax.u.x+(opt.p0.y-ax.A.y)*ax.u.y;
+  const W=p=>({ z:((p[0]-ax.A.x)*ax.u.x+(p[1]-ax.A.y)*ax.u.y-z0)*opt.s*sg,
+                r:Math.abs((p[0]-ax.A.x)*ax.n.x+(p[1]-ax.A.y)*ax.n.y)*opt.s });
+  const linien=komp.map(k=>{ const A=W(segs[k].a), B=W(segs[k].b); return {z1:A.z, r1:A.r, z2:B.z, r2:B.r}; });
+  const h=pdfvHuelle(linien);
+  if(h.aussen.length<2) return {fehler:'Die Linien am Nullpunkt bilden keinen Zug über Z — den Nullpunkt auf die Planfläche des Teils tippen, nicht auf eine Maß- oder Hilfslinie.'};
+  const aussen=pdfvVereinfachen(h.aussen, 0.002).slice().reverse();   // rechts -> links
+  // Bohrung: wo die untere Huelle deutlich unter der oberen liegt
+  // Laeufe: aufeinanderfolgende Punkte, an denen innen deutlich unter
+  // aussen liegt. Getrennt wird, wo beide zusammenfallen — NICHT am
+  // Z-Abstand: eine lange Bohrung besteht aus zwei Punkten weit auseinander.
+  const laeufe=[]; let lauf=[];
+  h.innen.forEach(p=>{ const ra=h.wert(p.z,true);
+    if(ra!==null && p.r>0.05 && p.r<ra-0.05) lauf.push(p); else { if(lauf.length) laeufe.push(lauf); lauf=[]; } });
+  if(lauf.length) laeufe.push(lauf);
+  let innen=null;
+  const zMax=aussen[0].z;
+  const brauchbar=laeufe.filter(l=>l.length>=2 && l[l.length-1].z-l[0].z>0.5);
+  if(brauchbar.length){
+    brauchbar.sort((x,y)=>Math.abs(zMax-x[x.length-1].z)-Math.abs(zMax-y[y.length-1].z));
+    innen=pdfvVereinfachen(brauchbar[0], 0.002).slice().reverse();
+  }
+  const elsA=pdfvElemente(aussen, true);
+  const elsI=innen? pdfvElemente(innen, false) : null;
+  let dMax=0; aussen.forEach(p=>{ if(2*p.r>dMax) dMax=2*p.r; });
+  return {elsA, elsI, achse:ax, komp, seed, breite:segs[seed].w, dMax, laenge:aussen[0].z-aussen[aussen.length-1].z,
+    zRechts:aussen[0].z, zLinks:aussen[aussen.length-1].z};
+}
+
+// ---------- Browser: entpacken, zeichnen, an die Unterlage haengen ----------
+// Flate entpackt im Browser nur asynchron (DecompressionStream). Deshalb
+// vorab alle Flate-Stroeme entpacken; der synchrone Leser schlaegt sie
+// ueber ihre Byte-Lage nach.
+async function pdfvVorentpacken(bytes){
+  const t=pdfvLatin1(bytes); const tab=new Map();
+  const re=/(\d+)\s+(\d+)\s+obj\b/g; let m;
+  while((m=re.exec(t))){
+    let wert, p2; try{ [wert,p2]=pdfvObj(t, m.index+m[0].length); }catch(x){ continue; }
+    let j=p2; while(j<t.length && /\s/.test(t[j])) j++;
+    if(!t.startsWith('stream', j)) continue;
+    const L=pdfvStromLage(t, j, wert); if(!(L.bis>L.von)) continue;
+    re.lastIndex=L.bis;
+    const f=JSON.stringify(wert && wert.Filter || '');
+    if(f.indexOf('FlateDecode')<0) continue;
+    let roh=bytes.subarray(L.von, L.bis);
+    let e=roh.length; while(e>0 && (roh[e-1]===10 || roh[e-1]===13 || roh[e-1]===32)) e--;
+    try{
+      const ab=await new Response(new Blob([roh.subarray(0,e)]).stream().pipeThrough(new DecompressionStream('deflate'))).arrayBuffer();
+      tab.set(L.von, new Uint8Array(ab));
+    }catch(x){}
+  }
+  return tab;
+}
+async function pdfvZeichnungAusBytes(bytes){
+  const tab=await pdfvVorentpacken(bytes);
+  return pdfvZeichnungLesen(bytes, d=>{ const r=tab.get(d.byteOffset); if(!r) throw new Error('nicht entpackt'); return r; });
+}
+// Papier-mm -> Bildpixel der Unterlage (y nach unten), max. 2200 px
+function pdfvAufBild(z){
+  const Wm=z.mb[2]-z.mb[0], Hm=z.mb[3]-z.mb[1];
+  const f=2200/Math.max(Wm,Hm);
+  const P=q=>[(q[0]-z.mb[0])*f, (z.mb[3]-q[1])*f];
+  const segs=z.segs.map(s=>({a:P(s.a), b:P(s.b), w:s.w, dash:s.dash, s:s.s, f:s.f}));
+  return {segs, f, w:Math.round(Wm*f), h:Math.round(Hm*f)};
+}
+function pdfvLeinwand(bild){
+  const c=document.createElement('canvas'); c.width=bild.w; c.height=bild.h;
+  const g=c.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height);
+  g.lineCap='round';
+  bild.segs.forEach(s=>{
+    if(!s.s && !s.f) return;
+    g.strokeStyle=s.dash? AKZENT : '#111';   // Mittellinien im Akzentton (Farbregler, Pruefung 61)
+    g.lineWidth=Math.max(1, s.w*bild.f);
+    g.beginPath(); g.moveTo(s.a[0],s.a[1]); g.lineTo(s.b[0],s.b[1]); g.stroke();
+  });
+  return c;
+}
+function pdfvSpeichern(){
+  try{
+    const u=unterlage;
+    if(!u || !u.vek){ localStorage.removeItem('et_unterlage_vek'); return; }
+    // kompakt: gerundet auf 0,05 px, je Strecke 7 Zahlen
+    const a=[]; u.vek.segs.forEach(s=>{ a.push(Math.round(s.a[0]*20), Math.round(s.a[1]*20), Math.round(s.b[0]*20), Math.round(s.b[1]*20), Math.round(s.w*1000), (s.s?1:0)+(s.dash?2:0)+(s.f?4:0)); });
+    localStorage.setItem('et_unterlage_vek', JSON.stringify({w:u.w, h:u.h, f:u.vek.f, d:a}));
+  }catch(e){ try{ localStorage.removeItem('et_unterlage_vek'); }catch(_){} }
+}
+function pdfvLaden(u){
+  try{
+    const d=JSON.parse(localStorage.getItem('et_unterlage_vek')||'null');
+    if(!d || d.w!==u.w || d.h!==u.h) return null;
+    const segs=[]; for(let i=0;i+5<d.d.length;i+=6){ const k=d.d[i+5];
+      segs.push({a:[d.d[i]/20, d.d[i+1]/20], b:[d.d[i+2]/20, d.d[i+3]/20], w:d.d[i+4]/1000, s:!!(k&1), dash:!!(k&2), f:!!(k&4)}); }
+    return {segs, f:d.f};
+  }catch(e){ return null; }
+}
+// Import einer Vektor-PDF als Unterlage. Liefert false, wenn keine
+// brauchbaren Linien drin sind (dann bleibt der alte Hinweis).
+async function pdfvUnterlageImport(bytes, name){
+  const z=await pdfvZeichnungAusBytes(bytes);
+  if(!z || z.segs.filter(s=>s.s).length<3) return false;
+  const bild=pdfvAufBild(z);
+  const c=pdfvLeinwand(bild);
+  unterlageBildSetzen(c);
+  unterlage.vek={segs:bild.segs, f:bild.f};
+  unterlage.name=name||'PDF';
+  pdfvSpeichern();
+  alert('VEKTOR-PDF als Zeichnung hinterlegt ('+z.segs.filter(s=>s.s).length+' Linien). Jetzt wie gewohnt ausrichten: Achse, bekanntes Maß, Planfläche — die Tipps rasten auf die Linien ein. Den Nullpunkt AUF die Planfläche des Teils tippen: von dort sammelt „Kontur ableiten“ die Kanten des Teils.');
+  return true;
+}
+// Fang beim Ausrichten (aus unterlageKlick gerufen)
+function pdfvTippFangen(u, q){
+  if(!u || !u.vek || !u.fit || !(u.fit.f>0)) return q;   // Zeichenflaeche nicht sichtbar: kein Fang
+  const tolPx=16*(typeof devicePixelRatio!=='undefined'? devicePixelRatio : 1)/u.fit.f;
+  const ecke=(u.schritt==='m1' || u.schritt==='m2');
+  const g=pdfvFang(u.vek.segs, [q.x, q.y], tolPx, ecke);
+  return {x:g.x, y:g.y};
+}
+// Kontur ableiten auf dem Vektorweg
+function pdfvKonturAbleiten(u){
+  const erg=pdfvKonturRechnen(u.vek.segs, {a1:u.a1, a2:u.a2, p0:u.p0, s:u.s, flip:!!u.flip, tol:Math.max(0.3*u.vek.f, 1), fang:4*u.vek.f});
+  if(erg.fehler){ alert(erg.fehler); return; }
+  // Unterlage auf die gerechnete Achse nachziehen — dann liegt die
+  // Kontur genau auf der Zeichnung
+  const ax=erg.achse;
+  u.a1={x:ax.A.x, y:ax.A.y}; u.a2={x:ax.A.x+ax.u.x*1000, y:ax.A.y+ax.u.y*1000};
+  unterlageRechnen(u); unterlageSpeichern();
+  snapshot();
+  const basis=(u.name||'PDF').replace(/\.pdf$/i,'');
+  contours.push({id:nextContourId++, name:'Außen (PDF '+basis+')', els:erg.elsA});
+  let innenTxt='';
+  if(erg.elsI){ contours.push({id:nextContourId++, name:'Innen (PDF '+basis+')', els:erg.elsI}); innenTxt=' Dazu eine INNENKONTUR (Bohrung im Schnitt, '+(erg.elsI.length-1)+' Elemente).'; }
+  switchContour(contours.length-(erg.elsI?2:1));
+  userAdjustedView=false; fitPending=true;
+  refreshAll();
+  const bogen=erg.elsA.filter(e=>e.kind==='kreis').length+(erg.elsI? erg.elsI.filter(e=>e.kind==='kreis').length : 0);
+  alert('AUS DER PDF: Außenkontur mit '+(erg.elsA.length-1)+' Elementen'+(bogen? ', davon '+bogen+' Kreisbogen':'')+'.'+innenTxt+
+    '\n\nGrößter ⌀ '+erg.dMax.toFixed(2)+' · Länge '+erg.laenge.toFixed(2)+' mm — gegen die Bemaßung prüfen; stimmt es nicht, war das bekannte Maß oder der Maßstab falsch.'+
+    (erg.achse.sym? '' : '\n\nDie Zeichnung zeigt nur EINE Hälfte — die Achse ist die getippte, nicht aus der Symmetrie gerechnet.'));
+}
 function panNachfuehren(){
   // Haelt den zuletzt bearbeiteten Punkt im Bild: liegt er ausserhalb des
   // sichtbaren Fensters (10%-Rand), wird die Ansicht VERSCHOBEN — der
@@ -8844,10 +9477,25 @@ function pdfJpegSuchen(bytes){
           // KEIN Scan — Vektor-PDF? Dann sind die Linien GENAUER als
           // jedes Foto: direkt als Kontur uebernehmen, derselbe Weg
           // wie der DXF-Import (Ketten, Vollprofil-Kuerzung).
-          pdfVektorInhalt(bytes).then(inhalt=>{
+          pdfVektorInhalt(bytes).then(async inhalt=>{
             const vk=inhalt? pdfVektorSegs(inhalt) : {segs:[]};
-            if(vk.segs.length<3){
-              alert('In dieser PDF steckt weder ein Seitenbild noch lesbare Vektorlinien. Screenshot der PDF-Seite machen und den anhaengen.');
+            // ECHTE ZEICHNUNG oder reiner Profil-Plot? [25.09.2026] Der
+            // Direktweg (laengster Zug als Kontur, 1:1) stimmt nur fuer einen
+            // Plot, der NUR das Profil traegt (SB-001: bitgleich zur DXF). In
+            // jeder echten Zeichnung ist der laengste Zug der Blattrahmen.
+            // Direktweg daher nur, wenn der laengste Zug geschlossen und
+            // achsensymmetrisch ist und das Blatt kaum etwas anderes traegt.
+            let direkt=false;
+            if(vk.segs.length>=3 && vk.segs.length<300){
+              const kk=dxfKetten(vk.segs); const hw=[];
+              const k0=kk[0]||[];
+              const zu=k0.length>2 && Math.hypot(k0[0].a[0]-k0[k0.length-1].b[0], k0[0].a[1]-k0[k0.length-1].b[1])<0.01;
+              if(zu && k0.length>=0.5*vk.segs.length){ pdfAchseNormieren(k0, hw); direkt=!hw.length; }
+            }
+            if(!direkt){
+              let ok=false;
+              try{ ok=await pdfvUnterlageImport(bytes, f.name); }catch(e){ ok=false; }
+              if(!ok) alert('In dieser PDF steckt weder ein Seitenbild noch lesbare Vektorlinien. Screenshot der PDF-Seite machen und den anhaengen.');
               return;
             }
             const ketten=dxfKetten(vk.segs);
