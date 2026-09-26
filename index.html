@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="26.09.2026 18:37 (2a258e1b)";</script>
+<script>window.__DZ_STAND="26.09.2026 19:00 (a35d0373)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4561,7 +4561,17 @@ tragen danach &bdquo;Stirn fertig&ldquo; und lassen das Planelement aus.</li>
 Max-&empty; der OFFENEN Konturen (geschlossene Z&uuml;ge sind Rohteilkonturen);
 Innenkontur = weitere Kontur mit deutlich kleinerem Max-&empty;; Bohrer =
 gr&ouml;&szlig;ter, der durch die kleinste Innenbohrung passt (vorbohren und
-aufdrehen ist der Normalfall).</li>
+aufdrehen ist der Normalfall). <b>Eine EINZELNE Kontur erkennt der Planer
+seit dem 26.09.2026 an ihrer Geometrie als Innenkontur:</b> springen alle
+steilen Schultern (&uuml;ber 75&deg;) auf dem Weg von der Stirn zum Futter nach
+innen und keine nach au&szlig;en, ist es ein Absatz innen &ndash; au&szlig;en w&auml;re
+dieselbe Schulter ein Hinterschnitt. Beim <b>Rohr</b> gilt zus&auml;tzlich: eine
+Kontur, die auf der Rohrbohrung XI endet, ist die Ausdrehung; die Vorbohrung
+ist dann XI, ein Bohrschritt entf&auml;llt (au&szlig;er ein Bohrer weitet die Bohrung
+vor dem Ausdrehen), und der Planzug endet an der Bohrung. Dann entsteht nur
+Planen + Innen-Kette, au&szlig;en bleibt Rohteil &ndash; die Meldung sagt es. Ein
+blo&szlig;er Zylinder ohne Schulter und jede Kontur mit T&auml;lern (beide
+Richtungen) bleiben Au&szlig;enkontur.</li>
 <li id="ba-pl-taeler"><b>T&auml;ler der Au&szlig;enkontur:</b> schmal und steil
 (Mund &le; 12 mm, Flanken &gt; 75&deg;) &rarr; EINSTECHEN als letzter Schritt, Werte
 aus der Talgeometrie, Stecher nach Klingenbreite. Breite Tasche mit beidseitigem
@@ -22577,6 +22587,47 @@ function planerAntwortenLesen(){
     antw.gewinde.push({an:!!(s&&s.dataset.v==='ja'), p:(isFinite(p)&&p>0)?p:undefined}); });
   return antw;
 }
+// INNEN ODER AUSSEN? [Daniel, 26.09.2026: 'Warum erkennt der Planer nicht,
+// dass es sich um einen Absatz innen handelt? Er schlaegt aussen Schruppen/
+// Schlichten vor.'] Bis dahin galt eine EINZIGE Kontur immer als Aussen-
+// kontur; innen wurde nur eine ZWEITE Kontur mit kleinerem Max-⌀ (Stufe 3).
+// Die Geometrie sagt es aber selbst: eine SCHULTER, die auf dem Weg von der
+// Stirn zum Futter nach INNEN springt (kleinerer ⌀), ist aussen ein
+// Hinterschnitt - die Flaeche zeigt zum Futter, kein Aussendreher kommt
+// von vorn heran. Innen ist genau das der normale Absatz (Bohrungsgrund,
+// Absatz in der Ausdrehung). Springen ALLE steilen Schultern nach innen
+// und keine nach aussen, ist die Kontur eine Innenkontur. Zweite Regel
+// fuer das ROHR: endet die Kontur auf der Rohrbohrung XI und liegt sie
+// weiter aussen, ist sie die Ausdrehung. Steil = ueber 75 Grad zur Achse;
+// ein Kegel zaehlt nicht (den faehrt aussen wie innen jede Platte im
+// Rahmen ihres Winkels). Eine Kontur, die vom Futter zur Stirn gezeichnet
+// ist, wird gedanklich umgedreht (rueck) - dieselbe Kontur, dieselbe
+// Antwort. Taeler (Einstiche, Taschen) haben BEIDE Richtungen und bleiben
+// damit aussen; ein blosser Zylinder ohne Schulter bleibt aussen.
+function konturIstInnen(els, xi){
+  if(!els || els.length<2) return false;
+  const pts=els.filter(e=>isFinite(e.x)&&isFinite(e.z));
+  if(pts.length<2) return false;
+  const rueck = pts[0].z < pts[pts.length-1].z - 0.01;
+  const steil=Math.tan(75*Math.PI/180);
+  let nachInnen=0, nachAussen=0;
+  for(let i=1;i<pts.length;i++){
+    const dz=Math.abs(pts[i].z-pts[i-1].z), dr=(pts[i].x-pts[i-1].x)/2*(rueck?-1:1);
+    if(Math.abs(dr)<0.01) continue;
+    if(Math.abs(dr) < steil*dz) continue;
+    if(dr<0) nachInnen++; else nachAussen++;
+  }
+  if(nachInnen>0 && nachAussen===0) return true;
+  const ende=rueck? pts[0] : pts[pts.length-1];
+  const mx=Math.max.apply(null, pts.map(p=>p.x));
+  if((+xi||0)>0 && nachAussen===0 && Math.abs(ende.x-xi)<=1 && mx>xi+1) return true;
+  return false;
+}
+// Rohr-Innen-⌀ des Programmkopfs, 0 beim Zylinder.
+function planerRohrXI(){
+  const f=document.getElementById('pkForm'), x=document.getElementById('pkXI');
+  return (f && f.value==='rohr' && x) ? (+x.value||0) : 0;
+}
 // interaktiv=true nur aus der Bedienung (Softkey/Rueckfrage-Maske):
 // dann duerfen Rueckfragen erscheinen. Direktaufrufe (Pruefstand,
 // Skripte) laufen wie bisher als reine Automatik durch.
@@ -22586,14 +22637,21 @@ function programmVorschlagen(interaktiv){
   // (44 % Quote, Phantom-Flanken). Aussen = der groesste Max-⌀
   // unter den OFFENEN Konturen; geschlossene Zuege (zurueck auf
   // x0/zStart) sind Rohteilkonturen und scheiden aus.
+  // NUR INNEN [26.09.2026]: eine Innenkontur (konturIstInnen) kommt nie in
+  // die Aussenwahl. Gibt es KEINE Aussenkontur, wird die groesste Innen-
+  // kontur geplant: Planen + Innen-Kette, aussen bleibt Rohteil.
+  let nurInnen=false;
+  const xiRohr=planerRohrXI();
   {
     const offen=(c)=>{ const e0=c.els&&c.els[0], eN=c.els&&c.els[c.els.length-1];
       if(!e0||!eN) return false;
       return !(Math.abs((eN.x||0)-(e0.x||0))<0.01 && Math.abs(eN.z-e0.z)<0.01); };
-    let best=-1, bestMx=-1;
+    let best=-1, bestMx=-1, bestI=-1, bestIMx=-1;
     contours.forEach((c,ci)=>{ if(!c.els||c.els.length<2||!offen(c)) return;
       const mx=Math.max.apply(null,c.els.filter(e=>isFinite(e.x)).map(e=>e.x));
+      if(konturIstInnen(c.els, xiRohr)){ if(mx>bestIMx){ bestIMx=mx; bestI=ci; } return; }
       if(mx>bestMx){ bestMx=mx; best=ci; } });
+    if(best<0 && bestI>=0){ best=bestI; nurInnen=true; }
     if(best>=0 && best!==activeContourIdx){
       try{ switchContour(best); }catch(e){ activeContourIdx=best; }
     }
@@ -22625,6 +22683,7 @@ function programmVorschlagen(interaktiv){
   }
   const hinweiseVorab=[];
   if(richtungGedreht) hinweiseVorab.push('Die Kontur war vom FUTTER zur Stirn gezeichnet — fuer den Vorschlag wurde die Laufrichtung umgekehrt (gleiche Geometrie, Stirn -> Futter).');
+  if(nurInnen) hinweiseVorab.push('INNENKONTUR erkannt (die Schultern springen zum Futter hin nach innen'+(xiRohr>0?' bzw. die Kontur endet auf der Rohrbohrung XI'+fmt(xiRohr):'')+') — geplant wird Planen + Innen-Kette; aussen bleibt Rohteil. Soll es doch eine Aussenkontur sein, ist es ein Hinterschnitt: Stechdrehen von Hand anlegen.');
   // WERKZEUGWAHL nach Daniels Praxis [30.08.2026]: geschruppt wird
   // mit der C-PLATTE (80 Grad, bevorzugt 95-Grad-Halter),
   // geschlichtet mit der V-PLATTE (35 Grad). Ohne Aussendreher gibt
@@ -22642,7 +22701,7 @@ function programmVorschlagen(interaktiv){
   const fallMax=(()=>{ try{ return planerKonturMaxFall(sampleContourForRough()); }catch(e){ return 0; } })();
   const schrupp = planerSchruppWahl(fallMax)
                || toolTable.find(t=>t.art==='aussen');
-  if(schrupp && fallMax>3.5){
+  if(schrupp && fallMax>3.5 && !nurInnen){
     const capS=toolFlankCapability(schrupp.t);
     if(capS && capS.maxFall < fallMax-0.5)
       hinweiseVorab.push('fallende Flanke '+fmt(Math.round(fallMax))+' Grad uebersteigt auch die '+fmt(+schrupp.sw||0)+'-Grad-Platte — sie bleibt beim Schruppen stehen (Schlichter/Restbearbeitung pruefen)');
@@ -22673,13 +22732,14 @@ function programmVorschlagen(interaktiv){
   // gefahrlos wiederholbar.
   // ================================================================
   const taeler=(()=>{ let t=[];
+    if(nurInnen) return t;
     try{
       const envE=roughEnvelope(0,0);
       const ptsE=sampleContourForRough();
       if(envE && ptsE.length) t=findPockets(envE, ptsE[0].z, ptsE[ptsE.length-1].z);
     }catch(e){}
     return t; })();
-  const funde=planerFunde(taeler);
+  const funde=nurInnen? {taeler:[], freistiche:[], gewinde:[]} : planerFunde(taeler);
   const antw=window.__planerAntworten||null;
   window.__planerFunde=funde;             // Offenlegung fuer den Pruefstand
   if(interaktiv && !antw && (funde.taeler.length || funde.freistiche.length || funde.gewinde.length)){
@@ -22701,21 +22761,28 @@ function programmVorschlagen(interaktiv){
     .map(o=>({...o, mx:Math.max.apply(null,o.c.els.filter(e=>isFinite(e.x)).map(e=>e.x))}))
     .filter(o=> o.mx < maxX-0.5)
     .sort((a,b)=>b.mx-a.mx);
-  const innenK=innenKandidaten[0]||null;
+  const innenK=nurInnen ? {c:contours[activeContourIdx], ci:activeContourIdx, mx:maxX} : (innenKandidaten[0]||null);
   if(innenKandidaten.length>1) hinweise.push('mehrere Innen-Kandidaten — geplant wird '+innenK.c.name);
   let innenPlan=null;
   if(innenK){
     const iEls=innenK.c.els;
     const minInnen=Math.min.apply(null,iEls.filter(e=>isFinite(e.x)&&e.x>0.5).map(e=>e.x));
     const zInnenEnde=Math.min.apply(null,iEls.filter(e=>isFinite(e.z)).map(e=>e.z));
-    const bohrer=toolTable.filter(t=>t.art==='bohren' && !(/zentrier/i.test(t.name||'')) && +t.dm>0 && +t.dm<=minInnen+0.01)
+    // ROHR [26.09.2026]: die Vorbohrung IST die Rohrbohrung XI - ein Bohrer
+    // ist nur noetig, wenn er die Bohrung vor dem Ausdrehen weitet (dm ueber
+    // XI und unter dem kleinsten Kontur-⌀); sonst dreht die Bohrstange ab XI.
+    const bohrer=toolTable.filter(t=>t.art==='bohren' && !(/zentrier/i.test(t.name||'')) && +t.dm>0 && +t.dm<=minInnen+0.01 && +t.dm>xiRohr+0.5)
       .sort((a,b)=>+b.dm-+a.dm)[0]||null;
     const zentrierer=toolTable.find(t=>t.art==='bohren' && /zentrier/i.test(t.name||''));
     const iSchrupp=toolTable.find(t=>t.art==='innen' && (+t.sw||0)>=55) || toolTable.find(t=>t.art==='innen');
     const iSchlicht=toolTable.find(t=>t.art==='innen' && (+t.sw||99)<=40) || iSchrupp;
-    if(!bohrer) hinweise.push('INNEN AUSGELASSEN: kein Bohrer <= ⌀'+fmt(minInnen)+' in der Tabelle');
+    if(!bohrer && !(xiRohr>0)) hinweise.push('INNEN AUSGELASSEN: kein Bohrer <= ⌀'+fmt(minInnen)+' in der Tabelle');
     else if(!iSchrupp) hinweise.push('INNEN AUSGELASSEN: kein Innen-Drehwerkzeug in der Tabelle');
-    else innenPlan={iEls, minInnen, zInnenEnde, bohrer, zentrierer, iSchrupp, iSchlicht, cid:innenK.c.id};
+    else {
+      innenPlan={iEls, minInnen, zInnenEnde, bohrer, zentrierer, iSchrupp, iSchlicht, cid:innenK.c.id,
+        rohr:(xiRohr>0), vorb:(bohrer? +bohrer.dm : xiRohr)};
+      if(xiRohr>0 && !bohrer) hinweise.push('Rohr: Vorbohrung = Rohrbohrung ⌀'+fmt(xiRohr)+', kein Bohrschritt');
+    }
     // KEIN Hinweis bei kleinerem Bohrer: vorbohren und aufdrehen ist
     // der Normalfall (Buchse: ⌀26 -> 40/48,4). Gewarnt wird nur,
     // wenn GAR KEIN Bohrer passt (oben).
@@ -22726,7 +22793,7 @@ function programmVorschlagen(interaktiv){
   // am Ende (die Stirnflaeche ist Teil der gezeichneten Kontur).
   if(zA > st.z + 0.01){
     neu.push({id:stepCounter++, type:'abspanen_einfach', params:{
-      richtung:'plan', bearbeitung:'schruppen', z0:zA, z1:st.z, x0:stock+2, x1:0,
+      richtung:'plan', bearbeitung:'schruppen', z0:zA, z1:st.z, x0:stock+2, x1:(xiRohr>0? Math.max(0, xiRohr-2) : 0),
       d:1.5, ux:0.1, uz:0.1, safeZ:pkSC(), t:String(schrupp.t),
       fr:fr, ff:ff, sr:sr, sf:sf }});
   } else hinweise.push('Planen entfaellt (Rohteil beginnt an der Stirn)');
@@ -22743,7 +22810,7 @@ function programmVorschlagen(interaktiv){
   // Schlichtgang im Nachgang ist besser']. Die Trennung traegt
   // spaeter auch die Innen-Regel: erst alles schruppen (aussen und
   // innen, wegen Materialverzug), dann alles schlichten.
-  neu.push({id:stepCounter++, type:'abspanen_kontur', params:{
+  if(!nurInnen) neu.push({id:stepCounter++, type:'abspanen_kontur', params:{
     contourId:cid, bearbeitung:'schruppen', richtung:'z-parallel', lage:'aussen',
     schlRicht:'rl', stock:stock, stockZ:stirnStand, d:1.5, ux:0.3, uz:0.1,
     safeZ:pkSC(), t:String(schrupp.t),
@@ -22752,8 +22819,8 @@ function programmVorschlagen(interaktiv){
   // er ueberhaupt ausdrehen kann']: zentrieren -> Tieflochbohren ->
   // innen SCHRUPPEN. Erst danach wird geschlichtet (aussen, dann
   // innen) — vom Groben zum Feinen, Spannungen zuerst heraus.
-  if(innenPlan){
-    if(innenPlan.zentrierer){
+  if(innenPlan && innenPlan.bohrer){
+    if(innenPlan.zentrierer && !innenPlan.rohr){
       neu.push({id:stepCounter++, type:'bohren', params:{
         art:'zentrieren', z0:st.z, z1:st.z-4, dt:0.5, safe:pkSC(),
         f:+(0.08*w.f).toFixed(3), s:Math.max(100,Math.round(1200*w.vc/10)*10), t:String(innenPlan.zentrierer.t) }});
@@ -22764,9 +22831,11 @@ function programmVorschlagen(interaktiv){
       z0:st.z, z1:+(innenPlan.zInnenEnde - 0.3*dmB - 1).toFixed(2),
       d:Math.max(2, Math.round(dmB*0.3)), v2:2, u:2, df:0.8, t1:1, dt:1, safe:3,
       f:+(0.12*w.f).toFixed(3), s:Math.max(100,Math.round(700*w.vc/10)*10), t:String(innenPlan.bohrer.t) }});
+  }
+  if(innenPlan){
     neu.push({id:stepCounter++, type:'abspanen_kontur', params:{
       contourId:innenPlan.cid, bearbeitung:'schruppen', richtung:'z-parallel', lage:'innen',
-      schlRicht:'rl', stock:dmB, stockZ:stirnStand, d:1, ux:0.2, uz:0.1,
+      schlRicht:'rl', stock:innenPlan.vorb, stockZ:stirnStand, d:1, ux:0.2, uz:0.1,
       safeZ:pkSC(), t:String(innenPlan.iSchrupp.t),
       fr:+(0.15*w.f).toFixed(3), sr:Math.max(50,Math.round(500*w.vc/10)*10),
       ff:+(0.08*w.f).toFixed(3), sf:Math.max(50,Math.round(700*w.vc/10)*10) }});
@@ -22781,17 +22850,17 @@ function programmVorschlagen(interaktiv){
   // die Aufmassscheibe auf Kontur-⌀ + 2·UX. Der Planschlichtzug
   // startet dort plus 2 mm Sicherheit — nie hoeher als das Rohteil.
   const stirnDia=(()=>{ try{ const v=contourXatZ(st.z-0.05, sampleContourForRough()); return (isFinite(v)&&v>0.5)? v : maxX; }catch(e){ return maxX; } })();
-  const planSchlichtX0=Math.min(stock+2, stirnDia + 2*0.3 + 2);
+  const planSchlichtX0=nurInnen? (stock+2) : Math.min(stock+2, stirnDia + 2*0.3 + 2);
   if(zA > st.z + 0.01){
     neu.push({id:stepCounter++, type:'abspanen_einfach', params:{
       richtung:'plan', bearbeitung:'schlichten', z0:stirnStand, z1:st.z, x0:planSchlichtX0, x1:0,
-      planBis:(innenPlan? +(innenPlan.iEls.find(e=>isFinite(e.x)&&e.x>0.5)||{}).x||0 : 0),
+      planBis:(innenPlan? +(innenPlan.iEls.find(e=>isFinite(e.x)&&e.x>0.5)||{}).x||0 : (xiRohr>0? xiRohr : 0)),
       d:1.5, ux:0, uz:0, safeZ:pkSC(), t:String(schlicht.t),
       fr:fr, ff:ff, sr:sr, sf:sf }});
   }
   // 4. KONTUR SCHLICHTEN — die Stirn ist fertig (planFertig): der
   // Zug beginnt radial am Fasenfuss statt mit dem X0-Hochzieher.
-  neu.push({id:stepCounter++, type:'abspanen_kontur', params:{
+  if(!nurInnen) neu.push({id:stepCounter++, type:'abspanen_kontur', params:{
     contourId:cid, bearbeitung:'schlichten', richtung:'z-parallel', lage:'aussen',
     schlRicht:'rl', stock:stock, stockZ:(zA>st.z+0.01? st.z : stirnStand), d:1.5, ux:0.3, uz:0.1,
     planFertig:(zA>st.z+0.01?'ja':undefined),
@@ -22803,7 +22872,7 @@ function programmVorschlagen(interaktiv){
   if(innenPlan){
     neu.push({id:stepCounter++, type:'abspanen_kontur', params:{
       contourId:innenPlan.cid, bearbeitung:'schlichten', richtung:'z-parallel', lage:'innen',
-      schlRicht:'rl', stock:+innenPlan.bohrer.dm, stockZ:(zA>st.z+0.01? st.z : stirnStand), d:1, ux:0.2, uz:0.1,
+      schlRicht:'rl', stock:innenPlan.vorb, stockZ:(zA>st.z+0.01? st.z : stirnStand), d:1, ux:0.2, uz:0.1,
       planFertig:(zA>st.z+0.01?'ja':undefined),
       safeZ:pkSC(), t:String(innenPlan.iSchlicht.t), t2:String(innenPlan.iSchlicht.t),
       fr:+(0.15*w.f).toFixed(3), sr:Math.max(50,Math.round(500*w.vc/10)*10),
@@ -22937,7 +23006,7 @@ function programmVorschlagen(interaktiv){
       hinweise.push('Gewinde ⌀'+fmt(gk.x0)+' P'+fmt(p)+': die Kontur traegt den NENN-⌀ — Kerndurchmesser/Vorbearbeitung selbst pruefen');
     });
   }
-  if(!fsAngelegt && !gwAngelegt)
+  if(!fsAngelegt && !gwAngelegt && !nurInnen)
     hinweise.push('keine Freistiche/Gewinde angelegt'+((funde.freistiche.length||funde.gewinde.length)?' (in der Rueckfrage abgewaehlt)':' — keine Kandidaten in der Kontur')+'; von Hand ergaenzen geht jederzeit: erst Freistiche, dann Gewinde');
   // KEIN automatisches Abstechen [Daniel: 'soll nicht grundsaetzlich
   // abstechen — die Praxis ist erste Aufspannung, umdrehen, zweite
@@ -22956,17 +23025,18 @@ function programmVorschlagen(interaktiv){
     const code=buildProgram();
     if(code){
       const b=massBericht();
-      const q=Math.round(100*b.aussen.treffLen/Math.max(0.001,b.aussen.gesamtLen));
-      mess=' — Massbericht: '+q+' % der Aussenkontur erreicht'+((b.aussen.zonen||[]).length? (', '+b.aussen.zonen.length+' Restzone(n)') : ', kein Restmaterial');
+      const seite=(nurInnen && b.innen)? b.innen : b.aussen;
+      const q=Math.round(100*seite.treffLen/Math.max(0.001,seite.gesamtLen));
+      mess=' — Massbericht: '+q+' % der '+(nurInnen?'Innen':'Aussen')+'kontur erreicht'+((seite.zonen||[]).length? (', '+seite.zonen.length+' Restzone(n)') : ', kein Restmaterial');
     } else mess=' — ACHTUNG: NC blockiert, Meldungen in der G-Code-Ansicht pruefen';
   }catch(e){}
-  alert('PROGRAMMVORSCHLAG ('+(innenPlan?'aussen + innen':'aussen')+'): '+neu.length+' Schritte angelegt'+mess+'.'+String.fromCharCode(10)+
+  alert('PROGRAMMVORSCHLAG ('+(nurInnen?'nur innen':(innenPlan?'aussen + innen':'aussen'))+'): '+neu.length+' Schritte angelegt'+mess+'.'+String.fromCharCode(10)+
     (hinweise.length? hinweise.join(' · ')+String.fromCharCode(10) : '')+
     'Jeder Schritt ist in seiner Maske aenderbar; Undo nimmt alles zurueck. Einstiche, Freistiche, Gewinde und Innenbearbeitung bitte ergaenzen (Stufe 2/3 folgt).');
   // Reihenfolge-Regel fuer Stufe 3 steht hier als Anker: Innen-
   // Schritte gehoeren ZWISCHEN Kontur-Schruppen und -Schlichten
   // (erst alles schruppen, dann alles schlichten — Materialverzug).
-  window.__vorschlagStand={schritte:neu.length, hinweise:hinweise.slice()};
+  window.__vorschlagStand={schritte:neu.length, hinweise:hinweise.slice(), nurInnen:nurInnen};
   return true;
 }
 function werkstoffJetzt(){
