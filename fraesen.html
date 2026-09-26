@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="26.09.2026 10:37 (a5b8d893)";</script>
+<script>window.__DZ_STAND="26.09.2026 12:19 (73c43235)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2943,7 +2943,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
                des Teils entsteht hier die PLATTE mit der Kavitaet. Deshalb eigene Zeile ohne
                Nummer - wie Ansicht und einzeln. -->
           <div class="stufe" id="stufeForm"><span class="tit">Form aus Blister</span><span class="lbl">Rand</span><input type="number" id="formRand" step="any" value="15" title="Wieviel Platte um den Blister herum stehen bleibt, in mm je Seite. Hier wird gespannt und abgedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Boden</span><input type="number" id="formBoden" step="any" value="15" title="Wieviel Platte unter der tiefsten Stelle der Kavit&auml;t bleibt, in mm. Durch diesen Boden gehen sp&auml;ter die Vakuumbohrungen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Entformung</span><input type="number" id="formEntform" step="any" value="5" title="Geforderter Entformungswinkel in Grad, gemessen von der Senkrechten. Die App PR&Uuml;FT ihn nur und nennt jede Stelle, die steiler steht &mdash; die Formschr&auml;ge geh&ouml;rt ins CAD, nicht ins CAM." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Schr&auml;ge</span><select id="formKorr" title="Was tun, wenn eine Wand steiler steht, als der Entformungswinkel erlaubt? MELDEN (Vorgabe) l&auml;sst die Form wie das Modell und nennt die Stellen. BODEN VERJ&Uuml;NGEN neigt die W&auml;nde, indem der Boden kleiner wird. &Ouml;FFNUNG WEITEN neigt sie, indem die &Ouml;ffnung gr&ouml;&szlig;er wird &mdash; das frisst in den Flansch. Beides &auml;ndert das BAUTEIL; die Meldung nennt die Fl&auml;che vorher und nachher." style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:150px;"><option value="aus">nur melden</option><option value="boden">Boden verj&uuml;ngen</option><option value="oeffnung">&Ouml;ffnung weiten</option></select><button class="gcbtn" id="btnStepForm" title="Aus dem Modell des fertigen Blisters die Platte machen, in der er tiefgezogen wird: Kavit&auml;t = Au&szlig;enfl&auml;che des Blisters, Platte drumherum, Sollform ans Programm">Form ableiten</button></div>
-          <div class="stufe" id="stufeVakuum"><span class="tit">Vakuumbohrungen</span><span class="lbl">&#x2300;</span><input type="number" id="vakD" step="any" value="1" title="Durchmesser der Vakuumbohrung in mm. Ueblich sind 0,5 bis 1 mm &mdash; gross genug fuer die Luft, klein genug, dass sich die Folie nicht hineinzieht und einen Pickel macht." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Abstand</span><input type="number" id="vakAbstand" step="any" value="30" title="Groesster Abstand zweier Bohrungen in mm. Die App setzt zuerst in die Ecken, dann fuellt sie auf, bis nirgends mehr als dieser Abstand bleibt." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Tiefe</span><input type="number" id="vakTiefe" step="any" value="0" title="Bohrtiefe ab der Kavitaetsflaeche in mm. 0 = durch die ganze Platte. Bei duennen Bohrungen ist das ueblicherweise nicht machbar: dann hier 1 bis 2 mm eintragen und die Kammer von der Rueckseite aufbohren (zweite Aufspannung, die plant die App nicht)." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepVakuum" title="Die Entlueftung setzen: in jede ebene Flaeche der Kavitaet, von der es nicht weiter nach unten geht, kommen Punkte in die Ecken und dazwischen. Daraus werden Bohrbilder und &mdash; wenn ein passender Bohrer in der Tabelle steht &mdash; Bohrschritte vor dem Schlichten.">Vakuumbohrungen setzen</button></div>
+          <div class="stufe" id="stufeVakuum"><span class="tit">Vakuumbohrungen</span><span class="lbl">&#x2300;</span><input type="number" id="vakD" step="any" value="1" title="Durchmesser der Vakuumbohrung in mm. Ueblich sind 0,5 bis 1 mm &mdash; gross genug fuer die Luft, klein genug, dass sich die Folie nicht hineinzieht und einen Pickel macht." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Abstand</span><input type="number" id="vakAbstand" step="any" value="30" title="Groesster Abstand zweier Bohrungen in mm. Die App setzt zuerst in die Ecken, dann fuellt sie auf, bis nirgends mehr als dieser Abstand bleibt." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Tiefe</span><input type="number" id="vakTiefe" step="any" value="0" title="Bohrtiefe ab der Kavitaetsflaeche in mm. 0 = durch die ganze Platte. Bei duennen Bohrungen ist das ueblicherweise nicht machbar: dann hier 1 bis 2 mm eintragen und die Kammer von der Rueckseite aufbohren (zweite Aufspannung: R&uuml;ckseite als Programm)." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepVakuum" title="Die Entlueftung setzen: in jede ebene Flaeche der Kavitaet, von der es nicht weiter nach unten geht, kommen Punkte in die Ecken und dazwischen. Daraus werden Bohrbilder und &mdash; wenn ein passender Bohrer in der Tabelle steht &mdash; Bohrschritte vor dem Schlichten.">Vakuumbohrungen setzen</button></div>
           <div class="stufe" id="stufeRueck"><span class="tit">R&uuml;ckseite</span><span class="lbl">Wand</span><input type="number" id="rsWand" step="any" value="3" title="Restwandst&auml;rke zwischen dem tiefsten Punkt der Kavit&auml;t und der Decke der Absaugkammer, in mm. Sie bestimmt zugleich, wie tief die Vakuumbohrungen von oben noch sein m&uuml;ssen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Spannkante</span><input type="number" id="rsSpann" step="any" value="15" title="Breite des Randes, der ringsum stehen bleibt, in mm. Dort wird die Form eingebaut und gedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepRueck" title="Die zweite Aufspannung als eigenes Programm: die gewendete Platte als Rohteil und die Absaugkammer als Rechtecktasche. Das Programm der Vorderseite kommt vorher in die Ablage.">R&uuml;ckseite als Programm</button></div>
           <!-- AUSWAHL [23.09.2026]: der Schritt vom Autopilot zum Werkzeug.
                In der Sollform-Ansicht waehlt ein Tipp die Flaeche, die dort
@@ -2956,6 +2956,10 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
             <button class="gcbtn" id="btnBereichLeeren" title="Auswahl verwerfen">leeren</button>
           </div>
           <div class="stufe" id="stufeProgramm"><span class="nr">4</span><span class="tit">Programm</span><button class="gcbtn primary" id="btnStepPlan" title="Der ganze Vorschlag in einem Zug: planen, schruppen, bohren, schlichten &mdash; in dieser Reihenfolge und mit so wenig Werkzeugwechseln wie m&ouml;glich">Programm vorschlagen</button><button class="gcbtn" id="btnStepEinzeln" title="Nur Teile des Vorschlags: die Fl&auml;chen, die Bohrungen oder die Konturen einer Z-Ebene">einzeln &#x25BE;</button></div>
+          <!-- DIE ZWEITE AUFSPANNUNG [26.09.2026, Punkt 4]: das Teil wird auf die Gegenachse gewendet,
+               das Rohteil der zweiten Seite ist der Stand nach der ersten (aus der eigenen Simulation),
+               das Programm der ersten Seite geht in die Ablage, der Planer legt die zweite Seite an. -->
+          <div class="stufe" id="stufeAufsp2"><span class="nr">5</span><span class="tit">Zweite Aufspannung</span><button class="gcbtn" id="btnStepAufsp2" title="Das Teil wenden und die zweite Seite planen: Rohteil = der Stand nach der ersten Seite (aus der Simulation, Durchbr&uuml;che ohne Material), Sollform der Gegenachse, Programm der ersten Seite vorher in die Ablage. Schon durchgebohrte L&ouml;cher werden nicht noch einmal geplant.">Wenden und Seite 2 planen</button></div>
           <div class="stufe stufe-ansicht"><span class="tit">Ansicht</span><span style="display:inline-flex;gap:2px;"><button class="gcbtn primary" id="btnStepDraht" title="Drahtbild des Modells">Drahtbild</button><button class="gcbtn" id="btnStepSoll" title="Sollform von oben: die Höhe, auf die gefräst werden muss">Sollform</button><button class="gcbtn" id="btnStepRest" title="Materialstand nach dem letzten Schruppschritt des Arbeitsplans (Modell abspanen / Restmaterial abspanen) — rot, was über der Sollform samt Aufmaß steht: das Restmaterial für den nächsten Schritt">Reststand</button></span><button class="gcbtn" id="btnStepHilfe" title="Anleitung Kap. 5c: Aufspannung, Sollform, Raster, Genauigkeit">&#x24D8;</button></div>
           <div class="stufe stufe-einzeln" id="stepEinzeln" style="display:none;"><span class="tit">einzeln &uuml;bernehmen</span><button class="gcbtn" id="btnStepFlaechen" title="Nur die Fl&auml;chen: planen, Modell abspanen, Schr&auml;gen schlichten &mdash; die Schritte stehen danach VOR den Bohrungen">Fl&auml;chen übernehmen</button><button class="gcbtn" id="btnStepBohren" title="Die Bohrungen des Modells als Bohrbilder und Schritte anlegen: ein Zentrierschritt über alle Stellen, danach je Durchmesser einer — größter zuerst">Bohrungen übernehmen</button><span class="lbl">Z-Ebene</span><select id="stepEbene" style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:210px;"></select><button class="gcbtn" id="btnStepKonturen" title="Die Schleifen dieser Ebene als XY-Konturen in den Arbeitsplan legen">Konturen übernehmen</button></div>
         </div>
@@ -3396,8 +3400,8 @@ Von der Wand halten sie mindestens das Anderthalbfache des Bohrerdurchmessers Ab
 <dt id="ba-fk05c-vakuum2">Durchmesser, Abstand, Tiefe</dt><dd>&Uuml;blich sind <b>&#x2300;0,5 bis 1 mm</b>: gro&szlig; genug f&uuml;r die Luft, klein genug, da&szlig; sich die Folie nicht hineinzieht und
 einen Pickel macht. Der <i>Abstand</i> ist der gr&ouml;&szlig;te Abstand zweier Bohrungen (Vorgabe 30 mm). Die <i>Tiefe</i> 0 hei&szlig;t <b>durch die ganze Platte</b> &mdash; das geht bei einer d&uuml;nnen
 Bohrung meist nicht: ein &#x2300;1 durch 15 mm Platte ist ein L&auml;ngen-Durchmesser-Verh&auml;ltnis von 15. &Uuml;blich ist, von der <b>R&uuml;ckseite</b> auf &#x2300;4 bis 6 aufzubohren und nur die letzten
-1 bis 2 mm d&uuml;nn stehen zu lassen; dann setzen sie auch nicht zu. Das ist eine <b>zweite Aufspannung</b> &mdash; die plant die App nicht: trag hier die d&uuml;nne Tiefe ein und bohre die
-Kammer von unten. Die App sagt es von sich aus, wenn das Verh&auml;ltnis &uuml;ber 10 liegt.</dd>
+1 bis 2 mm d&uuml;nn stehen zu lassen; dann setzen sie auch nicht zu. Das ist eine <b>zweite Aufspannung</b>: <i>R&uuml;ckseite als Programm</i> (Zeile darunter) legt die Absaugkammer an und
+tr&auml;gt hier die passende d&uuml;nne Tiefe ein; f&uuml;r jedes andere Teil plant Stufe 5 die Gegenseite. Die App sagt es von sich aus, wenn das Verh&auml;ltnis &uuml;ber 10 liegt.</dd>
 <dt id="ba-fk05c-vakuum3">Was angelegt wird</dt><dd>Je H&ouml;henebene ein <b>Bohrbild</b> (ein Bohrschritt hat eine Bezugsebene) und, wenn ein Bohrer mit diesem Durchmesser in der
 Werkzeugtabelle steht, ein <b>Bohrschritt</b>. Fehlt er, bleiben die Bohrbilder trotzdem stehen &mdash; die eigentliche Arbeit ist, die Stellen zu finden; den Schritt stellst Du dann selbst
 dazu. <b>Zentriert wird nicht:</b> der Boden ist frisch gefr&auml;st und eben, ein 1-mm-Bohrer braucht dort keine K&ouml;rnung, und ein NC-Anbohrer w&uuml;rde eine sichtbare Senkung in die
@@ -3413,11 +3417,12 @@ passende Tiefe gleich in das Feld <i>Tiefe</i> der Zeile dar&uuml;ber ein.</dd>
 <dt id="ba-fk05c-rueck3">Zweite Aufspannung, zweites Programm</dt><dd>Die Platte wird <b>gewendet</b> &mdash; das ist eine eigene Aufspannung und deshalb ein eigenes Programm. Das Programm
 der Vorderseite geht dabei nicht verloren: es kommt vorher in die <b>Ablage</b>, unter seinem Namen. Was die App hier <b>nicht</b> plant: den Anschlu&szlig; f&uuml;r den Vakuumschlauch, die
 Befestigungsbohrungen der Maschine und das Planen der R&uuml;ckseite &mdash; welches Lochbild und welcher Anschlu&szlig; gebraucht wird, wei&szlig; nur der, der die Form einbaut.</dd>
-<dt id="ba-fk05c-stufen">Das Fenster in vier Stufen</dt><dd>Die Kopfleiste ist seit dem 19.09.2026 eine <b>Stufenleiste</b> in der Reihenfolge, in der die App
+<dt id="ba-fk05c-stufen">Das Fenster in f&uuml;nf Stufen</dt><dd>Die Kopfleiste ist seit dem 19.09.2026 eine <b>Stufenleiste</b> in der Reihenfolge, in der die App
 die Angaben braucht: <b>1 Laden</b> (die STEP-Datei), <b>2 Ausrichten</b> (Werkzeugachse, Nullpunkt, <i>Aufspannung vorschlagen</i> bewertet die
 sechs Lagen), <b>3 Rohteil &amp; Sollform</b> (<i>Als Rohteil &uuml;bernehmen</i> schreibt den H&uuml;llquader in die BLK FORM &mdash; Aufma&szlig; von Hand dazu;
 <i>Raster</i> und <i>Sollform ans Programm</i> geben den Zyklen das H&ouml;henfeld) und <b>4 Programm</b> (<i>Programm vorschlagen</i> plant alles in einem
-Zug; hinter <i>einzeln</i> liegen Fl&auml;chen, Bohrungen und die Konturen einer Z-Ebene). Rohteil und Sollform stehen VOR dem Vorschlag, weil der
+Zug; hinter <i>einzeln</i> liegen Fl&auml;chen, Bohrungen und die Konturen einer Z-Ebene) und <b>5 Zweite Aufspannung</b> (<i>Wenden und Seite 2 planen</i>,
+Absatz weiter unten). Rohteil und Sollform stehen VOR dem Vorschlag, weil der
 Vorschlag das Rohteil gegen das Modell pr&uuml;ft und ohne Sollform keine Bahn rechnen kann. Rechts <b>Ansicht</b> (Drahtbild / Sollform / Reststand) und der
 Knopf &#x24D8;, der diese Anleitung an dieser Stelle &ouml;ffnet. Unter dem Bild steht nur noch die Farblegende; was Sollform, Raster und
 Genauigkeit bedeuten, steht in den Abs&auml;tzen darunter. Die Zeile <b>Form aus Blister</b> ist keine f&uuml;nfte Stufe, sondern ein ANDERER Einstieg in
@@ -3439,6 +3444,31 @@ bleibt ganz ohne Auflage.
 <br><b>Ehrliche Grenze:</b> gemessen wird die <i>Richtung</i> der Fl&auml;chen, nicht ihr Schatten. Eine nach oben zeigende Fl&auml;che tief in einer engen Tasche
 z&auml;hlt als erreichbar, obwohl kein Fr&auml;ser hineinkommt &mdash; das entscheidet erst die Bahn mit einem konkreten Werkzeug. Und die App w&auml;hlt die Lage,
 nicht das Spannmittel: Schraubstock, Pratzen oder Vorrichtung bleiben Sache des Bedieners.</dd>
+<dt id="ba-fk05c-aufspannung2">Die zweite Aufspannung &mdash; wenden, und das Rohteil ist der Stand der ersten Seite (26.09.2026)</dt><dd>Was von unten
+drankommt, bekommt in der ersten Aufspannung kein Programm &mdash; die Meldung des Vorschlags sagt es (&bdquo;geh&ouml;rt in die ZWEITE Aufspannung&ldquo;). Stufe&nbsp;5,
+<b>Wenden und Seite 2 planen</b>, macht daraus ein zweites Programm. Der Gedanke ist derselbe wie beim Rohteil aus einem zweiten Modell: das Rohteil der
+zweiten Seite ist kein Quader, sondern <b>das, was die erste Seite hinterl&auml;sst</b> &mdash; gewendet. Und das steht l&auml;ngst in der App: die eigene Simulation
+der ersten Seite f&uuml;hrt je Rasterzelle Ober- und Unterseite samt Durchbr&uuml;chen. Gewendet wird ihre Unterseite zur neuen Oberfl&auml;che, ihre Oberfl&auml;che
+zur neuen Unterseite; wo sie durch ist, steht kein Material.
+<br><b>Was der Knopf tut, in dieser Reihenfolge:</b> die erste Seite wird simuliert (das dauert, was eine Simulation dauert); das Programm der ersten Seite
+kommt unter seinem Namen in die <b>Ablage</b> und seine Laufzeit in den Aufspannungs-Merker der Kalkulation; das Modell wird auf die <b>Gegenachse</b> gedreht
+(aus +Z wird &minus;Z: gewendet um die X-Achse, Y spiegelt &mdash; genau so liegt das Teil nach dem Umdrehen auf dem Tisch; der Nullpunkt liegt wieder in der Ecke
+bzw. Mitte mit der Oberkante auf Z0); die gewendete Sollform wird gerechnet, der Stand der ersten Seite wird als <b>Rohform</b> an das neue Programm
+geh&auml;ngt (die BLK FORM ist die H&uuml;lle des Materials), und der Planer legt die zweite Seite an wie jede andere: planen, abspanen, Merkmale, bohren,
+schlichten &mdash; gegen die Rohform, also nur dort, wo nach der ersten Seite noch etwas steht. Das neue Programm hei&szlig;t wie das erste mit <b>-2</b>.
+<br><b>Bohrungen, die schon durch sind, werden nicht noch einmal geplant.</b> Eine Durchgangsbohrung der ersten Seite steht im Modell der zweiten als Loch
+und w&uuml;rde sonst ein zweites Mal gebohrt &mdash; mit dem Bohrer in ein Loch, das es schon gibt. Die App fragt an jeder Bohrstelle die Rohform: steht dort kein
+Material mehr, f&auml;llt die Stelle aus dem Bohrbild (Senkung und Gewinde an ihr ebenso, die k&auml;men von der falschen Seite); die Meldung nennt die Zahl.
+<br><b>Die Meldung sagt, was welche Seite erreicht:</b> der Anteil der Teilfl&auml;chen, die in der ersten Lage drankommen, was die zweite dazu bringt, und was
+in <i>keiner</i> der beiden Lagen erreichbar ist (quer stehende Fl&auml;chen, Hinterschnitte &mdash; daf&uuml;r br&auml;uchte es eine dritte Aufspannung oder eine
+geschwenkte Achse, und beides plant die App nicht).
+<br><b>Grenzen, ehrlich:</b> die Rohform gilt nur in dieser Sitzung &mdash; das Programm der zweiten Seite l&auml;sst sich speichern, der gewendete Stand nicht
+(nach dem Laden gilt wieder der Quader, wie bei jeder Rohform). Der Stand kommt aus der Simulation der ersten Seite; meldet die Kollisionen, ist er unsicher,
+und die Meldung sagt es. Das Spannmittel wird &uuml;bernommen, die Backenoberkante im selben Abstand unter der neuen Oberkante &mdash; das ist eine Annahme.
+Angetippte Bereiche und eine abgeleitete Blisterform geh&ouml;ren zur ersten Lage und werden verworfen. Und wie bei jedem Modell mit Rohform: die Bahnen der
+zweiten Seite sind dieselben, die am Programmierplatz belegt sind &mdash; die zweite Aufspannung selbst ist dort und an der Maschine nicht gelaufen.
+<br><b>Der Pr&uuml;fk&ouml;rper</b> <code>step-modelle/zweiseitig-60x40.step</code> (die App schreibt ihn selbst) hat oben eine Tasche, unten eine Aussparung und
+eine Durchgangsbohrung: Seite 1 bekommt Tasche und Bohrung, Seite 2 die Aussparung &mdash; und die Bohrung nicht noch einmal.</dd>
 <dt id="ba-fk05c-ausrichten">Ausrichten kommt zuerst</dt><dd>Ein CAD-Modell liegt fast nie in der Aufspannlage. In Daniels Teilen zeigt die Werkzeugachse im
 Modell nach <b>Y</b>, nicht nach Z: bei einer Grundplatte sind alle 182 Bohrungsachsen parallel zu Y. Ohne den richtigen Achsenwahl-Schritt w&auml;re jede
 Einordnung falsch (aus 28 B&ouml;den werden dann 7). Deshalb: <b>Werkzeugachse</b> w&auml;hlen, eine Zeile der Aufspannungs-Tafel antippen oder <b>Aufspannung vorschlagen</b> dr&uuml;cken. Scheitert die
@@ -8364,6 +8394,9 @@ function fPlanAbtrag(A, F){
 // erst die Bahn mit einem konkreten Werkzeug.
 function fPlanErreichbar(A){
   let erreichbar = 0, gesamt = 0, unten = 0;
+  // je Flaeche: {id, mm2, oben} - die zweite Aufspannung legt zwei Lagen
+  // uebereinander und fragt, was in KEINER drankommt.
+  const je = [];
   A.flaechen.forEach(f => {
     const G = fStepFlaechePoly(f);
     if(!G || !G.polys || !G.polys.length) return;
@@ -8384,13 +8417,16 @@ function fPlanErreichbar(A){
     }
     gesamt += fl;
     const n = f.achse;
-    if(!n){ erreichbar += fl; return; }          // Freiform: mitzaehlen
-    if(f.lage === 'senkrecht'){ erreichbar += fl; return; }
-    if(n[2] > 0.0002) erreichbar += fl;          // zeigt nach oben
-    else unten += fl;                            // liegt auf dem Tisch
+    let ok = true;
+    if(!n) ok = true;                                    // Freiform: mitzaehlen
+    else if(f.lage === 'senkrecht') ok = true;
+    else if(n[2] > 0.0002) ok = true;                    // zeigt nach oben
+    else ok = false;                                     // liegt auf dem Tisch
+    if(ok) erreichbar += fl; else unten += fl;
+    je.push({id:f.id, mm2:fl, oben:ok, lage:f.lage});
   });
   return {mm2:Math.round(erreichbar), gesamt:Math.round(gesamt), unten:Math.round(unten),
-          anteil:gesamt > 0 ? Math.round(erreichbar / gesamt * 100) / 100 : 0};
+          anteil:gesamt > 0 ? Math.round(erreichbar / gesamt * 100) / 100 : 0, je:je};
 }
 
 // Die sechs Lagen, bewertet. Liefert ALLE - der Vorschlag ist der
@@ -8707,9 +8743,25 @@ function fPlanSenkWerkzeug(prog, dSenk, winkel, dMax){
 // Platte bohrt man um die Spitzenlaenge (0,3 x ⌀ bei 118 Grad) plus 1 mm
 // tiefer, sonst bleibt der Kegel als Kragen stehen. Das steht in der
 // Meldung, damit niemand die Tiefe fuer ein Modellmass haelt.
-function fPlanBohrSchritte(prog, A, F){
+function fPlanBohrSchritte(prog, A, F, opt){
   const B = fPlanBohrungen(A, F);
   const hinweise = B.hinweise.slice(), schritte = [], muster = [];
+  // ZWEITE AUFSPANNUNG [26.09.2026]: was die erste Seite schon DURCHGEHEND
+  // gebohrt hat, steht im Modell der zweiten Seite als Loch und wuerde noch
+  // einmal geplant - mit dem Bohrer in ein Loch, das es schon gibt. opt.durch
+  // sagt je Stelle, ob dort kein Material mehr steht; solche Stellen fallen
+  // aus den Bohrbildern (Senkung und Gewinde an ihnen ebenso - die kaemen
+  // von der falschen Seite).
+  let schonDurch = 0;
+  if(opt && typeof opt.durch === 'function'){
+    B.gruppen.forEach(g => {
+      const bleibt = g.punkte.filter(p => { const d = !!opt.durch(p.x, p.y); if(d) schonDurch++; return !d; });
+      g.punkte = bleibt;
+    });
+    B.gruppen = B.gruppen.filter(g => g.punkte.length);
+    if(schonDurch) hinweise.push(schonDurch + ' Bohrung(en) sind von der ERSTEN Seite schon durchgehend gebohrt und werden nicht noch einmal geplant.');
+  }
+  B.schonDurch = schonDurch;
   if(!B.gruppen.length){
     hinweise.unshift('Keine Bohrung in Werkzeugrichtung gefunden.');
     return {schritte:schritte, muster:muster, hinweise:hinweise, bohrungen:B};
@@ -9575,9 +9627,9 @@ function fPlanMerkmalSchritte(prog, A, F){
 // Reihenfolge. Die Bohrkette behaelt ihre eigene Ordnung (zentrieren,
 // Durchmesser gross nach klein, senken, Gewinde) - sie ist selbst schon
 // nach Werkzeugwechseln geordnet und darf nicht gedreht werden.
-function fPlanProgramm(prog, A, F){
+function fPlanProgramm(prog, A, F, opt){
   const fl = fPlanFlaechen(prog, A, F);
-  const bo = fPlanBohrSchritte(prog, A, F);
+  const bo = fPlanBohrSchritte(prog, A, F, opt);
   // Merkmale [26.09.2026]: Taschen, Nuten und Konturtaschen als Zyklen,
   // NACH dem Abspanen (sie liefern die exakten Waende mit passendem Werkzeug)
   let mk = {schritte:[], konturen:[], hinweise:[], merkmale:[], absaetze:0};
@@ -9628,8 +9680,9 @@ function fPlanProgramm(prog, A, F){
   if(!schritte.length) hinweise.unshift('Aus diesem Modell laesst sich kein Schritt ableiten.');
   // Was der Planer NICHT kann, gehoert in dieselbe Meldung - sonst haelt
   // man das Programm fuer vollstaendig.
-  hinweise.push('NICHT geplant: offene Absaetze und mehrere Zapfen in einem Absatz als eigene Zyklen (die bleiben beim Abspanen), Gewindefraesen, Senkungen ohne Gewinde und die ZWEITE Aufspannung.');
-  return {schritte:schritte, muster:bo.muster, konturen:mk.konturen, merkmale:mk.merkmale, hinweise:hinweise, wechsel:wechsel,
+  hinweise.push('NICHT geplant: offene Absaetze und mehrere Zapfen in einem Absatz als eigene Zyklen (die bleiben beim Abspanen), Gewindefraesen und Senkungen ohne Gewinde.' +
+    ((opt && opt.seite === 2) ? '' : ' Was von UNTEN drankommt, plant der Knopf "Zweite Aufspannung" im STEP-Fenster (Stufe 5) - aus dem Stand, den diese Seite hinterlaesst.'));
+  return {schritte:schritte, muster:bo.muster, konturen:mk.konturen, merkmale:mk.merkmale, hinweise:hinweise, wechsel:wechsel, schonDurch:bo.bohrungen ? (bo.bohrungen.schonDurch || 0) : 0,
           mehrfach:mehrfach, flaechen:fl.schritte.length, bohrungen:bo.schritte.length,
           phasen:F_PLAN_PHASEN.map(ph => ({nr:ph.nr, name:ph.name, n:schritte.filter(x => x.phase === ph.nr).length}))};
 }
@@ -9663,6 +9716,174 @@ function fPlanProgrammText(plan){
   if(!plan.schritte.length) return 'Kein Schritt ableitbar.';
   return plan.schritte.length + ' Schritte in ' + plan.wechsel + ' Werkzeugwechseln: ' +
     plan.phasen.filter(p => p.n).map(p => p.name + ' ' + p.n).join(', ') + '.';
+}
+
+// ===================================================================
+// DIE ZWEITE AUFSPANNUNG [26.09.2026, Punkt 4 der Liste vom 25.09.]
+// ===================================================================
+// Daniels Punkt: "Fraesen: zweite Aufspannung (Umdrehen, Rohteil aus dem
+// Stand der Seite 1)". Bis hierher gab es die zweite Aufspannung nur fuer
+// die Blisterform (fFormRueckseiteProgramm: gewendete Platte, eine Tasche)
+// und sonst den Satz "gehoert in die ZWEITE Aufspannung" in den Meldungen.
+//
+// DER GEDANKE IST DERSELBE WIE BEI DER ROHFORM VOM 20.09.: das Rohteil der
+// zweiten Seite ist kein Quader, sondern das, was die erste Seite
+// hinterlaesst - gewendet. Und das steht laengst in der App: die eigene
+// SIMULATION der Seite 1 (fSimLauf) fuehrt Ober- UND Unterseite je Zelle
+// (h/hu), samt Durchbrueche. Gewendet wird ihre Unterseite zur neuen
+// Oberflaeche, ihre Oberflaeche zur neuen Unterseite, und wo sie durch ist,
+// steht kein Material. Danach laeuft ALLES wie bei jedem Modell: Sollform
+// der Gegenlage, Planer (planen, abspanen, Merkmale, bohren, schlichten),
+// Bahnen gegen die Rohform, Simulation. Es entsteht KEIN neuer Bahnapparat.
+//
+// DIE ABBILDUNG zwischen zwei Lagen desselben Modells: fStepAusrichten
+// rechnet p' = R * p + v (Drehung auf die Werkzeugachse, dann der Nullpunkt
+// in die Ecke bzw. Mitte). Fuer zwei Lagen A1 und A2 gilt also
+//     p2 = R2 * R1^T * (p1 - v1) + v2.
+// Fuer die GEGENACHSE ist R2 * R1^T immer eine Drehung um 180 Grad um eine
+// waagerechte Achse: Z kippt, EINE der beiden XY-Achsen spiegelt (bei +-Z
+// und +-Y die Y-Achse, bei +-X die X-Achse) - genau das Wenden auf dem
+// Tisch. Der Nullpunkt der zweiten Seite liegt wie beim Aufspannen in der
+// Ecke (oder Mitte) mit der Oberkante auf Z0; die Abbildung traegt beide
+// Versaetze mit, deshalb gilt sie auch bei "Mitte, Oberkante".
+function fAufspannungAbbildung(A1, A2){
+  const R1 = fStepDrehung(A1.achse), R2 = fStepDrehung(A2.achse);
+  const v1 = A1.versatz || [0, 0, 0], v2 = A2.versatz || [0, 0, 0];
+  const M = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  for(let i = 0; i < 3; i++) for(let j = 0; j < 3; j++){ let s = 0; for(let k = 0; k < 3; k++) s += R2[i][k] * R1[j][k]; M[i][j] = s; }
+  const vor = p => { const a = p[0] - v1[0], b = p[1] - v1[1], c = p[2] - v1[2];
+    return [M[0][0] * a + M[0][1] * b + M[0][2] * c + v2[0], M[1][0] * a + M[1][1] * b + M[1][2] * c + v2[1], M[2][0] * a + M[2][1] * b + M[2][2] * c + v2[2]]; };
+  const zurueck = p => { const a = p[0] - v2[0], b = p[1] - v2[1], c = p[2] - v2[2];   // M^T
+    return [M[0][0] * a + M[1][0] * b + M[2][0] * c + v1[0], M[0][1] * a + M[1][1] * b + M[2][1] * c + v1[1], M[0][2] * a + M[1][2] * b + M[2][2] * c + v1[2]]; };
+  const spiegelX = M[0][0] < -0.5, spiegelY = M[1][1] < -0.5, zKippt = M[2][2] < -0.5;
+  // quer: die Achsen tauschen (z. B. von +Z nach +X) - das ist keine
+  // Wendung, sondern eine andere Seite; die Rechnung traegt es, die Worte nicht.
+  const quer = !(Math.abs(M[2][2]) > 0.5);
+  return {M:M, vor:vor, zurueck:zurueck, spiegelX:spiegelX, spiegelY:spiegelY, zKippt:zKippt, quer:quer,
+    text:quer ? 'um 90 Grad gekippt (' + A1.achse + ' nach ' + A2.achse + ')'
+              : ('gewendet um die ' + (spiegelY ? 'X' : 'Y') + '-Achse (' + (spiegelY ? 'Y' : 'X') + ' spiegelt, Z kippt; ' + A1.achse + ' nach ' + A2.achse + ')')};
+}
+// Der Quader der ersten Seite, in die zweite Lage gebracht (acht Ecken).
+function fAufspannungQuader(k1, ab){
+  const xs = [+k1.x0, +k1.x1], ys = [+k1.y0, +k1.y1], zs = [+k1.z0, +k1.z1];
+  const B = {x0:Infinity, y0:Infinity, z0:Infinity, x1:-Infinity, y1:-Infinity, z1:-Infinity};
+  xs.forEach(x => ys.forEach(y => zs.forEach(z => { const p = ab.vor([x, y, z]);
+    B.x0 = Math.min(B.x0, p[0]); B.x1 = Math.max(B.x1, p[0]); B.y0 = Math.min(B.y0, p[1]); B.y1 = Math.max(B.y1, p[1]); B.z0 = Math.min(B.z0, p[2]); B.z1 = Math.max(B.z1, p[2]); })));
+  Object.keys(B).forEach(q => { B[q] = fRund(B[q]); });
+  return B;
+}
+// DIE ROHFORM DER ZWEITEN SEITE aus dem Simulationsfeld der ersten (S1 =
+// fSimFeld nach dem Lauf: h Oberseite, hu Unterseite, unten = BLK-Boden).
+// Je Zelle der zweiten Lage: die Stelle der ersten Lage darunter, dort das
+// Material zwischen hu und h - gewendet wird hu zur neuen Oberflaeche.
+// KEIN Material, wo die erste Seite durch ist (h unter dem BLK-Boden oder
+// unter hu: eine Durchgangsbohrung, ein Durchbruch) oder wo neben dem
+// Rohteil nie etwas stand. Der Quader der zweiten Seite ist die Huelle des
+// Materials, nicht der gewendete BLK der ersten - ein oben abgeplantes
+// Aufmass gehoert nicht mehr dazu.
+function fZweiteAufspannungRohform(S1, ab, k1){
+  const Q = fAufspannungQuader(k1, ab);
+  const r = S1.raster;
+  const nx = Math.max(1, Math.ceil((Q.x1 - Q.x0) / r - 1e-9)), ny = Math.max(1, Math.ceil((Q.y1 - Q.y0) / r - 1e-9));
+  const n = nx * ny, h = new Float32Array(n), hu = new Float32Array(n), quelle = new Uint8Array(n);
+  const boden1 = S1.unten;
+  let mat = 0, durch = 0, zTop = -Infinity, zBot = Infinity;
+  for(let j = 0; j < ny; j++){
+    const cy = Q.y0 + (j + 0.5) * r;
+    for(let i = 0; i < nx; i++){
+      const cx = Q.x0 + (i + 0.5) * r, c = j * nx + i;
+      const p1 = ab.zurueck([cx, cy, 0]);
+      const i1 = Math.floor((p1[0] - S1.x0) / S1.raster), j1 = Math.floor((p1[1] - S1.y0) / S1.raster);
+      if(i1 < 0 || j1 < 0 || i1 >= S1.nx || j1 >= S1.ny) continue;      // neben dem Rohteil der Seite 1
+      const c1 = j1 * S1.nx + i1, h1 = S1.h[c1], u1 = S1.hu ? S1.hu[c1] : boden1;
+      if(!(h1 > Math.max(u1, boden1) + F_SIM_EPS)){ durch++; continue; }  // Seite 1 ist hier durch
+      // Gewendet: Unterseite der Seite 1 wird Oberseite der Seite 2.
+      const zo = ab.vor([p1[0], p1[1], u1])[2], zu = ab.vor([p1[0], p1[1], h1])[2];
+      h[c] = Math.max(zo, zu); hu[c] = Math.min(zo, zu); quelle[c] = 1; mat++;
+      if(h[c] > zTop) zTop = h[c]; if(hu[c] < zBot) zBot = hu[c];
+    }
+  }
+  const RF = {x0:Q.x0, y0:Q.y0, nx:nx, ny:ny, raster:r, h:h, hu:hu, quelle:quelle, x1:null, y1:null,
+    unten:mat ? fRund(Math.floor(zBot * 1000) / 1000) : Q.z0, name:'Stand nach Seite 1 (gewendet)',
+    material:mat, durch:durch, zOben:mat ? fRund(Math.ceil(zTop * 1000) / 1000) : Q.z1, quader:Q};
+  // Was die Sollform-Abfragen erwarten (fStepSollIdx liest quelle/h; die
+  // Zaehler stehen der Ansicht Sollform zuliebe da).
+  RF.exakt = mat; RF.geschaetzt = 0; RF.leer = n - mat;
+  return RF;
+}
+// Der Programmkopf der zweiten Seite: Quader = Huelle des gewendeten
+// Materials (X/Y aus dem gewendeten BLK, Z aus der Rohform); alles andere
+// (Profil, Werkstoff, Wechselzeit, Sicherheitsabstaende, Rueckzug, Stand)
+// wie die erste Seite. Das Spannmittel kommt mit, seine Backenoberkante im
+// selben Abstand unter der neuen Oberkante - das ist eine ANNAHME, und die
+// Meldung sagt sie.
+function fZweiteAufspannungName(name){
+  let n = String(name || 'TEIL').trim().toUpperCase().replace(/-2$/, '');
+  return n.slice(0, 22) + '-2';
+}
+function fZweiteAufspannungKopf(k1, RF){
+  const Q = RF.quader;
+  const k2 = Object.assign({}, k1, {name:fZweiteAufspannungName(k1.name),
+    x0:Q.x0, x1:Q.x1, y0:Q.y0, y1:Q.y1, z0:RF.unten, z1:RF.zOben});
+  if(k1.spann && k1.spann !== 'aus') k2.spannZ = fRund(RF.zOben - ((+k1.z1 || 0) - (+k1.spannZ || 0)));
+  return k2;
+}
+// Erreichbarkeit ueber BEIDE Lagen: dieselbe Flaeche (id) einmal in A1, einmal
+// in A2 bewertet - was in keiner drankommt, bleibt uebrig (quer stehende
+// Flaechen, Hinterschnitte).
+function fZweiteAufspannungErreichbar(A1, A2){
+  const e1 = fPlanErreichbar(A1), e2 = fPlanErreichbar(A2);
+  const m2 = {}; (e2.je || []).forEach(f => { m2[f.id] = f; });
+  let ges = 0, nur1 = 0, nur2 = 0, beide = 0, keine = 0;
+  (e1.je || []).forEach(f => { const g = m2[f.id]; const o2 = g ? g.oben : false;
+    ges += f.mm2; if(f.oben && o2) beide += f.mm2; else if(f.oben) nur1 += f.mm2; else if(o2) nur2 += f.mm2; else keine += f.mm2; });
+  const pz = v => ges > 0 ? Math.round(v / ges * 100) : 0;
+  return {gesamt:Math.round(ges), seite1:Math.round(nur1 + beide), seite2:Math.round(nur2 + beide), nur2:Math.round(nur2), keine:Math.round(keine),
+    anteil1:pz(nur1 + beide), anteil2:pz(nur2), anteilKeine:pz(keine)};
+}
+// DAS GANZE: aus dem Programm der ersten Seite (mit Sollform) das Programm
+// der zweiten. DOM-frei; setzt Sollform und Rohform GLOBAL auf die zweite
+// Seite (die Bahnproben des Planers lesen F_ROHFELD) - der Aufrufer, der das
+// nicht will (Pruefstand), stellt beides zurueck.
+//   opt.raster  Raster der Simulation der Seite 1 (0 = automatisch)
+//   opt.sim     fertiges Ergebnis von fSimLauf(prog1) statt eines eigenen Laufs
+//   opt.F2      fertige Sollform der Seite 2
+function fZweiteAufspannung(prog1, A1, A2, opt){
+  opt = opt || {};
+  const hinweise = [];
+  if(!prog1 || !prog1.schritte || !prog1.schritte.filter(s => s && s.aktiv !== false).length)
+    return {ok:false, grund:'Das Programm der ersten Seite hat keine aktiven Schritte - erst Programm vorschlagen, dann die zweite Aufspannung.'};
+  if(!A1 || !A2) return {ok:false, grund:'Beide Aufspannlagen muessen ausgerichtet sein.'};
+  if(String(A1.achse) === String(A2.achse)) return {ok:false, grund:'Die zweite Lage ist dieselbe wie die erste (' + A1.achse + ').'};
+  const ab = fAufspannungAbbildung(A1, A2);
+  // (1) Der Stand nach der ersten Seite: die eigene Simulation.
+  let sim = opt.sim || null;
+  if(!sim){ try{ sim = fSimLauf(prog1, opt.raster || 0); }catch(e){ return {ok:false, grund:'Die Simulation der ersten Seite lief nicht: ' + (e && e.message)}; } }
+  if(sim.kollisionen && sim.kollisionen.length) hinweise.push('Die Simulation der ersten Seite meldet ' + sim.kollisionen.length + ' Kollision(en) - der Stand, von dem die zweite Seite ausgeht, ist damit unsicher.');
+  // (2) Rohform und Kopf der zweiten Seite.
+  const RF = fZweiteAufspannungRohform(sim.feld, ab, prog1.kopf);
+  if(!RF.material) return {ok:false, grund:'Nach der ersten Seite steht kein Material mehr - nichts zu wenden.'};
+  const k2 = fZweiteAufspannungKopf(prog1.kopf, RF);
+  const prog2 = fProgrammNeu();
+  prog2.kopf = k2;
+  prog2.werkzeuge = JSON.parse(JSON.stringify(prog1.werkzeuge || []));
+  // (3) Sollform der zweiten Lage, Rohform daran, dann der Planer.
+  let F2 = opt.F2 || null;
+  if(!F2){ try{ F2 = fStepSollfeld(A2, opt.sollRaster || 0); }catch(e){ return {ok:false, grund:'Die Sollform der zweiten Lage liess sich nicht rechnen: ' + (e && e.message)}; } }
+  fStepFeldSetzen(F2, prog2);
+  fRohformSetzen(RF, prog2);
+  const durch = (x, y) => { const c = fStepSollIdx(RF, x, y); return c >= 0 && !RF.quelle[c]; };
+  let plan;
+  try{ plan = fPlanProgramm(prog2, A2, F2, {seite:2, durch:durch}); }
+  catch(e){ return {ok:false, grund:'Der Planer der zweiten Seite brach ab: ' + (e && e.message)}; }
+  const n = fPlanProgrammAnlegen(prog2, plan, F2, true);
+  // (4) Der Bericht: was welche Seite erreicht, was uebrig bleibt.
+  const err = fZweiteAufspannungErreichbar(A1, A2);
+  hinweise.push(ab.text.charAt(0).toUpperCase() + ab.text.slice(1) + '. Rohteil der zweiten Seite = Stand nach der ersten: ' + RF.material + ' Rasterstellen mit Material, ' + RF.durch + ' durch (Raster ' + fRund(RF.raster) + ' mm), Huelle X ' + k2.x0 + '..' + k2.x1 + '  Y ' + k2.y0 + '..' + k2.y1 + '  Z ' + k2.z0 + '..' + k2.z1 + '.');
+  hinweise.push('Erreichbar: Seite 1 ' + err.anteil1 + ' % der Teilflaechen, dazu von Seite 2 ' + err.anteil2 + ' %' + (err.keine ? ', in KEINER der beiden Lagen ' + err.anteilKeine + ' % (' + err.keine + ' mm2 - quer stehende Flaechen oder Hinterschnitte)' : ', damit alles') + '.');
+  if(k2.spann && k2.spann !== 'aus') hinweise.push('Das Spannmittel ist von der ersten Seite uebernommen, die Backenoberkante im selben Abstand unter der neuen Oberkante (Z' + k2.spannZ + ') - ANNAHME, bitte pruefen.');
+  hinweise.push('Die Rohform gilt nur in dieser Sitzung (wie jede Rohform): das Programm der zweiten Seite laesst sich speichern, der gewendete Stand nicht - nach dem Laden gilt wieder der Quader.');
+  return {ok:true, prog:prog2, plan:plan, RF:RF, F2:F2, ab:ab, kopf:k2, sim:sim, erreichbar:err, schritte:n, hinweise:hinweise.concat(plan.hinweise || [])};
 }
 
 // ---- Stufe 2: waagerechte Flaechen als Z-Ebenen, Schleifen als Konturen ----
@@ -10494,8 +10715,8 @@ function fFormVakuum(F, opt){
     hinweise.push('Die Bohrung geht durch ' + durch + ' mm Platte bei ⌀' + d + ' — ein Verhaeltnis von ' +
                   'Laenge zu Durchmesser von ' + Math.round(ld) + ', mit einem gewoehnlichen Bohrer nicht zu ' +
                   'machen. Ueblich ist, von der RUECKSEITE auf ⌀4 bis 6 aufzubohren und nur die letzten 1 bis ' +
-                  '2 mm duenn stehen zu lassen (dann setzen sie auch nicht zu). Das ist eine zweite Aufspannung ' +
-                  '— die plant die App nicht: trag hier die duenne Tiefe ein und bohre die Kammer von unten.');
+                  '2 mm duenn stehen zu lassen (dann setzen sie auch nicht zu). Das ist eine zweite Aufspannung: ' +
+                  '"Rueckseite als Programm" legt die Absaugkammer an und traegt hier die passende Tiefe ein.');
   hinweise.push('Die Punkte sitzen in den ECKEN und Tiefpunkten der Kavitaet, ' + fRund(randAb) +
                 ' mm von der Wand weg und hoechstens ' + abst + ' mm auseinander. Wo die Folie zuletzt ankommt, ' +
                 'steht die Luft — das ist der Grund fuer die Ecken.');
@@ -14577,7 +14798,13 @@ function fSimFeld(prog, raster){
     const RF = F_ROHFELD, zu = +k.z0 || 0;
     for(let j = 0; j < ny; j++) for(let i = 0; i < nx; i++){
       const ir = fStepSollIdx(RF, x0 + (i + 0.5) * r, y0 + (j + 0.5) * r);
-      h[j * nx + i] = (ir >= 0 && RF.quelle[ir]) ? Math.max(zu, RF.h[ir]) : zu;
+      const da = (ir >= 0 && RF.quelle[ir]);
+      h[j * nx + i] = da ? Math.max(zu, RF.h[ir]) : zu;
+      // ZWEITE AUFSPANNUNG [26.09.2026]: die Rohform der Seite 2 kennt auch
+      // ihre UNTERSEITE (hu) - dort liegt, was die Seite 1 gefraest hat. Die
+      // 3D-Ansicht zeigt es von unten, der Rest der Simulation rechnet wie
+      // bisher von oben.
+      if(da && RF.hu) hu[j * nx + i] = Math.max(zu, Math.min(RF.hu[ir], h[j * nx + i]));
     }
   }
   return {x0:x0, y0:y0, nx:nx, ny:ny, raster:r, h:h, hu:hu, oben:+k.z1 || 0, unten:+k.z0 || 0, gen:0, rohform:!!F_ROHFELD};
@@ -17323,7 +17550,26 @@ function fStepTestkoerper(art){
     kGer([xa, yc - rr, z], [xb, yc - rr, z]), kBog([xb, yc - rr, z], [xb, yc + rr, z], [xb, yc], rr, true),
     kGer([xb, yc + rr, z], [xa, yc + rr, z]), kBog([xa, yc + rr, z], [xa, yc - rr, z], [xa, yc], rr, true)];
   const w = Math.SQRT1_2;
-  if(art === 'merkmale'){
+  if(art === 'zweiseitig'){
+    // DER ZWEISEITIGE PRUEFKOERPER [26.09.2026, Punkt 4: zweite Aufspannung].
+    // Platte 60 x 40 x 20, alles im Kopf nachrechenbar:
+    //   oben  Tasche 24 x 16 R4 um (42,20), Grund Z-6
+    //   unten Aussparung 20 x 20 (x 6..26, y 10..30), Decke Z-15 (5 mm tief
+    //         von unten), Flaechen mit Normale NACH UNTEN
+    //   durch Bohrung ⌀8 um (45,34), Zylindermantel Z-20..0
+    // Seite 1 (+Z) bekommt Tasche und Bohrung, Seite 2 (gewendet, -Z) die
+    // Aussparung - und die Bohrung NICHT noch einmal.
+    const ebeneU = (x, y, z) => add("PLANE('',#" + lage(x, y, z, 0, 0, -1, 1, 0, 0) + ')');
+    // Deckflaeche mit Tasche und Bohrung als Loecher
+    flaecheL(ebene(0, 0, 0, 0, 0, 1), quad(0, 0, 60, 40, 0), [rechtR(30, 12, 54, 28, 4, 0), [kKreis([45, 34], 4, 0)]]);
+    flaeche(ebene(0, 0, -6, 0, 0, 1), rechtR(30, 12, 54, 28, 4, -6));
+    // Unterseite (Normale nach unten) mit Aussparung und Bohrung als Loecher;
+    // die Decke der Aussparung ebenso nach unten
+    flaecheL(ebeneU(0, 0, -20), quad(0, 0, 60, 40, -20), [quad(6, 10, 26, 30, -20), [kKreis([45, 34], 4, -20)]]);
+    flaeche(ebeneU(0, 0, -15), quad(6, 10, 26, 30, -15));
+    // Bohrungsmantel
+    flaeche(add("CYLINDRICAL_SURFACE('',#" + lage(45, 34, -20, 0, 0, 1, 1, 0, 0) + ',4)'), [kKreis([45, 34], 4, 0), kKreis([45, 34], 4, -20)]);
+  } else if(art === 'merkmale'){
     // DIE MERKMALPLATTE [26.09.2026, Punkt 3]: Platte 120 x 80 x 15 mit vier
     // geschlossenen Taschen, jede eine andere Form - der Pruefkoerper fuer
     // die Merkmalerkennung. Alles im Kopf nachrechenbar:
@@ -17698,6 +17944,7 @@ function fMerkmale(profilId){
     z('gewBohr',    'Bohrgewindefraesen — Zyklus 264 (Q356 Bohrtiefe, Q202 Zustellung, Q258 Vorhalteabstand, Q257/Q256 Spanbruch, Q206 Vorschub Tiefenzustellung)'),
     z('gewHelix',   'Helix-Bohrgewindefraesen — Zyklus 265 (Q360 Senkvorgang vor/nach der Bearbeitung; kein Q351 und kein Q512)'),
     z('gewAussen',  'Aussengewinde fraesen — Zyklus 267 (Gewinde am Zapfen; Q358/Q359 Senken stirnseitig)'),
+    {t:'Zweite Aufspannung (STEP-Fenster, Stufe 5, seit 26.09.2026): das Teil wird auf die Gegenachse gewendet, das Rohteil der zweiten Seite ist der STAND nach der ersten (aus der eigenen Simulation: Ober- und Unterseite je Rasterzelle, Durchbrueche ohne Material), das Programm der ersten Seite geht in die Ablage, der Planer legt die zweite Seite an - schon durchgebohrte Loecher nicht noch einmal. Am Programmierplatz und an der Maschine nicht gelaufen; die Bahnen sind dieselben wie bei jedem Modell mit Rohform.', s:'eigenbahn'},
     z('slRaeumen',  'SL Raeumen — Zyklus 14 KONTUR mit Tasche und bis zu 11 Inseln + 20 KONTUR-DATEN + 22 RAEUMEN [+ 23 SCHLICHTEN TIEFE + 24 SCHLICHTEN SEITE], je mit CYCL CALL (Q1-Q9 im 20, Q10 Q11 Q12 Q18 Q19 Q208 Q401 Q404 im 22, Q14 im 24); als Einzelsaetze eine eigene Zeilenbahn mit Randumlaeufen'),
     z('slVorbohren', 'SL Vorbohren — Zyklus 14 + 20 + 21 VORBOHREN + CYCL CALL (Q10 Q11 Q13); als Einzelsaetze eine Bohrleiter an den Eintauchpunkten des Raeumens, gerechnet mit dem Radius des Ausraeum-Werkzeugs Q13'),
     z('planfraesen', 'Planfraesen — Zyklus 232 (Q389 Strategie, Startpunkt Q225-Q227, Endhoehe Q386, Q218/Q219 Laengen, Q357 SC Seite; CYCL CALL ohne Bohrbild)'),
@@ -22200,6 +22447,57 @@ function fStepRueckseite(){
   return true;
 }
 
+// DIE ZWEITE AUFSPANNUNG [26.09.2026, Punkt 4 der Liste]. Kern in F10
+// (fZweiteAufspannung); hier nur, was am DOM haengt: das Programm der ersten
+// Seite in die Ablage, die Lage des Fensters auf die Gegenachse, die Laufzeit
+// der ersten Seite in den Aufspannungs-Merker der Kalkulation, dann das neue
+// Programm ins Fenster.
+function fStepZweiteAufspannung(){
+  const A1 = STEP.aus;
+  if(!STEP.modell || !A1){ melde('Erst ein Modell laden.'); return false; }
+  if(!(fProg.schritte || []).some(s => s && s.aktiv !== false)){
+    melde('Das Programm der ersten Seite hat keine Schritte — erst Programm vorschlagen (Stufe 4), dann die zweite Aufspannung.'); return false; }
+  if(!STEP.feld){ try{ STEP.feld = fStepSollfeld(A1, STEP.raster || 0); }catch(e){ STEP.feld = null; } }
+  if(!fProg.__sollform && STEP.feld) fStepFeldSetzen(STEP.feld, fProg);
+  // Laufzeit der ersten Seite merken - die Kalkulation der zweiten rechnet sie dazu.
+  const name1 = fName(fProg);
+  let hz1 = 0; try{ const hz = fHauptzeiten(fProg); hz1 = (hz && hz.komplett > 0) ? hz.komplett : 0; }catch(e){}
+  // Die zweite Lage: Gegenachse, derselbe Nullpunkt-Modus.
+  const alt = STEP.achse, altAus = STEP.aus, altFeld = STEP.feld;
+  STEP.achse = fGegenAchse(alt); fStepAusrichtenJetzt(); fStepAchseKnoepfe();
+  const A2 = STEP.aus;
+  let R = null;
+  try{ R = fZweiteAufspannung(fProg, A1, A2, {raster:0, sollRaster:STEP.raster || 0}); }
+  catch(e){ R = {ok:false, grund:e && e.message}; }
+  if(!R || !R.ok){
+    // zurueck in die erste Lage, nichts geaendert
+    STEP.achse = alt; STEP.aus = altAus; STEP.feld = altFeld; STEP.bild = null; fStepAchseKnoepfe();
+    fStepFeldSetzen(fProg.__sollform || null); fRohformSetzen(fProg.__rohform || null);
+    melde('Keine zweite Aufspannung: ' + ((R && R.grund) || 'unbekannter Grund')); return false;
+  }
+  // Das Programm der ersten Seite kommt in die Ablage, bevor die zweite es ersetzt.
+  let abgelegt = '';
+  try{
+    const liste = fProgLesen();
+    const kopie = JSON.parse(JSON.stringify(fProg));
+    kopie.kopf.name = String(fProg.kopf.name || 'TEIL');
+    const i = liste.findIndex(x => x && x.kopf && x.kopf.name === kopie.kopf.name);
+    if(i >= 0) liste[i] = kopie; else liste.push(kopie);
+    if(fProgSchreiben(liste)) abgelegt = 'Das Programm der ersten Seite liegt unter "' + kopie.kopf.name + '" in der Ablage. ';
+  }catch(e){}
+  if(hz1 > 0){ try{ const w = fKalkLaden(); w.aufsp = w.aufsp || []; const a = w.aufsp.find(x => x.name === name1);
+    if(a) a.min = hz1; else w.aufsp.push({name:name1, min:hz1}); fKalkSpeichern(); }catch(e){} }
+  // Das Fenster zeigt jetzt die zweite Lage: Sollform der Gegenachse, Rohform = Stand nach Seite 1.
+  STEP.feld = R.F2; STEP.bild = null; STEP.restBild = null; STEP.form = null; STEP.wahl = [];
+  STEP.rohModell = null; STEP.rohAus = null; STEP.rohfeld = R.RF;
+  const w2 = document.getElementById('btnStepRohWeg'); if(w2) w2.style.display = '';
+  fProgrammSetzen(R.prog, 'zweite Aufspannung');
+  fSpeicherAkt(); fRender();
+  try{ fStepBericht(); fStepAnsicht('soll'); }catch(e){}
+  melde('Zweite Aufspannung als eigenes Programm "' + R.kopf.name + '": ' + fPlanProgrammText(R.plan) + ' ' +
+        R.plan.schritte.map((sp, i) => (i + 1) + '. ' + (sp.text || sp.art)).join('; ') + '. ' + abgelegt + R.hinweise.join(' '));
+  return true;
+}
 function fStepVakuum(){
   if(!STEP.form || !STEP.form.ok || !STEP.form.F){
     melde('Erst die Form ableiten — die Vakuumbohrungen brauchen die Kavitaet, nicht das Modell des Blisters.');
@@ -22441,6 +22739,7 @@ function fStepRohUebernehmen(){
   on('btnStepForm', fStepFormAbleiten);
   on('btnStepVakuum', fStepVakuum);
   on('btnStepRueck', fStepRueckseite);
+  on('btnStepAufsp2', fStepZweiteAufspannung);
   on('btnStepPlan', fStepProgrammVorschlagen);
   on('btnStepBohren', fStepBohrUebernehmen);
   on('btnStepFlaechen', fStepFlaechenUebernehmen);
