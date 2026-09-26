@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="26.09.2026 17:55 (cac06b51)";</script>
+<script>window.__DZ_STAND="26.09.2026 18:37 (2a258e1b)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2549,6 +2549,11 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
   #maskZyklusWahl .zwk:active{background:hsl(28, 90%, 96%);border-color:hsl(28, 92%, 45%);}
   #maskZyklusWahl .zwk .ic{flex:0 0 auto;width:26px;text-align:center;color:var(--akzent);}
   #maskZyklusWahl .zwk .nm{font-size:14px;font-weight:600;}
+  /* Die Schliessen-Zeile: eine gewoehnliche .mrow haelt rechts 26 px fuer die
+     Einheitenspalte frei (Erbe des Drehteils) - der Knopf stand links am Rand
+     und rechts fehlten 26 px (Daniels Foto 26.09.2026: "nicht in der Mitte").
+     Jetzt dasselbe Polster wie der Maskenkoerper, beidseitig 14 px. */
+  #maskZyklusWahl .zwzu{padding:8px 14px 12px;border-bottom:0;}
   /* ---- Die Vorlagen als Kacheln mit Draufsicht ---------------------- */
   #pmVorlagen .vlgrp{margin:10px 0 5px;padding:4px 2px 4px 9px;font-size:11px;
     font-weight:700;letter-spacing:.6px;text-transform:uppercase;
@@ -2881,7 +2886,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
         <div class="mask-head"><span class="mtitel" id="zwTitel">Zyklus wählen</span>
           <button class="ansichtBtn" id="zwAlle" style="font-size:11px;padding:3px 7px;white-space:nowrap;" title="alle Kategorien zeigen">alle</button></div>
         <div class="mask-body" id="zwBody"></div>
-        <div class="mrow" style="margin-top:8px;"><button class="gcbtn" id="btnZwZu" style="width:100%;padding:10px;">&#x2715; Schließen</button></div>
+        <div class="mrow zwzu"><button class="gcbtn" id="btnZwZu" style="width:100%;padding:10px;">&#x2715; Schließen</button></div>
       </div>
 
       <!-- ===== KONTUR (Paket C3, 13.09.2026): XY-Kontur aus Geraden und

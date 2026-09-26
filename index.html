@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="26.09.2026 17:55 (cac06b51)";</script>
+<script>window.__DZ_STAND="26.09.2026 18:37 (2a258e1b)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4680,7 +4680,8 @@ Bohrstangen-&empty;, Spitzen&uuml;berstand, max. Stichtiefe); leer gilt die Vorg
 25 mm Schaft, &empty;20 Bohrstange mit 2 mm &Uuml;berstand, Gewindestahl 3 mm
 &Uuml;berstand &mdash; <b>das sind Annahmen, keine Messungen</b>, und die
 Stichtiefe bleibt ohne Eintrag ungepr&uuml;ft. Wer den echten Halter nachmisst,
-tr&auml;gt ihn ein; der gestrichelte Kasten in der Simulation zeigt, was gilt. Ein
+tr&auml;gt ihn ein (der Pr&uuml;fkasten selbst wird seit dem 26.09.2026 abends
+nicht mehr ins Bild gezeichnet). Ein
 Treffer steht als eigene Zeile in Simulation und Ampel: HALTER, Werkzeug, Satz,
 Stelle. Nicht gepr&uuml;ft: Bohrer (stecken im eigenen Loch) und die Breite des
 Halters quer zur Zeichenebene.</dd>
@@ -38389,20 +38390,12 @@ function drawSimOverlay(){
         dotColor:'#c8281f',
         nurPlatte: (typeof window!=='undefined' && window.__simHalterAus===true)
       });
-      // Der PRUEFKASTEN des Halters, gestrichelt: was die Kollisionspruefung
-      // wirklich gegen Material, Backen und Reitstock haelt — damit man
-      // sieht, ob die Masse in der Werkzeugmaske zum Halter passen.
-      if(typeof halterKoerper==='function'){
-        const rT=Math.abs(d2r(pos.x));
-        ctx.save(); ctx.setLineDash([5*devicePixelRatio,4*devicePixelRatio]); ctx.lineWidth=1*devicePixelRatio;
-        ctx.strokeStyle='rgba(210,90,0,0.75)';
-        halterKoerper(tool).forEach(k=>{
-          ctx.beginPath();
-          k.pts.forEach((p,i)=>{ const c=toScreen(pos.z+p[0], r2d(rT+p[1])); if(i) ctx.lineTo(c[0],c[1]); else ctx.moveTo(c[0],c[1]); });
-          ctx.closePath(); ctx.stroke();
-        });
-        ctx.restore();
-      }
+      // Den PRUEFKASTEN des Halters (halterKoerper, gestrichelt) hat die
+      // Simulation vom 26.09.2026 mittags bis abends gezeichnet. Daniel am
+      // Bild: "Diese rot gestrichelte Halterzone moechte ich nicht sehen" -
+      // er lag als grosses Vieleck ueber dem Teil und verdeckte mehr, als er
+      // erklaerte. Die Pruefung selbst (halterTreffer) laeuft unveraendert;
+      // ihr Ergebnis steht als HALTER-Zeile in Simulation und Ampel.
     } else {
       ctx.fillStyle='#c8281f';
       ctx.beginPath(); ctx.arc(sx,sy,6*devicePixelRatio,0,7); ctx.fill();
