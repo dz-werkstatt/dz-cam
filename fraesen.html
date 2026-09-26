@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="26.09.2026 15:27 (eb772fe3)";</script>
+<script>window.__DZ_STAND="26.09.2026 16:33 (a14753eb)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3983,6 +3983,17 @@ einer hohen steilen Wand kann der Schaft anstehen, ohne dass die App es sagt: vo
 14.09.2026 im Programm-Test des iTNC-530-Programmierplatzes <b>ohne Meldung durchgelaufen</b> &mdash; die Schr&auml;ge ist in der Grafik
 geschlichtet, das Plateau bleibt stehen (es liegt unter dem Winkelband). Die Steuerung nimmt die S&auml;tze also an.
 <b>An einer Maschine ist noch nichts gefahren.</b></dd>
+<dt id="ba-fk05d-kehlen">Kehlen nachschlichten &mdash; der Bleistift (26.09.2026)</dt><dd>Ein Kugelfr&auml;ser R kommt in keine Kehle,
+die enger ist als R: am Fu&szlig; einer Wand bleibt ein Fillet vom Radius R stehen, bis zu R hoch &mdash; das ist Geometrie, keine L&uuml;cke
+der Bahn. Der Schritt <b>Kehlen nachschlichten</b> f&auml;hrt danach mit einem <b>kleineren</b> Kugelfr&auml;ser genau dorthin. Wo die Kehle
+liegt, rechnet die App aus der Sollform: was der gro&szlig;e Fr&auml;ser des Schlichtschritts davor tiefstens hinterl&auml;sst, gegen die
+Sollform (Toleranz eine halbe Rasterweite, mindestens 0,05 mm); der kleine f&auml;hrt in diesem Band, einen Werkzeugradius um den Rest,
+mit derselben Zeilenbahn wie das Schlichten &mdash; die Zeilen laufen quer zum Gef&auml;lle der Wand, also <i>l&auml;ngs der Kehle</i>, mit
+dem Bahnabstand aus der Rautiefe. <b>Der Schritt braucht einen Schritt &bdquo;Schr&auml;gen schlichten&ldquo; davor</b> im Arbeitsplan (die
+Kehle ist, was dessen Werkzeug stehen l&auml;sst) und ein Werkzeug mit kleinerem Eckenradius; sonst sagt er, warum er nichts tut. Der
+Planer h&auml;ngt ihn von selbst hinter das Schlichten, wenn in der Tabelle ein kleinerer Kugelfr&auml;ser steht &mdash; und nennt sonst die
+Kehlenfl&auml;che. Was auch der kleine nicht erreicht (Kehlen enger als sein Radius), bleibt stehen und steht im Restmaterialbericht der
+Simulation. Am Programmierplatz und an der Maschine ist der Schritt noch nicht gelaufen.</dd>
 <dt id="ba-fk05d-kante">&Uuml;ber die Teilkante hinaus</dt><dd>Eine runde Schneide ber&uuml;hrt eine
 geneigte Fl&auml;che nicht unter sich, sondern seitlich versetzt &mdash; bei einem Kugelfr&auml;ser R5 auf
 45&nbsp;Grad um 3,5&nbsp;mm. Endet die Fl&auml;che an einer Kante und darf die Werkzeugmitte nicht
@@ -5045,10 +5056,10 @@ var F_PROFILE = {
       // durchgelaufen (T241A); Q426 5 brach mit "Undefinierter
       // Programmstart" ab (T241B). Beides gelb in fPruefen.
       ausdrehen:'pgst', senkenRueck:'pgst', tiefUni:'pgst', bohrfraesen:'pgst', gewindeSpan:'pgst', einlippen:'pgst', planfraesen:'pgst',
-      modellSchruppen:'eigenbahn', modellSchlichten:'eigenbahn', modellRest:'eigenbahn', modellSchlichtenEben:'eigenbahn'
+      modellSchruppen:'eigenbahn', modellSchlichten:'eigenbahn', modellRest:'eigenbahn', modellSchlichtenEben:'eigenbahn', modellKehlen:'eigenbahn'
     },
     termine:'Programmierplatz 12.09.2026 (Demo 606 424, NC-SW 606 42x): DZ1, DZ2, DZ3 (Bohren, Muster), DZ4 (Taschen, Nuten, Zapfen 251-257) und DZ5 (Planfraesen 232, Bohrzyklen 202/204/205/208/209/241) im Programm-Test ohne Meldung durchgelaufen, Rueckexport Satz fuer Satz gleich; abends DZ6 (Einzelsaetze der eigenen Bahn, Paket C: 240/203/200/201 ohne Zyklus, 3:06 min) ebenso, nachts DZ7 (Kreistasche, Nut, Kreiszapfen als Ringbahnen mit CC/C, 1:55 min) und DZ8 (Planfraesen-Maeander, Rechtecktasche mit Helix CP IPA/IZ, 2:32 min), am 13.09.2026 DZ9 (Insel mit Nut als XY-Kontur: Zyklus 14/25 und dieselbe Kontur als eigene Bahn mit CC/C-Eckenboegen, 0:53 min) und DZ10 (Rundung, Fase, tangentialer Bogen, Vollkreis: natives LBL mit RND/CHF/CT und eigene Bahn, 1:00 min — erster Lauf fiel mit Kreis-Endpunkt falsch, MP7431: CC-Mitten seither auf der Mittelsenkrechten mit 0,0001); alles am selben Tag gebaut und an den Handbuechern 340 49x-02/-06/-07 geprueft. Befund 241: Q427 unter der Mindestdrehzahl der Demo (50 U/min) gibt Falsche Drehzahl, Q426 = 5 Undefinierter Programmstart',
-    offen:'Modell abspanen: erster Lauf am Teil (senkrechtes Eintauchen, Restmaterial an den Waenden nachmessen). Schraegen schlichten: Programmierplatz-Lauf (DZ15) und erster Lauf am Teil — geprueft wird nur die Kugel, nicht Schaft und Halter; die Z-konstante Bahn fuer steile Flanken fehlt noch. Lauf an einer der drei Maschinen (Stand 340 49x): Softwarestand je Maschine (MOD), M13/M9 an der PLC, Option Synchron-Gewindebohren (207); danach Daniels eigene .H-Programme als Fixtures'
+    offen:'Modell abspanen: erster Lauf am Teil (senkrechtes Eintauchen, Restmaterial an den Waenden nachmessen). Kehlen nachschlichten (26.09.2026): nur gerechnet, kein Lauf. Schraegen schlichten: Programmierplatz-Lauf (DZ15) und erster Lauf am Teil — geprueft wird nur die Kugel, nicht Schaft und Halter; die Z-konstante Bahn fuer steile Flanken fehlt noch. Lauf an einer der drei Maschinen (Stand 340 49x): Softwarestand je Maschine (MOD), M13/M9 an der PLC, Option Synchron-Gewindebohren (207); danach Daniels eigene .H-Programme als Fixtures'
   },
 
   // -------------------------------------------------------------------
@@ -5157,7 +5168,7 @@ var F_PROFILE = {
       zapfenR:'eigenbahn', zapfenK:'eigenbahn', planfraesen:'eigenbahn',
       konturzug:'eigenbahn', slRaeumen:'eigenbahn', slVorbohren:'eigenbahn',
       modellSchruppen:'eigenbahn', modellSchlichten:'eigenbahn',
-      modellRest:'eigenbahn', modellSchlichtenEben:'eigenbahn'
+      modellRest:'eigenbahn', modellSchlichtenEben:'eigenbahn', modellKehlen:'eigenbahn'
     },
     termine:'Kein Lauf durch diese App. Belegt sind: die Zyklusliste und die Parameter je Zyklus am Benutzer-Handbuch Klartext-Dialog 286 060-xx (6/2001), und die Satzform an zwoelf NC-Dateien, die auf dieser Maschine gelaufen sind (F MAX mit Leerzeichen, Kommentar mit Strichpunkt, Werkzeugdaten als Sternzeile, M-Wort als eigener L-Satz, M30 am Ende, Zyklus 17 Wort fuer Wort).',
     offen:'Erster Lauf an der Maschine. Der Wortlaut der vier Zeilen des Zyklus 2 (GEWINDEBOHREN mit Ausgleichsfutter) ist aus der Familie abgeleitet, nicht belegt - vor dem ersten Lauf den Satz an der Steuerung in der Zyklusmaske oeffnen. Ungeprueft: ob die Steuerung FMAX ohne Leerzeichen ebenfalls nimmt, und ob die Programmnamen laenger als 8 Zeichen sein duerfen. Nicht gebaut: die alten Fraeszyklen 3/4/5/6/14/15/16/210-215/230/231 - dort faehrt die App ihre eigene Bahn.'
@@ -5239,7 +5250,7 @@ var F_PROFILE = {
       gewFraesen:'gesperrt', gewSenk:'gesperrt', gewBohr:'gesperrt', gewHelix:'gesperrt', gewAussen:'gesperrt',
       ausdrehen:'abgeleitet', senkenRueck:'gesperrt', tiefUni:'abgeleitet',
       bohrfraesen:'abgeleitet', gewindeSpan:'gesperrt', einlippen:'abgeleitet', planfraesen:'abgeleitet',
-      modellSchruppen:'abgeleitet', modellSchlichten:'abgeleitet', modellRest:'abgeleitet', modellSchlichtenEben:'abgeleitet'
+      modellSchruppen:'abgeleitet', modellSchlichten:'abgeleitet', modellRest:'abgeleitet', modellSchlichtenEben:'abgeleitet', modellKehlen:'abgeleitet'
     },
     termine:'Kein Lauf an dieser Maschine. 20.09.2026: Daniel hat den Bildschirm der Maschine abfotografiert — Anfang und Ende eines Programms, das dort gelaufen ist. Damit sind Rahmen und Satzschreibweise abgelesen statt abgeleitet, und drei Annahmen sind widerlegt (SETUP-Zeile, M82, G00 Z20). Die ZYKLEN deckt das nicht ab: ein aelteres Postprozessor-Paket zu dieser Maschine fuehrt nachweislich falsche Parameterlisten (CYCLE83 mit 15 statt 12, im Reibzyklus CYCLE85 die Parameter des Gewindebohrers) — deshalb die Wache auf den klassischen Zyklenstand.',
     offen:'Eine .MPF, die von DIESER Maschine gezogen ist — daran erst sind die ZYKLUSPARAMETER belegt (der Rahmen ist es seit den Fotos, die Bahn darin nicht). Ein Foto der Zyklusmaske genuegt schon fuer einen Zyklus. Dann: erster Lauf im Einzelsatz mit Grafiksimulation an der Steuerung. Fuenfachsig rechnet die App noch nicht (B0 C0, TRAORI(1) steht im Kopf); Gewindefraesen, Rueckwaerts-Senken und Gewindebohren mit Spanbruch sind nicht gebaut.'
@@ -5416,6 +5427,12 @@ var F_ZYKLEN = {
   // bleiben, und das Mass ist die Rautiefe, nicht die Zustellung.
   modellSchlichten:{nr:null, titel:'SCHRAEGEN SCHLICHTEN', wort:'Schraegen schlichten', kurz:'Schraegen schlichten',
     fraes:true, modell:true, schlicht:true, nurEinzel:true, eigenePosition:true, q:[]},
+  // KEHLEN NACHSCHLICHTEN [26.09.2026, Punkt 8]: der kleine Kugelfraeser nur
+  // dort, wo der grosse des Schlichtschritts davor nicht hinkam (Bleistift).
+  // schlicht:true, damit Hilfebild und Bahnfamilie dieselben sind; kehlen:true
+  // ist die Weiche in fBahnSchritt (steht VOR der Schlicht-Weiche).
+  modellKehlen:{nr:null, titel:'KEHLEN NACHSCHLICHTEN', wort:'Kehlen nachschlichten', kurz:'Kehlen',
+    fraes:true, modell:true, schlicht:true, kehlen:true, nurEinzel:true, eigenePosition:true, q:[]},
   // ---- Paket E (14.09.2026): Gewindefraesen 262-267. Alle CALL-aktiv, die
   // Position kommt wie beim Bohren aus dem Bohrbild. gewf:true heisst: die
   // Q206/Q207-Bedeutung der Fraeszyklen gilt (Q207 Fraesen, Q206 Tiefen-
@@ -5456,7 +5473,7 @@ var F_ZYKLEN = {
 };
 var F_ARTEN = ['zentrieren','bohren','tief','reiben','gewinde','gewindeGS','ausdrehen','senkenRueck','tiefUni','bohrfraesen','gewindeSpan','einlippen',
   'tascheR','tascheK','nut','nutR','zapfenR','zapfenK','planfraesen','konturzug','slVorbohren','slRaeumen',
-  'gewFraesen','gewSenk','gewBohr','gewHelix','gewAussen','modellSchruppen','modellSchlichten','modellRest','modellSchlichtenEben'];
+  'gewFraesen','gewSenk','gewBohr','gewHelix','gewAussen','modellSchruppen','modellSchlichten','modellRest','modellSchlichtenEben','modellKehlen'];
 var F_FRAES_ARTEN = ['tascheR','tascheK','nut','nutR','zapfenR','zapfenK','planfraesen'];
 var F_BOHR_ARTEN = ['zentrieren','bohren','tief','reiben','gewinde','gewindeGS','ausdrehen','senkenRueck','tiefUni','bohrfraesen','gewindeSpan','einlippen'];
 
@@ -5822,6 +5839,10 @@ var F_MASKE = {
       ae:'ae Zeilenabstand am Boden', aeArt:'ae bezogen auf', bahnSinn:'Fräsart (bei Rechtslauf M3)',
       sc2:'SC2 Rückzug über Z0'},
     ohneQ:['t','s','f','fTief','kuehl','q203','tiefe','ebWas','zust','bahnArt','ae','aeArt','bahnSinn','eintauch','sc','sc2']},
+  modellKehlen:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','#Mass','rautiefe','tolBahn','bahnSinn','#!Sicherheit','sc','sc2'],
+               feldText:{f:'F Vorschub Schlichten', fTief:'FZ Vorschub Zustellen', tiefe:'Z1 unterste Höhe (Bereich)',
+                 q203:'Z0 oberste Höhe (Bereich)', bahnSinn:'Fräsart (bei Rechtslauf M3)', sc2:'SC2 Rückzug über Z0'},
+               ohneQ:['t','s','f','fTief','kuehl','q203','tiefe','rautiefe','tolBahn','bahnSinn','sc','sc2']},
   modellSchlichten:{felder:['#Werkzeug & Schnittwerte','t','s','f','fTief','kuehl','#Bereich','q203','tiefe','winkelMin','winkel','#Mass','rautiefe','tolBahn','strategie','bahnSinn','ueberKante','#Bereich','gebiet','#!Sicherheit','sc','sc2'],
                feldText:{f:'F Vorschub Schlichten', fTief:'FZ Vorschub Zustellen', tiefe:'Z1 unterste Höhe (Bereich)',
                  q203:'Z0 oberste Höhe (Bereich)', strategie:'Zeilenrichtung', bahnSinn:'Fräsart (bei Rechtslauf M3)', sc2:'SC2 Rückzug über Z0'},
@@ -5841,7 +5862,7 @@ var F_ZYKLUS_GRUPPEN = [
   {id:'taschen', name:'Taschen · Zapfen',  arten:['tascheR','tascheK','nut','nutR','zapfenR','zapfenK']},
   {id:'bohren',  name:'Bohren',            arten:['zentrieren','bohren','tief','tiefUni','reiben','ausdrehen','senkenRueck','bohrfraesen','einlippen']},
   {id:'gewinde', name:'Gewinde',           arten:['gewinde','gewindeGS','gewindeSpan','gewFraesen','gewSenk','gewBohr','gewHelix','gewAussen']},
-  {id:'modell',  name:'STEP-Modell',        arten:['modellSchruppen','modellRest','modellSchlichten','modellSchlichtenEben']}
+  {id:'modell',  name:'STEP-Modell',        arten:['modellSchruppen','modellRest','modellSchlichten','modellKehlen','modellSchlichtenEben']}
 ];
 // Feldliste eines Zyklus ohne Abschnittsmarken.
 function fZyklusFelder(art){ return ((F_MASKE[art] || {}).felder || []).filter(x => x[0] !== '#'); }
@@ -6454,6 +6475,13 @@ function fSchrittNeu(prog, art, tNr, musterIdx){
         gebiet:[], rautiefe:0.01, tolBahn:0.005, winkelMin:5, winkel:45, strategie:2, bahnSinn:0, ueberKante:1,
         f:t.f || 600, fTief:fRund((t.f || 600) * 0.3), ausgabe:'einzel'});
     }
+    if(art === 'modellKehlen'){
+      // Kehlen: dieselbe Rautiefe und Sehne wie das Schlichten; das Winkelband
+      // ist nicht waehlbar (0 bis 90, die Kehle liegt am Uebergang), der
+      // Bereich kommt aus der Rechnung, nicht aus einer Kontur.
+      Object.assign(s, {q203:+k.z1 || 0, tiefe:-Math.max(1, fRund((+k.z1 || 0) - (+k.z0 || 0))),
+        rautiefe:0.01, tolBahn:0.005, bahnSinn:0, f:t.f || 600, fTief:fRund((t.f || 600) * 0.3), ausgabe:'einzel'});
+    }
     if(art === 'modellSchlichtenEben'){
       // BOEDEN UND WAENDE SCHLICHTEN [20.09.2026]: Schaftfraeser, Aufmass 0
       // (fest - es ist das Schlichten), Boeden zeilenweise mit ae, Waende als
@@ -6797,6 +6825,7 @@ function fBahnSchritt(s, tool, prog, punkte){
   const nein = (g) => ({ok:false, grund:g, bahn:[], warn:warn});
   if(F_ZYKLEN[art] && F_ZYKLEN[art].sl) return fBahnSL(s, tool, prog);                   // Paket D3 (vor der Kontur-Weiche: die SL-Familien tragen kontur:true)
   if(F_ZYKLEN[art] && F_ZYKLEN[art].kontur) return fBahnKontur(s, tool, prog);           // Paket C3
+  if(F_ZYKLEN[art] && F_ZYKLEN[art].kehlen) return fBahnKehlen(s, tool, prog);          // Punkt 8 (26.09.2026): VOR der Schlicht-Weiche
   if(F_ZYKLEN[art] && F_ZYKLEN[art].schlicht) return fBahnSchlichtenKomplett(s, tool, prog);  // Stufe 4 + S2/S3: flach ueber die Zeilen, steil Z-konstant
   if(F_ZYKLEN[art] && F_ZYKLEN[art].eben) return fBahnSchlichtenEben(s, tool, prog);   // 20.09.2026: Boeden und Waende mit dem Schaftfraeser
   if(F_ZYKLEN[art] && F_ZYKLEN[art].modell) return fBahnModell(s, tool, prog);          // Stufe 3 Teil B: gegen die Sollform, keine Form mit Massen
@@ -9614,6 +9643,24 @@ function fPlanFlaechen(prog, A, F){
   } else if(F && bef.imBand > 0) hinweise.push('Im Band ' + wMin + ' bis ' + wMax + ' Grad liegen ' + anteil + ' % der Flaeche, aber die Tabelle hat kein Werkzeug mit runder Schneidenkante (Kugelfraeser oder Eckenradiusfraeser mit R2) — nicht geschlichtet.' + holWeg);
   else if(F) hinweise.push('Keine Schraege im Band ' + wMin + ' bis ' + wMax + ' Grad (' + Math.round(bef.zuFlach / (bef.zellen || 1) * 100) + ' % flacher, ' + Math.round(bef.zuSteil / (bef.zellen || 1) * 100) + ' % steiler) — nichts zu schlichten.');
 
+
+  // (4) KEHLEN NACHSCHLICHTEN [26.09.2026, Punkt 8]: was der Kugelfraeser des
+  //     Schlichtschritts in Kehlen stehen laesst, holt ein KLEINERER - nur
+  //     dort. Gerechnet, nicht vermutet: fKehlenRest gegen die Sollform. Ohne
+  //     kleineren Kugelfraeser wird der Rest GENANNT.
+  if(F && wKugel && schritte.some(x => x.art === 'modellSchlichten')){
+    try{
+      const K = fKehlenRest(F, +wKugel.r2, fWerkzeugStirn(wKugel));
+      if(K && K.zellen && K.flaeche >= 1){
+        const kleiner = ((prog && prog.werkzeuge) || []).filter(w => w.art === 'fraeser' && (+w.r2 || 0) > 0 && +w.r2 < +wKugel.r2 - 1e-9)
+          .sort((a, b) => ((+b.r2 || 0) - (+a.r2 || 0)) || ((+a.d || 0) - (+b.d || 0)))[0];
+        if(kleiner) schritte.push({art:'modellKehlen', t:kleiner.nr, werte:{
+            q203:fRund(B ? B.z1 : (+k.z1 || 0)), tiefe:fRund(zTief - (B ? B.z1 : 0)), rautiefe:0.01, tolBahn:0.005, ausgabe:'einzel'},
+          text:'Kehlen nachschlichten (nach R' + fRund(+wKugel.r2) + ' bleiben ' + K.flaeche + ' mm2 bis ' + K.maxRest + ' mm in Kehlen), Kugelfraeser R' + fRund(+kleiner.r2) + ' (' + (kleiner.name || ('T' + kleiner.nr)) + ')'});
+        else hinweise.push('KEHLEN: nach dem Kugelfraeser R' + fRund(+wKugel.r2) + ' bleiben ' + K.flaeche + ' mm2 in Kehlen stehen (bis ' + K.maxRest + ' mm, bei X' + K.x + ' Y' + K.y + ') - die Tabelle hat keinen kleineren Kugel- oder Eckenradiusfraeser.');
+      }
+    }catch(e){ hinweise.push('Kehlen: Rechnung ausgefallen (' + (e && e.message) + ').'); }
+  }
   return {schritte:schritte, hinweise:hinweise, befund:bef};
 }
 // DIE FLAECHEN GEHEN VOR DIE BOHRUNGEN. In eine ungeplante Flaeche zu
@@ -9666,7 +9713,7 @@ const F_PLAN_PHASEN = [
 function fPlanPhase(art){
   if(art === 'planfraesen') return 1;
   if(art === 'modellSchruppen' || art === 'modellRest') return 2;
-  if(art === 'modellSchlichten' || art === 'modellSchlichtenEben') return 4;
+  if(art === 'modellSchlichten' || art === 'modellKehlen' || art === 'modellSchlichtenEben') return 4;
   const z = F_ZYKLEN[art] || {};
   if(z.fraes && !z.gewf) return 2;                 // Taschen, Nuten, Zapfen
   if(z.sl || art === 'konturzug') return 2;        // Konturtaschen (Merkmale)
@@ -14156,7 +14203,10 @@ function fBahnSchlichten(s, tool, prog){
   // AUSWAHL: die Begrenzung schneidet die Maske. Gerechnet wird sie auf DEM
   // Feld, das die Bahn benutzt — mit Ueberlauf ueber die Kante ist das das
   // gerandete, und dessen Zellen liegen anders (siehe fSollfeldRand).
-  const polysS = fGebietPolys(prog, s), GMS = polysS ? fGebietMaske(F, polysS) : null;
+  // s.__maske: eine GERECHNETE Begrenzung auf dem Sollfeld (Kehlen, 26.09.2026)
+  // statt einer gezeichneten - gilt nur ohne Ueberlauf ueber die Kante, sonst
+  // laegen die Zellen anders (fSollfeldRand).
+  const polysS = s.__maske ? null : fGebietPolys(prog, s), GMS = s.__maske || (polysS ? fGebietMaske(F, polysS) : null);
   let nAusserhalb = 0;
   let nGut = 0, nSteil = 0, nFlach = 0, aMax = 0, nSteht = 0, stehtMax = 0;
   for(let q = 0; q < nx * ny; q++){
@@ -14798,6 +14848,97 @@ function fBahnSchlichtenZ(s, tool, prog, vorgabe){
 // Faellt eine der beiden aus (keine Flaeche in ihrem Band), laeuft die
 // andere allein - mit Ansage, WARUM die andere nichts hatte.
 // ===================================================================
+// =====================================================================
+// KEHLEN NACHSCHLICHTEN (Bleistift) [26.09.2026, Punkt 8 der Liste]. Ein
+// Kugelfraeser R kommt in keine konkave Kehle, die enger ist als R: am Fuss
+// einer Wand bleibt ein Fillet vom Radius R stehen, bis zu R hoch. Das ist
+// keine Luecke der Bahn, sondern Geometrie - und genau dort faehrt danach
+// ein KLEINERER Kugelfraeser, nur dort.
+//
+// WO die Kehle ist, sagt die EROSION der Versatzflaeche: fBallFeld liefert,
+// wie hoch die Spitze des Werkzeugs an jeder Mittenstelle steht (Dilatation
+// der Sollform mit der Stirn). Was das Werkzeug an einer Stelle (x,y) am
+// tiefsten hinterlaesst, ist das Minimum ueber alle Mittenstellen c in
+// Reichweite von zSpitze(c) + g(rho) - die Unterseite an dieser Stelle.
+// Erosion nach Dilatation = Schliessung: auf jeder Flaeche, die das Werkzeug
+// beruehren kann, gibt sie die Sollform zurueck; wo sie hoeher liegt, ist
+// die Kehle. Toleranz: eine halbe Rasterweite, mindestens 0,05 - darunter
+// ist es die Aufloesung des Feldes, keine Kehle.
+function fKehlenRest(F, r, stirn, tol){
+  if(!F || !(r > 0) || !(F.nx > 0)) return null;
+  const rr = F.raster, nx = F.nx, ny = F.ny, n = nx * ny;
+  const kugelig = !stirn || stirn.art === 'kugel' || !(stirn.rt > r);
+  const reich = kugelig ? r : stirn.rt;
+  const B = fBallFeld(F, r, null, stirn);
+  const k = Math.max(1, Math.round(reich / rr));
+  const di = [], dj = [], dg = [];
+  for(let b = -k; b <= k; b++) for(let a = -k; a <= k; a++){
+    const d2 = (a * a + b * b) * rr * rr;
+    if(d2 > reich * reich) continue;
+    di.push(a); dj.push(b);
+    dg.push(kugelig ? r - Math.sqrt(Math.max(0, r * r - d2)) : fStirnHoehe(stirn, Math.sqrt(d2)));
+  }
+  const t = (tol > 0) ? tol : Math.max(0.05, rr / 2);
+  const rest = new Float32Array(n), maske = new Uint8Array(n);
+  let zellen = 0, maxRest = 0, sx = 0, sy = 0;
+  // AM FELDRAND gibt es keine Mittenstellen ausserhalb - die Erosion laege dort
+  // zu hoch und meldete auf jeder Schraege eine Kehle (gemessen 26.09.2026: 0,154
+  // mm auf einer 14-Grad-Rampe, eine Zellreihe). Eine Kehle liegt nie am Rand des
+  // Modells, dort ist nichts, an dem sie entstehen koennte.
+  for(let j = k; j < ny - k; j++) for(let q = k; q < nx - k; q++){
+    const c = j * nx + q;
+    if(!F.quelle[c]) continue;
+    let e = Infinity;
+    for(let s2 = 0; s2 < di.length; s2++){
+      const ii = q + di[s2], jj = j + dj[s2];
+      if(ii < 0 || jj < 0 || ii >= nx || jj >= ny) continue;
+      const v = B[jj * nx + ii];
+      if(!(v > -Infinity)) continue;
+      const z = v - r + dg[s2];
+      if(z < e) e = z;
+    }
+    if(e === Infinity) continue;
+    const d = e - F.h[c];
+    if(d > t){ rest[c] = d; maske[c] = 1; zellen++; if(d > maxRest){ maxRest = d; sx = F.x0 + (q + 0.5) * rr; sy = F.y0 + (j + 0.5) * rr; } }
+  }
+  return {rest:rest, maske:maske, tol:fRund(t), zellen:zellen, maxRest:fRund(maxRest), flaeche:fRund(zellen * rr * rr), x:fRund(sx), y:fRund(sy), r:r};
+}
+// Der Bezug eines Kehlenschritts: der letzte Schritt "Schraegen schlichten"
+// davor im Arbeitsplan, samt seinem Werkzeug.
+function fKehlenBezug(prog, s){
+  if(!prog || !prog.schritte) return null;
+  const i = prog.schritte.indexOf(s.__orig || s);
+  const vorher = (i < 0 ? prog.schritte : prog.schritte.slice(0, i)).filter(q => q && q.art === 'modellSchlichten' && q.aktiv !== false);
+  if(!vorher.length) return null;
+  const b = vorher[vorher.length - 1];
+  const w = (prog.werkzeuge || []).filter(x => +x.nr === +b.t)[0];
+  return {schritt:b, werkzeug:w || null, idx:prog.schritte.indexOf(b)};
+}
+function fBahnKehlen(s, tool, prog){
+  const nein = (g) => ({ok:false, grund:g, bahn:[], warn:[]});
+  const F = F_SOLLFELD;
+  if(!F) return nein('keine Sollform geladen — im STEP-Fenster ein Modell laden und "Sollform ans Programm" druecken');
+  const bz = fKehlenBezug(prog, s);
+  if(!bz) return nein('Kehlen nachschlichten braucht einen Schritt "Schraegen schlichten" DAVOR im Arbeitsplan - die Kehle ist das, was dessen Werkzeug stehen laesst');
+  if(!bz.werkzeug || !(+bz.werkzeug.r2 > 0)) return nein('das Werkzeug des Schlichtschritts (T' + bz.schritt.t + ') hat keinen Eckenradius - ohne ihn gibt es keine gerechnete Kehle');
+  const r1 = +bz.werkzeug.r2, st1 = fWerkzeugStirn(bz.werkzeug);
+  const rk = (tool && +tool.r2 > 0) ? +tool.r2 : 0, rt = (tool && +tool.d > 0) ? +tool.d / 2 : 0;
+  if(!(rk > 0)) return nein('das Werkzeug dieses Schritts braucht eine runde Schneidenkante (Kugel- oder Eckenradiusfraeser)');
+  if(!(rk < r1 - 1e-9)) return nein('das Werkzeug (R' + fRund(rk) + ') ist nicht kleiner als das des Schlichtschritts (R' + fRund(r1) + ') - es kaeme in dieselben Kehlen nicht hinein');
+  const K = fKehlenRest(F, r1, st1);
+  if(!K || !K.zellen) return nein('keine Kehle: der Kugelfraeser R' + fRund(r1) + ' des Schlichtschritts kommt ueberall an die Sollform (Toleranz ' + (K ? K.tol : '?') + ' mm)');
+  // Die Mitte des kleinen Werkzeugs arbeitet im Rest UND einen Werkzeugradius
+  // daneben (die Kugel greift so weit) plus eine Rasterweite.
+  const maske = fMaskeWeiten(K.maske, F.nx, F.ny, Math.ceil((rt + F.raster) / F.raster));
+  const s2 = Object.assign({}, s, {winkelMin:0, winkel:90, ueberKante:0, __maske:maske, __orig:s.__orig || s});
+  const b = fBahnSchlichten(s2, tool, prog);
+  const kopf = 'KEHLEN NACHSCHLICHTEN: nach dem Kugelfraeser R' + fRund(r1) + ' (Schritt ' + (bz.idx + 1) + ') stehen ' + K.flaeche + ' mm2 in Kehlen, bis ' + K.maxRest + ' mm hoch (bei X' + K.x + ' Y' + K.y + '); dieser Schritt faehrt R' + fRund(rk) + ' nur dort (Band ' + fRund(rt + F.raster) + ' mm um den Rest, Winkel 0 bis 90).';
+  if(!b.ok) return {ok:false, grund:b.grund, bahn:[], warn:[kopf].concat(b.warn || []), kehlen:K};
+  b.warn = [kopf].concat((b.warn || []).filter(w => !/BEGRENZUNG/.test(w)));
+  b.kehlen = K;
+  return b;
+}
+
 function fBahnSchlichtenKomplett(s, tool, prog){
   const flach = fBahnSchlichten(s, tool, prog);
   const steil = fBahnSchlichtenZ(s, tool, prog, flach.ok ? {neig:flach.neig} : null);
@@ -17372,10 +17513,19 @@ function fPruefen(prog){
       if(!(+s.rautiefe > 0)) rot.push(nr + 'Rautiefe fehlt — sie ist das Mass dieser Bahn.');
       if(!(+s.tiefe < 0)) rot.push(nr + 'Z1 muss NEGATIV sein (unterste Höhe des Bereichs), steht auf ' + s.tiefe + '.');
       if(+s.tolBahn > 0 && +s.rautiefe > 0 && +s.tolBahn > +s.rautiefe) gelb.push(nr + 'Sehnentoleranz ' + s.tolBahn + ' ist groesser als die Rautiefe ' + s.rautiefe + ' — dann bestimmt die Ausduennung die Form, nicht die Rautiefe.');
+      if(z.kehlen){
+        // KEHLEN NACHSCHLICHTEN [26.09.2026]: kein Winkelband (0 bis 90, die Kehle liegt am
+        // Uebergang), dafuer der Bezug: ein Schlichtschritt davor mit groesserem Radius.
+        const bz = fKehlenBezug(prog, s);
+        if(!bz) rot.push(nr + 'braucht einen Schritt "Schraegen schlichten" DAVOR im Arbeitsplan — die Kehle ist, was dessen Werkzeug stehen laesst.');
+        else if(tool && bz.werkzeug && +tool.r2 > 0 && !(+tool.r2 < +bz.werkzeug.r2 - 1e-9)) rot.push(nr + 'T' + s.t + ' (R' + tool.r2 + ') ist nicht kleiner als das Werkzeug des Schlichtschritts T' + bz.schritt.t + ' (R' + bz.werkzeug.r2 + ') — es kaeme in dieselben Kehlen nicht hinein.');
+        gelb.push(nr + 'Kehlen nachschlichten ist die eigene Bahn der App (kein Steuerungszyklus): der kleine Kugelfraeser nur dort, wo der des Schlichtschritts nicht hinkam — vor dem ersten Lauf Programm-Test und Einzelsatz.');
+      } else {
       if(!(+s.winkel > 0 && +s.winkel < 90)) rot.push(nr + 'Steilste Neigung α1 muss zwischen 0 und 90 Grad liegen.');
       if(+s.winkelMin < 0 || +s.winkelMin >= +s.winkel) rot.push(nr + 'Flachste Neigung α0 muss unter der steilsten liegen.');
       if(!(+s.winkelMin > 0)) gelb.push(nr + 'α0 steht auf 0 — dann schlichtet die Kugel auch die WAAGERECHTEN Flaechen; die gehoeren ueblicherweise dem Schaft- oder Messerkopf.');
       gelb.push(nr + 'Schraegen schlichten ist die eigene Bahn der App (kein Steuerungszyklus). Geprueft wird nur das SCHNEIDTEIL, nicht Schaft und Halter — vor dem ersten Lauf Programm-Test und Einzelsatz.');
+      }
     } else if(z && z.modell){
       // Stufe 3 Teil B. Die schwere Frage ("kommt das Werkzeug ueberall
       // hin?") beantwortet die Bahn selbst samt Restmaterialbericht — hier
@@ -19173,6 +19323,7 @@ function fFormText(s){
     case 'zapfenK': return 'Kreiszapfen ⌀' + s.dm + ' (Roh ⌀' + s.dmRoh + ')';
     case 'planfraesen': return 'Fläche ' + s.l1 + '×' + s.l2 + ' ab X' + s.px + ' Y' + s.py + ' · Z' + s.pz + ' → Z' + s.zEnd + ' · Strategie ' + (s.strategie || 0);
     case 'modellSchlichten': return 'Schrägen schlichten ' + fRund(+s.winkelMin || 0) + '–' + fRund(+s.winkel || 45) + '° · Rz ' + fRund(+s.rautiefe || 0) + ' · Zeilen in ' + (Math.round(+s.strategie || 0) === 1 ? 'Y' : 'X') + (+s.bahnSinn > 0 ? ' · nur Gleichlauf' : (+s.bahnSinn < 0 ? ' · nur Gegenlauf' : '')) + (fStepFeldHolen() ? '' : ' · KEINE SOLLFORM');
+    case 'modellKehlen': return 'Kehlen nachschlichten · Rz ' + fRund(+s.rautiefe || 0) + ' · nur wo der Schlichtschritt davor nicht hinkam' + (+s.bahnSinn > 0 ? ' · nur Gleichlauf' : (+s.bahnSinn < 0 ? ' · nur Gegenlauf' : ''));
     case 'modellRest': {
       // Der Bezug ist der letzte Schruppschritt davor - er steht in der
       // Zeile, damit man sieht, worauf sich der Schritt bezieht. Ein Schritt,
@@ -19765,6 +19916,7 @@ const F_ICONS = {
   // die Z-Ebenen als waagerechte Striche.
   modellSchruppen:'<rect x="2" y="1.5" width="18" height="12" rx="1" stroke-dasharray="1.8 1.4"/><path d="M4 13h4V9h4V5.5h5"/><path d="M2 9h4M2 5.5h6" stroke-dasharray="1.4 1.2"/>',
   modellSchlichtenEben:'<rect x="2" y="1.5" width="18" height="12" rx="1" stroke-dasharray="1.8 1.4"/><path d="M4 4v9h14"/><path d="M6 13v-1.5M9 13v-1.5M12 13v-1.5M15 13v-1.5M4 6h1.5M4 9h1.5" stroke-width="1.2"/>',
+  modellKehlen:'<path d="M3 2v11h15"/><path d="M3 13a5 5 0 0 1 5-5" stroke-dasharray="1.4 1.2"/><circle cx="6" cy="10" r="2.2"/>',
   modellSchlichten:'<rect x="2" y="1.5" width="18" height="12" rx="1" stroke-dasharray="1.8 1.4"/><path d="M3 13l7-7h9"/><circle cx="8.5" cy="6.2" r="2.1"/><path d="M4.6 10.6l1.1 1.1M6.6 8.6l1.1 1.1M11 6h1.6M14 6h1.6" stroke-dasharray="0"/>',
   modellRest:'<rect x="2" y="1.5" width="18" height="12" rx="1" stroke-dasharray="1.8 1.4"/><path d="M4 13h4V9h4V5.5h5"/><circle cx="6.4" cy="11" r="1.5"/><circle cx="10.4" cy="7.2" r="1.5"/><circle cx="14.6" cy="3.8" r="1.5"/>',
   grp_modell:'<rect x="2" y="1.5" width="18" height="12" rx="1" stroke-dasharray="1.8 1.4"/><path d="M4 13h4V9h4V5.5h5"/>'
@@ -19915,6 +20067,8 @@ function fZyklusWerkzeugVorschlag(art){
     // Schraegen schlichten braucht die Kugel (r2 = halber Durchmesser) - der
     // Planfraeser T1 als Vorschlag liess die Maske mit Vorgaben nicht zu [19.09.2026].
     (art === 'modellSchlichten' ? fr.find(w => +w.r2 > 0 && Math.abs(+w.r2 - (+w.d) / 2) < 1e-6) : null) ||
+    // Kehlen: der KLEINSTE Kugelfraeser - er kommt am weitesten hinein [26.09.2026].
+    (art === 'modellKehlen' ? fr.filter(w => +w.r2 > 0).sort((a, b) => (+a.r2 || 0) - (+b.r2 || 0))[0] : null) ||
     // Tasche, Nut, Zapfen: ein Schaftfraeser mit Eintauchwinkel bis ⌀20, der
     // groesste zuerst - nicht der Messerkopf T1, mit dem eine 50x30-Tasche
     // in der Vorgabe gar nicht anzulegen war (Durchlauf 19.09.2026).
