@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="26.09.2026 16:33 (a14753eb)";</script>
+<script>window.__DZ_STAND="26.09.2026 17:06 (b54813ac)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3142,6 +3142,9 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
       <div class="msec">Preisstaffel</div>
       <div id="kalkStaffel"></div>
       <div id="kalkHinweis" style="font-size:11.5px;color:var(--text-dim);padding:6px 10px 12px;line-height:1.45;"></div>
+      <!-- IST-ZEITEN AUS DER MASCHINE [26.09.2026, Punkt 9]: gestoppte Zeit je Programm, Faktor je Maschine (08-istzeiten.js). -->
+      <div class="msec">Ist-Zeit an der Maschine (Kalibrierung)</div>
+      <div id="izBlock"></div>
       <div class="msec">Werkstatt-Pipeline</div>
       <div class="mrow" style="flex-wrap:wrap;gap:6px;padding-right:12px;">
         <button id="btnKalkZeitExport" style="flex:1 1 46%;font-size:12px;padding:7px;" title="Komplettzeit mit Werkzeugwechseln, Schnittzeit, Zahl der Werkzeuge und Wechsel, gemerkte Aufspannungen als Datei dz-cam-zeit — in der Pipeline, Blatt 2, Zeit aus DZ CAM laden">⇪ Zeit an die Pipeline</button>
@@ -4327,6 +4330,18 @@ Fr&auml;se hat ihren eigenen Stundensatz.</li>
 f&uuml;rs Gegenst&uuml;ck ab: die Kalkulation der zweiten Aufspannung rechnet gemerkte Eintr&auml;ge dazu &mdash; Laufzeiten summiert, Neben- und
 R&uuml;stzeit je Aufspannung, Material einmal. Ein Eintrag mit dem Namen des offenen Programms wird gezeigt, aber durchgestrichen und nicht
 mitgerechnet.</p>
+<p id="ba-fk06f-istzeit"><b>Ist-Zeit an der Maschine &mdash; die Kalibrierung (26.09.2026):</b> die Zeiten der App sind
+Sch&auml;tzwerte (siehe oben); die Maschine beschleunigt, bremst, wartet auf die Spindel, der Override steht selten auf 100&nbsp;%.
+<b>Stoppuhr vom Zyklusstart bis M30</b>, ohne R&uuml;sten und ohne St&ouml;rung, und die Zeit im Kalkulationsblatt unter
+<b>Ist-Zeit an der Maschine</b> eintragen (<code>7:40</code> als m:ss oder <code>7,5</code> in Minuten), dann <b>Ist-Zeit merken</b>.
+Die App legt je Programm und Maschine (Zielmaschine des Programmkopfs) einen Eintrag ab &mdash; Sch&auml;tzung, gestoppte Zeit, Datum;
+eine zweite Messung ersetzt die erste &mdash; und rechnet daraus den <b>Faktor der Maschine</b>: Summe aller Ist-Zeiten durch Summe aller
+Sch&auml;tzungen, gewichtet, damit ein langes Programm mehr z&auml;hlt als ein 30-Sekunden-Test. Ab der ersten Messung rechnet die
+Kalkulation mit der <b>erwarteten Zeit</b> (Sch&auml;tzung mal Faktor, die Zeile <i>Fertigung</i> sagt &bdquo;kalibriert&ldquo;),
+der Programmkopf im Arbeitsplan zeigt sie neben der Hauptzeit, und die Zeit-Datei f&uuml;r die Pipeline tr&auml;gt sie als
+<code>kalibrierung</code>. Die NC &auml;ndert sich nicht. Ein Faktor au&szlig;erhalb 0,5 bis 3 wird als unplausibel gemeldet (falsche
+Einheit, St&ouml;rung w&auml;hrend der Messung): Eintrag pr&uuml;fen, mit &#10005; l&ouml;schen. Jede Zielmaschine hat ihre eigene Liste;
+die Dreh-App f&uuml;hrt eine getrennte.</p>
 <p id="ba-fk06f-pipeline"><b>Werkstatt-Pipeline:</b> den Angebotspreis rechnet die Pipeline &mdash; dieses Blatt bleibt die Grobkalkulation.
 <b>Zeit an die Pipeline</b> schreibt die Zeiten als Datei (Kap.&nbsp;6d), <b>Preise aus der Pipeline</b> liest deren Werkstoffliste (Blatt&nbsp;5,
 <i>F&uuml;r die Dreh-App sichern</i> &mdash; dieselbe Datei passt hier) und &uuml;bernimmt die Preise je kg: zugeordnet nach Namen (S235 &rarr;
@@ -4929,6 +4944,136 @@ function huelleStart(){
   document.addEventListener('click', (e) => { if(!m.contains(e.target)) zu(); });
   document.addEventListener('keydown', (e) => { if(e.key === 'Escape') zu(); });
   return true;
+}
+// =====================================================================
+// IST-ZEITEN AUS DER MASCHINE: die Kalibrierung der Zeitschaetzung
+// [26.09.2026, Punkt 9 der Liste vom 25.09.]. Gemeinsames Modul beider Apps.
+//
+// WARUM: die Hauptzeit der App ist eine RECHNUNG - Weg durch Vorschub,
+// Eilgang mit einem festen Wert, Werkzeugwechsel als Pauschale. Die
+// Maschine beschleunigt, bremst in jeder Ecke, wartet auf die Spindel,
+// der Bediener steht auf 80 % Override. Was an der Maschine vergeht, ist
+// deshalb regelmaessig LAENGER, und zwar je Maschine um einen aehnlichen
+// Anteil. Wer das einmal gemessen hat, will es nicht bei jedem Angebot
+// im Kopf dazurechnen.
+//
+// WIE: je Programm EIN Eintrag - Name, die Schaetzung der App zum Zeit-
+// punkt des Merkens (soll), die gestoppte Zeit an der Maschine (ist),
+// Maschine, Datum. Der FAKTOR je Maschine ist die Summe aller Ist-Zeiten
+// durch die Summe aller Schaetzungen: GEWICHTET, damit ein langes Programm
+// mehr zaehlt als ein 30-Sekunden-Test - der Mittelwert der Verhaeltnisse
+// liesse den Test die Zahl bestimmen. Aus dem Faktor wird die ERWARTETE
+// Zeit: Schaetzung mal Faktor. Sie steht im Arbeitsplan neben der
+// Schaetzung, geht in die Kalkulation und in die Zeit-Datei fuer die
+// Pipeline.
+//
+// Der Faktor ist eine AUSKUNFT, keine Korrektur der Bahn: die NC bleibt,
+// was sie ist, nur die Zahl daneben aendert sich. Ein Faktor ausserhalb
+// 0,5..3 wird als unplausibel gemeldet (falsche Einheit, Stoerung waehrend
+// der Messung) - er wird trotzdem angewandt, der Bediener sieht die Zahl.
+//
+// Alles hier ist DOM-frei: der Zustand kommt als Parameter, der Speicher
+// als Schluessel (et_istzeiten im Drehteil, dzf_istzeiten beim Fraesen -
+// zwei Maschinenparks, zwei Listen). Der Pruefstand rechnet ohne Browser.
+// =====================================================================
+var IZ_SLOT_V = 1;
+var IZ_PLAUSIBEL = [0.5, 3];
+var izCache = {};
+
+// Ein Text von der Stoppuhr wird Minuten: "7:40" ist m:ss, "1:02:03" ist
+// h:mm:ss, "7,5" oder "7.5" sind Minuten. Alles andere ist NaN - der Aufrufer
+// meldet es, statt 0 zu speichern.
+function izMinuten(text){
+  const t = String(text == null ? '' : text).trim().replace(',', '.');
+  if(!t) return NaN;
+  const m = t.match(/^(\d+):(\d{1,2})(?::(\d{1,2}))?$/);
+  if(m){
+    if(m[3] !== undefined) return (+m[1]) * 60 + (+m[2]) + (+m[3]) / 60;
+    return (+m[1]) + (+m[2]) / 60;
+  }
+  if(!/^\d+(\.\d+)?$/.test(t)) return NaN;
+  return parseFloat(t);
+}
+function izZeitText(min){
+  const s2 = Math.max(0, Math.round((+min || 0) * 60));
+  return Math.floor(s2 / 60) + ':' + String(s2 % 60).padStart(2, '0');
+}
+// Gespeichertes lesen: nur saubere Eintraege (Maschine, Name, soll > 0,
+// ist > 0); Muell faellt auf die leere Liste.
+function izMerge(json){
+  const v = {v:IZ_SLOT_V, eintraege:[]};
+  try{
+    const d = JSON.parse(json); if(!d || !Array.isArray(d.eintraege)) return v;
+    v.eintraege = d.eintraege.filter(e => e && typeof e.maschine === 'string' && e.maschine &&
+        typeof e.name === 'string' && e.name && +e.soll > 0 && +e.ist > 0)
+      .map(e => ({maschine:e.maschine, name:e.name, soll:+e.soll, ist:+e.ist, datum:String(e.datum || '')}));
+  }catch(e){}
+  return v;
+}
+function izLaden(slot){
+  if(!izCache[slot]){ let j = null; try{ j = localStorage.getItem(slot); }catch(e){} izCache[slot] = izMerge(j); }
+  return izCache[slot];
+}
+function izSpeichern(slot, z){ izCache[slot] = z; try{ localStorage.setItem(slot, JSON.stringify(z)); }catch(e){} }
+// Ein Programm hat je Maschine EINEN Eintrag: dieselbe Messung noch einmal
+// ersetzt die alte (das Programm wurde geaendert, die Zeit neu gestoppt).
+function izEintragen(z, e){
+  if(!(+e.soll > 0) || !(+e.ist > 0) || !e.maschine || !e.name) return false;
+  const neu = {maschine:String(e.maschine), name:String(e.name), soll:+e.soll, ist:+e.ist, datum:e.datum || new Date().toISOString().slice(0, 10)};
+  const i = z.eintraege.findIndex(x => x.maschine === neu.maschine && x.name === neu.name);
+  if(i >= 0) z.eintraege[i] = neu; else z.eintraege.push(neu);
+  return true;
+}
+function izLoeschen(z, maschine, name){
+  const i = z.eintraege.findIndex(x => x.maschine === maschine && x.name === name);
+  if(i >= 0) z.eintraege.splice(i, 1);
+}
+// Der Faktor einer Maschine: Summe ist / Summe soll (gewichtet), dazu das
+// kleinste und groesste Einzelverhaeltnis als Streuung. null ohne Messung.
+function izFaktor(z, maschine){
+  const L = (z && z.eintraege || []).filter(e => e.maschine === maschine && e.soll > 0 && e.ist > 0);
+  if(!L.length) return null;
+  const sollSum = L.reduce((q, e) => q + e.soll, 0), istSum = L.reduce((q, e) => q + e.ist, 0);
+  const vs = L.map(e => e.ist / e.soll);
+  const faktor = istSum / sollSum;
+  return {n:L.length, faktor:faktor, min:Math.min.apply(null, vs), max:Math.max.apply(null, vs),
+          sollSum:sollSum, istSum:istSum, plausibel:faktor >= IZ_PLAUSIBEL[0] && faktor <= IZ_PLAUSIBEL[1]};
+}
+function izErwartet(min, fk){ return (fk && fk.faktor > 0) ? (+min || 0) * fk.faktor : (+min || 0); }
+function izFaktorText(fk){
+  if(!fk) return 'noch keine Messung';
+  const f = x => x.toFixed(2).replace('.', ',');
+  return 'Faktor ' + f(fk.faktor) + ' aus ' + fk.n + ' Messung' + (fk.n === 1 ? '' : 'en') +
+         (fk.n > 1 ? ' (' + f(fk.min) + ' bis ' + f(fk.max) + ')' : '') +
+         (fk.plausibel ? '' : ' - UNPLAUSIBEL, Eintrag pruefen (Einheit? Stoerung?)');
+}
+// Die Zeile fuer die Kalkulation: welche Laufzeit gerechnet wird und warum.
+// Ohne Messung ist erwartet = soll und die Zeile sagt es.
+function izKalkZeit(sollMin, fk){
+  const erw = izErwartet(sollMin, fk);
+  return {soll:+sollMin || 0, erwartet:erw, faktor:fk ? fk.faktor : 1, n:fk ? fk.n : 0,
+          text:fk ? ('kalibriert x ' + fk.faktor.toFixed(2).replace('.', ',') + ' aus ' + fk.n + ' Messung' + (fk.n === 1 ? '' : 'en')) : 'Schaetzung, noch keine Ist-Zeit gemessen'};
+}
+// Der Block in der Kalkulationsmaske (beide Apps): Eingabe, Knopf, die
+// Eintraege dieser Maschine mit ✕, die Faktor-Zeile. Nur HTML - die Knoepfe
+// verdrahtet jede App an ihrer Kalkulationsmaske.
+function izBlockHtml(z, maschine, maschLabel, sollMin, eigenName){
+  const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const fk = izFaktor(z, maschine);
+  const L = (z.eintraege || []).filter(e => e.maschine === maschine);
+  let h = '';
+  h += '<div class="mrow" style="padding-right:12px;"><label>Gestoppt an der Maschine <span class="kdim">(' + esc(maschLabel) + ')</span></label>' +
+       '<input type="text" id="izIst" inputmode="decimal" placeholder="m:ss oder min" style="width:108px;flex:0 0 auto;margin-left:auto;text-align:right;">' +
+       '<span class="unit">min</span></div>';
+  h += '<div class="mrow" style="padding-right:12px;"><button id="izMerken" style="flex:1;font-size:12px;padding:6px;" title="Die gestoppte Zeit dieses Programms merken - Schaetzung ' + izZeitText(sollMin) + ' min steht daneben">⏱ Ist-Zeit merken (Schätzung ' + izZeitText(sollMin) + ' min)</button></div>';
+  h += '<div class="kalkzeile"><span>' + esc(maschLabel) + ': ' + esc(izFaktorText(fk)) + '</span><span class="kw">' + (fk ? '× ' + fk.faktor.toFixed(2).replace('.', ',') : '—') + '</span></div>';
+  L.forEach(e => {
+    const eigen = e.name === eigenName;
+    h += '<div class="kalkzeile"><span>' + (eigen ? '<b>' : '') + esc(e.name) + (eigen ? '</b>' : '') + ' <span class="kdim">' + esc(e.datum) + '</span></span>' +
+         '<span class="kw">' + izZeitText(e.soll) + ' → ' + izZeitText(e.ist) + ' (' + (e.ist / e.soll).toFixed(2).replace('.', ',') + ') <button data-izx="' + esc(e.name) + '" style="padding:0 6px;margin-left:4px;">✕</button></span></div>';
+  });
+  if(!L.length) h += '<div class="kdim" style="padding:2px 10px 6px;font-size:11.5px;">Noch keine Messung an dieser Maschine. Stoppuhr vom Zyklusstart bis M30, ohne Rüsten und ohne Störung — dann hier eintragen. Je Programm ein Eintrag, ein zweiter ersetzt den ersten.</div>';
+  return h;
 }
 // =====================================================================
 // DZ CAM · FRAESEN — KERN (DOM-frei)
@@ -18997,12 +19142,15 @@ function fArbeitsplanRender(){
   const hz = fHzSofort();
   const zeitMax = (hz && hz.proSchritt) ? Object.keys(hz.proSchritt).reduce((m, j) => Math.max(m, +hz.proSchritt[j] || 0), 0) : 0;
   const zeitChip = (min, titel) => '<span class="zeitchip" title="' + titel + '">\u23F1 ' + fZeitText(min) + '</span>';
+  let izFkAp = null; try{ izFkAp = izFaktor(izLaden(F_SLOT_IZ), k.profil || 'HEIDENHAIN_ITNC530'); }catch(e){}
   const sel = (typ, idx) => (fSel && fSel.typ === typ && fSel.idx === idx) ? ' sel' : '';
   let h = '';
   h += '<div class="ap-row' + sel('kopf', 0) + '" data-k="kopf"><div class="ap-icon" style="background:#4d5860;">P</div>' +
        '<div class="ap-name">Programmkopf</div><div class="ap-detail">' + esc(fName(fProg)) + '.H · BLK ' + (k.x1 - k.x0) + '×' + (k.y1 - k.y0) + '×' + (k.z1 - k.z0) +
        ' · SC ' + k.sc + ' · SC2 ' + k.sc2 + ' · sicher Z' + k.rz +
        ((hz && hz.gesamt > 0) ? ' · Hauptzeit ' + fZeitText(hz.gesamt) + ' + ' + hz.wechsel + ' WW à ' + hz.twSek + ' s' : '') +
+       // IST-ZEITEN [26.09.2026]: mit gemessenem Faktor die erwartete Zeit an der Maschine daneben.
+       ((hz && hz.gesamt > 0 && izFkAp) ? ' · <span title="' + esc(izFaktorText(izFkAp)) + '">an der Maschine ~' + fZeitText(izErwartet(hz.komplett, izFkAp)) + '</span>' : '') +
        '</div><div class="ap-zeit">' + ((hz && hz.gesamt > 0) ? zeitChip(hz.komplett, 'Komplett, mit Werkzeugwechseln') : '') + '</div><button class="ap-edit" data-ek="1">✎</button></div>';
   fProg.muster.forEach((m, i) => {
     const n = fMusterPunkte(m).length;
@@ -22264,11 +22412,14 @@ function fZeitDatei(){
   if(!gemerkt.length){ try{ if(STEP.plan && STEP.plan.lagen){ const l = STEP.plan.lagen.find(x => x.achse === STEP.plan.vorschlag) || STEP.plan.lagen[0]; if(l && l.fertig < 0.6) aufsp = 2; } }catch(e){} }
   const prof = F_PROFILE[(fProg.kopf && fProg.kopf.profil) || 'HEIDENHAIN_ITNC530'] || {};
   const r3 = v => Math.round((+v || 0) * 1000) / 1000;
+  const izFk = izFaktor(izLaden(F_SLOT_IZ), (fProg.kopf && fProg.kopf.profil) || 'HEIDENHAIN_ITNC530');
   return { format:'dz-cam-zeit', version:1, quelle:'fraesen', datum:new Date().toISOString(),
     programm:{ name:eigen, maschine:prof.name || 'Heidenhain iTNC 530' },
     zeiten:{ komplett_min:r3(hz.komplett), schnitt_min:r3(hz.gesamt), werkzeuge:ts.size, wechsel:hz.wechsel, wechsel_min:r3(hz.wechselMin) },
     aufspannungen:aufsp,
-    weitere_aufspannungen:gemerkt.map(a => ({name:a.name, min:a.min})) };
+    weitere_aufspannungen:gemerkt.map(a => ({name:a.name, min:a.min})),
+    // KALIBRIERUNG [26.09.2026]: Faktor dieser Maschine und erwartete Zeit, null ohne Messung.
+    kalibrierung:izFk ? {faktor:r3(izFk.faktor), messungen:izFk.n, erwartet_min:r3(izErwartet(hz.komplett, izFk))} : null };
 }
 function fZeitExport(){
   const z = fZeitDatei();
@@ -22287,6 +22438,7 @@ function fZeitExport(){
 // rechnet die Werkstatt-Pipeline; dieses Blatt ist die Grobkalkulation.
 // =====================================================================
 var F_SLOT_KALK = 'dzf_kalk';
+var F_SLOT_IZ = 'dzf_istzeiten';   // Ist-Zeiten je Maschine (08-istzeiten.js), eigene Liste der Fraes-App
 var fKalkWerte = null;
 function fKalkLaden(){ if(!fKalkWerte){ let j = null; try{ j = localStorage.getItem(F_SLOT_KALK); }catch(e){} fKalkWerte = fKalkMerge(j); } return fKalkWerte; }
 function fKalkSpeichern(){ try{ localStorage.setItem(F_SLOT_KALK, JSON.stringify(fKalkWerte)); }catch(e){} }
@@ -22299,11 +22451,14 @@ function fKalkEingabe(){
   // Das offene Programm zaehlt nie doppelt: sein Merker wird am NAMEN erkannt.
   const eigen = fName(fProg);
   const aufspAktiv = (w.aufsp || []).filter(a => a.name !== eigen);
+  // IST-ZEITEN [26.09.2026, Punkt 9]: der Faktor dieser Maschine (Profil des
+  // Programmkopfs) macht aus der Schaetzung die erwartete Zeit; ohne Messung 1.
+  const izZ = izLaden(F_SLOT_IZ), izMasch = k.profil || 'HEIDENHAIN_ITNC530', izFk = izFaktor(izZ, izMasch);
   const ein = {lx:Math.abs((+k.x1 || 0) - (+k.x0 || 0)), ly:Math.abs((+k.y1 || 0) - (+k.y0 || 0)), lz:Math.abs((+k.z1 || 0) - (+k.z0 || 0)),
     saege:w.saege, dichte:F_WERKSTOFFE[key].dichte, preisKg:w.preise[key], satz:w.satz, ruestMin:w.ruestMin, nebenMin:w.nebenMin,
-    hzMin:hzMin, aufspMin:aufspAktiv.reduce((q, a) => q + a.min, 0), aufspN:aufspAktiv.length,
+    hzMin:izErwartet(hzMin, izFk), aufspMin:izErwartet(aufspAktiv.reduce((q, a) => q + a.min, 0), izFk), aufspN:aufspAktiv.length,
     mgkProz:w.mgkProz, vwProz:w.vwProz, gewinnProz:w.gewinnProz, los:w.los};
-  return {ein:ein, w:w, key:key, hz:hz, hzMin:hzMin, eigen:eigen, aufspAktiv:aufspAktiv};
+  return {ein:ein, w:w, key:key, hz:hz, hzMin:hzMin, eigen:eigen, aufspAktiv:aufspAktiv, izZ:izZ, izMasch:izMasch, izFk:izFk, izK:izKalkZeit(hzMin, izFk)};
 }
 function fKalkBlattMalen(){
   const E = fKalkEingabe(), w = E.w, ein = E.ein, key = E.key;
@@ -22314,7 +22469,7 @@ function fKalkBlattMalen(){
   h += z('Materialeinzelkosten', fEur(r.mek));
   h += z('+ Materialgemeinkosten ' + w.mgkProz + ' %', fEur(r.mgk));
   const nAuf = 1 + E.aufspAktiv.length;
-  h += z('Fertigung ' + fZeitText(r.fertMin) + ' min à ' + w.satz + ' €/h' + (nAuf > 1 ? ' <span class="kdim">(' + nAuf + ' Aufspannungen)</span>' : ''), fEur(r.fert));
+  h += z('Fertigung ' + fZeitText(r.fertMin) + ' min à ' + w.satz + ' €/h' + (nAuf > 1 ? ' <span class="kdim">(' + nAuf + ' Aufspannungen)</span>' : '') + (E.izFk ? ' <span class="kdim">(kalibriert × ' + E.izFk.faktor.toFixed(2).replace('.', ',') + ')</span>' : ''), fEur(r.fert));
   h += z('Rüstumlage ' + (nAuf > 1 ? nAuf + ' × ' : '') + w.ruestMin + ' min / ' + r.los + ' Stk', fEur(r.ruest));
   h += z('= Herstellkosten', fEur(r.hk), 'summe');
   h += z('+ Verwaltung u. Vertrieb ' + w.vwProz + ' %', fEur(r.vw));
@@ -22337,7 +22492,9 @@ function fKalkBlattMalen(){
     la += '<div class="kalkzeile"' + (selbst ? ' style="text-decoration:line-through;color:var(--text-dim);"' : '') + '><span>+ gemerkt: ' + esc(a.name) + (selbst ? ' <span class="kdim">(gerade geöffnet — zählt nicht doppelt)</span>' : '') + '</span><span class="kw">\u23F1 ' + fZeitText(a.min) + ' <button data-aufspx="' + ix + '" style="padding:0 6px;margin-left:4px;">✕</button></span></div>';
   });
   const al = document.getElementById('kalkAufspListe'); if(al) al.innerHTML = la;
+  { const ib = document.getElementById('izBlock'); if(ib) ib.innerHTML = izBlockHtml(E.izZ, E.izMasch, (F_PROFILE[E.izMasch] || F_PROFILE.HEIDENHAIN_ITNC530).name, E.hzMin, E.eigen); }
   const hin = [];
+  if(E.hzMin > 0) hin.push('Laufzeit in der Rechnung: ' + fZeitText(E.izK.erwartet) + ' min — ' + esc(E.izK.text) + (E.izFk ? ' (Schätzung der App ' + fZeitText(E.hzMin) + ' min)' : '') + '.');
   if(!(E.hzMin > 0)) hin.push('⚠ Keine Laufzeit — es ist kein aktiver Bearbeitungsschritt angelegt. Die Kalkulation enthält nur Material, Neben- und Rüstzeit.');
   if(E.hz && E.hz.hinweise && E.hz.hinweise.length) hin.push('Zeitrechnung: ' + E.hz.hinweise.map(esc).join(' · '));
   if(E.aufspAktiv.length) hin.push('Gesamtkalkulation über ' + (1 + E.aufspAktiv.length) + ' Aufspannungen: Laufzeiten summiert, Rüst- und Nebenzeit je Aufspannung, Material EINMAL aus dem aktuellen Programmkopf.');
@@ -22371,7 +22528,22 @@ function fKalkOeffnen(){
       const b = ev.target && ev.target.closest ? ev.target.closest('[data-aufspx]') : null; if(!b) return;
       const w = fKalkLaden(); w.aufsp.splice(+b.dataset.aufspx, 1); fKalkSpeichern(); fKalkBlattMalen();
     });
-    mk.addEventListener('input', ()=>{
+    // IST-ZEIT MERKEN / LOESCHEN [26.09.2026]: delegiert (der Block entsteht bei jedem Malen neu).
+    mk.addEventListener('click', (ev)=>{
+      const t = ev.target;
+      if(t && t.id === 'izMerken'){
+        const E = fKalkEingabe();
+        if(!(E.hzMin > 0)){ alert('Keine Schätzung — erst Schritte anlegen, dann die Ist-Zeit dazu merken.'); return; }
+        const ist = izMinuten(getStr('izIst'));
+        if(!(ist > 0)){ alert('Ist-Zeit nicht lesbar: m:ss (7:40) oder Minuten (7,5) eintragen.'); return; }
+        izEintragen(E.izZ, {maschine:E.izMasch, name:E.eigen, soll:E.hzMin, ist:ist});
+        izSpeichern(F_SLOT_IZ, E.izZ); fKalkBlattMalen(); return;
+      }
+      const b = t && t.closest ? t.closest('[data-izx]') : null;
+      if(b){ const E = fKalkEingabe(); izLoeschen(E.izZ, E.izMasch, b.dataset.izx); izSpeichern(F_SLOT_IZ, E.izZ); fKalkBlattMalen(); }
+    });
+    mk.addEventListener('input', (ev)=>{
+      if(ev && ev.target && ev.target.id === 'izIst') return;   // das Ist-Zeit-Feld malt das Blatt nicht neu
       const w = fKalkLaden();
       const g = id => parseFloat(String(getStr(id)).replace(',', '.'));
       const nz = (v, alt) => (isFinite(v) && v >= 0) ? v : alt;   // leeres Feld kippt nicht auf 0

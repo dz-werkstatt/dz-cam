@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="26.09.2026 16:33 (a14753eb)";</script>
+<script>window.__DZ_STAND="26.09.2026 17:06 (b54813ac)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3648,6 +3648,10 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
       <div class="msec">Preisstaffel</div>
       <div id="kalkStaffel"></div>
       <div id="kalkHinweis" style="font-size:11.5px;color:var(--text-dim);padding:6px 10px 12px;line-height:1.45;"></div>
+      <!-- IST-ZEITEN AUS DER MASCHINE [26.09.2026, Punkt 9]: die gestoppte Zeit je Programm,
+           daraus der Faktor je Maschine (08-istzeiten.js); der Block wird von kalkBlattMalen gemalt. -->
+      <div class="msec">Ist-Zeit an der Maschine (Kalibrierung)</div>
+      <div id="izBlock"></div>
       <!-- AUSTAUSCH MIT DER WERKSTATT-PIPELINE [19.09.2026, Daniels Freigabe: die Pipeline ist die
            Quelle des Preises, die CAM-Apps liefern die Zeiten]. Die Zeit geht als Datei hinueber,
            die Werkstoffpreise kommen als Datei herueber - kein Server dazwischen. -->
@@ -5545,6 +5549,19 @@ Stundensatz, R&uuml;stumlage auf die Losgr&ouml;&szlig;e &rarr; <b>Herstellkoste
 <b>St&uuml;ckpreis netto</b>. Die <b>Preisstaffel</b> (1/5/10/25/50 St&uuml;ck)
 zeigt, wie die R&uuml;stumlage f&auml;llt &mdash; die Antwort auf &bdquo;und bei
 zehn St&uuml;ck?&ldquo;.</p>
+<p id="ba-k14-istzeit"><b>Ist-Zeit an der Maschine &mdash; die Kalibrierung (26.09.2026):</b> die Laufzeit der App ist eine
+Rechnung (Weg durch Vorschub, Eilgang mit festem Wert, Werkzeugwechsel als Pauschale). Die Maschine beschleunigt und bremst,
+wartet auf die Spindel, der Override steht selten auf 100&nbsp;% &mdash; an der Maschine vergeht regelm&auml;&szlig;ig mehr, und zwar
+je Maschine um einen &auml;hnlichen Anteil. Deshalb: <b>Stoppuhr vom Zyklusstart bis M30</b>, ohne R&uuml;sten, ohne St&ouml;rung, und die
+Zeit im Blatt unter <b>Ist-Zeit an der Maschine</b> eintragen (<code>7:40</code> als m:ss oder <code>7,5</code> in Minuten), dann
+<b>Ist-Zeit merken</b>. Die App legt je Programm und Maschine einen Eintrag ab (Sch&auml;tzung, gestoppte Zeit, Datum; eine zweite
+Messung ersetzt die erste) und rechnet daraus den <b>Faktor der Maschine</b>: Summe aller Ist-Zeiten durch Summe aller
+Sch&auml;tzungen &mdash; gewichtet, damit ein langes Programm mehr z&auml;hlt als ein 30-Sekunden-Test. Ab der ersten Messung rechnet die
+Kalkulation mit der <b>erwarteten Zeit</b> (Sch&auml;tzung mal Faktor; die Zeile <i>Fertigung</i> sagt &bdquo;kalibriert&ldquo;),
+der Arbeitsplan zeigt sie neben der Gesamtzeit, und die Zeit-Datei f&uuml;r die Pipeline tr&auml;gt sie als <code>kalibrierung</code>.
+Die NC &auml;ndert sich nicht &mdash; der Faktor ist eine Auskunft &uuml;ber die Maschine, keine Korrektur der Bahn. Liegt er
+au&szlig;erhalb 0,5 bis 3, meldet das Blatt ihn als unplausibel (falsche Einheit, St&ouml;rung w&auml;hrend der Messung): den Eintrag
+pr&uuml;fen, mit &#10005; l&ouml;schen. Jede Maschine hat ihre eigene Liste; die Fr&auml;s-App f&uuml;hrt eine getrennte.</p>
 <p id="ba-k14-pipeline"><b>Zusammenspiel mit der Werkstatt-Pipeline (19.09.2026):</b> den
 Angebotspreis rechnet die Pipeline &mdash; sie kennt Material, Zuschl&auml;ge, Staffel und die
 Auftr&auml;ge; dieses Blatt bleibt die Grobkalkulation f&uuml;rs Gegenst&uuml;ck. Der Knopf
@@ -6242,6 +6259,136 @@ function huelleStart(){
   document.addEventListener('click', (e) => { if(!m.contains(e.target)) zu(); });
   document.addEventListener('keydown', (e) => { if(e.key === 'Escape') zu(); });
   return true;
+}
+// =====================================================================
+// IST-ZEITEN AUS DER MASCHINE: die Kalibrierung der Zeitschaetzung
+// [26.09.2026, Punkt 9 der Liste vom 25.09.]. Gemeinsames Modul beider Apps.
+//
+// WARUM: die Hauptzeit der App ist eine RECHNUNG - Weg durch Vorschub,
+// Eilgang mit einem festen Wert, Werkzeugwechsel als Pauschale. Die
+// Maschine beschleunigt, bremst in jeder Ecke, wartet auf die Spindel,
+// der Bediener steht auf 80 % Override. Was an der Maschine vergeht, ist
+// deshalb regelmaessig LAENGER, und zwar je Maschine um einen aehnlichen
+// Anteil. Wer das einmal gemessen hat, will es nicht bei jedem Angebot
+// im Kopf dazurechnen.
+//
+// WIE: je Programm EIN Eintrag - Name, die Schaetzung der App zum Zeit-
+// punkt des Merkens (soll), die gestoppte Zeit an der Maschine (ist),
+// Maschine, Datum. Der FAKTOR je Maschine ist die Summe aller Ist-Zeiten
+// durch die Summe aller Schaetzungen: GEWICHTET, damit ein langes Programm
+// mehr zaehlt als ein 30-Sekunden-Test - der Mittelwert der Verhaeltnisse
+// liesse den Test die Zahl bestimmen. Aus dem Faktor wird die ERWARTETE
+// Zeit: Schaetzung mal Faktor. Sie steht im Arbeitsplan neben der
+// Schaetzung, geht in die Kalkulation und in die Zeit-Datei fuer die
+// Pipeline.
+//
+// Der Faktor ist eine AUSKUNFT, keine Korrektur der Bahn: die NC bleibt,
+// was sie ist, nur die Zahl daneben aendert sich. Ein Faktor ausserhalb
+// 0,5..3 wird als unplausibel gemeldet (falsche Einheit, Stoerung waehrend
+// der Messung) - er wird trotzdem angewandt, der Bediener sieht die Zahl.
+//
+// Alles hier ist DOM-frei: der Zustand kommt als Parameter, der Speicher
+// als Schluessel (et_istzeiten im Drehteil, dzf_istzeiten beim Fraesen -
+// zwei Maschinenparks, zwei Listen). Der Pruefstand rechnet ohne Browser.
+// =====================================================================
+var IZ_SLOT_V = 1;
+var IZ_PLAUSIBEL = [0.5, 3];
+var izCache = {};
+
+// Ein Text von der Stoppuhr wird Minuten: "7:40" ist m:ss, "1:02:03" ist
+// h:mm:ss, "7,5" oder "7.5" sind Minuten. Alles andere ist NaN - der Aufrufer
+// meldet es, statt 0 zu speichern.
+function izMinuten(text){
+  const t = String(text == null ? '' : text).trim().replace(',', '.');
+  if(!t) return NaN;
+  const m = t.match(/^(\d+):(\d{1,2})(?::(\d{1,2}))?$/);
+  if(m){
+    if(m[3] !== undefined) return (+m[1]) * 60 + (+m[2]) + (+m[3]) / 60;
+    return (+m[1]) + (+m[2]) / 60;
+  }
+  if(!/^\d+(\.\d+)?$/.test(t)) return NaN;
+  return parseFloat(t);
+}
+function izZeitText(min){
+  const s2 = Math.max(0, Math.round((+min || 0) * 60));
+  return Math.floor(s2 / 60) + ':' + String(s2 % 60).padStart(2, '0');
+}
+// Gespeichertes lesen: nur saubere Eintraege (Maschine, Name, soll > 0,
+// ist > 0); Muell faellt auf die leere Liste.
+function izMerge(json){
+  const v = {v:IZ_SLOT_V, eintraege:[]};
+  try{
+    const d = JSON.parse(json); if(!d || !Array.isArray(d.eintraege)) return v;
+    v.eintraege = d.eintraege.filter(e => e && typeof e.maschine === 'string' && e.maschine &&
+        typeof e.name === 'string' && e.name && +e.soll > 0 && +e.ist > 0)
+      .map(e => ({maschine:e.maschine, name:e.name, soll:+e.soll, ist:+e.ist, datum:String(e.datum || '')}));
+  }catch(e){}
+  return v;
+}
+function izLaden(slot){
+  if(!izCache[slot]){ let j = null; try{ j = localStorage.getItem(slot); }catch(e){} izCache[slot] = izMerge(j); }
+  return izCache[slot];
+}
+function izSpeichern(slot, z){ izCache[slot] = z; try{ localStorage.setItem(slot, JSON.stringify(z)); }catch(e){} }
+// Ein Programm hat je Maschine EINEN Eintrag: dieselbe Messung noch einmal
+// ersetzt die alte (das Programm wurde geaendert, die Zeit neu gestoppt).
+function izEintragen(z, e){
+  if(!(+e.soll > 0) || !(+e.ist > 0) || !e.maschine || !e.name) return false;
+  const neu = {maschine:String(e.maschine), name:String(e.name), soll:+e.soll, ist:+e.ist, datum:e.datum || new Date().toISOString().slice(0, 10)};
+  const i = z.eintraege.findIndex(x => x.maschine === neu.maschine && x.name === neu.name);
+  if(i >= 0) z.eintraege[i] = neu; else z.eintraege.push(neu);
+  return true;
+}
+function izLoeschen(z, maschine, name){
+  const i = z.eintraege.findIndex(x => x.maschine === maschine && x.name === name);
+  if(i >= 0) z.eintraege.splice(i, 1);
+}
+// Der Faktor einer Maschine: Summe ist / Summe soll (gewichtet), dazu das
+// kleinste und groesste Einzelverhaeltnis als Streuung. null ohne Messung.
+function izFaktor(z, maschine){
+  const L = (z && z.eintraege || []).filter(e => e.maschine === maschine && e.soll > 0 && e.ist > 0);
+  if(!L.length) return null;
+  const sollSum = L.reduce((q, e) => q + e.soll, 0), istSum = L.reduce((q, e) => q + e.ist, 0);
+  const vs = L.map(e => e.ist / e.soll);
+  const faktor = istSum / sollSum;
+  return {n:L.length, faktor:faktor, min:Math.min.apply(null, vs), max:Math.max.apply(null, vs),
+          sollSum:sollSum, istSum:istSum, plausibel:faktor >= IZ_PLAUSIBEL[0] && faktor <= IZ_PLAUSIBEL[1]};
+}
+function izErwartet(min, fk){ return (fk && fk.faktor > 0) ? (+min || 0) * fk.faktor : (+min || 0); }
+function izFaktorText(fk){
+  if(!fk) return 'noch keine Messung';
+  const f = x => x.toFixed(2).replace('.', ',');
+  return 'Faktor ' + f(fk.faktor) + ' aus ' + fk.n + ' Messung' + (fk.n === 1 ? '' : 'en') +
+         (fk.n > 1 ? ' (' + f(fk.min) + ' bis ' + f(fk.max) + ')' : '') +
+         (fk.plausibel ? '' : ' - UNPLAUSIBEL, Eintrag pruefen (Einheit? Stoerung?)');
+}
+// Die Zeile fuer die Kalkulation: welche Laufzeit gerechnet wird und warum.
+// Ohne Messung ist erwartet = soll und die Zeile sagt es.
+function izKalkZeit(sollMin, fk){
+  const erw = izErwartet(sollMin, fk);
+  return {soll:+sollMin || 0, erwartet:erw, faktor:fk ? fk.faktor : 1, n:fk ? fk.n : 0,
+          text:fk ? ('kalibriert x ' + fk.faktor.toFixed(2).replace('.', ',') + ' aus ' + fk.n + ' Messung' + (fk.n === 1 ? '' : 'en')) : 'Schaetzung, noch keine Ist-Zeit gemessen'};
+}
+// Der Block in der Kalkulationsmaske (beide Apps): Eingabe, Knopf, die
+// Eintraege dieser Maschine mit ✕, die Faktor-Zeile. Nur HTML - die Knoepfe
+// verdrahtet jede App an ihrer Kalkulationsmaske.
+function izBlockHtml(z, maschine, maschLabel, sollMin, eigenName){
+  const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const fk = izFaktor(z, maschine);
+  const L = (z.eintraege || []).filter(e => e.maschine === maschine);
+  let h = '';
+  h += '<div class="mrow" style="padding-right:12px;"><label>Gestoppt an der Maschine <span class="kdim">(' + esc(maschLabel) + ')</span></label>' +
+       '<input type="text" id="izIst" inputmode="decimal" placeholder="m:ss oder min" style="width:108px;flex:0 0 auto;margin-left:auto;text-align:right;">' +
+       '<span class="unit">min</span></div>';
+  h += '<div class="mrow" style="padding-right:12px;"><button id="izMerken" style="flex:1;font-size:12px;padding:6px;" title="Die gestoppte Zeit dieses Programms merken - Schaetzung ' + izZeitText(sollMin) + ' min steht daneben">⏱ Ist-Zeit merken (Schätzung ' + izZeitText(sollMin) + ' min)</button></div>';
+  h += '<div class="kalkzeile"><span>' + esc(maschLabel) + ': ' + esc(izFaktorText(fk)) + '</span><span class="kw">' + (fk ? '× ' + fk.faktor.toFixed(2).replace('.', ',') : '—') + '</span></div>';
+  L.forEach(e => {
+    const eigen = e.name === eigenName;
+    h += '<div class="kalkzeile"><span>' + (eigen ? '<b>' : '') + esc(e.name) + (eigen ? '</b>' : '') + ' <span class="kdim">' + esc(e.datum) + '</span></span>' +
+         '<span class="kw">' + izZeitText(e.soll) + ' → ' + izZeitText(e.ist) + ' (' + (e.ist / e.soll).toFixed(2).replace('.', ',') + ') <button data-izx="' + esc(e.name) + '" style="padding:0 6px;margin-left:4px;">✕</button></span></div>';
+  });
+  if(!L.length) h += '<div class="kdim" style="padding:2px 10px 6px;font-size:11.5px;">Noch keine Messung an dieser Maschine. Stoppuhr vom Zyklusstart bis M30, ohne Rüsten und ohne Störung — dann hier eintragen. Je Programm ein Eintrag, ein zweiter ersetzt den ersten.</div>';
+  return h;
 }
 // =================================================================
 // State
@@ -15520,8 +15667,11 @@ function refreshArbeitsplan(){
     if(hauptzeiten && hauptzeiten.gesamt>0){
       // KOMPLETT heisst mit Werkzeugwechseln — das ist die Zeit, die
       // an der Maschine vergeht. gesamt allein waere zu optimistisch.
+      // IST-ZEITEN [26.09.2026]: mit gemessenem Faktor steht die erwartete
+      // Zeit an der Maschine daneben; ohne Messung bleibt die Zeile, wie sie war.
+      let izFk=null; try{ izFk=izFaktor(izLaden('et_istzeiten'), MASCHINENPROFIL.id); }catch(e){}
       zeit='<span class="zeit">Gesamtzeit <span class="gesamt">⏱ '+
-           fmtZeit(hauptzeiten.komplett)+'</span></span>';
+           fmtZeit(hauptzeiten.komplett)+'</span>'+(izFk? ' <span class="kdim" title="'+izFaktorText(izFk)+'">an der Maschine ~'+fmtZeit(izErwartet(hauptzeiten.komplett, izFk))+'</span>':'')+'</span>';
     }
     ende.innerHTML='<span class="marke">END</span><span>Programmende</span>'+zeit;
     body.appendChild(ende);
@@ -39620,9 +39770,13 @@ function kalkBlattMalen(){
   const eigenName=kalkProgName();
   const aufspAktiv=(w.aufsp||[]).filter(a=>a.name!==eigenName);
   const aufspMin=aufspAktiv.reduce((q,a)=>q+a.min,0);
+  // IST-ZEITEN [26.09.2026, Punkt 9]: der Faktor dieser Maschine macht aus der
+  // Schaetzung die ERWARTETE Zeit - gerechnet wird mit ihr, die Schaetzung
+  // steht daneben. Ohne Messung ist der Faktor 1 und alles wie bisher.
+  const izZ=izLaden('et_istzeiten'), izFk=izFaktor(izZ, MASCHINENPROFIL.id), izK=izKalkZeit(hzMin, izFk);
   const ein={xa, xi, laenge, saege:w.saege, dichte:KALK_DICHTE[key],
     preisKg:w.preise[key], satz:w.satz, ruestMin:w.ruestMin, nebenMin:w.nebenMin,
-    hzMin, aufspMin, aufspN:aufspAktiv.length,
+    hzMin:izErwartet(hzMin, izFk), aufspMin:izErwartet(aufspMin, izFk), aufspN:aufspAktiv.length,
     mgkProz:w.mgkProz, vwProz:w.vwProz, gewinnProz:w.gewinnProz, los:w.los};
   const r=kalkRechnen(ein);
   const z=(t,wert,cls)=>'<div class="kalkzeile'+(cls?' '+cls:'')+'"><span>'+t+'</span><span class="kw">'+wert+'</span></div>';
@@ -39631,7 +39785,7 @@ function kalkBlattMalen(){
   h+=z('Materialeinzelkosten', kfEur(r.mek));
   h+=z('+ Materialgemeinkosten '+w.mgkProz+' %', kfEur(r.mgk));
   const nAuf=1+aufspAktiv.length;
-  h+=z('Fertigung '+fmtZeit(r.fertMin)+' min à '+w.satz+' €/h'+(nAuf>1?' <span class="kdim">('+nAuf+' Aufspannungen)</span>':''), kfEur(r.fert));
+  h+=z('Fertigung '+fmtZeit(r.fertMin)+' min à '+w.satz+' €/h'+(nAuf>1?' <span class="kdim">('+nAuf+' Aufspannungen)</span>':'')+(izFk?' <span class="kdim">(kalibriert × '+izFk.faktor.toFixed(2).replace('.',',')+')</span>':''), kfEur(r.fert));
   h+=z('Rüstumlage '+(nAuf>1? nAuf+' × ':'')+w.ruestMin+' min / '+r.los+' Stk', kfEur(r.ruest));
   h+=z('= Herstellkosten', kfEur(r.hk), 'summe');
   h+=z('+ Verwaltung u. Vertrieb '+w.vwProz+' %', kfEur(r.vw));
@@ -39662,7 +39816,9 @@ function kalkBlattMalen(){
       +'<span class="kw">⏱ '+fmtZeit(a.min)+' <button data-aufspx="'+ix+'" style="padding:0 6px;margin-left:4px;">✕</button></span></div>';
   });
   document.getElementById('kalkAufspListe').innerHTML=la;
+  { const ib=document.getElementById('izBlock'); if(ib) ib.innerHTML=izBlockHtml(izZ, MASCHINENPROFIL.id, MASCHINENPROFIL.label, hzMin, eigenName); }
   const hin=[];
+  if(hzMin>0) hin.push('Laufzeit in der Rechnung: '+fmtZeit(izK.erwartet)+' min — '+izK.text+(izFk?' (Schätzung der App '+fmtZeit(hzMin)+' min)':'')+'.');
   if(!(hzMin>0)) hin.push('⚠ Keine Laufzeit — es ist kein Bearbeitungsschritt angelegt oder das Programm ist blockiert. Die Kalkulation enthält nur Material, Neben- und Rüstzeit.');
   if(aufspAktiv.length) hin.push('Gesamtkalkulation über '+(1+aufspAktiv.length)+' Aufspannungen: Laufzeiten summiert, Rüst- und Nebenzeit je Aufspannung, Material EINMAL aus dem aktuellen Programmkopf.');
   hin.push('Grobe Angebotskalkulation: Laufzeit aus der Simulation ('+(hzMin>0? fmtZeit(hzMin)+' min mit Werkzeugwechseln':'—')+'), Material aus den Rohteilmaßen des Programmkopfs. Ohne Härten, Transport, Fremdleistung.');
@@ -39699,6 +39855,22 @@ document.getElementById('maskKalk').addEventListener('click',(ev)=>{
   kalkSpeichern(); kalkBlattMalen();
 });
 document.getElementById('btnKalkZu').onclick=()=>document.getElementById('maskKalk').classList.remove('show');
+// IST-ZEIT MERKEN / LOESCHEN [26.09.2026]: delegiert, weil der Block bei jedem
+// Malen neu entsteht. Ein unlesbarer Wert wird gemeldet, nie als 0 gespeichert.
+document.getElementById('maskKalk').addEventListener('click',(ev)=>{
+  const t=ev.target;
+  if(t && t.id==='izMerken'){
+    const hzMin=(hauptzeiten && hauptzeiten.komplett>0)? hauptzeiten.komplett : 0;
+    if(!(hzMin>0)){ alert('Keine Schätzung — erst Schritte anlegen, dann die Ist-Zeit dazu merken.'); return; }
+    const ist=izMinuten((document.getElementById('izIst')||{}).value);
+    if(!(ist>0)){ alert('Ist-Zeit nicht lesbar: m:ss (7:40) oder Minuten (7,5) eintragen.'); return; }
+    const z=izLaden('et_istzeiten');
+    izEintragen(z, {maschine:MASCHINENPROFIL.id, name:kalkProgName(), soll:hzMin, ist});
+    izSpeichern('et_istzeiten', z); kalkBlattMalen(); return;
+  }
+  const b=t && t.closest? t.closest('[data-izx]') : null;
+  if(b){ const z=izLaden('et_istzeiten'); izLoeschen(z, MASCHINENPROFIL.id, b.dataset.izx); izSpeichern('et_istzeiten', z); kalkBlattMalen(); }
+});
 // =================================================================
 // AUSTAUSCH MIT DER WERKSTATT-PIPELINE [19.09.2026, Daniels Freigabe der
 // Nachtdurchsicht: die Pipeline ist die Quelle des PREISES, die CAM-Apps
@@ -39719,13 +39891,17 @@ function zeitDateiBauen(){
   const aufsp=(w.aufsp||[]).filter(a=>a.name!==eigenName);
   const nrEl=document.getElementById('progNo'); const nr=(nrEl && nrEl.value)? String(nrEl.value).trim() : '';
   const r3=v=>Math.round(v*1000)/1000;
+  const izFkZ=izFaktor(izLaden('et_istzeiten'), MASCHINENPROFIL.id);
   return {
     format:'dz-cam-zeit', version:1, quelle:'drehen', datum:new Date().toISOString(),
     programm:{ name:eigenName, o:nr? 'O'+nr : '', maschine:(typeof MASCHINENPROFIL!=='undefined' && MASCHINENPROFIL && MASCHINENPROFIL.label)||'' },
     zeiten:{ komplett_min: hz? r3(hz.komplett):0, schnitt_min: hz? r3(hz.gesamt):0, werkzeuge: ts.size,
              wechsel: hz? hz.wechsel:0, wechsel_min: hz? r3(hz.wechselMin):0 },
     aufspannungen: 1+aufsp.length,
-    weitere_aufspannungen: aufsp.map(a=>({name:a.name, min:a.min}))
+    weitere_aufspannungen: aufsp.map(a=>({name:a.name, min:a.min})),
+    // KALIBRIERUNG [26.09.2026]: der Faktor dieser Maschine und die erwartete Zeit;
+    // null ohne Messung. komplett_min bleibt die Schaetzung (die Pipeline liest sie).
+    kalibrierung: (hz && izFkZ)? {faktor:r3(izFkZ.faktor), messungen:izFkZ.n, erwartet_min:r3(izErwartet(hz.komplett, izFkZ))} : null
   };
 }
 document.getElementById('btnKalkZeitExport').onclick=()=>{
@@ -39772,7 +39948,8 @@ document.getElementById('kalkWerkstoffDatei').addEventListener('change',(e)=>{
   };
   reader.readAsText(file);
 });
-document.getElementById('maskKalk').addEventListener('input',()=>{
+document.getElementById('maskKalk').addEventListener('input',(ev)=>{
+  if(ev && ev.target && ev.target.id==='izIst') return;   // das Ist-Zeit-Feld malt das Blatt nicht neu - sonst verschwindet, was man tippt
   const w=kalkLaden();
   const g=id=>parseFloat(document.getElementById(id).value);
   const nz=(v,alt)=>(isFinite(v)&&v>=0)? v:alt;   // leeres Feld kippt nicht auf 0
