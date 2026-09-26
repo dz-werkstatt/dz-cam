@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="26.09.2026 17:06 (b54813ac)";</script>
+<script>window.__DZ_STAND="26.09.2026 17:55 (cac06b51)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2981,7 +2981,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <!-- DIE ZWEITE AUFSPANNUNG [26.09.2026, Punkt 4]: das Teil wird auf die Gegenachse gewendet,
                das Rohteil der zweiten Seite ist der Stand nach der ersten (aus der eigenen Simulation),
                das Programm der ersten Seite geht in die Ablage, der Planer legt die zweite Seite an. -->
-          <div class="stufe" id="stufeAufsp2"><span class="nr">5</span><span class="tit">Zweite Aufspannung</span><button class="gcbtn" id="btnStepAufsp2" title="Das Teil wenden und die zweite Seite planen: Rohteil = der Stand nach der ersten Seite (aus der Simulation, Durchbr&uuml;che ohne Material), Sollform der Gegenachse, Programm der ersten Seite vorher in die Ablage. Schon durchgebohrte L&ouml;cher werden nicht noch einmal geplant.">Wenden und Seite 2 planen</button></div>
+          <div class="stufe" id="stufeAufsp2"><span class="nr">5</span><span class="tit">Zweite Aufspannung</span><button class="gcbtn" id="btnStepAufsp2" title="Das Teil wenden und die zweite Seite planen: Rohteil = der Stand nach der ersten Seite (aus der Simulation, Durchbr&uuml;che ohne Material), Sollform der Gegenachse, Programm der ersten Seite vorher in die Ablage. Schon durchgebohrte L&ouml;cher werden nicht noch einmal geplant.">Wenden und Seite 2 planen</button><button class="gcbtn" id="btnStepAngestellt" title="3+2: erst in der Ansicht Sollform eine schr&auml;ge (oder senkrechte) ebene Fl&auml;che antippen. Die App stellt die Werkzeugachse darauf, dreht das Modell in das geschwenkte System und plant dort ein eigenes Programm; Rohteil = der Stand dieses Programms. Die NC bekommt den Schwenksatz der Zielmaschine (PLANE SPATIAL bzw. CYCLE800) davor und die Abwahl dahinter &mdash; nach Handbuch, an keiner Maschine gelaufen.">Angestellt planen (3+2)</button></div>
           <div class="stufe stufe-ansicht"><span class="tit">Ansicht</span><span style="display:inline-flex;gap:2px;"><button class="gcbtn primary" id="btnStepDraht" title="Drahtbild des Modells">Drahtbild</button><button class="gcbtn" id="btnStepSoll" title="Sollform von oben: die Höhe, auf die gefräst werden muss">Sollform</button><button class="gcbtn" id="btnStepRest" title="Materialstand nach dem letzten Schruppschritt des Arbeitsplans (Modell abspanen / Restmaterial abspanen) — rot, was über der Sollform samt Aufmaß steht: das Restmaterial für den nächsten Schritt">Reststand</button></span><button class="gcbtn" id="btnStepHilfe" title="Anleitung Kap. 5c: Aufspannung, Sollform, Raster, Genauigkeit">&#x24D8;</button></div>
           <div class="stufe stufe-einzeln" id="stepEinzeln" style="display:none;"><span class="tit">einzeln &uuml;bernehmen</span><button class="gcbtn" id="btnStepFlaechen" title="Nur die Fl&auml;chen: planen, Modell abspanen, Schr&auml;gen schlichten &mdash; die Schritte stehen danach VOR den Bohrungen">Fl&auml;chen übernehmen</button><button class="gcbtn" id="btnStepBohren" title="Die Bohrungen des Modells als Bohrbilder und Schritte anlegen: ein Zentrierschritt über alle Stellen, danach je Durchmesser einer — größter zuerst">Bohrungen übernehmen</button><span class="lbl">Z-Ebene</span><select id="stepEbene" style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:210px;"></select><button class="gcbtn" id="btnStepKonturen" title="Die Schleifen dieser Ebene als XY-Konturen in den Arbeitsplan legen">Konturen übernehmen</button></div>
         </div>
@@ -3507,6 +3507,27 @@ bleibt ganz ohne Auflage.
 <br><b>Ehrliche Grenze:</b> gemessen wird die <i>Richtung</i> der Fl&auml;chen, nicht ihr Schatten. Eine nach oben zeigende Fl&auml;che tief in einer engen Tasche
 z&auml;hlt als erreichbar, obwohl kein Fr&auml;ser hineinkommt &mdash; das entscheidet erst die Bahn mit einem konkreten Werkzeug. Und die App w&auml;hlt die Lage,
 nicht das Spannmittel: Schraubstock, Pratzen oder Vorrichtung bleiben Sache des Bedieners.</dd>
+<dt id="ba-fk05c-angestellt">Angestellt bearbeiten, 3+2 &mdash; die Werkzeugachse auf eine schr&auml;ge Fl&auml;che (26.09.2026)</dt><dd>Eine schr&auml;ge Fl&auml;che oder eine
+Wand, die von oben nicht sauber zu fr&auml;sen ist (Bohrungen in einer Schr&auml;ge, eine Seitenfl&auml;che), wird auf der 5-Achs-Maschine <b>angestellt</b>
+bearbeitet: der Tisch schwenkt, bis die Werkzeugachse senkrecht auf der Fl&auml;che steht, und darin l&auml;uft ein gew&ouml;hnliches Dreiachs-Programm.
+Kein Simultanfr&auml;sen &mdash; die Drehachsen stehen w&auml;hrend der Bearbeitung.
+<br><b>Bedienung:</b> in der Ansicht <b>Sollform</b> die Fl&auml;che antippen, dann in Stufe&nbsp;5 <b>Angestellt planen (3+2)</b>. Die App braucht dazu ein
+Programm der aktuellen Lage mit Schritten &mdash; das Rohteil der angestellten Lage ist der <b>Stand danach</b> (aus der Simulation, wie beim Wenden),
+und das Programm der ersten Lage kommt vorher in die Ablage. Dann dreht sie das Modell so, dass die Fl&auml;che waagerecht liegt, rechnet Sollform
+und Rohform im geschwenkten System, plant dort (Abspanen, Bohrungen, Schlichten) und simuliert dort. Das Ergebnis ist ein <b>eigenes Programm</b>
+mit dem Zusatz <code>-S</code>.
+<br><b>Was die NC schreibt:</b> nach dem R&uuml;ckzug des ersten Werkzeugs den Schwenksatz der Zielmaschine &mdash; Heidenhain
+<code>PLANE SPATIAL SPA SPB SPC TURN FMAX SEQ- TABLE ROT</code> und Zyklus&nbsp;7 f&uuml;r den Nullpunkt (Handbuch 670&nbsp;387-12 Kap.&nbsp;12.2),
+Siemens <code>TRAFOOF</code> und <code>CYCLE800(1,,0,57,0,0,0,A,B,C,X1,Y1,Z1,-1)</code> mit 14 Parametern wie das Beispiel des Zyklenhandbuchs 11.02
+(Kap.&nbsp;3.16) &mdash;, am Ende <code>PLANE RESET</code> bzw. <code>CYCLE800()</code>. Die Winkel sind <b>je Steuerung anders gerechnet</b>: Heidenhain dreht
+Raumwinkel um die maschinenfesten Achsen (A, dann B, dann C), Siemens achsweise auf der jeweils vorigen Drehung. Mit einem Winkel ist das dasselbe,
+mit zweien nicht; das Programm merkt sich seine Konvention, und die Ampel sperrt, wenn die Zielmaschine eine andere f&uuml;hrt. Die
+<b>TNC 410</b> kennt kein Schwenken &mdash; dort ist ein angestelltes Programm rot.
+<br><b>Ehrlich:</b> beide Schwenks&auml;tze sind aus dem Handbuch abgeleitet und an <b>keiner Maschine gelaufen</b>. Die positive Drehrichtung ist als
+rechtsh&auml;ndig angenommen (beide Handb&uuml;cher verweisen auf Hilfebilder), der Schwenkdatensatz der Siemens bleibt leer (der einzige der Maschine),
+und vor dem CYCLE800 schreibt die App <code>TRAFOOF</code>, weil das Handbuch Schwenkframes und TRAORI nicht zusammen sehen will. Ersten Lauf im Einzelsatz
+mit der Grafiksimulation der Steuerung fahren. Was im geschwenkten System <b>mehrere Materialst&uuml;cke &uuml;bereinander</b> hat (schr&auml;g durchbohrt),
+f&uuml;hrt das Feld nur als &auml;u&szlig;eres St&uuml;ck &mdash; die Meldung z&auml;hlt diese Stellen.</dd>
 <dt id="ba-fk05c-aufspannung2">Die zweite Aufspannung &mdash; wenden, und das Rohteil ist der Stand der ersten Seite (26.09.2026)</dt><dd>Was von unten
 drankommt, bekommt in der ersten Aufspannung kein Programm &mdash; die Meldung des Vorschlags sagt es (&bdquo;geh&ouml;rt in die ZWEITE Aufspannung&ldquo;). Stufe&nbsp;5,
 <b>Wenden und Seite 2 planen</b>, macht daraus ein zweites Programm. Der Gedanke ist derselbe wie beim Rohteil aus einem zweiten Modell: das Rohteil der
@@ -5171,6 +5192,9 @@ var F_PROFILE = {
   HEIDENHAIN_ITNC530: {
     id:'HEIDENHAIN_ITNC530', name:'Heidenhain iTNC 530 (Klartext)',
     dialekt:'klartext', endung:'.H', zeilenende:'\r\n',
+    // 3+2 (26.09.2026): PLANE SPATIAL mit Raumwinkeln um die maschinenfesten
+    // Achsen (Software-Option 1). Wortlaut aus dem Handbuch, nie gelaufen.
+    schwenk:{konv:'fest-ABC', status:'handbuch'},
     // Dateiname = Programmname. Handbuch 670 387-12 S. 122 (und schon die
     // Ausgabe 02): "Die Laenge von Dateinamen sollte 25 Zeichen nicht
     // ueberschreiten", erlaubt sind Buchstaben, Ziffern, Punkt, _ und -.
@@ -5244,6 +5268,8 @@ var F_PROFILE = {
   HEIDENHAIN_TNC410: {
     id:'HEIDENHAIN_TNC410', name:'Heidenhain TNC 410 (Klartext)',
     dialekt:'klartext', endung:'.H', zeilenende:'\r\n',
+    // Kein Schwenken: die TNC 410 kennt weder PLANE noch den Zyklus 19 (Handbuch 286 060).
+    schwenk:null,
     // Dateinamen der TNC 410: 8 Zeichen plus Endung (DOS-Form). Das
     // Handbuch nennt fuer die Programmverwaltung "Name, max. 8 Zeichen".
     nameMax:8, nameMuster:/^[A-Z0-9_-]{1,8}$/,
@@ -5339,6 +5365,9 @@ var F_PROFILE = {
   SIEMENS_840D_PL: {
     id:'SIEMENS_840D_PL', name:'Sinumerik 840D powerline (5 Achsen)',
     dialekt:'siemens', endung:'.MPF', zeilenende:'\r\n',
+    // 3+2 (26.09.2026): CYCLE800 achsweise, 14 Parameter wie das gedruckte
+    // Beispiel des Zyklenhandbuchs 11.02 (ab SW 6.2). Abgeleitet, nie gelaufen.
+    schwenk:{konv:'achsweise-XYZ', status:'abgeleitet'},
     // Siemens-Programmnamen: hoechstens 24 Zeichen, Buchstaben, Ziffern
     // und Unterstrich; die ersten beiden Zeichen duerfen KEINE Ziffer
     // sein. Der Bindestrich ist hier — anders als im Klartext — nicht
@@ -8786,7 +8815,9 @@ const fStepDreh = (R, p) => [R[0][0] * p[0] + R[0][1] * p[1] + R[0][2] * p[2],
 //   Zylinder laengs der Achse -> Bohrung oder Zapfen
 function fStepAusrichten(modell, ausricht){
   const a = ausricht || {};
-  const R = fStepDrehung(a.achse);
+  // 3+2 (26.09.2026): eine BELIEBIGE Drehung (a.R, 3x3) statt der sechs Achslagen -
+  // die Werkzeugachse auf eine schraege Flaeche gestellt.
+  const R = a.R || fStepDrehung(a.achse);
   const flaechen = modell.flaechen.map(f => {
     const rand = f.rand.map(lo => ({aussen:lo.aussen, kanten:lo.kanten.map(k => ({
       p:k.p.map(p => fStepDreh(R, p)), art:k.art,
@@ -8832,7 +8863,7 @@ function fStepAusrichten(modell, ausricht){
     else if(f.art === 'zylinder' || f.art === 'kegel'){ if(f.lage === 'laengs') z.laengs++; else z.quer++; }
     else z.frei++;
   });
-  return {flaechen:flaechen, box:B, zaehl:z, achse:a.achse || '+Z',
+  return {flaechen:flaechen, box:B, zaehl:z, achse:a.achse || '+Z', R:R,
     neigungen:[...new Set(neigungen)].sort((p, q) => p - q), versatz:[fRund(vx), fRund(vy), fRund(vz)]};
 }
 
@@ -10305,7 +10336,8 @@ function fPlanProgrammText(plan){
 // Ecke (oder Mitte) mit der Oberkante auf Z0; die Abbildung traegt beide
 // Versaetze mit, deshalb gilt sie auch bei "Mitte, Oberkante".
 function fAufspannungAbbildung(A1, A2){
-  const R1 = fStepDrehung(A1.achse), R2 = fStepDrehung(A2.achse);
+  const R1 = A1.R || fStepDrehung(A1.achse), R2 = A2.R || fStepDrehung(A2.achse);
+  const allgemein = !!(A1.R || A2.R) && (String(A1.achse) === 'angestellt' || String(A2.achse) === 'angestellt');
   const v1 = A1.versatz || [0, 0, 0], v2 = A2.versatz || [0, 0, 0];
   const M = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
   for(let i = 0; i < 3; i++) for(let j = 0; j < 3; j++){ let s = 0; for(let k = 0; k < 3; k++) s += R2[i][k] * R1[j][k]; M[i][j] = s; }
@@ -10317,8 +10349,9 @@ function fAufspannungAbbildung(A1, A2){
   // quer: die Achsen tauschen (z. B. von +Z nach +X) - das ist keine
   // Wendung, sondern eine andere Seite; die Rechnung traegt es, die Worte nicht.
   const quer = !(Math.abs(M[2][2]) > 0.5);
-  return {M:M, vor:vor, zurueck:zurueck, spiegelX:spiegelX, spiegelY:spiegelY, zKippt:zKippt, quer:quer,
-    text:quer ? 'um 90 Grad gekippt (' + A1.achse + ' nach ' + A2.achse + ')'
+  return {M:M, vor:vor, zurueck:zurueck, spiegelX:spiegelX, spiegelY:spiegelY, zKippt:zKippt, quer:quer, allgemein:allgemein,
+    text:allgemein ? 'angestellt (3+2): die Werkzeugachse steht auf der gewaehlten Flaeche'
+       : quer ? 'um 90 Grad gekippt (' + A1.achse + ' nach ' + A2.achse + ')'
               : ('gewendet um die ' + (spiegelY ? 'X' : 'Y') + '-Achse (' + (spiegelY ? 'Y' : 'X') + ' spiegelt, Z kippt; ' + A1.achse + ' nach ' + A2.achse + ')')};
 }
 // Der Quader der ersten Seite, in die zweite Lage gebracht (acht Ecken).
@@ -10419,9 +10452,12 @@ function fZweiteAufspannung(prog1, A1, A2, opt){
   if(!sim){ try{ sim = fSimLauf(prog1, opt.raster || 0); }catch(e){ return {ok:false, grund:'Die Simulation der ersten Seite lief nicht: ' + (e && e.message)}; } }
   if(sim.kollisionen && sim.kollisionen.length) hinweise.push('Die Simulation der ersten Seite meldet ' + sim.kollisionen.length + ' Kollision(en) - der Stand, von dem die zweite Seite ausgeht, ist damit unsicher.');
   // (2) Rohform und Kopf der zweiten Seite.
-  const RF = fZweiteAufspannungRohform(sim.feld, ab, prog1.kopf);
+  // 3+2: bei einer beliebigen Drehung wird die Senkrechte abgetastet (fRohformGedreht);
+  // beim Wenden bleibt der Saeulenweg - Punkt 4 haengt Zelle fuer Zelle daran.
+  const RF = ab.allgemein ? fRohformGedreht(sim.feld, ab, prog1.kopf) : fZweiteAufspannungRohform(sim.feld, ab, prog1.kopf);
   if(!RF.material) return {ok:false, grund:'Nach der ersten Seite steht kein Material mehr - nichts zu wenden.'};
   const k2 = fZweiteAufspannungKopf(prog1.kopf, RF);
+  if(opt.schwenk){ k2.name = fSchwenkName(prog1.kopf.name); k2.schwenk = Object.assign({}, opt.schwenk, {quelle:String(prog1.kopf.name || '')}); }
   const prog2 = fProgrammNeu();
   prog2.kopf = k2;
   prog2.werkzeuge = JSON.parse(JSON.stringify(prog1.werkzeuge || []));
@@ -10441,7 +10477,169 @@ function fZweiteAufspannung(prog1, A1, A2, opt){
   hinweise.push('Erreichbar: Seite 1 ' + err.anteil1 + ' % der Teilflaechen, dazu von Seite 2 ' + err.anteil2 + ' %' + (err.keine ? ', in KEINER der beiden Lagen ' + err.anteilKeine + ' % (' + err.keine + ' mm2 - quer stehende Flaechen oder Hinterschnitte)' : ', damit alles') + '.');
   if(k2.spann && k2.spann !== 'aus') hinweise.push('Das Spannmittel ist von der ersten Seite uebernommen, die Backenoberkante im selben Abstand unter der neuen Oberkante (Z' + k2.spannZ + ') - ANNAHME, bitte pruefen.');
   hinweise.push('Die Rohform gilt nur in dieser Sitzung (wie jede Rohform): das Programm der zweiten Seite laesst sich speichern, der gewendete Stand nicht - nach dem Laden gilt wieder der Quader.');
+  if(opt.schwenk){
+    hinweise.push('3+2 ANGESTELLT: ' + fSchwenkText(k2.schwenk) + ', Nullpunkt im geschwenkten System um ' + k2.schwenk.d.map(v => fRund(v)).join('/') + ' versetzt. Die NC schreibt den Schwenksatz der Zielmaschine davor und die Abwahl dahinter - ABGELEITET aus dem Handbuch, an keiner Maschine gelaufen: ersten Lauf im Einzelsatz mit der Grafik der Steuerung fahren.');
+    if(RF.mehrfach) hinweise.push(RF.mehrfach + ' Rasterstellen haben im geschwenkten System MEHRERE Materialstuecke uebereinander (schraeg durchbohrt, hinterschnitten) - das Feld fuehrt nur das aeussere; dort zeigt die Simulation zu viel Material.');
+  }
   return {ok:true, prog:prog2, plan:plan, RF:RF, F2:F2, ab:ab, kopf:k2, sim:sim, erreichbar:err, schritte:n, hinweise:hinweise.concat(plan.hinweise || [])};
+}
+
+// =====================================================================
+// 3+2: ANGESTELLT BEARBEITEN [26.09.2026, Punkt 10 der Liste vom 25.09.].
+// Eine schraege Flaeche (oder eine Wand) bekommt die Werkzeugachse als
+// Normale: die Steuerung SCHWENKT das Koordinatensystem (Heidenhain PLANE
+// SPATIAL, Siemens CYCLE800), und darin laeuft ein gewoehnliches
+// 3-Achs-Programm. Das ist die klassische 3+2-Bearbeitung - kein
+// Simultanfraesen, keine fuenfte Achse in der Bahn.
+//
+// GEBAUT ALS EIGENE AUFSPANNUNG (dasselbe Geruest wie das Wenden, Punkt 4):
+// das Modell wird in das geschwenkte System gedreht, das Rohteil ist der
+// STAND des Vorgaengerprogramms (aus dessen Simulation, in das neue System
+// gedreht), der Planer plant, die Simulation laeuft in ihrem eigenen Z.
+// Nur die NC-Ausgabe weiss, dass das System geschwenkt ist: sie schreibt
+// den Schwenksatz davor und den Ruecksatz dahinter. Fuer die Maschine ist
+// es EINE Aufspannung - der Tisch schwenkt.
+//
+// DIE WINKELKONVENTION ist der Punkt, an dem beide Steuerungen
+// auseinandergehen, und deshalb steht sie am Profil (P.schwenk.konv):
+//   fest-ABC       Heidenhain PLANE SPATIAL: SPA/SPB/SPC sind Drehungen um
+//                  die MASCHINENFESTEN Achsen X, Y, Z, in dieser Reihenfolge
+//                  (670 387-12 Kap. 12.2: "zunaechst um die Achse A, dann um
+//                  B, dann um C"). Feste Achsen heisst R = Rz(C) Ry(B) Rx(A).
+//   achsweise-XYZ  Siemens CYCLE800 achsweise: "jede Drehung setzt auf die
+//                  vorherige auf" (Zyklenhandbuch 11.02 Kap. 3.16), Reihen-
+//                  folge X, Y, Z wie im gedruckten Beispiel (_MODE 57).
+//                  Mitgedrehte Achsen heisst R = Rx(A) Ry(B) Rz(C).
+// Mit EINEM Winkel (die Flaeche faellt nur in X oder nur in Y) sind beide
+// gleich; mit zweien nicht. Ein Programm traegt deshalb die Konvention, mit
+// der es gerechnet wurde, und die Ampel sperrt, wenn die Zielmaschine eine
+// andere fuehrt. Die positive Drehrichtung ist als rechtshaendig um die
+// Achse ANGENOMMEN - beide Handbuecher verweisen dafuer auf Hilfebilder.
+// Zeichenprobe: das gedruckte Heidenhain-Beispiel "SPB+45" schwenkt die
+// Ebene so, dass ihre Z-Achse nach +X kippt - genau das liefert Ry(+45).
+//
+// BELEGSTAND: Wortlaut beider Saetze aus dem Handbuch (Heidenhain: PLANE
+// SPATIAL ... TURN FMAX SEQ- TABLE ROT, PLANE RESET, Zyklus 7; Siemens:
+// CYCLE800 mit 14 Parametern wie das gedruckte Beispiel, Abwahl CYCLE800()).
+// Gelaufen ist es nirgends; die 5-Achs-Portalfraese hat noch nie ein
+// Programm von dieser App gesehen. Jeder Schwenksatz traegt die Ansage.
+// =====================================================================
+var F_SCHWENK_KONV = {
+  'fest-ABC':'Raumwinkel um die maschinenfesten Achsen, Reihenfolge A, B, C (Heidenhain PLANE SPATIAL, 670 387-12 Kap. 12.2)',
+  'achsweise-XYZ':'achsweise, jede Drehung auf der vorigen: X, dann Y, dann Z (Siemens CYCLE800 _MODE 57, Zyklenhandbuch 11.02 Kap. 3.16)'};
+function fRotX(a){ const c = Math.cos(a), s = Math.sin(a); return [[1, 0, 0], [0, c, -s], [0, s, c]]; }
+function fRotY(b){ const c = Math.cos(b), s = Math.sin(b); return [[c, 0, s], [0, 1, 0], [-s, 0, c]]; }
+function fRotZ(g){ const c = Math.cos(g), s = Math.sin(g); return [[c, -s, 0], [s, c, 0], [0, 0, 1]]; }
+function fMatMul(A, B){
+  const M = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  for(let i = 0; i < 3; i++) for(let j = 0; j < 3; j++){ let s = 0; for(let k = 0; k < 3; k++) s += A[i][k] * B[k][j]; M[i][j] = s; }
+  return M;
+}
+function fMatT(A){ return [[A[0][0], A[1][0], A[2][0]], [A[0][1], A[1][1], A[2][1]], [A[0][2], A[1][2], A[2][2]]]; }
+// Das Koordinatensystem, das die Steuerung aus drei Winkeln (Grad) baut: seine
+// Achsen sind die Spalten von R; Werkstueckpunkt = R * (Punkt im geschwenkten System).
+function fSchwenkFrame(a, b, c, konv){
+  const A = a * Math.PI / 180, B = b * Math.PI / 180, C = c * Math.PI / 180;
+  if(konv === 'fest-ABC') return fMatMul(fRotZ(C), fMatMul(fRotY(B), fRotX(A)));
+  return fMatMul(fMatMul(fRotX(A), fRotY(B)), fRotZ(C));
+}
+// Aus der Flaechennormalen n (Werkstuecksystem) die Winkel, mit denen die
+// Steuerung die Werkzeugachse auf n stellt; C bleibt 0 (die Drehung um die
+// Werkzeugachse selbst braucht eine schraege Flaeche nicht). Rn = R^T dreht das
+// Modell in das geschwenkte System; fehler = Abstand zwischen dem, was die
+// Steuerung aus den gerundeten Winkeln baut, und n (Kontrolle, nie > 1e-6).
+function fSchwenkWinkel(n, konv){
+  const L = Math.hypot(n[0], n[1], n[2]) || 1, nx = n[0] / L, ny = n[1] / L, nz = n[2] / L;
+  const kl = v => Math.max(-1, Math.min(1, v));
+  let a, b;
+  if(konv === 'fest-ABC'){ a = Math.asin(kl(-ny)); b = Math.atan2(nx, nz); }       // R e_z = (cosA sinB, -sinA, cosA cosB)
+  else { b = Math.asin(kl(nx)); a = Math.atan2(-ny, nz); }                          // R e_z = (sinB, -sinA cosB, cosA cosB)
+  const A = Math.round(a * 180 / Math.PI * 10000) / 10000, B = Math.round(b * 180 / Math.PI * 10000) / 10000;
+  const R = fSchwenkFrame(A, B, 0, konv);
+  const fehler = Math.hypot(R[0][2] - nx, R[1][2] - ny, R[2][2] - nz);
+  return {a:A, b:B, c:0, konv:konv, R:R, Rn:fMatT(R), fehler:fehler};
+}
+// Der Nullpunkt-Versatz zwischen beiden Systemen: p2 = Rn p1 + d (v1, v2 sind
+// die Versaetze, mit denen fStepAusrichten Ecke und Oberkante auf null legt).
+// Die Steuerung schwenkt um den AKTUELLEN Nullpunkt (Zyklus 7 bzw. _X0.._Z0 = 0)
+// und braucht danach die Verschiebung -d im geschwenkten System.
+function fSchwenkVersatz(A1, A2, Rn){
+  const v1 = A1.versatz || [0, 0, 0], v2 = A2.versatz || [0, 0, 0];
+  const w = fStepDreh(Rn, v1);
+  return [fRund(v2[0] - w[0]), fRund(v2[1] - w[1]), fRund(v2[2] - w[2])];
+}
+function fSchwenkName(name){
+  let n = String(name || 'TEIL').trim().toUpperCase().replace(/-S\d*$/, '');
+  return n.slice(0, 22) + '-S';
+}
+function fSchwenkText(s){
+  const g = v => (v >= 0 ? '+' : '') + fRund(v);
+  return 'A' + g(s.a) + ' B' + g(s.b) + ' C' + g(s.c || 0) + ' (' + (s.konv === 'fest-ABC' ? 'Raumwinkel, feste Achsen' : 'achsweise X, Y, Z') + ')';
+}
+// DIE ROHFORM IM GESCHWENKTEN SYSTEM aus dem Simulationsfeld des Vorgaengers.
+// Fuer eine beliebige Drehung reicht es NICHT, die Ober- und Unterseite einer
+// Zelle abzubilden (das tut fZweiteAufspannungRohform beim Wenden: dort bleibt
+// eine Saeule eine Saeule). Hier wird je Zelle des neuen Systems die SENKRECHTE
+// abgetastet, in das alte System zurueckgedreht und gegen dessen Material
+// (zwischen Unterseite hu und Oberseite h) geprueft; das hoechste und tiefste
+// Innen-Sample sind Ober- und Unterseite der neuen Zelle. Schritt: halbe
+// Rasterweite. Mehrere getrennte Materialstuecke uebereinander (eine schraeg
+// durchbohrte Platte) werden zu EINEM Stueck - das Feld kennt nur eines je
+// Zelle; die Meldung sagt es.
+function fRohformGedreht(S1, ab, k1){
+  const Q = fAufspannungQuader(k1, ab);
+  const r = S1.raster;
+  const nx = Math.max(1, Math.ceil((Q.x1 - Q.x0) / r - 1e-9)), ny = Math.max(1, Math.ceil((Q.y1 - Q.y0) / r - 1e-9));
+  const n = nx * ny, h = new Float32Array(n), hu = new Float32Array(n), quelle = new Uint8Array(n);
+  const boden1 = S1.unten, dz = r / 2;
+  let mat = 0, durch = 0, zTop = -Infinity, zBot = Infinity, mehrfach = 0;
+  for(let j = 0; j < ny; j++){
+    const cy = Q.y0 + (j + 0.5) * r;
+    for(let i = 0; i < nx; i++){
+      const cx = Q.x0 + (i + 0.5) * r, c = j * nx + i;
+      let zo = -Infinity, zu = Infinity, drin = false, stuecke = 0, vorher = false;
+      for(let z2 = Q.z0; z2 <= Q.z1 + 1e-9; z2 += dz){
+        const p1 = ab.zurueck([cx, cy, z2]);
+        const i1 = Math.floor((p1[0] - S1.x0) / S1.raster), j1 = Math.floor((p1[1] - S1.y0) / S1.raster);
+        let innen = false;
+        if(i1 >= 0 && j1 >= 0 && i1 < S1.nx && j1 < S1.ny){
+          const c1 = j1 * S1.nx + i1, h1 = S1.h[c1], u1 = S1.hu ? S1.hu[c1] : boden1;
+          innen = (h1 > Math.max(u1, boden1) + F_SIM_EPS) && p1[2] > u1 + F_SIM_EPS && p1[2] <= h1 + F_SIM_EPS;
+        }
+        if(innen){ drin = true; if(z2 > zo) zo = z2; if(z2 < zu) zu = z2; if(!vorher) stuecke++; }
+        vorher = innen;
+      }
+      if(!drin){ durch++; continue; }
+      if(stuecke > 1) mehrfach++;
+      h[c] = zo; hu[c] = zu; quelle[c] = 1; mat++;
+      if(zo > zTop) zTop = zo; if(zu < zBot) zBot = zu;
+    }
+  }
+  const RF = {x0:Q.x0, y0:Q.y0, nx:nx, ny:ny, raster:r, h:h, hu:hu, quelle:quelle, x1:null, y1:null,
+    unten:mat ? fRund(Math.floor(zBot * 1000) / 1000) : Q.z0, name:'Stand des Vorgaengers (angestellt)',
+    material:mat, durch:durch, mehrfach:mehrfach, zOben:mat ? fRund(Math.ceil(zTop * 1000) / 1000) : Q.z1, quader:Q};
+  RF.exakt = mat; RF.geschaetzt = 0; RF.leer = n - mat;
+  return RF;
+}
+// Die Saetze, die das System schwenken und zuruecksetzen - je Dialekt, Wortlaut
+// aus dem Handbuch (Belegstand oben). shift = -d: die Verschiebung des
+// Nullpunkts im geschwenkten System.
+function fSchwenkSaetze(s, P, k){
+  const d = s.d || [0, 0, 0], sx = -d[0], sy = -d[1], sz = -d[2];
+  const g = v => (v >= 0 ? '+' : '') + fRund(v);
+  if(P.dialekt === 'siemens'){
+    return {
+      vor:[{kom:'; 3+2 ANGESTELLT: ' + fSchwenkText(s).replace(/[^A-Z0-9 +\-.,()]/gi, '') + ' - ABGELEITET AUS DEM ZYKLENHANDBUCH 11.02 KAP. 3.16, AN DIESER MASCHINE NICHT GELAUFEN'},
+           {kom:'; SCHWENKDATENSATZ (_TC) LEER = DER EINZIGE DER MASCHINE; VOR CYCLE800 KEIN TRAORI (HANDBUCH), ERSTER LAUF IM EINZELSATZ'},
+           {satz:'TRAFOOF'},
+           {satz:'CYCLE800(1,,0,57,0,0,0,' + siNum(s.a) + ',' + siNum(s.b) + ',' + siNum(s.c || 0) + ',' + siNum(sx) + ',' + siNum(sy) + ',' + siNum(sz) + ',-1)'}],
+      nach:[{kom:'; SCHWENKEN ABWAEHLEN'}, {satz:'CYCLE800()'}]};
+  }
+  return {
+    vor:['; 3+2 ANGESTELLT: ' + fSchwenkText(s).replace(/[^A-Z0-9 +\-.,()]/gi, '') + ' - NACH HANDBUCH 670 387-12 KAP. 12.2, NICHT GELAUFEN, ERSTER LAUF IM EINZELSATZ',
+         'PLANE SPATIAL SPA' + g(s.a) + ' SPB' + g(s.b) + ' SPC' + g(s.c || 0) + ' TURN FMAX SEQ- TABLE ROT',
+         'CYCL DEF 7.0 NULLPUNKT', 'CYCL DEF 7.1 X' + klNum(sx), 'CYCL DEF 7.2 Y' + klNum(sy), 'CYCL DEF 7.3 Z' + klNum(sz)],
+    nach:['CYCL DEF 7.0 NULLPUNKT', 'CYCL DEF 7.1 X+0', 'CYCL DEF 7.2 Y+0', 'CYCL DEF 7.3 Z+0', 'PLANE RESET TURN FMAX']};
 }
 
 // ---- Stufe 2: waagerechte Flaechen als Z-Ebenen, Schleifen als Konturen ----
@@ -15974,7 +16172,9 @@ var SI_ZYK_PL = {
   CYCLE840:11,  // RTP,RFP,SDIS,DP,DPR,DTB,SDR,SDAC,ENC,MPIT,PIT
   CYCLE85:8,    // RTP,RFP,SDIS,DP,DPR,DTB,FFR,RFF
   HOLES1:6, HOLES2:6,
-  POCKET3:23, POCKET4:19
+  POCKET3:23, POCKET4:19,
+  // 3+2 (26.09.2026): Schwenken, 14 Parameter wie das Beispiel des Zyklenhandbuchs 11.02 (ab SW 6.2); CYCLE800() ohne Parameter ist die Abwahl.
+  CYCLE800:14
 };
 
 // Prueft einen fertigen Programmtext. Liefert die Beanstandungen als
@@ -16289,6 +16489,8 @@ function fProgrammSchreibenSiemens(prog, opt){
         // Programms darueber, wird sie nachgezogen — sonst nicht: hoeher
         // ist immer sicher.
         if(+k.rz > 20) satz('G00 Z' + siNum(+k.rz));
+        // 3+2 (26.09.2026): Schwenken, sobald das Werkzeug auf sicherer Hoehe steht.
+        if(k.schwenk && P.schwenk) fSchwenkSaetze(k.schwenk, P, k).vor.forEach(e => e.kom !== undefined ? roh(e.kom) : satz(e.satz, true));
         roh(b.zeilen[0]);
       }
       else if(b.t !== aktT){ roh(b.zeilen[0]); wechselZeilen(b.t, s.s, s.f).forEach(z => satz(z, true)); }
@@ -16303,6 +16505,7 @@ function fProgrammSchreibenSiemens(prog, opt){
       for(let zi = 1; zi < b.zeilen.length; zi++){ const z = b.zeilen[zi]; (z.charAt(0) === ';') ? roh(z) : satz(z); }
     }
     if(aktT === null) kopfZeilen(wz[0] || 1, erst.s, erst.f).forEach(z => satz(z, true));
+    if(k.schwenk && P.schwenk && aktT !== null) fSchwenkSaetze(k.schwenk, P, k).nach.forEach(e => e.kom !== undefined ? roh(e.kom) : satz(e.satz, true));
     P.fuss.forEach(z => satz(z, true));
     roh(P.eof);
     return zeilen;
@@ -16985,6 +17188,9 @@ function fProgrammSchreiben(prog, opt){
     // M13 = Spindel rechts + Kuehlmittel EIN in einem Wort (Standard-M der
     // TNC); ohne Kuehlmittel nur M3.
     satz('L Z' + klNum(rz) + ' R0 FMAX ' + (s.kuehl === 'aus' ? 'M3' : 'M13'));
+    // 3+2 (26.09.2026): das System schwenken, sobald das erste Werkzeug auf sicherer
+    // Hoehe steht (Handbuch: vorpositionieren, damit beim Einschwenken nichts kollidiert).
+    if(si === 0 && k.schwenk && P.schwenk) fSchwenkSaetze(k.schwenk, P, k).vor.forEach(t => satz(t));
     // Paket C: wuenscht der Schritt Einzelsaetze und hat seine Familie eine
     // eigene Bahn, stehen statt CYCL DEF + CALL LBL die Saetze der Bahn an
     // jeder Position. Sonst der Zyklus — mit Ansage, wenn der Wunsch nicht
@@ -17087,8 +17293,10 @@ function fProgrammSchreiben(prog, opt){
       }
       }
     }
-    satz('L Z' + klNum(rz) + ' R0 FMAX ' + (letzter ? 'M2' : (s.kuehl === 'aus' ? 'M5' : 'M9')));
+    satz('L Z' + klNum(rz) + ' R0 FMAX ' + ((letzter && !(k.schwenk && P.schwenk)) ? 'M2' : (s.kuehl === 'aus' ? 'M5' : 'M9')));
   });
+  // 3+2: zurueckschwenken, dann erst das Programmende.
+  if(schritte.length && k.schwenk && P.schwenk){ fSchwenkSaetze(k.schwenk, P, k).nach.forEach(t => satz(t)); satz('L Z' + klNum(+k.rz) + ' R0 FMAX M2'); }
   if(!schritte.length) satz('L Z' + klNum(+k.rz) + ' R0 FMAX M2');
   // Unterprogramme: Positionsmuster als LBL n ... LBL 0. M99 ruft an
   // jedem Punkt den zuletzt definierten Zyklus (satzweise Zyklusaufruf).
@@ -17469,6 +17677,12 @@ function fPruefen(prog){
   if(F_ROHFELD) gelb.push('Rohform aus einem Modell (' + (F_ROHFELD.name || 'Rohteil') + '): Modell abspanen, Restmaterial, Boeden & Waende und die Simulation rechnen mit ihrer Oberflaeche; die BLK FORM ist nur die Huelle, die Grafik der Steuerung zeigt den Quader.');
   if(+k.sc2 < +k.sc) gelb.push('2. Sicherheits-Abstand Q204 ist kleiner als Q200 — Rueckzug zwischen den Loechern unter dem Sicherheitsabstand.');
   const schritte = (prog.schritte || []).filter(s => s && s.aktiv !== false);
+  // ---- 3+2 ANGESTELLT (26.09.2026) -----------------------------------
+  if(k.schwenk){
+    if(!P.schwenk) rot.push('Angestellt (3+2): die Zielmaschine ' + P.name + ' kennt kein Schwenken (weder PLANE noch Zyklus 19). Zielmaschine im Programmkopf umstellen oder das Teil in dieser Lage aufspannen.');
+    else if(k.schwenk.konv !== P.schwenk.konv) rot.push('Angestellt (3+2): die Winkel sind fuer eine andere Steuerungskonvention gerechnet (' + k.schwenk.konv + ', die ' + P.name + ' fuehrt ' + P.schwenk.konv + ') - das Programm im STEP-Fenster mit dieser Zielmaschine neu anstellen.');
+    else gelb.push('Angestellt (3+2): ' + fSchwenkText(k.schwenk) + ' - Schwenksatz ' + (P.dialekt === 'siemens' ? 'CYCLE800' : 'PLANE SPATIAL') + ' nach Handbuch, an keiner Maschine gelaufen. Ersten Lauf im Einzelsatz mit der Grafik der Steuerung; Rohteil = Stand des Programms ' + (k.schwenk.quelle || '?') + '.');
+  }
   // ---- ZWEITE KLARTEXT-STEUERUNG (TNC 410, 20.09.2026) -------------
   // EIN TOOL DEF OHNE LAENGE IST EIN CRASH: die Steuerung rechnet dann mit
   // der Laenge des Null-Werkzeugs, und ein 75 mm langer Fraeser faehrt
@@ -18584,6 +18798,7 @@ function fMerkmale(profilId){
     {t:'Wandler in BEIDE Richtungen (Knopf "Programm wandeln" in der NC-Ausgabe; die Richtung erkennt die App an der Datei): ein fertiges Programm wird UEBERSETZT, nicht nachgerechnet. Klartext -> 840D: Geraden, Kreise, Schraubenlinien, Verweilzeiten, Werkzeug- und Drehzahlaufrufe, die Bohrzyklen 200/201/203/206/240 und die Bohrbilder; Taschen-, Nut-, Zapfen- und SL-Zyklen werden GEMELDET statt geraten. Ein CR-Satz traegt nur den Radius — die Mitte wird aus den gerundeten Endpunkten zurueckgerechnet und kann ein Tausendstel danebenliegen. M13 wird M3 und M8; M99 und M91 heissen hier etwas anderes und werden nicht uebernommen. 840D -> Klartext: dieselbe Regel rueckwaerts (Vollkreis wird zu zwei Halbboegen, TURN= zu CP IPA/IZ); ein CYCLE/POCKET der Steuerung wird mit Namen gemeldet, das Rohteil (BLK FORM) aus den Bahnkoordinaten GESCHAETZT, der feste Rahmen (TRAORI, G53/G54) und die PLC-Woerter M99/M91/M98/M80/M82 bleiben draussen — alles drei steht in der Meldung. Gemessen am Rundlauf ueber fuenf Vorlagen (derselbe Plan direkt als Klartext gegen 840D-dann-gewandelt): jeder Bahnsatz kommt zurueck, zusaetzlich nur der feste Rahmen der 840D.', s:'abgeleitet'},
     {t:'Fuenfachsig: die Maschine ist es, die Bahnen der App sind es nicht. TRAORI(1) und B0 C0 stehen im Kopf (die Unterlage nennt TRAORI Pflicht auch bei 3-Achs-Bearbeitung), geschwenkt wird nicht.', s:'gesperrt'},
     {t:'Nicht gebaut: Zapfen (CYCLE76/77), Nuten (SLOT1/SLOT2/LONGHOLE), Planfraesen (CYCLE71), Bahnfraesen (CYCLE72), Gewindefraesen (CYCLE90), Gewindebohren synchron (CYCLE84), Rueckwaerts-Senken. Bei ihnen haengt die Bedeutung an Parametern, die sich ohne Beleg nicht sicher zuordnen lassen — sie laufen als Bahn und sagen es.', s:'gesperrt'},
+    {t:'Angestellt, 3+2 (STEP-Fenster, Stufe 5, seit 26.09.2026): eine ebene Flaeche antippen, die App stellt die Werkzeugachse darauf und plant ein eigenes Programm im geschwenkten System (Rohteil = Stand des Vorgaengers, gedreht). Die NC schreibt TRAFOOF und CYCLE800(1,,0,57,0,0,0,A,B,C,X1,Y1,Z1,-1) mit 14 Parametern wie das gedruckte Beispiel des Zyklenhandbuchs 11.02 (Kap. 3.16, ab SW 6.2), am Ende CYCLE800() zur Abwahl; Winkel achsweise X, Y, Z (_MODE 57), Schwenkdatensatz leer. Nie gelaufen - Drehrichtung, Schwenkdatensatz und das Zusammenspiel mit dem TRAORI(1) des festen Kopfs am ersten Lauf pruefen.', s:'abgeleitet'},
     {t:'Stand: ' + P.termine, s:'bildschirm', offen:P.offen}
   ];
   return [
@@ -18605,6 +18820,7 @@ function fMerkmale(profilId){
     z('gewBohr',    'Bohrgewindefraesen — Zyklus 264 (Q356 Bohrtiefe, Q202 Zustellung, Q258 Vorhalteabstand, Q257/Q256 Spanbruch, Q206 Vorschub Tiefenzustellung)'),
     z('gewHelix',   'Helix-Bohrgewindefraesen — Zyklus 265 (Q360 Senkvorgang vor/nach der Bearbeitung; kein Q351 und kein Q512)'),
     z('gewAussen',  'Aussengewinde fraesen — Zyklus 267 (Gewinde am Zapfen; Q358/Q359 Senken stirnseitig)'),
+    {t:'Angestellt, 3+2 (STEP-Fenster, Stufe 5, seit 26.09.2026): eine ebene Flaeche antippen, die App stellt die Werkzeugachse darauf und plant ein eigenes Programm im geschwenkten System (Rohteil = Stand des Vorgaengers, gedreht). ' + (P.schwenk ? ('Die NC schreibt ' + (P.dialekt === 'siemens' ? 'CYCLE800(1,,0,57,...) mit 14 Parametern wie das Beispiel des Zyklenhandbuchs 11.02 und CYCLE800() zur Abwahl' : 'PLANE SPATIAL SPA SPB SPC TURN FMAX SEQ- TABLE ROT, Zyklus 7 fuer den Nullpunkt, PLANE RESET am Ende (670 387-12 Kap. 12.2)') + '; Winkelkonvention ' + P.schwenk.konv + '. Nie gelaufen - Drehrichtung und Schwenkdatensatz am ersten Lauf pruefen.') : 'Diese Steuerung kennt kein Schwenken - die Ampel sperrt ein angestelltes Programm.'), s:P.schwenk ? P.schwenk.status : 'gesperrt'},
     {t:'Zweite Aufspannung (STEP-Fenster, Stufe 5, seit 26.09.2026): das Teil wird auf die Gegenachse gewendet, das Rohteil der zweiten Seite ist der STAND nach der ersten (aus der eigenen Simulation: Ober- und Unterseite je Rasterzelle, Durchbrueche ohne Material), das Programm der ersten Seite geht in die Ablage, der Planer legt die zweite Seite an - schon durchgebohrte Loecher nicht noch einmal. Am Programmierplatz und an der Maschine nicht gelaufen; die Bahnen sind dieselben wie bei jedem Modell mit Rohform.', s:'eigenbahn'},
     z('slRaeumen',  'SL Raeumen — Zyklus 14 KONTUR mit Tasche und bis zu 11 Inseln + 20 KONTUR-DATEN + 22 RAEUMEN [+ 23 SCHLICHTEN TIEFE + 24 SCHLICHTEN SEITE], je mit CYCL CALL (Q1-Q9 im 20, Q10 Q11 Q12 Q18 Q19 Q208 Q401 Q404 im 22, Q14 im 24); als Einzelsaetze eine eigene Zeilenbahn mit Randumlaeufen'),
     z('slVorbohren', 'SL Vorbohren — Zyklus 14 + 20 + 21 VORBOHREN + CYCL CALL (Q10 Q11 Q13); als Einzelsaetze eine Bohrleiter an den Eintauchpunkten des Raeumens, gerechnet mit dem Radius des Ausraeum-Werkzeugs Q13'),
@@ -19147,7 +19363,7 @@ function fArbeitsplanRender(){
   let h = '';
   h += '<div class="ap-row' + sel('kopf', 0) + '" data-k="kopf"><div class="ap-icon" style="background:#4d5860;">P</div>' +
        '<div class="ap-name">Programmkopf</div><div class="ap-detail">' + esc(fName(fProg)) + '.H · BLK ' + (k.x1 - k.x0) + '×' + (k.y1 - k.y0) + '×' + (k.z1 - k.z0) +
-       ' · SC ' + k.sc + ' · SC2 ' + k.sc2 + ' · sicher Z' + k.rz +
+       ' · SC ' + k.sc + ' · SC2 ' + k.sc2 + ' · sicher Z' + k.rz + (k.schwenk ? ' · 3+2 ' + esc(fSchwenkText(k.schwenk)) : '') +
        ((hz && hz.gesamt > 0) ? ' · Hauptzeit ' + fZeitText(hz.gesamt) + ' + ' + hz.wechsel + ' WW à ' + hz.twSek + ' s' : '') +
        // IST-ZEITEN [26.09.2026]: mit gemessenem Faktor die erwartete Zeit an der Maschine daneben.
        ((hz && hz.gesamt > 0 && izFkAp) ? ' · <span title="' + esc(izFaktorText(izFkAp)) + '">an der Maschine ~' + fZeitText(izErwartet(hz.komplett, izFkAp)) + '</span>' : '') +
@@ -23237,6 +23453,66 @@ function fStepRueckseite(){
 // Seite in die Ablage, die Lage des Fensters auf die Gegenachse, die Laufzeit
 // der ersten Seite in den Aufspannungs-Merker der Kalkulation, dann das neue
 // Programm ins Fenster.
+// Das offene Programm in die Ablage (Wenden und Anstellen ersetzen es gleich).
+function fStepSeite1Ablegen(){
+  try{
+    const liste = fProgLesen();
+    const kopie = JSON.parse(JSON.stringify(fProg));
+    kopie.kopf.name = String(fProg.kopf.name || 'TEIL');
+    const i = liste.findIndex(x => x && x.kopf && x.kopf.name === kopie.kopf.name);
+    if(i >= 0) liste[i] = kopie; else liste.push(kopie);
+    if(fProgSchreiben(liste)) return 'Das Programm der ersten Seite liegt unter "' + kopie.kopf.name + '" in der Ablage. ';
+  }catch(e){}
+  return '';
+}
+// 3+2 ANGESTELLT [26.09.2026, Punkt 10]: die gewaehlte ebene Flaeche wird zur
+// Werkzeugachse. Kern in F10 (fSchwenkWinkel, fZweiteAufspannung mit
+// opt.schwenk); hier das Fenster: Auswahl pruefen, Winkel je Zielmaschine,
+// Programm der ersten Seite in die Ablage, das angestellte Programm ins Fenster.
+function fStepAngestellt(){
+  const A1 = STEP.aus;
+  if(!STEP.modell || !A1){ melde('Erst ein Modell laden.'); return false; }
+  const idx = (STEP.wahl || [])[0];
+  if(idx == null){ melde('Erst die Flaeche antippen, auf die die Werkzeugachse soll (Ansicht Sollform oder Reststand) - dann Angestellt planen.'); return false; }
+  const f = A1.flaechen[idx];
+  if(!f || f.art !== 'ebene' || !f.achse){ melde('Angestellt geht nur an einer EBENEN Flaeche - die gewaehlte ist ' + (f ? f.art : 'unbekannt') + '.'); return false; }
+  const n = f.achse;
+  if(n[2] < -0.0002){ melde('Die gewaehlte Flaeche zeigt nach UNTEN - das ist keine Anstellung, sondern die zweite Aufspannung (Wenden und Seite 2 planen).'); return false; }
+  if(n[2] > 0.9998){ melde('Die gewaehlte Flaeche liegt schon waagerecht - dafuer braucht es kein Schwenken.'); return false; }
+  if(!(fProg.schritte || []).some(s => s && s.aktiv !== false)){ melde('Das Programm dieser Lage hat keine Schritte - erst Programm vorschlagen (Stufe 4), dann anstellen: das Rohteil der angestellten Lage ist der Stand danach.'); return false; }
+  const P = F_PROFILE[(fProg.kopf && fProg.kopf.profil) || 'HEIDENHAIN_ITNC530'];
+  if(!P.schwenk){ melde('Die Zielmaschine ' + P.name + ' kennt kein Schwenken (weder PLANE noch Zyklus 19) - Zielmaschine im Programmkopf umstellen.'); return false; }
+  if(!STEP.feld){ try{ STEP.feld = fStepSollfeld(A1, STEP.raster || 0); }catch(e){ STEP.feld = null; } }
+  if(!fProg.__sollform && STEP.feld) fStepFeldSetzen(STEP.feld, fProg);
+  const name1 = fName(fProg);
+  let hz1 = 0; try{ const hz = fHauptzeiten(fProg); hz1 = (hz && hz.komplett > 0) ? hz.komplett : 0; }catch(e){}
+  const W = fSchwenkWinkel(n, P.schwenk.konv);
+  const A2 = fStepAusrichten(STEP.modell, {R:fMatMul(W.Rn, A1.R || fStepDrehung(A1.achse)), achse:'angestellt'});
+  if(STEP.nullp === 'mitte') fStepVerschieben(A2, -(A2.box.x0 + A2.box.x1) / 2, -(A2.box.y0 + A2.box.y1) / 2);
+  const schwenk = {a:W.a, b:W.b, c:0, konv:W.konv, d:fSchwenkVersatz(A1, A2, W.Rn), flaeche:idx, neigung:f.neigung};
+  let R = null;
+  try{ R = fZweiteAufspannung(fProg, A1, A2, {raster:0, sollRaster:STEP.raster || 0, schwenk:schwenk}); }
+  catch(e){ R = {ok:false, grund:e && e.message}; }
+  if(!R || !R.ok){
+    fStepFeldSetzen(fProg.__sollform || null); fRohformSetzen(fProg.__rohform || null);
+    melde('Nicht angestellt: ' + ((R && R.grund) || 'unbekannter Grund')); return false;
+  }
+  const abgelegt = fStepSeite1Ablegen();
+  if(hz1 > 0){ try{ const w = fKalkLaden(); w.aufsp = w.aufsp || []; const a = w.aufsp.find(x => x.name === name1);
+    if(a) a.min = hz1; else w.aufsp.push({name:name1, min:hz1}); fKalkSpeichern(); }catch(e){} }
+  // Das Fenster zeigt die angestellte Lage: Modell gedreht, Sollform neu, Rohform = Stand davor.
+  STEP.aus = A2; STEP.mitte = [(A2.box.x0 + A2.box.x1) / 2, (A2.box.y0 + A2.box.y1) / 2, (A2.box.z0 + A2.box.z1) / 2];
+  STEP.ebenen = fStepEbenen(A2); STEP.ebene = STEP.ebenen.length ? 0 : -1; fStepEbenenFuellen();
+  STEP.feld = R.F2; STEP.bild = null; STEP.restBild = null; STEP.form = null; STEP.wahl = [];
+  STEP.rohModell = null; STEP.rohAus = null; STEP.rohfeld = R.RF;
+  const w2 = document.getElementById('btnStepRohWeg'); if(w2) w2.style.display = '';
+  fProgrammSetzen(R.prog, 'angestellt');
+  fSpeicherAkt(); fRender();
+  try{ fStepWahlStand(); fStepBericht(); fStepAnsicht('soll'); }catch(e){}
+  melde('Angestellt (3+2) als eigenes Programm "' + R.kopf.name + '": ' + fSchwenkText(R.kopf.schwenk) + '. ' + fPlanProgrammText(R.plan) + ' ' +
+        R.plan.schritte.map((sp, i) => (i + 1) + '. ' + (sp.text || sp.art)).join('; ') + '. ' + abgelegt + R.hinweise.join(' '));
+  return true;
+}
 function fStepZweiteAufspannung(){
   const A1 = STEP.aus;
   if(!STEP.modell || !A1){ melde('Erst ein Modell laden.'); return false; }
@@ -23261,15 +23537,7 @@ function fStepZweiteAufspannung(){
     melde('Keine zweite Aufspannung: ' + ((R && R.grund) || 'unbekannter Grund')); return false;
   }
   // Das Programm der ersten Seite kommt in die Ablage, bevor die zweite es ersetzt.
-  let abgelegt = '';
-  try{
-    const liste = fProgLesen();
-    const kopie = JSON.parse(JSON.stringify(fProg));
-    kopie.kopf.name = String(fProg.kopf.name || 'TEIL');
-    const i = liste.findIndex(x => x && x.kopf && x.kopf.name === kopie.kopf.name);
-    if(i >= 0) liste[i] = kopie; else liste.push(kopie);
-    if(fProgSchreiben(liste)) abgelegt = 'Das Programm der ersten Seite liegt unter "' + kopie.kopf.name + '" in der Ablage. ';
-  }catch(e){}
+  const abgelegt = fStepSeite1Ablegen();
   if(hz1 > 0){ try{ const w = fKalkLaden(); w.aufsp = w.aufsp || []; const a = w.aufsp.find(x => x.name === name1);
     if(a) a.min = hz1; else w.aufsp.push({name:name1, min:hz1}); fKalkSpeichern(); }catch(e){} }
   // Das Fenster zeigt jetzt die zweite Lage: Sollform der Gegenachse, Rohform = Stand nach Seite 1.
@@ -23525,6 +23793,7 @@ function fStepRohUebernehmen(){
   on('btnStepVakuum', fStepVakuum);
   on('btnStepRueck', fStepRueckseite);
   on('btnStepAufsp2', fStepZweiteAufspannung);
+  on('btnStepAngestellt', fStepAngestellt);
   on('btnStepPlan', fStepProgrammVorschlagen);
   on('btnStepBohren', fStepBohrUebernehmen);
   on('btnStepFlaechen', fStepFlaechenUebernehmen);
