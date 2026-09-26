@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="26.09.2026 14:39 (abde551b)";</script>
+<script>window.__DZ_STAND="26.09.2026 15:27 (eb772fe3)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -136,6 +136,24 @@
   #splash .ssub{font-size:12.5px;color:var(--text-dim);letter-spacing:.4px;
     max-width:min(320px, 86vw);line-height:1.45;padding:0 16px;}
   /* Dunkelmodus-Schalter [30.08.2026]: flach wie alle Knoepfe. */
+  /* DIE HUELLE [26.09.2026, Punkt 7]: das Werkstatt-Menue unter dem Logo (haengt
+     am body, z ueber Masken und Anleitung) und die Werkstatt-Leiste ueber dem
+     Startbild beider Apps. Nur NEUE Klassen - kein bestehendes Element aendert
+     sich (Regel 3). */
+  .wmenue{position:fixed;z-index:960;display:none;min-width:210px;padding:6px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 28px -10px rgba(0,0,0,.35);}
+  .wmenue.auf{display:block;}
+  .wmenue .wm-app{display:block;padding:7px 10px;border-radius:6px;color:var(--blue);font-weight:600;font-size:14px;text-decoration:none;line-height:1.25;}
+  .wmenue a.wm-app:hover{background:hsl(var(--ton), 45%, 95%);}
+  .wmenue .wm-app.hier{background:hsl(var(--ton), 45%, 93%);cursor:default;}
+  .wmenue .wm-sub{display:block;font-size:11px;font-weight:400;color:var(--text-dim);}
+  body.dunkel .wmenue{background:hsl(var(--ton), 14%, 18%);border-color:hsl(var(--ton), 14%, 28%);}
+  body.dunkel .wmenue a.wm-app:hover{background:hsl(var(--ton), 20%, 26%);}
+  body.dunkel .wmenue .wm-app.hier{background:hsl(var(--ton), 20%, 24%);}
+  .wleiste{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:4px 0 8px;font-size:12px;color:var(--text-dim);}
+  .wleiste .wl-tit{font-weight:700;letter-spacing:.3px;margin-right:4px;}
+  .wleiste .wl-app{padding:3px 10px;border:1px solid var(--line);border-radius:12px;color:var(--blue);font-weight:600;text-decoration:none;font-size:12px;line-height:1.3;}
+  .wleiste .wl-app.hier{background:var(--blue);color:#fff;border-color:var(--blue);}
+  body.dunkel .wleiste .wl-app{border-color:hsl(var(--ton), 14%, 32%);}
   #dunkelBtn{width:30px;border:1px solid var(--line);border-radius:4px;
     background:var(--panel);color:var(--text-dim);font-size:14px;}
   body.dunkel #dunkelBtn{background:var(--key);color:#f2d98c;}
@@ -3209,6 +3227,15 @@ Ordnungskn&ouml;pfe &#x25B2;&#x25BC;&#x23FB;&#x29C9; erscheinen weiter nur am an
 <b>links unten</b>, damit es die Zyklusspalte rechts nicht verdeckt, und im Dunkelmodus sind Zyklusspalte und Fu&szlig;leiste
 seit demselben Tag dunkel.</p>
 
+<h3 id="ba-fk02-werkstatt">Die Werkstatt: Drehen, Fr&auml;sen, Pipeline (26.09.2026)</h3>
+<p>Es gibt drei Apps, und sie geh&ouml;ren zusammen: <b>Drehen</b>, <b>Fr&auml;sen</b> (diese) und die <b>Werkstatt-Pipeline</b>
+(Anfrage, Angebot, Auftrag). Ein Tipp auf das <b>Logo</b> oben &ouml;ffnet das Werkstatt-Men&uuml; mit allen dreien &mdash; die
+aktuelle ist markiert; dieselbe Leiste steht &uuml;ber der Startauswahl. Der Weg f&uuml;hrt immer zur richtigen Datei: im
+Projektordner zur Nachbardatei, auf dem Handy und am Laptop mit der Verkn&uuml;pfung zur ver&ouml;ffentlichten Fassung. Gemeinsam sind
+der <b>Dunkelmodus</b> (ein Schalter, eine Einstellung) und der <b>Projektordner</b> (unten: einmal gew&auml;hlt, gilt er in beiden
+Apps &mdash; jede zeigt nur ihre Dateien). Die <b>Werkzeugtabellen bleiben getrennt</b>: Fr&auml;ser und Drehmei&szlig;el sind zwei
+Maschinenwelten; gleich sind die Werkstoffliste und die Bedienung der Masken.</p>
+
 <h3 id="ba-fk02-ordner">Projektordner: Programme und NC als Dateien auf dem Rechner (seit 26.09.2026)</h3>
 <p>Bis dahin lagen die Programme nur im <b>Browserspeicher</b> dieses Ger&auml;ts, und wer sie behalten wollte, lud
 eine .json herunter und holte sie &uuml;ber <i>Importieren</i> zur&uuml;ck. <b>Am Laptop</b> (Edge, Chrome) steht in der
@@ -3221,7 +3248,7 @@ Die App merkt sich den Ordner; beim n&auml;chsten Start fragt der Browser einmal
 (<i>Zugriff erlauben</i>), das ist seine Regel, nicht unsere. <i>Ordner l&ouml;sen</i> vergisst ihn, die Dateien bleiben.
 <b>Am iPhone</b> gibt es den Block nicht (Safari kennt keinen Ordnerzugriff), dort gilt weiter Teilen und Importieren.
 Sollform und Rohform eines STEP-Modells stehen NICHT in der Datei (wie bei jeder Ablage &mdash; nach dem Laden
-&bdquo;Sollform ans Programm&ldquo; neu dr&uuml;cken). Beide Apps d&uuml;rfen denselben Ordner nutzen, jede zeigt nur ihre
+&bdquo;Sollform ans Programm&ldquo; neu dr&uuml;cken). Der Ordner gilt f&uuml;r <b>beide Apps</b> (einmal gew&auml;hlt, in Drehen wie in Fr&auml;sen da), jede zeigt nur ihre
 Dateien (<code>.dreh.json</code> / <code>.fraes.json</code>).</p>
 
 <h3 id="ba-fk02-stand">Welche Fassung Du vor Dir hast &mdash; und wie sie sich erneuert</h3>
@@ -4611,13 +4638,15 @@ window.__fehlerMelden = function(quelle, e){
 // ohne Browser; die Browser-Szene nimmt denselben Fake und obendrein den
 // echten Weg ueber IndexedDB.
 //
-// Die App merkt sich den Griff je App getrennt (Schluessel 'dreh' /
-// 'fraes'): beide Apps liegen auf derselben Herkunft (GitHub Pages) und
-// duerfen denselben Ordner nutzen - jede sieht nur ihre Dateien, weil
-// die Endungen verschieden sind (.dreh.json / .fraes.json).
+// EIN Griff fuer beide Apps [Huelle, 26.09.2026]: gemerkt unter dem
+// Schluessel 'projekt' - beide Apps liegen auf derselben Herkunft (GitHub
+// Pages bzw. file://), wer den Ordner in der einen waehlt, hat ihn in der
+// anderen. Jede sieht nur ihre Dateien (.dreh.json / .fraes.json). Die
+// alten Schluessel 'dreh'/'fraes' vom Vormittag werden beim Start
+// uebernommen und nicht mehr geschrieben.
 // =====================================================================
 var PO = {app:'', griff:null, name:'', bereit:false};
-const PO_DB = 'dz-projektordner', PO_STORE = 'griffe';
+const PO_DB = 'dz-projektordner', PO_STORE = 'griffe', PO_SCHLUESSEL = 'projekt';
 
 function poVerfuegbar(){
   try{
@@ -4696,7 +4725,11 @@ async function poStart(app){
   PO.app = app; PO.griff = null; PO.name = ''; PO.bereit = false;
   if(!poVerfuegbar()) return 'nicht verfuegbar';
   let g = null;
-  try{ g = await poGriffHolen(app); }catch(e){ return 'keiner'; }
+  try{ g = await poGriffHolen(PO_SCHLUESSEL); }catch(e){ return 'keiner'; }
+  if(!g){
+    // Umzug vom Vormittag: der Griff lag je App getrennt.
+    try{ g = await poGriffHolen(app); if(g){ await poGriffMerken(PO_SCHLUESSEL, g); await poGriffLoeschen(app); } }catch(e){ g = g || null; }
+  }
   if(!g || typeof g.queryPermission !== 'function') return 'keiner';
   PO.griff = g; PO.name = g.name || 'Ordner';
   let p = 'prompt';
@@ -4716,13 +4749,13 @@ async function poWaehlen(app){
   PO.app = app; PO.griff = g; PO.name = g.name || 'Ordner'; PO.bereit = true;
   // Merken kann scheitern (IndexedDB gesperrt) - der Ordner gilt dann
   // trotzdem fuer diese Sitzung, nur nicht fuer die naechste.
-  try{ await poGriffMerken(app, g); }catch(e){}
+  try{ await poGriffMerken(PO_SCHLUESSEL, g); }catch(e){}
   return g;
 }
 async function poLoesen(){
   const app = PO.app;
   PO.griff = null; PO.name = ''; PO.bereit = false;
-  try{ await poGriffLoeschen(app); }catch(e){}
+  try{ await poGriffLoeschen(PO_SCHLUESSEL); await poGriffLoeschen(app); }catch(e){}
 }
 
 // --- Dateien im Ordner. createWritable schreibt in eine Hilfsdatei und
@@ -4784,6 +4817,107 @@ function poFakeOrdner(name){
     _dateien:dateien,
   };
   return griff;
+}
+// =====================================================================
+// DIE GEMEINSAME HUELLE [26.09.2026, Punkt 7 der Liste vom 25.09.]:
+// "ein Start, eine Werkzeugverwaltung, ein Projektordner, ein Dunkelmodus,
+// und darin Drehen oder Fraesen - der sichtbare Sprung. Was fehlt, ist
+// nicht Glanz, sondern Einheit."
+//
+// Zwei Apps, zwei Dateien - das bleibt (Regel 1: eine Datei, Doppelklick,
+// offline). Die Huelle ist deshalb kein drittes Programm, sondern das,
+// was beide GLEICH haben und was den Weg zwischen ihnen kennt:
+//   - das Logo in der Kopfzeile ist der WERKSTATT-SCHALTER: ein Tipp
+//     oeffnet Drehen / Fraesen / Werkstatt-Pipeline, die aktuelle App ist
+//     markiert. Kein neues Element in der Kopfzeile (am iPhone bleibt sie
+//     Pixel fuer Pixel, wie sie war - Regel 3), nur ein Klick auf das,
+//     was schon da ist.
+//   - die WERKSTATT-LEISTE ueber dem Startbild beider Apps: dieselbe Zeile,
+//     dieselben Ziele.
+//   - EIN Projektordner (06-projektordner.js, Schluessel 'projekt'): wer ihn
+//     in einer App waehlt, hat ihn in der anderen.
+//   - EIN Dunkelmodus (etDunkel, seit dem 12.09. gemeinsam).
+//
+// WOHIN der Sprung fuehrt, haengt an der FORM, in der die App laeuft:
+// im Projektordner heissen die Dateien euroturn-kontur-cam.html und
+// dz-cam-fraesen.html, auf GitHub Pages (PWA) index.html und fraesen.html
+// (pwa-bauen.js benennt um). Die Pipeline ist ein eigenes Repo: auf Pages
+// ihre Adresse, im Projektordner der Nachbarordner auf dem Desktop.
+// Ausgerechnet wird das aus dem eigenen Dateinamen, nicht aus einer
+// Einstellung - eine Einstellung wuerde beim naechsten Umbenennen luegen.
+// =====================================================================
+const HUELLE_APPS = [
+  {id:'dreh',     name:'Drehen',             sub:'Monforts 1000 / 1500, Siemens 810T / 840D', projekt:'euroturn-kontur-cam.html', pwa:'index.html'},
+  {id:'fraes',    name:'Fräsen',        sub:'iTNC 530, TNC 410, 840D powerline',        projekt:'dz-cam-fraesen.html',      pwa:'fraesen.html'},
+  {id:'pipeline', name:'Werkstatt-Pipeline', sub:'Anfrage, Angebot, Auftrag',                 projekt:'../werkstatt-pipeline/docs/index.html', pwa:'https://dz-werkstatt.github.io/werkstatt-pipeline/', https:'https://dz-werkstatt.github.io/werkstatt-pipeline/'},
+];
+// Der eigene Dateiname (letztes Pfadstueck, ohne ?query und #hash); ein
+// nackter Ordner ("…/dz-cam/") ist index.html - so liefert Pages die PWA.
+function huelleDateiname(href){
+  const h = String(href || (typeof location !== 'undefined' && location.href) || '');
+  const ohne = h.split('#')[0].split('?')[0];
+  const teil = ohne.split('/').pop();
+  let d = ''; try{ d = decodeURIComponent(teil); }catch(e){ d = teil; }
+  return d || 'index.html';
+}
+function huelleHier(href){
+  const d = huelleDateiname(href).toLowerCase();
+  const a = HUELLE_APPS.find(x => x.projekt.toLowerCase() === d || String(x.pwa).toLowerCase() === d);
+  return a ? a.id : 'dreh';
+}
+// 'pwa' = die umbenannten Dateien der Veroeffentlichung, sonst 'projekt'.
+function huelleForm(href){
+  const d = huelleDateiname(href).toLowerCase();
+  return (d === 'index.html' || d === 'fraesen.html') ? 'pwa' : 'projekt';
+}
+function huelleZiel(id, href, protokoll){
+  const a = HUELLE_APPS.find(x => x.id === id); if(!a) return null;
+  const p = String(protokoll || (typeof location !== 'undefined' && location.protocol) || 'file:');
+  if(a.https) return (p === 'file:') ? a.projekt : a.https;
+  return huelleForm(href) === 'pwa' ? a.pwa : a.projekt;
+}
+// Die Werkstatt-Leiste ueber dem Startbild (beide Apps dieselbe).
+function huelleLeisteHtml(hier, href){
+  const h = hier || huelleHier(href);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  return '<div class="wleiste"><span class="wl-tit">DZ CAM · Werkstatt</span>' +
+    HUELLE_APPS.map(a => a.id === h
+      ? '<span class="wl-app hier" title="' + esc(a.sub) + '">' + esc(a.name) + '</span>'
+      : '<a class="wl-app" href="' + esc(huelleZiel(a.id, href)) + '" title="' + esc(a.sub) + '">' + esc(a.name) + '</a>').join('') +
+    '</div>';
+}
+function huelleMenueHtml(hier, href){
+  const h = hier || huelleHier(href);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  return HUELLE_APPS.map(a => a.id === h
+    ? '<span class="wm-app hier">' + esc(a.name) + '<span class="wm-sub">hier</span></span>'
+    : '<a class="wm-app" href="' + esc(huelleZiel(a.id, href)) + '">' + esc(a.name) + '<span class="wm-sub">' + esc(a.sub) + '</span></a>').join('');
+}
+// Das Logo wird der Schalter. Das Menue haengt am body (Wurzelkontext -
+// dieselbe Lehre wie beim Meldebanner: in der Kopfzeile laege es unter
+// jeder offenen Maske) und steht unter dem Logo.
+function huelleStart(){
+  if(typeof document === 'undefined') return false;
+  const logo = document.querySelector('.hdr .logo'); if(!logo || !logo.addEventListener) return false;
+  let m = document.getElementById('wmenue');
+  if(!m){ m = document.createElement('div'); m.id = 'wmenue'; m.className = 'wmenue'; document.body.appendChild(m); }
+  m.innerHTML = huelleMenueHtml();
+  logo.style.cursor = 'pointer';
+  logo.setAttribute('title', 'Werkstatt: Drehen · Fräsen · Pipeline');
+  const zu = () => { m.classList.remove('auf'); };
+  logo.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if(m.classList.contains('auf')){ zu(); return; }
+    m.classList.add('auf');
+    // Unter dem Logo, aber im Bild: das Logo steht rechts in der Kopfzeile, ein
+    // links buendiges Menue lief aus dem Fenster (Aufnahme 26.09.2026).
+    try{ const r = logo.getBoundingClientRect(), w = m.offsetWidth || 220;
+      m.style.top = (r.bottom + 4) + 'px';
+      m.style.left = Math.max(6, Math.min(r.left, window.innerWidth - w - 6)) + 'px'; }catch(x){}
+  });
+  document.addEventListener('click', (e) => { if(!m.contains(e.target)) zu(); });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') zu(); });
+  return true;
 }
 // =====================================================================
 // DZ CAM · FRAESEN — KERN (DOM-frei)
@@ -18571,6 +18705,9 @@ kachelPilotAnwenden();
   });
 })();
 
+// DIE HUELLE [26.09.2026]: das Logo wird der Werkstatt-Schalter (07-huelle.js).
+try{ huelleStart(); }catch(e){}
+
 // ---- Datei-Export: Teilen -> Download -> Zwischenablage --------------
 const IN_EMBEDDED_VIEW = (function(){ try{ return window.self !== window.top; }catch(e){ return true; } })();
 function exportToast(msg){ melde(msg); }
@@ -18758,7 +18895,8 @@ function fArbeitsplanRender(){
     // STARTAUSWAHL statt Hinweistext [Daniels Ansage 20.09.2026]. Die erste
     // Karte gibt es nur, wenn wirklich ein Stand im Speicher liegt.
     const L = fLetzterStand();
-    h += '<div class="leerstart">';
+    // WERKSTATT-LEISTE [Huelle, 26.09.2026]: dieselbe Zeile wie im Drehen.
+    h += (typeof huelleLeisteHtml === 'function' ? huelleLeisteHtml('fraes') : '') + '<div class="leerstart">';
     if(L) h += '<button class="lskarte lsweiter" data-start="weiter">' +
       '<span class="lstitel">Weitermachen: ' + esc(L.name) + '</span>' +
       '<span class="lstext">' + L.schritte + ' Schritt' + (L.schritte === 1 ? '' : 'e') + ', ' + L.muster + ' Bohrbild' + (L.muster === 1 ? '' : 'er') + ' — zuletzt bearbeitet</span></button>';
