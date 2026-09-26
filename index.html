@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="26.09.2026 13:04 (35b4beaf)";</script>
+<script>window.__DZ_STAND="26.09.2026 14:39 (abde551b)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2153,6 +2153,10 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     body.mode-grafisch #canvasWrap #maskStart, body.mode-grafisch #canvasWrap #maskGerade, body.mode-grafisch #canvasWrap #maskKreis{width:min(700px,92vw) !important;}
     #maskProgramme, #maskPlaner{width:min(720px,92vw) !important;}
     #maskKalk{width:min(820px,92vw) !important;}
+    #maskSchnittdaten{width:min(960px,92vw) !important;}
+    /* Das Blatt oeffnet sich AUS der Werkzeugverwaltung (Masken am Laptop z 900) und lag darunter -
+       gesehen in der Browser-Szene S1 (26.09.2026): das Bild zeigte die Werkzeugliste. */
+    #maskSchnittdaten{z-index:945 !important;}
 
     /* (18) STARTBILDSCHIRM: die drei Einstiege (Kontur zeichnen, DXF,
        Programme) standen als 800 px breite Streifen mit einer Zeile
@@ -2631,13 +2635,13 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
             <div class="mrow"><label>Drehzahleingabe</label><div class="radiobtns" id="aeSModeBtns"><button data-v="n">n (U/min)</button><button data-v="vc" class="sel">Vc (m/min)</button></div></div>
             <div class="mrow"><label>F / Vc Schruppen</label><input type="number" id="aeFR" value="0.25" step="any" style="width:51px;"><input type="number" step="any" id="aeSR" value="180" style="width:51px;"><span class="unit unit2"><i>mm/U</i><i class="u-s">m/min</i></span></div>
             <div class="mrow"><label>K&#252;hlmittel</label><div class="radiobtns" id="aeKuehlBtns"><button data-v="an" class="sel">an</button><button data-v="aus">aus</button></div></div>
-            <div class="mrow"><label>F / Vc Schlichten</label><input type="number" id="aeFF" value="0.12" step="any" style="width:51px;"><input type="number" step="any" id="aeSF" value="200" style="width:51px;"><span class="unit unit2"><i>mm/U</i><i class="u-s">m/min</i></span></div>
+            <div class="mrow"><label>F / Vc Schlichten</label><input type="number" id="aeFF" value="0.1" step="any" style="width:51px;"><input type="number" step="any" id="aeSF" value="220" style="width:51px;"><span class="unit unit2"><i>mm/U</i><i class="u-s">m/min</i></span></div>
             <!-- ZUSTELLUNG UND AUFMASS IM TECHNOLOGIE-BLOCK [Daniel,
                  29.08.2026: "direkt oben bei Werkzeug und Schnittwerten
                  drunter"]. UX ist im DURCHMESSER definiert - der
                  Generator addiert es auf das Durchmessermass
                  (roughEnvelope: ur = ux/2). UZ ueblich kleiner. -->
-            <div class="mrow"><label>D Zustelltiefe (a<sub>p</sub>)</label><input type="number" step="any" id="aeD" value="2"><span class="unit">mm</span></div>
+            <div class="mrow"><label>D Zustelltiefe (a<sub>p</sub>)</label><input type="number" step="any" id="aeD" value="1.5"><span class="unit">mm</span></div>
             <div class="mrow"><label>UX rad. / UZ Schlichtaufmaß</label><input step="any" style="width:51px;" type="number" id="aeUX" value="0.5"><input step="any" style="width:51px;" type="number" id="aeUZ" value="0.1"><span class="unit">mm</span></div>
             <!-- SPANBRECHEN [Daniel, 02.09.2026]: fuer langspanende
                  Werkstoffe. Siemens-Vorbild CYCLE952 (S. 474): DI =
@@ -2779,11 +2783,11 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
             <div class="mrow"><label>Drehzahleingabe</label><div class="radiobtns" id="akSModeBtns"><button data-v="n">n (U/min)</button><button data-v="vc" class="sel">Vc (m/min)</button></div></div>
             <div class="mrow"><label>F / Vc Schruppen</label><input type="number" id="akFR" value="0.25" step="any" style="width:51px;"><input type="number" step="any" id="akSR" value="180" style="width:51px;"><span class="unit unit2"><i>mm/U</i><i class="u-s">m/min</i></span></div>
             <div class="mrow"><label>K&#252;hlmittel</label><div class="radiobtns" id="akKuehlBtns"><button data-v="an" class="sel">an</button><button data-v="aus">aus</button></div></div>
-            <div class="mrow"><label>F / Vc Schlichten</label><input type="number" id="akFF" value="0.12" step="any" style="width:51px;"><input type="number" step="any" id="akSF" value="200" style="width:51px;"><span class="unit unit2"><i>mm/U</i><i class="u-s">m/min</i></span></div>
+            <div class="mrow"><label>F / Vc Schlichten</label><input type="number" id="akFF" value="0.1" step="any" style="width:51px;"><input type="number" step="any" id="akSF" value="220" style="width:51px;"><span class="unit unit2"><i>mm/U</i><i class="u-s">m/min</i></span></div>
             <!-- IM TECHNOLOGIE-BLOCK, OHNE GRUPPE [Daniel, 29.08.2026] -
                  s. Abspanen Ecke. UX gilt im DURCHMESSER (roughEnvelope:
                  ur = ux/2). -->
-            <div class="mrow"><label>D Zustelltiefe (a<sub>p</sub>)</label><input type="number" step="any" id="akD" value="2"><span class="unit">mm</span></div>
+            <div class="mrow"><label>D Zustelltiefe (a<sub>p</sub>)</label><input type="number" step="any" id="akD" value="1.5"><span class="unit">mm</span></div>
             <div class="mrow"><label>UX rad. / UZ Schlichtaufmaß</label><input step="any" style="width:51px;" type="number" id="akUX" value="0.5"><input step="any" style="width:51px;" type="number" id="akUZ" value="0.1"><span class="unit">mm</span></div>
             <!-- SPANBRECHEN [Daniel, 02.09.2026]: fuer langspanende
                  Werkstoffe. Siemens-Vorbild CYCLE952 (S. 474): DI =
@@ -3119,7 +3123,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
             <div class="mrow"><label>Drehzahleingabe</label><div class="radiobtns" id="fsSModeBtns">
               <button data-v="n">n (U/min)</button><button data-v="vc" class="sel">Vc (m/min)</button>
             </div></div>
-            <div class="mrow"><label>F / Vc Freistich</label><input type="number" id="fsFR" value="0.08" step="any" style="width:51px;"><input type="number" step="any" id="fsSR" value="200" style="width:51px;"><span class="unit unit2"><i>mm/U</i><i class="u-s">m/min</i></span></div>
+            <div class="mrow"><label>F / Vc Freistich</label><input type="number" id="fsFR" value="0.08" step="any" style="width:51px;"><input type="number" step="any" id="fsSR" value="220" style="width:51px;"><span class="unit unit2"><i>mm/U</i><i class="u-s">m/min</i></span></div>
             <div class="mrow"><label>K&#252;hlmittel</label><div class="radiobtns" id="fsKuehlBtns"><button data-v="an" class="sel">an</button><button data-v="aus">aus</button></div></div>
             <canvas class="mask-help" id="help_maskFreistich"></canvas>
             <div class="mrow"><label>Form</label><div class="radiobtns" id="fsFormBtns">
@@ -3581,6 +3585,26 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     <div class="hsk primary" id="hskGcode" title="G-Code Ausgabe"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3 L2.5 8 L7 13"/><path d="M15 3 L19.5 8 L15 13"/></svg><span>G-Code</span></div>
   </div>
 
+  <!-- SCHNITTDATEN JE WERKSTOFF [Daniel, 26.09.2026, Punkt 6 der Liste vom
+       25.09.]: "eine Tabelle, wo ich editieren und ausfuellen kann ... das
+       kann ich dann ueberschreiben, und dann zieht es das beim naechsten Mal
+       richtig." Das Blatt ist die EINE Quelle fuer die Vorbelegung der
+       Zyklusmasken (Felder eines neuen Schritts und der Vorschlag bei der
+       Werkzeugwahl). Die Tabelle malt sdMalen (85-planer.js) aus SD_*;
+       gespeichert wird im Browserspeicher (et_schnittdaten). -->
+  <div class="mask" id="maskSchnittdaten" style="position:fixed;z-index:30;">
+    <div class="mask-head"><span class="mtitel">SCHNITTDATEN JE WERKSTOFF</span>
+      <button class="gcbtn" id="btnSdZu" style="margin-left:auto;min-width:40px;">&#x2715;</button></div>
+    <div class="mask-body">
+      <div style="font-size:11.5px;color:var(--text-dim);padding:4px 10px 6px;line-height:1.4;">Vc in m/min, F in mm/U, a<sub>p</sub> in mm.
+        Was hier steht, belegt die Zyklusmasken vor: die Felder eines neuen Schritts und der Vorschlag, sobald ein Werkzeug gew&auml;hlt ist
+        (a<sub>p</sub> au&szlig;en oder innen nach der Werkzeugart) &mdash; in jeder Maske &uuml;berschreibbar. Stahlwerte vom 26.09.2026;
+        Guss, Alu und Messing tragen dieselben Zahlen als <b>Platzhalter</b>, bis sie eingetragen sind. Jede &Auml;nderung wird sofort gespeichert.</div>
+      <div id="sdTabelle" style="overflow-x:auto;padding:0 6px 6px;"></div>
+      <div class="mrow" style="gap:8px;"><button class="gcbtn" id="btnSdReset" style="flex:1;padding:8px;">Zur&uuml;ck auf die Vorgabe</button>
+        <button class="gcbtn ok-gruen" id="btnSdFertig" style="flex:1;padding:8px;">&#x2713; Fertig</button></div>
+    </div>
+  </div>
   <!-- ANGEBOTSKALKULATION [Daniel, 31.08.2026]: Zuschlagskalkulation
        fuer den Lohnfall. Rohteil und Werkstoff kommen aus dem
        Programmkopf, die Laufzeit aus der Hauptzeitrechnung — nur die
@@ -5290,6 +5314,18 @@ Lagernummer dahinter.
 <br>Die Zeilen &uuml;berleben das schlanke Senden (wie die Zeile <code>(WZ ...)</code>
 hinter jedem Werkzeugaufruf) &mdash; sie stehen also auch in der Datei an der Maschine,
 wo sie gebraucht werden.</dd>
+<dt id="ba-wz-schnittdaten">Schnittdaten je Werkstoff &mdash; das Blatt (seit 26.09.2026)</dt>
+<dd>Knopf <i>Schnittdaten je Werkstoff</i> oben in der Werkzeugverwaltung. Eine Tabelle: je Werkstoff (Baustahl, Verg&uuml;tungsstahl,
+Edelstahl, Guss, Alu, Messing) die Schnittgeschwindigkeit Vc, der Vorschub F und beim Schruppen die Zustelltiefe a<sub>p</sub> au&szlig;en
+und innen, getrennt nach Schruppen, Schlichten, Stechen und Gewinde. <b>Was dort steht, belegt die Zyklusmasken vor</b>: die Felder eines
+neuen Schritts folgen dem Werkstoff im Programmkopf, und sobald in einer Maske ein Werkzeug gew&auml;hlt wird, tr&auml;gt die App Vc, F und
+a<sub>p</sub> aus dem Blatt ein (a<sub>p</sub> au&szlig;en bei einem Au&szlig;enwerkzeug, innen bei einer Bohrstange; das Gewinde bekommt seine
+Drehzahl aus Vc und Nenndurchmesser) &mdash; gelb hinterlegt und in jeder Maske &uuml;berschreibbar. <b>Jede &Auml;nderung im Blatt wird sofort
+gespeichert</b> und gilt beim n&auml;chsten Mal (Browserspeicher dieses Ger&auml;ts; <i>Zur&uuml;ck auf die Vorgabe</i> stellt Daniels
+Stahlwerte wieder her). Vorgabe: Schruppen Vc 180, F 0,25, a<sub>p</sub> 1,5 au&szlig;en / 1,0 innen; Schlichten Vc 220, F 0,1 (au&szlig;en wie innen);
+Stechen und Gewinde Vc 140. <b>Guss, Alu und Messing tragen dieselben Zahlen als Platzhalter</b> &mdash; die echten Werte kommen mit dem
+Herantasten an der Maschine. Die Vc-Spalte der Werkzeugtabelle ist seither nur noch Auskunft; die alten Werkstoff-Faktoren nutzt nur noch der
+Planer (der rechnet weiter mit Drehzahlen &mdash; ihn auf das Blatt zu stellen ist ein eigenes Paket).</dd>
 <dt id="ba-wz-abgleich">Abgleich gegen die Werkzeugkorrektur der Maschine (seit 22.09.2026)</dt>
 <dd>Die App f&uuml;hrt <b>eine</b> Werkzeugtabelle f&uuml;r beide Monforts. Die Maschine
 f&uuml;hrt ihre eigene (WZ-KORR), und wenn beide auseinanderlaufen, geht das zweimal
@@ -5618,6 +5654,9 @@ erzeugt und ist damit immer vollst&auml;ndig.</p>
   <div class="mask" id="maskWerkzeuge" style="position:fixed;">
     <div class="mask-head"><span class="mtitel">Werkzeugverwaltung</span></div>
     <div class="mask-body">
+      <!-- SCHNITTDATEN JE WERKSTOFF [Daniel, 26.09.2026]: das Blatt, das die
+           Zyklusmasken vorbelegt - Vc, F und ap je Werkstoff und Vorgang. -->
+      <div class="mrow"><button class="gcbtn" id="btnSchnittdaten" style="width:100%;padding:8px;">Schnittdaten je Werkstoff (Vc, F, a<sub>p</sub>)</button></div>
       <!-- KEIN thead mehr [05.09.2026]: die R/SL-Spalten sind in die
            Subzeile unter den Namen gewandert, und die Sektionskoepfe
            REVOLVER/LAGER strukturieren die Liste — eine zusaetzliche
@@ -21878,12 +21917,16 @@ function toolOptionsFuer(selId, prev){
 // Ueberschreiben in der Maske bleibt jederzeit moeglich.
 // =================================================================
 const SCHNITT_MAP={
-  aeT:{fr:'aeFR', sr:'aeSR', ff:'aeFF', sf:'aeSF', dia:'aeX0'},
-  akT:{fr:'akFR', sr:'akSR', ff:'akFF', sf:'akSF', dia:'akStock'},
+  aeT:{fr:'aeFR', sr:'aeSR', ff:'aeFF', sf:'aeSF', dia:'aeX0', d:'aeD'},
+  akT:{fr:'akFR', sr:'akSR', ff:'akFF', sf:'akSF', dia:'akStock', d:'akD'},
   akT2:{ff:'akFF', sf:'akSF', dia:'akStock'},
   esT:{fr:'esFR', sr:'esSR', ff:'esFF', sf:'esSF', dia:'esX0'},
   stT:{fr:'stFR', sr:'stSR', ff:'stFF', sf:'stSF', dia:'stStock'},
   abT:{fr:'abFR', sr:'abSR', dia:'abX0'},
+  // Freistich (Vc-Modus, kein Durchmesserfeld) und Gewinde (Drehzahl aus
+  // Vc und Nenndurchmesser, die Maske hat keinen Vc-Umschalter) [26.09.2026].
+  fsT:{sr:'fsSR'},
+  gwT:{sr:'gwS', dia:'gwX0'},
 };
 function drehzahlAusVc(vc, diaId){
   const dEl=diaId?document.getElementById(diaId):null;
@@ -21915,6 +21958,105 @@ const WERKSTOFFE={
   guss:      {name:'Guss',            vc:0.70, f:1.15},
   alu:       {name:'Alu',             vc:2.50, f:1.30},
   messing:   {name:'Messing',         vc:2.00, f:1.20},
+};
+// =====================================================================
+// SCHNITTDATEN JE WERKSTOFF [Daniel, 26.09.2026, Punkt 6 der Liste vom
+// 25.09.]: "mit den Schnittgeschwindigkeiten, Vorschueben, ap-Zustelltiefen
+// ... ein Blatt extra, eine Tabelle, wo ich editieren und ausfuellen kann
+// ... das kann ich dann ueberschreiben, und dann zieht es das beim
+// naechsten Mal richtig."
+//
+// VORHER standen die Schnittwerte an drei Stellen: als Vorgabewert in den
+// Maskenfeldern (180/200/140), als Vc je Werkzeug in der Werkzeugtabelle
+// (mal Werkstoff-FAKTOR aus WERKSTOFFE) und als Drehzahl-Basis im Planer.
+// Drei Stellen driften; die Werkzeugtabelle sagte "Schlichter 200", waehrend
+// Daniel 220 faehrt. JETZT ist das Blatt die EINE Quelle fuer die
+// Maskenvorgaben (sdVorgabenAnwenden) und den Vorschlag bei der Werkzeug-
+// wahl (belegeSchnittwerte). Die Vc-Spalte der Werkzeugtabelle bleibt als
+// Auskunft stehen; die Faktoren nutzt nur noch der Planer (Drehzahlen -
+// ihn auf Vc und das Blatt zu stellen ist ein eigenes Paket, s. die vier
+// offenen Entscheidungen vom 15.09.).
+//
+// Daniels Stahlwerte gelten fuer ALLE Stahlsorten; Guss, Alu und Messing
+// tragen dieselben Zahlen als PLATZHALTER ("die trage ich dann selber") -
+// ein erfundener Alu-Wert waere schlimmer als ein sichtbar gleicher.
+// Gespeichert wird im Browserspeicher (et_schnittdaten, Muster et_kalk:
+// Muell-JSON -> Vorgabe, nur Zahlen groesser 0 ueberschreiben).
+// =====================================================================
+const SD_SLOT='et_schnittdaten', SD_V=1;
+const SD_VORGAENGE=[['schrupp','Schruppen'],['schlicht','Schlichten'],['stech','Stechen'],['gewinde','Gewinde']];
+const SD_FELDER={
+  schrupp:[['vc','Vc','m/min'],['f','F','mm/U'],['apA','ap außen','mm'],['apI','ap innen','mm']],
+  schlicht:[['vc','Vc','m/min'],['f','F','mm/U']],
+  stech:[['vc','Vc','m/min'],['f','F','mm/U']],
+  gewinde:[['vc','Vc','m/min']],
+};
+// Daniels Werte 26.09.2026: Schruppen 180 / 0,25 / ap 1,5 aussen, 1,0 innen;
+// Schlichten 220 / 0,1 (aussen wie innen); Einstich und Gewinde 140.
+// Der Stech-Vorschub 0,08 ist die bisherige Maskenvorgabe, keine Ansage.
+const SD_STAHL={schrupp:{vc:180, f:0.25, apA:1.5, apI:1.0}, schlicht:{vc:220, f:0.1}, stech:{vc:140, f:0.08}, gewinde:{vc:140}};
+function sdVorgabe(){ const o={}; Object.keys(WERKSTOFFE).forEach(k=>{ o[k]=JSON.parse(JSON.stringify(SD_STAHL)); }); return o; }
+let sdCache=null;
+// Gespeichertes ueber die Vorgabe legen - nur Zahlen groesser 0, nur
+// bekannte Felder. Ein Feld, das es in der Vorgabe nicht gibt, kommt nicht
+// herein (sonst schleppt ein alter Slot Felder mit, die niemand liest).
+function sdMerge(vorgabe, gespeichert){
+  const o=JSON.parse(JSON.stringify(vorgabe));
+  if(!gespeichert || typeof gespeichert!=='object') return o;
+  Object.keys(o).forEach(w=>{ const gw=gespeichert[w]; if(!gw || typeof gw!=='object') return;
+    Object.keys(o[w]).forEach(v=>{ const gv=gw[v]; if(!gv || typeof gv!=='object') return;
+      Object.keys(o[w][v]).forEach(f=>{ const z=+gv[f]; if(isFinite(z) && z>0) o[w][v][f]=z; }); }); });
+  return o;
+}
+function sdWerte(){
+  if(sdCache) return sdCache;
+  let j=null;
+  try{ const r=localStorage.getItem(SD_SLOT); if(r) j=JSON.parse(r); }catch(e){ j=null; }
+  sdCache=sdMerge(sdVorgabe(), (j && j.v===SD_V) ? j.werte : null);
+  return sdCache;
+}
+function sdSpeichern(){ try{ localStorage.setItem(SD_SLOT, JSON.stringify({v:SD_V, werte:sdWerte()})); return true; }catch(e){ return false; } }
+function sdSetzen(w, v, f, wert){
+  const s=sdWerte(); if(!s[w] || !s[w][v] || s[w][v][f]===undefined) return false;
+  const z=+wert; if(!isFinite(z) || !(z>0)) return false;
+  s[w][v][f]=z; sdSpeichern(); return true;
+}
+function sdZuruecksetzen(){ sdCache=null; try{ localStorage.removeItem(SD_SLOT); }catch(e){} return sdWerte(); }
+function werkstoffSchluessel(){
+  const e=document.getElementById('pkWerkstoff');
+  const k=e && e.value ? e.value : 'baustahl';
+  return WERKSTOFFE[k] ? k : 'baustahl';
+}
+function sdJetzt(){ return sdWerte()[werkstoffSchluessel()]; }
+// Die Felder eines NEUEN Schritts: sie tragen, was zuletzt in der Maske
+// stand, und beim ersten Oeffnen den HTML-Vorgabewert. Das Blatt setzt
+// Wert UND Vorgabewert (defaultValue haengt am Eingabemodus einfach/
+// komplett) fuer den Werkstoff im Programmkopf - beim Start, nach jeder
+// Aenderung im Blatt und beim Werkstoffwechsel. Ein offener, bearbeiteter
+// Schritt ist davon nicht betroffen: editStep setzt seine Werte danach.
+const SD_MASKENFELDER=[
+  ['aeSR','schrupp','vc'],['aeFR','schrupp','f'],['aeSF','schlicht','vc'],['aeFF','schlicht','f'],['aeD','schrupp','apA'],
+  ['akSR','schrupp','vc'],['akFR','schrupp','f'],['akSF','schlicht','vc'],['akFF','schlicht','f'],['akD','schrupp','apA'],
+  ['esSR','stech','vc'],['esSF','stech','vc'],['esFR','stech','f'],
+  ['stSR','stech','vc'],['stSF','stech','vc'],['stFR','stech','f'],
+  ['fsSR','schlicht','vc'],['abSR','stech','vc']];
+function sdVorgabenAnwenden(){
+  const s=sdJetzt(); let n=0;
+  SD_MASKENFELDER.forEach(([id,v,f])=>{
+    const e=document.getElementById(id); if(!e) return;
+    const w=s[v] && s[v][f]; if(!(w>0)) return;
+    const wert=String(w);
+    e.value=wert;
+    try{ e.defaultValue=wert; if(e.setAttribute) e.setAttribute('value', wert); }catch(x){}
+    n++;
+  });
+  return n;
+}
+// Welcher Vorgang des Blatts zu welchem Werkzeug-Select gehoert.
+const SCHNITT_VORGANG={
+  aeT:{sr:'schrupp', sf:'schlicht'}, akT:{sr:'schrupp', sf:'schlicht'}, akT2:{sf:'schlicht'},
+  esT:{sr:'stech', sf:'stech'}, stT:{sr:'stech', sf:'stech'}, abT:{sr:'stech'},
+  fsT:{sr:'schlicht'}, gwT:{sr:'gewinde'},
 };
 // ===============================================================
 // REIHENFOLGE-REGELN [Daniel, 30.08.2026, seine Ansagen]:
@@ -22551,36 +22693,38 @@ function belegeSchnittwerte(selId){
   const map=SCHNITT_MAP[selId]; if(!map) return;
   const sel=document.getElementById(selId); if(!sel || sel.value==='') return;
   const t=toolTable.find(x=>String(x.t)===String(sel.value)); if(!t) return;
-  if(t.vc===undefined && t.f1===undefined && t.f2===undefined) return;
-  const w=werkstoffJetzt();
+  // DAS BLATT IST DIE QUELLE [Daniel, 26.09.2026]: Vc, F und ap je Werkstoff
+  // und Vorgang aus sdWerte(); das Werkzeug sagt nur noch, ob aussen oder
+  // innen (ap) - sein Vc in der Tabelle ist Auskunft. Vorher: Werkzeug-Vc
+  // mal Werkstoff-Faktor, und kein ap-Vorschlag.
+  const wk=werkstoffSchluessel(), sd=sdWerte()[wk], vg=SCHNITT_VORGANG[selId]||{};
   const setz=(id,v)=>{ const e=id?document.getElementById(id):null; if(e && v!==null && v!==undefined) e.value=String(v); };
-  const rund2=(v)=>Math.round(v*100)/100;
   // MODUSBEWUSST [Daniel, 02.09.2026: "ansonsten arbeite ich ja immer
   // mit Schnittgeschwindigkeit"]: steht die Maske auf Vc, gehoert der
-  // Vc-Wert aus der Werkzeugtabelle DIREKT ins Feld. Die alte
-  // n-Umrechnung haette eine Drehzahl in ein m/min-Feld geschrieben.
-  const vcModus=(typeof selBtnVal==='function' && selBtnVal(selId.slice(0,2)+'SModeBtns')==='vc');
-  const vcWert=(t.vc!==undefined)? Math.round(t.vc*w.vc) : null;
-  const n=drehzahlAusVc(t.vc!==undefined ? t.vc*w.vc : undefined, map.dia);
-  if(map.fr && t.f1!==undefined) setz(map.fr, rund2(t.f1*w.f));
-  if(map.ff && t.f2!==undefined) setz(map.ff, rund2(t.f2*w.f));
-  if(vcModus){ if(vcWert!==null){ setz(map.sr, vcWert); setz(map.sf, vcWert); } }
-  else if(n!==null){ setz(map.sr, n); setz(map.sf, n); }
+  // Vc-Wert DIREKT ins Feld; im n-Modus (und beim Gewinde, das keinen
+  // Umschalter hat) wird die Drehzahl am Durchmesserfeld gerechnet.
+  const vcModus=(!!document.getElementById(selId.slice(0,2)+'SModeBtns') && typeof selBtnVal==='function' && selBtnVal(selId.slice(0,2)+'SModeBtns')==='vc');
+  const vcOderN=(vc)=> vcModus ? Math.round(vc) : drehzahlAusVc(vc, map.dia);
+  const r=sd[vg.sr], f=sd[vg.sf];
+  if(map.sr && r && r.vc>0) setz(map.sr, vcOderN(r.vc));
+  if(map.fr && r && r.f>0) setz(map.fr, r.f);
+  if(map.sf && f && f.vc>0) setz(map.sf, vcOderN(f.vc));
+  if(map.ff && f && f.f>0) setz(map.ff, f.f);
+  // ap nach der Werkzeugart: Bohrstange -> innen, sonst aussen.
+  let ap=null;
+  if(map.d && sd.schrupp){ ap=(t.art==='innen') ? sd.schrupp.apI : sd.schrupp.apA; if(ap>0) setz(map.d, ap); else ap=null; }
   // HERKUNFT ANSCHREIBEN [Daniel]: "Die Herkunft des Vorschlags
-  // anzeigen." Sonst steht da eine Zahl, von der niemand weiss, ob sie
-  // gerechnet, geraten oder von Hand eingetragen ist.
-  // GELB WIE BEI SIEMENS: Vorschubwerte und Drehzahlen kommen aus
-  // Werkzeug und Werkstoff, nicht vom Bediener. Die Zeile darunter
-  // nennt schon die Herkunft — die Farbe sagt es auf einen Blick.
+  // anzeigen." GELB WIE BEI SIEMENS: die Werte kommen aus dem Blatt, nicht
+  // vom Bediener - die Farbe sagt es auf einen Blick.
   try{
-    const q="aus T"+(t&&t.t!==undefined?t.t:"");
-    [map.fr, map.ff, map.sr, map.sf].forEach(id=>{ if(id) feldGerechnet(id, q); });
+    const q='Schnittdaten '+WERKSTOFFE[wk].name;
+    [map.fr, map.ff, map.sr, map.sf, ap!==null?map.d:null].forEach(id=>{ if(id) feldGerechnet(id, q); });
   }catch(e){}
-  try{ schnittHerkunftZeigen(selId, t, w); }catch(e){}
+  try{ schnittHerkunftZeigen(selId, t, wk, sd, vg, ap); }catch(e){}
 }
-// Kurze Zeile unter der Werkzeugzeile: welches Werkzeug, welcher
-// Werkstoff, welcher Vc. Wird bei jedem Vorschlag neu gesetzt.
-function schnittHerkunftZeigen(selId, t, w){
+// Kurze Zeile unter der Werkzeugzeile: welcher Werkstoff, welche Werte aus
+// dem Blatt, welches Werkzeug. Wird bei jedem Vorschlag neu gesetzt.
+function schnittHerkunftZeigen(selId, t, wk, sd, vg, ap){
   const sel=document.getElementById(selId);
   if(!sel || !sel.parentElement || !document.createElement) return;
   const id='herk_'+selId;
@@ -22590,10 +22734,12 @@ function schnittHerkunftZeigen(selId, t, w){
     z.id=id; z.className='schnittherkunft';
     sel.parentElement.appendChild(z);
   }
-  const vcRoh=(t.vc!==undefined) ? t.vc : null;
-  z.textContent = 'Vorschlag: T'+t.t+(vcRoh!==null? ' (Vc '+vcRoh+')':'')+
-    ' × '+w.name+' — Vc '+(vcRoh!==null? Math.round(vcRoh*w.vc)+' m/min':'—')+
-    ', Vorschub ×'+w.f.toFixed(2).replace('.',',')+'. Überschreibbar.';
+  const k=(x)=>String(x).replace('.',',');
+  const teil=(name, v)=> v ? (name+' Vc '+k(v.vc)+(v.f>0?' / F '+k(v.f):'')) : '';
+  const teile=[];
+  if(vg.sr) teile.push(teil(SD_VORGAENGE.filter(x=>x[0]===vg.sr)[0][1], sd[vg.sr]) + (ap!==null && ap!==undefined ? ' / ap '+k(ap) : ''));
+  if(vg.sf && vg.sf!==vg.sr) teile.push(teil(SD_VORGAENGE.filter(x=>x[0]===vg.sf)[0][1], sd[vg.sf]));
+  z.textContent='Vorschlag: Schnittdaten '+WERKSTOFFE[wk].name+' — '+teile.join(' · ')+' (T'+t.t+(t.art==='innen'?', innen':'')+'). Überschreibbar.';
 }
 document.addEventListener('change',(e)=>{
   if(e.target && SCHNITT_MAP[e.target.id]){ try{ belegeSchnittwerte(e.target.id); }catch(err){} }
@@ -22603,6 +22749,7 @@ document.addEventListener('change',(e)=>{
 // waehlen, damit der Wert nachzieht.
 { const wsel=document.getElementById('pkWerkstoff');
   if(wsel && wsel.addEventListener) wsel.addEventListener('change', ()=>{
+    try{ sdVorgabenAnwenden(); }catch(e){}   // die Felder neuer Schritte folgen dem Werkstoff [26.09.2026]
     Object.keys(SCHNITT_MAP).forEach(id=>{ try{ belegeSchnittwerte(id); }catch(e){} });
   }); }
 function populateToolSelects(){
@@ -23161,6 +23308,56 @@ async function poProgrammLaden(datei){
   on('btnPoLoesen', ()=>poLoesen().then(poZeigen));
   // Beim Start den gemerkten Ordner holen - im Hintergrund, die App wartet nicht darauf.
   if(poVerfuegbar()) poStart('dreh').then(()=>{ try{ poZeigen(); }catch(e){} }).catch(()=>{});
+}
+
+// =================================================================
+// SCHNITTDATEN-BLATT: Tabelle, Speichern je Aenderung, Zuruecksetzen.
+// Die Daten und ihre Anwendung stehen oben bei SD_* (hinter WERKSTOFFE).
+// =================================================================
+function sdMalen(){
+  const box=document.getElementById('sdTabelle'); if(!box) return;
+  const s=sdWerte();
+  const li='border-left:1px solid var(--line,#c9d3dc);';
+  let h='<table style="border-collapse:collapse;font-size:12px;white-space:nowrap;"><thead><tr><th style="text-align:left;padding:4px 6px;">Werkstoff</th>';
+  SD_VORGAENGE.forEach(([v,name])=>{ h+='<th colspan="'+SD_FELDER[v].length+'" style="padding:4px 6px;'+li+'">'+name+'</th>'; });
+  h+='</tr><tr><th></th>';
+  SD_VORGAENGE.forEach(([v])=>SD_FELDER[v].forEach(([f,label,einheit],i)=>{
+    h+='<th style="font-weight:normal;color:var(--text-dim);padding:2px 6px;'+(i===0?li:'')+'">'+label+'<br><span style="font-size:10px;">'+einheit+'</span></th>'; }));
+  h+='</tr></thead><tbody>';
+  Object.keys(WERKSTOFFE).forEach(w=>{
+    h+='<tr><td style="padding:3px 6px;font-weight:600;">'+WERKSTOFFE[w].name+'</td>';
+    SD_VORGAENGE.forEach(([v])=>SD_FELDER[v].forEach(([f],i)=>{
+      h+='<td style="padding:2px 4px;'+(i===0?li:'')+'"><input type="number" step="any" data-sd="'+w+'.'+v+'.'+f+'" value="'+s[w][v][f]+'" style="width:58px;min-width:0;text-align:right;"></td>'; }));
+    h+='</tr>';
+  });
+  h+='</tbody></table>';
+  box.innerHTML=h;
+}
+function sdOeffnen(){
+  sdMalen();
+  const m=document.getElementById('maskSchnittdaten'); if(m) m.classList.add('show');
+  try{ maskeSichtbarPruefen('maskSchnittdaten'); }catch(e){}
+}
+{ const on=(id,fn)=>{ const el=document.getElementById(id); if(el) el.onclick=fn; };
+  const zu=()=>{ const m=document.getElementById('maskSchnittdaten'); if(m) m.classList.remove('show'); };
+  on('btnSchnittdaten', sdOeffnen);
+  on('btnSdZu', zu); on('btnSdFertig', zu);
+  on('btnSdReset', function(){
+    zweiklickBestaetigen(this, 'Alle Werte auf die Vorgabe? Nochmal tippen', ()=>{
+      sdZuruecksetzen(); sdMalen(); sdVorgabenAnwenden();
+      exportToast('Schnittdaten auf die Vorgabe zurueckgesetzt (Stahlwerte 26.09.2026).');
+    });
+  });
+  const tab=document.getElementById('sdTabelle');
+  if(tab && tab.addEventListener) tab.addEventListener('change',(e)=>{
+    const k=e.target && e.target.dataset ? e.target.dataset.sd : null; if(!k) return;
+    const [w,v,f]=k.split('.');
+    if(sdSetzen(w,v,f,e.target.value)){ sdVorgabenAnwenden(); exportToast('Schnittdaten gespeichert: '+WERKSTOFFE[w].name+', '+v+' '+f+' = '+e.target.value); }
+    else { e.target.value=sdWerte()[w][v][f]; exportToast('Nur Zahlen groesser 0 - Wert zurueckgestellt.'); }
+  });
+  // Beim Start: die Maskenvorgaben auf das Blatt stellen (gespeicherte
+  // Werte gelten "beim naechsten Mal" - Daniels Ansage).
+  try{ sdVorgabenAnwenden(); }catch(e){}
 }
 
 setBodyMode('mode-arbeitsplan');
