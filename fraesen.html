@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="26.09.2026 12:19 (73c43235)";</script>
+<script>window.__DZ_STAND="26.09.2026 13:04 (35b4beaf)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3034,6 +3034,20 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
       <div class="mask" id="maskProgramme" style="position:fixed;">
         <div class="mask-head"><span class="mtitel">Programmverwaltung</span></div>
         <div class="mask-body">
+          <!-- PROJEKTORDNER [26.09.2026, Punkt 5 der Liste]: Programme und NC als
+               Dateien in einem Ordner auf dem Rechner. display:none - das JS zeigt
+               den Block nur, wenn der Browser Ordnerzugriff kann (Edge/Chrome am
+               Laptop, poVerfuegbar). Am iPhone bleibt die Maske Pixel fuer Pixel,
+               wie sie war (Regel 3). Keine Emoji in den Knoepfen (Wache 152). -->
+          <div id="poBlock" style="display:none;">
+            <div class="msec">Projektordner (Dateien auf dem Rechner)</div>
+            <div id="poStatus" style="font-size:12px;color:var(--text-dim);padding:4px 10px 6px;"></div>
+            <div class="mrow"><button class="gcbtn" id="btnPoWahl" style="width:48%;padding:10px;">Ordner w&auml;hlen</button>
+              <button class="gcbtn" id="btnPoErlauben" style="width:48%;padding:10px;display:none;">Zugriff erlauben</button>
+              <button class="gcbtn" id="btnPoLoesen" style="width:48%;padding:10px;display:none;">Ordner l&ouml;sen</button></div>
+            <div id="poLeer" style="display:none;font-size:12px;color:var(--text-dim);padding:6px 10px 8px;"></div>
+            <div class="pointlist" id="poListe" style="max-height:32vh;display:none;"><table><thead><tr><th>Programm</th><th>Datei</th><th></th><th></th></tr></thead><tbody id="poBody"></tbody></table></div>
+          </div>
           <div class="msec">Aktuelles Programm</div>
           <div class="mrow"><label>Name</label><input type="text" id="pmSaveName" value="DZ1" style="width:180px;"></div>
           <div class="mrow" style="flex-direction:column;align-items:stretch;gap:2px;"><button class="gcbtn primary" id="btnProgSave" style="width:100%;padding:10px;">&#x1F4BE; Speichern (Browserspeicher)</button><div style="font-size:10.5px;color:var(--text-dim);padding:0 2px;">bleibt in diesem Browser &mdash; ger&auml;te&uuml;bergreifend: als Datei sichern</div></div>
@@ -3190,6 +3204,21 @@ Bohrbild- und Konturzeilen dauerhaft, die Zykluszeilen nie &mdash; im selben Pla
 Ordnungskn&ouml;pfe &#x25B2;&#x25BC;&#x23FB;&#x29C9; erscheinen weiter nur am angew&auml;hlten Schritt. Das Meldebanner steht am Laptop
 <b>links unten</b>, damit es die Zyklusspalte rechts nicht verdeckt, und im Dunkelmodus sind Zyklusspalte und Fu&szlig;leiste
 seit demselben Tag dunkel.</p>
+
+<h3 id="ba-fk02-ordner">Projektordner: Programme und NC als Dateien auf dem Rechner (seit 26.09.2026)</h3>
+<p>Bis dahin lagen die Programme nur im <b>Browserspeicher</b> dieses Ger&auml;ts, und wer sie behalten wollte, lud
+eine .json herunter und holte sie &uuml;ber <i>Importieren</i> zur&uuml;ck. <b>Am Laptop</b> (Edge, Chrome) steht in der
+Programmverwaltung der Block <b>Projektordner</b>: einmal <i>Ordner w&auml;hlen</i> &mdash; den Ordner des Teils, in dem
+Zeichnung und STEP schon liegen &mdash;, danach schreibt <b>Speichern</b> das Programm als <code>NAME.fraes.json</code>
+dorthin (mit Werkzeugtabelle, wie &bdquo;Als Datei sichern&ldquo;), die Liste darunter zeigt die Programme des Ordners
+(neueste zuerst) mit <i>Laden</i> und <i>L&ouml;schen</i>, und <b>NC sichern</b> legt <code>NAME.H</code> bzw.
+<code>NAME.MPF</code> in denselben Ordner statt in die Downloads &mdash; bei einer geteilten Diskettendatei alle Teile.
+Die App merkt sich den Ordner; beim n&auml;chsten Start fragt der Browser einmal nach der Erlaubnis
+(<i>Zugriff erlauben</i>), das ist seine Regel, nicht unsere. <i>Ordner l&ouml;sen</i> vergisst ihn, die Dateien bleiben.
+<b>Am iPhone</b> gibt es den Block nicht (Safari kennt keinen Ordnerzugriff), dort gilt weiter Teilen und Importieren.
+Sollform und Rohform eines STEP-Modells stehen NICHT in der Datei (wie bei jeder Ablage &mdash; nach dem Laden
+&bdquo;Sollform ans Programm&ldquo; neu dr&uuml;cken). Beide Apps d&uuml;rfen denselben Ordner nutzen, jede zeigt nur ihre
+Dateien (<code>.dreh.json</code> / <code>.fraes.json</code>).</p>
 
 <h3 id="ba-fk02-stand">Welche Fassung Du vor Dir hast &mdash; und wie sie sich erneuert</h3>
 <p>Oben im Kopf dieser Anleitung steht <b>Stand &lt;Datum Uhrzeit&gt;</b>. Das ist die Fassung, die
@@ -4553,6 +4582,205 @@ window.__fehlerMelden = function(quelle, e){
 })();
 </script>
 <script>
+// =====================================================================
+// PROJEKTORDNER: Programme als Dateien auf dem Rechner [26.09.2026,
+// Punkt 5 der Liste vom 25.09.]. Gemeinsames Modul beider Apps.
+//
+// WARUM: die Programme lebten nur im Browserspeicher (Fraesen) oder gar
+// nur in der Sitzung (Drehen: `programs` ist ein Array im Speicher, mit
+// dem Schliessen weg). Wer sie behalten wollte, lud eine .json herunter
+// und holte sie ueber "Importieren" zurueck - jedes Mal von Hand, jedes
+// Mal in den Downloads. Ein Projektordner ist der Ort, an dem die Dateien
+// eines Teils zusammenliegen: Zeichnung, STEP, Programm, NC. Genau dort
+// sollen sie hin, und von dort sollen sie wieder aufgehen.
+//
+// WIE: der Browser gibt am Laptop (Edge/Chrome) mit showDirectoryPicker
+// einen GRIFF auf einen Ordner; der Griff laesst sich in IndexedDB
+// merken und in der naechsten Sitzung wieder holen - dann fragt der
+// Browser einmal nach der Erlaubnis (requestPermission braucht einen
+// Klick). Safari am iPhone kennt das nicht: dort bleibt alles, wie es
+// war, und der ganze Block ist unsichtbar (Regel 3: unter 900 px kein
+// Pixel anders - der Block ist display:none, bis poVerfuegbar() ja sagt).
+//
+// JEDE Ein-/Ausgabe laeuft ueber den GRIFF als Parameter. Der Pruefstand
+// reicht einen Fake-Ordner (poFakeOrdner) hinein und misst die Logik
+// ohne Browser; die Browser-Szene nimmt denselben Fake und obendrein den
+// echten Weg ueber IndexedDB.
+//
+// Die App merkt sich den Griff je App getrennt (Schluessel 'dreh' /
+// 'fraes'): beide Apps liegen auf derselben Herkunft (GitHub Pages) und
+// duerfen denselben Ordner nutzen - jede sieht nur ihre Dateien, weil
+// die Endungen verschieden sind (.dreh.json / .fraes.json).
+// =====================================================================
+var PO = {app:'', griff:null, name:'', bereit:false};
+const PO_DB = 'dz-projektordner', PO_STORE = 'griffe';
+
+function poVerfuegbar(){
+  try{
+    return typeof window !== 'undefined' && typeof window.showDirectoryPicker === 'function' &&
+           typeof indexedDB !== 'undefined' && !!indexedDB;
+  }catch(e){ return false; }
+}
+// Ein Programmname wird ein Dateiname, den Windows und macOS nehmen:
+// die verbotenen Zeichen werden Unterstriche, Punkt und Leerzeichen am
+// Ende fallen weg (Windows legt "Name." als "Name" an), hoechstens 60
+// Zeichen, nie leer. Traegt der Name die Endung schon, kommt sie nicht
+// doppelt.
+function poDateiname(name, endung){
+  let s = String(name == null ? '' : name).replace(/[<>:"/\\|?*\u0000-\u001f]/g, '_').replace(/\s+/g, ' ').trim().replace(/[. ]+$/, '');
+  if(!s) s = 'Programm';
+  if(s.length > 60) s = s.slice(0, 60).replace(/[. ]+$/, '');
+  endung = endung || '';
+  if(endung && s.toLowerCase().endsWith(endung.toLowerCase())) return s;
+  return s + endung;
+}
+function poNameAusDatei(datei, endung){
+  const d = String(datei || '');
+  if(endung && d.toLowerCase().endsWith(String(endung).toLowerCase())) return d.slice(0, d.length - endung.length);
+  return d;
+}
+// Neueste zuerst; bei gleichem Datum nach Namen.
+function poSortieren(l){
+  return l.slice().sort((a, b) => ((b.datum || 0) - (a.datum || 0)) || String(a.name).localeCompare(String(b.name), 'de'));
+}
+function poDatumText(ms){
+  const d = new Date(ms || 0), z = n => (n < 10 ? '0' : '') + n;
+  return z(d.getDate()) + '.' + z(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + z(d.getHours()) + ':' + z(d.getMinutes());
+}
+function poGroesseText(b){
+  b = +b || 0;
+  return b < 1024 ? b + ' B' : (b < 1048576 ? Math.round(b / 1024) + ' kB' : (b / 1048576).toFixed(1) + ' MB');
+}
+// Fehlertexte in Worten, die auf dem Bildschirm etwas sagen. Ein
+// Abbruch durch den Bediener (Dialog weggeklickt) ist kein Fehler und
+// liefert einen leeren Text.
+function poFehlerText(e){
+  if(!e) return 'unbekannter Fehler';
+  if(e.name === 'AbortError') return '';
+  if(e.name === 'NotAllowedError' || e.name === 'SecurityError') return 'Zugriff auf den Ordner nicht erlaubt';
+  if(e.name === 'NotFoundError') return 'Datei oder Ordner nicht mehr da';
+  if(e.name === 'InvalidStateError') return 'der Ordner ist nicht mehr erreichbar (verschoben, umbenannt, Laufwerk weg)';
+  return e.message || String(e);
+}
+
+// --- Der Griff in IndexedDB (ueberlebt das Schliessen des Browsers) ---
+function poDb(){
+  return new Promise((res, rej) => {
+    const r = indexedDB.open(PO_DB, 1);
+    r.onupgradeneeded = () => { r.result.createObjectStore(PO_STORE); };
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error || new Error('IndexedDB'));
+  });
+}
+function poDbTx(art, tu){
+  return poDb().then(db => new Promise((res, rej) => {
+    const tx = db.transaction(PO_STORE, art), st = tx.objectStore(PO_STORE);
+    const q = tu(st);
+    tx.oncomplete = () => { db.close(); res(q && q.result); };
+    tx.onerror = () => { db.close(); rej(tx.error || new Error('IndexedDB')); };
+  }));
+}
+function poGriffMerken(app, griff){ return poDbTx('readwrite', st => st.put(griff, app)); }
+function poGriffHolen(app){ return poDbTx('readonly', st => st.get(app)); }
+function poGriffLoeschen(app){ return poDbTx('readwrite', st => st.delete(app)); }
+
+// --- Der Zustand: keiner / erlauben / bereit ---
+// poStart holt den gemerkten Griff. Ob er noch gilt, sagt queryPermission:
+// 'granted' = sofort bereit, 'prompt' = der Bediener muss einmal klicken
+// (poErlauben), sonst ist der Ordner nur gemerkt, nicht nutzbar.
+async function poStart(app){
+  PO.app = app; PO.griff = null; PO.name = ''; PO.bereit = false;
+  if(!poVerfuegbar()) return 'nicht verfuegbar';
+  let g = null;
+  try{ g = await poGriffHolen(app); }catch(e){ return 'keiner'; }
+  if(!g || typeof g.queryPermission !== 'function') return 'keiner';
+  PO.griff = g; PO.name = g.name || 'Ordner';
+  let p = 'prompt';
+  try{ p = await g.queryPermission({mode:'readwrite'}); }catch(e){ p = 'prompt'; }
+  PO.bereit = (p === 'granted');
+  return PO.bereit ? 'bereit' : 'erlauben';
+}
+async function poErlauben(){
+  if(!PO.griff) return false;
+  let p = 'denied';
+  try{ p = await PO.griff.requestPermission({mode:'readwrite'}); }catch(e){ p = 'denied'; }
+  PO.bereit = (p === 'granted');
+  return PO.bereit;
+}
+async function poWaehlen(app){
+  const g = await window.showDirectoryPicker({id:'dz-cam-' + app, mode:'readwrite'});
+  PO.app = app; PO.griff = g; PO.name = g.name || 'Ordner'; PO.bereit = true;
+  // Merken kann scheitern (IndexedDB gesperrt) - der Ordner gilt dann
+  // trotzdem fuer diese Sitzung, nur nicht fuer die naechste.
+  try{ await poGriffMerken(app, g); }catch(e){}
+  return g;
+}
+async function poLoesen(){
+  const app = PO.app;
+  PO.griff = null; PO.name = ''; PO.bereit = false;
+  try{ await poGriffLoeschen(app); }catch(e){}
+}
+
+// --- Dateien im Ordner. createWritable schreibt in eine Hilfsdatei und
+//     tauscht beim close - eine halb geschriebene Datei gibt es nicht.
+async function poSchreiben(griff, datei, text){
+  const fh = await griff.getFileHandle(datei, {create:true});
+  const w = await fh.createWritable();
+  await w.write(text);
+  await w.close();
+  return datei;
+}
+async function poLesen(griff, datei){
+  const fh = await griff.getFileHandle(datei);
+  const f = await fh.getFile();
+  return await f.text();
+}
+async function poLoeschen(griff, datei){ await griff.removeEntry(datei); }
+// Nur Dateien mit der Endung dieser App; Unterordner werden nicht
+// durchsucht (ein Projektordner ist flach, und wer verschachtelt, waehlt
+// den Unterordner).
+async function poListe(griff, endung){
+  const l = [], e = String(endung || '').toLowerCase();
+  for await (const [n, h] of griff.entries()){
+    if(!h || h.kind !== 'file') continue;
+    if(e && !n.toLowerCase().endsWith(e)) continue;
+    let f = null;
+    try{ f = await h.getFile(); }catch(x){ continue; }
+    l.push({datei:n, name:e ? n.slice(0, n.length - e.length) : n, datum:f.lastModified, groesse:f.size});
+  }
+  return poSortieren(l);
+}
+
+// --- Ein Ordner im Speicher mit derselben Schnittstelle, fuer Pruefstand
+//     und Browser-Szene. Er tut, was der echte tut: schreiben, lesen,
+//     auflisten, loeschen - und er merkt sich das Datum jeder Datei.
+function poFakeOrdner(name){
+  const dateien = {};
+  let uhr = 1000;
+  const griff = {
+    kind:'directory', name:name || 'Fake',
+    queryPermission(){ return Promise.resolve('granted'); },
+    requestPermission(){ return Promise.resolve('granted'); },
+    getFileHandle(n, opt){
+      if(!dateien[n] && !(opt && opt.create)){ const e = new Error('kein ' + n); e.name = 'NotFoundError'; return Promise.reject(e); }
+      if(!dateien[n]) dateien[n] = {text:'', datum:uhr++};
+      const fh = {
+        kind:'file', name:n,
+        getFile(){ const d = dateien[n]; return Promise.resolve({name:n, lastModified:d.datum, size:d.text.length, text(){ return Promise.resolve(d.text); }}); },
+        createWritable(){ let puffer = ''; return Promise.resolve({write(t){ puffer += String(t); return Promise.resolve(); }, close(){ dateien[n] = {text:puffer, datum:uhr++}; return Promise.resolve(); }}); },
+      };
+      return Promise.resolve(fh);
+    },
+    removeEntry(n){ if(!dateien[n]){ const e = new Error('kein ' + n); e.name = 'NotFoundError'; return Promise.reject(e); } delete dateien[n]; return Promise.resolve(); },
+    entries(){
+      const es = Object.keys(dateien).map(n => [n, {kind:'file', name:n, getFile(){ const d = dateien[n]; return Promise.resolve({name:n, lastModified:d.datum, size:d.text.length, text(){ return Promise.resolve(d.text); }}); }}]);
+      let i = 0;
+      return {[Symbol.asyncIterator](){ return this; }, next(){ return Promise.resolve(i < es.length ? {value:es[i++], done:false} : {value:undefined, done:true}); }};
+    },
+    _dateien:dateien,
+  };
+  return griff;
+}
 // =====================================================================
 // DZ CAM · FRAESEN — KERN (DOM-frei)
 // ---------------------------------------------------------------------
@@ -18551,7 +18779,7 @@ function fArbeitsplanRender(){
       const d = b.dataset;
       if(d.start){
         if(d.start === 'weiter'){ const L = fLetzterStand(); if(L){ fProgrammSetzen(L.prog); melde('Weiter mit ' + L.prog.kopf.name + '.'); } }
-        else if(d.start === 'vorlagen'){ fProgListe(); fVorlagenListe(); setVal('pmSaveName', fProg.kopf.name); maskZeigen('maskProgramme'); }
+        else if(d.start === 'vorlagen'){ fProgListe(); fVorlagenListe(); try{ fPoZeigen(); }catch(e){} setVal('pmSaveName', fProg.kopf.name); maskZeigen('maskProgramme'); }
         else if(d.start === 'step'){ maskZeigen('maskStep'); setTimeout(()=>{ try{ fStepBericht(); fStepPlanMalen(); fStepZeichnen(); }catch(e){} }, 0); }
         else if(d.start === 'kopf'){ fKopfOeffnen(); }
         return;
@@ -19783,7 +20011,7 @@ function fZyklusWahlOeffnen(grpId){
   on('skMuster', ()=>fMusterOeffnen(null));
   on('skKontur', ()=>fKonturOeffnen(null));
   on('hskTools', ()=>{ fWzListe(); maskZeigen('maskWerkzeuge'); });
-  on('hskProgs', ()=>{ fProgListe(); fVorlagenListe(); setVal('pmSaveName', fProg.kopf.name); maskZeigen('maskProgramme'); });
+  on('hskProgs', ()=>{ fProgListe(); fVorlagenListe(); try{ fPoZeigen(); }catch(e){} setVal('pmSaveName', fProg.kopf.name); maskZeigen('maskProgramme'); });
   on('hskGcode', ()=>{ maskZeigen('maskGcode'); fNcErzeugen(); });
   const col = document.getElementById('skZyklen');
   if(col && col.addEventListener) col.addEventListener('click', (e)=>{
@@ -20075,9 +20303,13 @@ function fAmpelZeigen(){
     // Passt das Programm nicht auf eine Diskette, hat der Schreiber es an
     // Schrittgrenzen geteilt — dann muessen ALLE Teile heraus, sonst
     // fehlt an der Maschine die zweite Haelfte.
-    if(r.teile && r.teile.length > 1){
-      r.teile.forEach((t, i) => setTimeout(() => exportiereDatei(t.datei, t.text, 'Teil ' + (i + 1) + ' von ' + r.teile.length), i * 400));
-      melde(r.teile.length + ' Teildateien: ' + r.teile.map(t => t.datei).join(', ') + ' — nacheinander abfahren.');
+    const teile = (r.teile && r.teile.length > 1) ? r.teile : [{datei:r.datei, text:r.text}];
+    // PROJEKTORDNER [26.09.2026]: liegt einer bereit, gehen die Dateien dorthin
+    // statt in die Downloads - neben Programm, Zeichnung und STEP des Teils.
+    if(typeof PO !== 'undefined' && PO.bereit && PO.griff){ fPoNcSichern(teile); return; }
+    if(teile.length > 1){
+      teile.forEach((t, i) => setTimeout(() => exportiereDatei(t.datei, t.text, 'Teil ' + (i + 1) + ' von ' + teile.length), i * 400));
+      melde(teile.length + ' Teildateien: ' + teile.map(t => t.datei).join(', ') + ' — nacheinander abfahren.');
       return;
     }
     exportiereDatei(r.datei, r.text, 'NC-Programm');
@@ -20133,6 +20365,73 @@ function fStand(){
 }
 
 function fProgLesen(){ try{ const r = localStorage.getItem(F_SLOT_PROG); const a = r ? JSON.parse(r) : []; return Array.isArray(a) ? a : []; }catch(e){ return []; } }
+
+// PROJEKTORDNER (26.09.2026): die Dateiform ist dieselbe wie bei "Als Datei
+// sichern" - eine Quelle fuer Download, Import und Ordner.
+const F_PO_ENDUNG = '.fraes.json';
+function fPoDateiObjekt(name){ return {typ:'dzcam-fraesen', version:fStand(), programme:[{name:name || fProg.kopf.name, prog:fProg, datum:new Date().toISOString().slice(0, 10)}]}; }
+// Aus einem Dateiobjekt das erste Programm - oder null, wenn es keins ist.
+function fPoAusObjekt(d){
+  if(!d) return null;
+  const l = Array.isArray(d) ? d : (d.programme || (d.kopf ? [{name:d.kopf.name, prog:d}] : []));
+  const e = l.find(x => x && x.prog && x.prog.kopf);
+  return e ? {name:e.name, prog:JSON.parse(JSON.stringify(e.prog))} : null;
+}
+function fPoZeigen(){
+  const bl = document.getElementById('poBlock'); if(!bl) return;
+  if(!poVerfuegbar()){ bl.style.display = 'none'; return; }
+  bl.style.display = '';
+  const st = document.getElementById('poStatus'), bE = document.getElementById('btnPoErlauben'), bL = document.getElementById('btnPoLoesen'),
+        li = document.getElementById('poListe'), le = document.getElementById('poLeer'), bS = document.getElementById('btnProgSave');
+  if(!PO.griff){
+    st.textContent = 'Kein Projektordner gewaehlt - "Speichern" legt das Programm im Browserspeicher ab.';
+    bE.style.display = 'none'; bL.style.display = 'none'; li.style.display = 'none'; le.style.display = 'none';
+  } else if(!PO.bereit){
+    st.textContent = 'Projektordner "' + PO.name + '" gemerkt - Zugriff fuer diese Sitzung erneut erlauben (der Browser fragt einmal).';
+    bE.style.display = ''; bL.style.display = ''; li.style.display = 'none'; le.style.display = 'none';
+  } else {
+    st.textContent = 'Projektordner "' + PO.name + '" - Speichern schreibt NAME' + F_PO_ENDUNG + ', NC sichern legt NAME' + fEndung(fProg.kopf) + ' daneben.';
+    bE.style.display = 'none'; bL.style.display = '';
+    fPoListeMalen();
+  }
+  if(bS) bS.innerHTML = PO.bereit ? '&#x1F4BE; Speichern im Projektordner' : '&#x1F4BE; Speichern (Browserspeicher)';
+  // Der Satz unter dem Knopf muss zum Knopf passen - im Browser gesehen (Szene F3, 26.09.2026):
+  // 'bleibt in diesem Browser' unter 'Speichern im Projektordner'.
+  const hinweis = bS && bS.parentElement ? bS.parentElement.querySelector('div') : null;
+  if(hinweis) hinweis.textContent = PO.bereit ? 'schreibt NAME' + F_PO_ENDUNG + ' in den Projektordner "' + PO.name + '"' : 'bleibt in diesem Browser — geräteübergreifend: als Datei sichern oder Projektordner wählen';
+}
+async function fPoSpeichern(){
+  const name = getStr('pmSaveName').trim() || fProg.kopf.name;
+  const datei = poDateiname(name, F_PO_ENDUNG);
+  try{ await poSchreiben(PO.griff, datei, JSON.stringify(fPoDateiObjekt(name), null, 1)); melde('Im Projektordner gespeichert: ' + datei); fPoListeMalen(); }
+  catch(e){ const f = poFehlerText(e); if(f) melde('FEHLER: Speichern im Projektordner - ' + f); }
+}
+async function fPoListeMalen(){
+  const li = document.getElementById('poListe'), body = document.getElementById('poBody'), le = document.getElementById('poLeer');
+  if(!li || !body || !le) return;
+  let l = [];
+  try{ l = await poListe(PO.griff, F_PO_ENDUNG); }
+  catch(e){ li.style.display = 'none'; le.textContent = 'Ordner nicht lesbar: ' + (poFehlerText(e) || '?'); le.style.display = ''; return; }
+  li.style.display = l.length ? '' : 'none'; le.style.display = l.length ? 'none' : '';
+  le.textContent = 'Noch kein Programm im Ordner - "Speichern" legt das erste an.';
+  body.innerHTML = l.map(e => '<tr><td><b>' + esc(e.name) + '</b></td><td style="font-size:11px;color:var(--text-dim);">' + poDatumText(e.datum) + ' &middot; ' + poGroesseText(e.groesse) + '</td>' +
+    '<td><button class="gcbtn" data-poload="' + esc(e.datei) + '">Laden</button></td><td><button class="gcbtn" data-podel="' + esc(e.datei) + '">&#x2715;</button></td></tr>').join('');
+}
+async function fPoLaden(datei){
+  try{
+    const e = fPoAusObjekt(JSON.parse(await poLesen(PO.griff, datei)));
+    if(!e){ melde('FEHLER: ' + datei + ' ist kein Programm dieser App.'); return; }
+    fProgrammSetzen(e.prog, 'Aus dem Projektordner: ' + e.name); maskZu('maskProgramme');
+  }catch(x){ const f = poFehlerText(x); if(f) melde('FEHLER: Laden aus dem Projektordner - ' + f); }
+}
+async function fPoNcSichern(teile){
+  const fertig = [];
+  for(const t of teile){
+    try{ await poSchreiben(PO.griff, t.datei, t.text); fertig.push(t.datei); }
+    catch(e){ const f = poFehlerText(e); melde('FEHLER: Projektordner - ' + (f || '?') + ' - Download stattdessen.'); exportiereDatei(t.datei, t.text, 'NC-Programm'); }
+  }
+  if(fertig.length) melde('Im Projektordner: ' + fertig.join(', ') + (fertig.length > 1 ? ' — nacheinander abfahren.' : ''));
+}
 function fProgSchreiben(l){ try{ localStorage.setItem(F_SLOT_PROG, JSON.stringify(l)); return true; }catch(e){ return false; } }
 function fProgListe(){
   const body = document.getElementById('progBody'), leer = document.getElementById('progLeer'), liste = document.getElementById('progListe');
@@ -20145,6 +20444,8 @@ function fProgListe(){
 {
   const on = (id, fn) => { const e = document.getElementById(id); if(e) e.onclick = fn; };
   on('btnProgSave', ()=>{
+    // PROJEKTORDNER [26.09.2026]: ist ein Ordner bereit, geht das Programm als Datei dorthin.
+    if(typeof PO !== 'undefined' && PO.bereit && PO.griff){ fPoSpeichern(); return; }
     const name = getStr('pmSaveName').trim() || fProg.kopf.name;
     const l = fProgLesen(); const e = {name:name, prog:JSON.parse(JSON.stringify(fProg)), datum:new Date().toISOString().slice(0, 10)};
     const i = l.findIndex(x => x.name === name); if(i >= 0) l[i] = e; else l.push(e);
@@ -20176,6 +20477,22 @@ function fProgListe(){
     };
     rd.readAsText(f);
   });
+
+  // =====================================================================
+  // PROJEKTORDNER [26.09.2026, Punkt 5]: Programme und NC als Dateien.
+  // Kern in 06-projektordner.js, hier die Verdrahtung. Am iPhone bleibt
+  // der Block unsichtbar (poVerfuegbar false), s. Markup.
+  // =====================================================================
+  on('btnPoWahl', ()=>poWaehlen('fraes').then(fPoZeigen).catch(x=>{ const f = poFehlerText(x); if(f) melde('Ordner waehlen: ' + f); }));
+  on('btnPoErlauben', ()=>poErlauben().then(fPoZeigen));
+  on('btnPoLoesen', ()=>poLoesen().then(fPoZeigen));
+  { const pb = document.getElementById('poBody');
+    if(pb && pb.addEventListener) pb.addEventListener('click', (e)=>{
+      const b = e.target && e.target.closest ? e.target.closest('button') : null; if(!b) return;
+      if(b.dataset.poload !== undefined) fPoLaden(b.dataset.poload);
+      if(b.dataset.podel !== undefined) zweiklickBestaetigen(b, 'Wirklich?', ()=>{ poLoeschen(PO.griff, b.dataset.podel).then(fPoListeMalen).catch(x=>{ const f = poFehlerText(x); if(f) melde(f); }); });
+    }); }
+  if(poVerfuegbar()) poStart('fraes').then(()=>{ try{ fPoZeigen(); }catch(e){} }).catch(()=>{});
   on('btnProgNew', ()=>{ const p = fProgrammNeu(); p.werkzeuge = JSON.parse(JSON.stringify(fProg.werkzeuge)); fProgrammSetzen(p, 'Neues leeres Programm — Werkzeugtabelle uebernommen.'); maskZu('maskProgramme'); });
   on('btnCloseProgs', ()=>maskZu('maskProgramme'));
 }
