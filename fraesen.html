@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="26.09.2026 08:56 (98e35441)";</script>
+<script>window.__DZ_STAND="26.09.2026 10:37 (a5b8d893)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3459,9 +3459,38 @@ Werkzeugwechseln geordnet und wird nicht umsortiert. Die Meldung nennt die <b>Za
 eingewechselt, steht auch das da (das ist der Preis der Reihenfolge, kein Fehler).
 <br><br><b>Ein vorhandenes Programm wird ERSETZT</b> &mdash; aber erst beim zweiten Druck, und die Meldung sagt es vorher. Die zwei
 Einzelknöpfe bleiben f&uuml;r den Fall, dass Du nur die Bohrungen oder nur die Fl&auml;chen willst.
-<br><br><b>Was der Planer nicht tut</b> (und in jeder Meldung sagt): Taschen, Nuten und Zapfen als eigene Zyklen &mdash; das Modell wird als
-Ganzes abgespant &mdash;, Gewindefr&auml;sen, Senkungen ohne Gewinde und die <b>zweite Aufspannung</b>. Der Vorschlag ist ein
+<br><br><b>Was der Planer nicht tut</b> (und in jeder Meldung sagt): offene Abs&auml;tze und mehrere Zapfen in einem Absatz als eigene Zyklen
+(die bleiben beim Abspanen), Gewindefr&auml;sen, Senkungen ohne Gewinde und die <b>zweite Aufspannung</b>. Taschen, Nuten und Zapfen
+legt er seit dem 26.09.2026 als eigene Zyklen an (n&auml;chster Absatz). Der Vorschlag ist ein
 <b>Vorschlag</b>: durchsehen, die Schnittwerte pr&uuml;fen, simulieren.</dd>
+<dt id="ba-fk05c-merkmale">Merkmale &mdash; Taschen, Nuten und Zapfen als eigene Zyklen (26.09.2026)</dt><dd>Das Abspanen nimmt das Grobe
+und l&auml;sst an jeder Wand den Werkzeugradius stehen. Was am Teil eine <b>Tasche</b> ist, bekommt seither <b>ihren Zyklus</b> mit dem
+passenden Werkzeug &mdash; der liefert die exakten W&auml;nde und Ecken, die das Abspanen nicht kann. Der Planer liest daf&uuml;r die
+<b>B&ouml;den</b> des Modells: jede waagerechte Fl&auml;che unter der Oberkante, deren Rand <b>ringsum</b> von h&ouml;herem Material umgeben ist,
+ist eine geschlossene Tasche. Die Form des Randes entscheidet:
+<br><b>Kreis</b> &rarr; Kreistasche 252 &middot; <b>achsparalleles Rechteck</b> (mit gleichen Eckenradien oder ohne) &rarr; Rechtecktasche 251 &middot;
+<b>zwei Geraden mit zwei Halbkreisen</b> &rarr; Nut 253 &middot; <b>alles andere</b>, und jede Tasche mit <b>Insel</b> &rarr; SL-R&auml;umen 14/20/22 auf der
+Kontur des Bodens (die Konturen liegen danach im Kontureditor: <i>Tasche n (Merkmal Z&hellip;)</i> und <i>Insel n.m</i>).
+Ein Boden, der zum Rand hin <b>offen</b> ist (Absatz), bleibt beim Abspanen &mdash; seine W&auml;nde macht <i>B&ouml;den &amp; W&auml;nde schlichten</i>.
+Steht in einem offenen Absatz <b>genau eine</b> Insel mit Kreis- oder Rechteckform, ist sie ein <b>Zapfen</b> (257/256); das Rohteilma&szlig;
+des Zyklus ist die Ausdehnung des Absatzes um die Zapfenmitte. Ein runder Boden, der eine erkannte <b>Bohrung</b> ist, geh&ouml;rt dem Bohrplan
+und wird hier &uuml;bersprungen.
+<br><b>Das Werkzeug</b> ist der gr&ouml;&szlig;te Schaftfr&auml;ser mit Eintauchwinkel, der samt Aufma&szlig; hineinpasst: in der Kreistasche der halbe
+Durchmesser, in der Nut die halbe Breite (gleich breit w&auml;re ein Langloch), im Rechteck die halbe Breite und der Eckenradius (gleich gro&szlig;
+ist erlaubt), in der Konturtasche der gr&ouml;&szlig;te einbeschriebene Kreis zwischen Wand und Inseln. Hat die Konturtasche <b>Ecken enger als
+dieses Werkzeug</b> (scharfe Ecken, oder die Insel hat den gro&szlig;en Fr&auml;ser erzwungen), folgt ein zweiter SL-Schritt
+<b>Ecken nachr&auml;umen</b> mit dem kleinsten passenden Fr&auml;ser; <b>Q18</b> nennt der Steuerung das Vorr&auml;um-Werkzeug, sie f&auml;hrt dann nur, was
+der gro&szlig;e lie&szlig;. Passt kein Fr&auml;ser, wird das Merkmal <b>genannt</b> und bleibt beim Abspanen.
+<br>Jeder Zyklus beginnt an der <b>h&ouml;chsten umgebenden Fl&auml;che</b> und endet am Boden &mdash; bei ungleich hohen W&auml;nden schneidet er
+oben Luft, aber nie in eine Stufe, die das Abspanen noch nicht ge&ouml;ffnet hat. Die Merkmalzyklen stehen in Phase 2 <b>hinter dem
+Abspanen</b> und vor dem Bohren.
+<br><b>Gemessen</b> am Pr&uuml;fk&ouml;rper <i>merkmalplatte-120x80.step</i> (Kreistasche &empty;30, Rechtecktasche 40&times;24 R5, Nut 40&times;10,
+Rechtecktasche 35&times;30 mit Insel &empty;8, Absatz mit Rechteckzapfen 12&times;10, dazu ein Sackloch M10, das dem Bohrplan bleibt): Restmaterial nach dem Abspanen 1090 mm&sup2;, mit den
+Merkmalzyklen 13 mm&sup2; &mdash; der Rest ist der Werkzeugradius in scharfen Ecken. Keine Kollision in der eigenen Simulation.
+<br><b>Grenzen, ehrlich:</b> ein Boden aus mehreren Teilfl&auml;chen wird vereint, wenn die Naht eine <b>gemeinsame Kante</b> ist (gleiche Endpunkte);
+teilen zwei Fl&auml;chen eine Kante nur teilweise, bleibt der Boden ein Absatz. Ein gedrehtes Rechteck wird eine Konturtasche (der Zyklus 251
+mit Drehlage wird nicht geraten). Zwei Zapfen in einem Absatz bleiben beim Abspanen (der erste Zapfenzyklus fr&auml;ste den zweiten weg).
+Am Programmierplatz und an der Maschine ist davon nichts gelaufen.</dd>
 <dt id="ba-fk05c-flaechen">Fl&auml;chen &mdash; planen, abspanen, schlichten</dt><dd>Der Knopf <b>Fl&auml;chen &uuml;bernehmen</b> leitet aus dem Modell ab, was am
 Werkst&uuml;ck fl&auml;chig zu tun ist, und legt es <b>vor den Bohrungen</b> an &mdash; in eine ungeplante Fl&auml;che zu bohren hie&szlig;e schr&auml;g anbohren, und wer
 erst bohrt und dann abspant, f&auml;hrt mit dem Fr&auml;ser durch die fertigen L&ouml;cher. Die Reihenfolge ist Daniels: vom Groben zum Feinen.
@@ -3482,8 +3511,9 @@ schneidet, und sagt warum. Das Aufma&szlig; z&auml;hlt dabei mit: in einen 14 mm
 <br><b>Welches Werkzeug, entscheidet die Tabelle &mdash; &uuml;ber ihre Zahlen, nicht &uuml;ber die Namen:</b> ein Kugelfr&auml;ser tr&auml;gt den Eckenradius
 R2 = halber Durchmesser, ein Werkzeug mit <b>ANGLE &gt; 0</b> darf eintauchen (das Abspanen taucht senkrecht ein und braucht es), zum Planen reicht
 der gr&ouml;&szlig;te Nicht-Kugel-Fr&auml;ser. Eine eingelesene TOOL.T mit fremder Beschriftung findet damit genauso ihre Werkzeuge.
-<br><b>Was die App hier nicht tut:</b> Taschen und Konturen als eigene Zyklen ableiten (die Bahn <i>Modell abspanen</i> r&auml;umt sie mit, und was ihr
-Werkzeug nicht erreicht, steht in ihrem Restmaterialbericht) und die Reihenfolge nach Werkzeugen zusammenfassen.</dd>
+<br><b>Was die App hier nicht tut:</b> die Reihenfolge nach Werkzeugen zusammenfassen. Taschen, Nuten und Zapfen bekommen ihre eigenen Zyklen
+&uuml;ber <i>Programm vorschlagen</i> (Absatz <i>Merkmale</i>) &mdash; die Bahn <i>Modell abspanen</i> r&auml;umt sie vorher mit, und was ihr Werkzeug nicht
+erreicht, steht in ihrem Restmaterialbericht.</dd>
 <dt id="ba-fk05c-bohrungen">Bohrungen &mdash; aus dem Modell in den Arbeitsplan</dt><dd>Der Knopf <b>Bohrungen &uuml;bernehmen</b> liest die Bohrungen des Modells
 und legt sie als Bohrbilder mit ihren Schritten an: <b>ein Zentrierschritt &uuml;ber alle Stellen</b> (ein Werkzeug, ein Bohrbild &mdash; das spart Wechsel),
 danach je Durchmesser ein Schritt, <b>gr&ouml;&szlig;ter zuerst</b>. Der Bericht unter dem Bild sagt vorher, was gefunden wurde.
@@ -4393,7 +4423,7 @@ nicht belegt. Es fehlt eine echte .MPF, ein Lauf und die f&uuml;nfachsige Bahn.<
      man konnte ihr nicht ansehen, wie alt sie ist. Wer hier ein Kapitel
      aendert, zieht das Datum mit; der Pruefstand vergleicht es gegen das
      juengste Datum im Text. -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 23.09.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 26.09.2026. Sie
 wird mit jedem Paket mitgeschrieben &mdash; wer eine Funktion baut oder erweitert,
 schreibt ihren Absatz mit. Findest Du hier eine Aussage, die die App nicht mehr
 einl&ouml;st, ist das ein Fehler und geh&ouml;rt gemeldet.</p>
@@ -9221,7 +9251,324 @@ function fPlanPhase(art){
   if(art === 'modellSchlichten' || art === 'modellSchlichtenEben') return 4;
   const z = F_ZYKLEN[art] || {};
   if(z.fraes && !z.gewf) return 2;                 // Taschen, Nuten, Zapfen
+  if(z.sl || art === 'konturzug') return 2;        // Konturtaschen (Merkmale)
   return 3;                                        // alles Bohrende
+}
+
+// =====================================================================
+// MERKMALE [26.09.2026, Punkt 3 der Liste vom 25.09.: "Merkmale statt
+// 'Modell als Ganzes' - Taschen, Nuten, Zapfen, Absaetze als eigene
+// Bearbeitungen mit eigenem Werkzeug"]. Bis hierher spante der Planer das
+// Modell als Ganzes ab und setzte mit kleineren Fraesern nach; eine Tasche
+// bekam nie ihren Zyklus. Jetzt liest er die BOEDEN:
+//   Jede waagerechte Flaeche unter der Oberkante, deren Rand RINGSUM von
+//   hoeherem Material umgeben ist, ist eine geschlossene Tasche. Die Form
+//   des Randes entscheidet den Zyklus: Kreis -> Kreistasche 252, Rechteck
+//   (achsparallel, gleiche Eckenradien) -> Rechtecktasche 251, zwei Geraden
+//   mit zwei Halbkreisen -> Nut 253, alles andere -> SL-Raeumen 14/20/22
+//   auf der Kontur. Loecher im Boden, in denen das Material hoeher steht,
+//   sind INSELN - dann ist es immer eine Konturtasche mit Inseln (ein 251
+//   fraeste die Insel weg).
+//   Ein Boden, dessen Rand irgendwo NICHT von Material umgeben ist
+//   (Absatz, offene Tasche zum Rand), bleibt beim Abspanen - das kann der
+//   Modell-Schritt, ein Taschenzyklus nicht.
+// Der Zyklus beginnt an der HOECHSTEN umgebenden Flaeche (q203) - bei
+// ungleich hohen Waenden schneidet er oben Luft, aber nie in eine Stufe,
+// die das Abspanen noch nicht geoeffnet hat. Das Abspanen laeuft weiter
+// ueber das ganze Teil; der Taschenzyklus liefert danach die exakten Waende
+// und Ecken mit dem passenden Werkzeug.
+// Die Bohrungen gehoeren dem Bohrplan: ein runder Boden, der eine
+// erkannte Bohrung ist, wird hier uebersprungen.
+// =====================================================================
+// Die Form eines geschlossenen Randes: kreis | rechteck (r) | nut | kontur
+function fKonturForm(kt){
+  const P = fKonturPolygon(kt); if(!P || P.length < 3) return null;
+  let cx = 0, cy = 0; P.forEach(p => { cx += p[0]; cy += p[1]; }); cx /= P.length; cy /= P.length;
+  let x0 = 1e18, x1 = -1e18, y0 = 1e18, y1 = -1e18;
+  P.forEach(p => { if(p[0] < x0) x0 = p[0]; if(p[0] > x1) x1 = p[0]; if(p[1] < y0) y0 = p[1]; if(p[1] > y1) y1 = p[1]; });
+  const bb = {x0, y0, x1, y1, w:x1 - x0, h:y1 - y0, cx:(x0 + x1) / 2, cy:(y0 + y1) / 2};
+  const el = kt.elemente || [];
+  let g = []; const b = [], folge = []; let px = kt.x0, py = kt.y0;
+  el.forEach(e => {
+    if(e.typ === 'g'){ const q = {dx:e.x - px, dy:e.y - py, l:Math.hypot(e.x - px, e.y - py)}; g.push(q); folge.push(q); px = e.x; py = e.y; }
+    else if(e.typ === 'b'){ b.push({r:+e.r}); folge.push('b'); px = e.x; py = e.y; }
+    else if(e.typ === 'k'){ b.push({r:Math.hypot(kt.x0 - e.x, kt.y0 - e.y), voll:true}); folge.push('k'); }
+    else { px = e.x != null ? e.x : px; py = e.y != null ? e.y : py; }
+  });
+  // Aufeinanderfolgende KOLLINEARE Geraden sind EINE Seite - ein CAD-Zug
+  // beginnt gern mitten auf einer Seite (dann sind erste und letzte Gerade
+  // dieselbe), oder es teilt eine Seite an einer fremden Kante.
+  if(folge.length > 1){
+    const koll = (p, q) => p !== 'b' && p !== 'k' && q !== 'b' && q !== 'k' && p.l > 1e-9 && q.l > 1e-9 && Math.abs(p.dx * q.dy - p.dy * q.dx) < 1e-6 * p.l * q.l && (p.dx * q.dx + p.dy * q.dy) > 0;
+    let i = 0;
+    while(i < folge.length && folge.length > 1){
+      const p = folge[i], q = folge[(i + 1) % folge.length];
+      if(koll(p, q)){ p.dx += q.dx; p.dy += q.dy; p.l = Math.hypot(p.dx, p.dy); folge.splice((i + 1) % folge.length, 1); if((i + 1) % folge.length === 0) i = 0; }
+      else i++;
+    }
+    g = folge.filter(x => x !== 'b' && x !== 'k');
+  }
+  // Kreis: alle Punkte gleich weit von der Mitte des Huellrechtecks
+  const rs = P.map(p => Math.hypot(p[0] - bb.cx, p[1] - bb.cy));
+  const rMin = Math.min(...rs), rMax = Math.max(...rs);
+  if(!g.length && b.length && rMax - rMin < 0.05 && Math.abs(bb.w - bb.h) < 0.05)
+    return {form:'kreis', cx:fRund(bb.cx), cy:fRund(bb.cy), d:fRund(2 * (rMin + rMax) / 2), bb};
+  const achs = g.every(s => Math.abs(s.dx) < 0.01 || Math.abs(s.dy) < 0.01);
+  const rGleich = b.length ? b.every(q => Math.abs(q.r - b[0].r) < 0.02) : true;
+  // Nut: zwei parallele Geraden, zwei Halbkreise mit r = halbe Breite
+  if(g.length === 2 && b.length === 2 && achs && rGleich && Math.abs(2 * b[0].r - Math.min(bb.w, bb.h)) < 0.05)
+    return {form:'nut', cx:fRund(bb.cx), cy:fRund(bb.cy), l1:fRund(Math.max(bb.w, bb.h)), l2:fRund(Math.min(bb.w, bb.h)), dreh:(bb.w >= bb.h) ? 0 : 90, bb};
+  // Rechteck, achsparallel, mit oder ohne gleiche Eckenradien
+  if(g.length === 4 && achs && (b.length === 0 || (b.length === 4 && rGleich)))
+    return {form:'rechteck', cx:fRund(bb.cx), cy:fRund(bb.cy), l1:fRund(bb.w), l2:fRund(bb.h), r:fRund(b.length ? b[0].r : 0), bb};
+  return {form:'kontur', cx:fRund(cx), cy:fRund(cy), bb};
+}
+// Groesster einbeschriebener Kreis einer Begrenzung, auf dem Raster von F
+function fBereichRadiusF(F, polys){
+  if(!F || !polys || !polys.length) return null;
+  const m = fGebietMaske(F, polys);
+  const n = F.nx * F.ny, aus = new Uint8Array(n);
+  for(let c = 0; c < n; c++) if(!m[c]) aus[c] = 1;
+  let drin = 0; for(let c = 0; c < n; c++) if(m[c]) drin++;
+  if(!drin) return {r:0, zellen:0};
+  const d2 = new Float64Array(n);
+  fEdt(aus, F.nx, F.ny, d2);
+  let best = 0;
+  for(let c = 0; c < n; c++) if(m[c] && d2[c] > best) best = d2[c];
+  return {r:Math.sqrt(best) * F.raster, zellen:drin};
+}
+// Alle Merkmale eines ausgerichteten Modells A ueber seiner Sollform F.
+// Die Boeden EINER Ebene zu Regionen vereinen. Ein CAD teilt einen Boden
+// manchmal in Teilflaechen (die T-Tasche des Pruefkoerpers: Hauptfeld und
+// Finger sind zwei Flaechen auf derselben Hoehe). Eine gerade Kante, die
+// in zwei Teilflaechen gegenlaeufig vorkommt, ist eine NAHT und faellt weg;
+// was bleibt, wird zu geschlossenen Zuegen verkettet. Ein Zug, der in einem
+// anderen liegt, ist dessen Loch. Nur Boeden mit Normale nach OBEN zaehlen
+// (die Aussparung in einer Unterseite ist von hier nicht zu fraesen).
+// Kanten, die nur teilweise aufeinanderliegen, loest das NICHT auf - dann
+// bleibt ein offener Zug, und der Boden gilt als offen (bleibt beim Abspanen).
+function fEbeneRegionen(e){
+  const key = p => fRund(p[0]) + ',' + fRund(p[1]);
+  const segs = [];
+  e.flaechen.forEach(f => {
+    if(f.achse && f.achse[2] < 0.5) return;
+    (f.rand || []).forEach(lo => {
+      const R = fStepKontur(lo, 'x'); if(!R) return;
+      let px = R.kontur.x0, py = R.kontur.y0;
+      (R.kontur.elemente || []).forEach(el => {
+        if(el.typ === 'k'){ segs.push({a:[px, py], e:[px, py], el, voll:true, loch:lo.aussen === false}); return; }
+        const ex = el.x != null ? el.x : px, ey = el.y != null ? el.y : py;
+        segs.push({a:[px, py], e:[ex, ey], el, loch:lo.aussen === false}); px = ex; py = ey;
+      });
+    });
+  });
+  const weg = new Set();
+  for(let i = 0; i < segs.length; i++){ if(weg.has(i) || segs[i].el.typ !== 'g') continue;
+    for(let j = i + 1; j < segs.length; j++){ if(weg.has(j) || segs[j].el.typ !== 'g') continue;
+      if(key(segs[i].a) === key(segs[j].e) && key(segs[i].e) === key(segs[j].a)){ weg.add(i); weg.add(j); break; } } }
+  const rest = segs.filter((q, i) => !weg.has(i)), zuege = []; let offen = 0;
+  while(rest.length){
+    const l = [rest.shift()];
+    if(l[0].voll){ zuege.push(l); continue; }
+    let g = 0;
+    while(key(l[l.length - 1].e) !== key(l[0].a) && g++ < 100000){
+      const k = key(l[l.length - 1].e); const j = rest.findIndex(q => key(q.a) === k);
+      if(j < 0) break; l.push(rest.splice(j, 1)[0]);
+    }
+    if(key(l[l.length - 1].e) === key(l[0].a)) zuege.push(l); else offen++;
+  }
+  // Loch oder Rand: das sagt die FACE_BOUND des Modells (lo.aussen); nur wo
+  // sie fehlt, entscheidet die Lage (in einem groesseren Zug = Loch).
+  const kts = zuege.map(l => ({kontur:{name:'Boden', geschlossen:true, x0:l[0].a[0], y0:l[0].a[1], elemente:l.map(q => q.el)}, loch:l.every(q => q.loch), rand:l.every(q => q.loch === false)}));
+  kts.forEach(k => { k.P = fKonturPolygon(k.kontur) || []; let a = 0; for(let i = 0; i < k.P.length; i++){ const p = k.P[i], q = k.P[(i + 1) % k.P.length]; a += p[0] * q[1] - q[0] * p[1]; } k.A = Math.abs(a / 2); });
+  const drin = (p, P) => { let c = false; for(let i = 0, j = P.length - 1; i < P.length; j = i++){ const a = P[i], b = P[j];
+    if(((a[1] > p[1]) !== (b[1] > p[1])) && (p[0] < (b[0] - a[0]) * (p[1] - a[1]) / (b[1] - a[1]) + a[0])) c = !c; } return c; };
+  const regionen = [];
+  kts.forEach(k => { k.eltern = kts.filter(o => o !== k && o.A > k.A && o.P.length > 2 && k.P.length && drin(k.P[0], o.P)).length; });
+  kts.filter(k => k.rand || (!k.loch && k.eltern % 2 === 0)).forEach(k => regionen.push({aussen:k.kontur, P:k.P, A:k.A, loecher:[]}));
+  kts.filter(k => k.loch || (!k.rand && k.eltern % 2 === 1)).forEach(k => {
+    // Ein Loch gehoert zu der Region, in der es GANZ liegt (bis auf ein
+    // paar Punkte Rundung). Ein Loch, das keine Region ganz enthaelt, ist
+    // keins von ihr - im selbstgebauten Gehaeuse liegen vier Bohrloecher
+    // als Loecher am Taschenboden, aber unter der Ecke der Platte; als
+    // Insel gedeutet machten sie aus der Rechtecktasche eine Konturtasche.
+    const el = regionen.filter(r => r.A > k.A && k.P.filter(p => drin(p, r.P)).length >= 0.95 * k.P.length).sort((a, b) => a.A - b.A)[0];
+    if(el) el.loecher.push(k.kontur);
+  });
+  return {regionen, offen};
+}
+// Alle Merkmale eines ausgerichteten Modells A ueber seiner Sollform F.
+function fPlanMerkmale(A, F, prog){
+  const out = {merkmale:[], absaetze:0, unklar:0, hinweise:[]};
+  if(!A || !F) return out;
+  const zTop = A.box.z1, r = F.raster;
+  let loecher = [];
+  try{ loecher = fPlanBohrungen(A, F).loecher || []; }catch(e){ loecher = []; }
+  const ebenen = fStepEbenen(A);
+  let nr = 0;
+  ebenen.forEach(e => {
+    if(e.z >= zTop - 0.01) return;                       // die Oberkante hat keinen Boden
+    // (die Unterseite faellt in fEbeneRegionen ueber ihre Normale -Z heraus;
+    // eine eigene Abfrage auf box.z0 stand hier und war toter Code - die
+    // Gegenprobe dazu schlug nicht an, 26.09.2026)
+    const RG = fEbeneRegionen(e);
+    out.absaetze += RG.offen;
+    RG.regionen.forEach(rg => {
+      const kt = rg.aussen, P = rg.P; if(!P || P.length < 3) return;
+      // VORZEICHENBEHAFTETE Flaeche ueber Punktpaare (fPolyFlaeche nimmt die
+      // flache Liste und gibt den Betrag - damit war der Umlaufsinn weg, und
+      // die Aussenproben zeigten nach INNEN: jede Tasche galt als offen).
+      let A2 = 0; for(let i = 0; i < P.length; i++){ const a = P[i], b = P[(i + 1) % P.length]; A2 += a[0] * b[1] - b[0] * a[1]; } A2 /= 2;
+      if(Math.abs(A2) < 4) return;
+      // Proben je Kante: aussen 1,5 und 3 Rasterweiten neben dem Rand (steht
+      // dort HOEHERES Material?), innen 1,5 Rasterweiten (liegt der Boden
+      // wirklich OBEN - oder ist er von einer anderen Flaeche verdeckt?)
+      const sg = A2 > 0 ? 1 : -1; let offen = 0, schraeg = 0, fremd = 0, n = 0, zMax = -1e18;
+      for(let i = 0; i < P.length; i++){
+        const a = P[i], b = P[(i + 1) % P.length]; const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy); if(l < 1e-6) continue;
+        const nx = sg * dy / l, ny = -sg * dx / l;   // nach aussen
+        const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+        const h1 = fStepSollHoehe(F, mx + nx * 1.5 * r, my + ny * 1.5 * r), h2 = fStepSollHoehe(F, mx + nx * 3 * r, my + ny * 3 * r);
+        const hi = fStepSollHoehe(F, mx - nx * 1.5 * r, my - ny * 1.5 * r);
+        n++;
+        if(hi > e.z + 0.05) fremd++;                       // innen HOEHER = verdeckt; tiefer (Bohrung) ist kein Grund
+        if(!(h1 > e.z + 0.05) || !(h2 > e.z + 0.05)){ offen++; continue; }
+        if(Math.abs(h1 - h2) > 0.5) schraeg++;
+        if(h1 > zMax) zMax = h1;
+      }
+      if(!n) return;
+      if(fremd > 0.2 * n) return;                        // von oben nicht sichtbar (verdeckt, Unterseite)
+      // Inseln: Loecher des Bodens, in denen das Material HOEHER steht.
+      // Ihre OBERKANTE zaehlt fuer den Beginn des Zyklus mit: die eigene
+      // SL-Bahn faehrt zwischen ihren Zuegen auf q203 + SC, und eine Insel,
+      // die hoeher steht als der Taschenrand, laege dann im Weg (am Bestand
+      // gefunden - 492B Bearing: Boss auf Z0 in einer Tasche mit Rand Z-11,
+      // 16 Kollisionen auf Z-9). Also beginnt der Zyklus ueber der Insel.
+      const inseln = []; let zInsel = -1e18;
+      rg.loecher.forEach(kl => {
+        const Pi = fKonturPolygon(kl); if(!Pi || Pi.length < 3) return;
+        let ix = 0, iy = 0; Pi.forEach(p => { ix += p[0]; iy += p[1]; }); ix /= Pi.length; iy /= Pi.length;
+        const hm = fStepSollHoehe(F, ix, iy);
+        if(hm > e.z + 0.05){ inseln.push(kl); if(hm > zInsel) zInsel = hm;
+          Pi.forEach(p => { const h = fStepSollHoehe(F, p[0] + (ix - p[0]) * 0.05, p[1] + (iy - p[1]) * 0.05); if(h > zInsel) zInsel = h; }); }
+      });
+      if(zInsel > zMax) zMax = zInsel;
+      if(offen > 0 || schraeg > 0.1 * n){
+        // Ein OFFENER Boden (Absatz) mit GENAU EINER Insel ist ein ZAPFEN:
+        // der Zapfenzyklus raeumt rings um den Zapfen bis zum Rohteilmass -
+        // das Rohteilmass ist die Ausdehnung des Bodens, symmetrisch um die
+        // Zapfenmitte (Q424/Q425 sind symmetrisch). Bei zwei Inseln fraeste
+        // der erste Zyklus die zweite weg - das bleibt beim Abspanen.
+        if(inseln.length === 1){
+          const fi = fKonturForm(inseln[0]);
+          if(fi && (fi.form === 'kreis' || fi.form === 'rechteck')){
+            const bbB = fKonturForm(kt).bb;
+            const rx = 2 * Math.max(fi.cx - bbB.x0, bbB.x1 - fi.cx), ry = 2 * Math.max(fi.cy - bbB.y0, bbB.y1 - fi.cy);
+            // Die Oberkante des Zapfens: knapp innerhalb seines Randes, an
+            // JEDEM Randpunkt hoeher als der Boden. Am Bestand gefunden (492B
+            // Bearing): eine "Insel", deren Mitte hoeher liegt, deren Rand
+            // aber TIEFER ist als der Boden - daraus wurde ein Zapfen mit
+            // Tiefe +2, rot in der Ampel und 16 Kollisionen. Das ist kein
+            // Zapfen, das ist ein Absatz mit etwas darin.
+            let zOben = -1e18, zRand = 1e18; const Pi = fKonturPolygon(inseln[0]);
+            Pi.forEach(p => { const h = fStepSollHoehe(F, p[0] + (fi.cx - p[0]) * 0.05, p[1] + (fi.cy - p[1]) * 0.05); if(h > zOben) zOben = h; if(h < zRand) zRand = h; });
+            if(!(zRand > e.z + 0.05)){ out.absaetze++; return; }
+            nr++;
+            out.merkmale.push({nr, typ:fi.form === 'kreis' ? 'zapfenK' : 'zapfenR', form:fi, roh:{rx:fRund(rx), ry:fRund(ry), d:fRund(Math.max(rx, ry))},
+              z0:fRund(zOben), z1:fRund(e.z), tiefe:fRund(e.z - zOben), kontur:inseln[0], inseln:[], flaeche:fRund(Math.abs(A2))});
+            return;
+          }
+        }
+        out.absaetze++; return;
+      }
+      // DIE FLAECHENPROBE [26.09.2026, am Bestand gefunden - 492B Bearing]:
+      // der Rand allein sagt nicht, dass der Boden die ganze Tasche ist.
+      // Steht IM Gebiet (ohne die Inseln) irgendwo Material ueber dem Boden
+      // - ein Absatz ohne eigenes Loch im Modell, eine Schraege, ein Wulst -,
+      // fraeste der Taschenzyklus hinein (16 Kollisionen). Dann ist es kein
+      // Merkmal, sondern bleibt beim Abspanen, und der Bericht zaehlt es.
+      { const polys = [P].concat(inseln.map(k => fKonturPolygon(k)).filter(Boolean));
+        const mk = fGebietMaske(F, polys); let nZ = 0, nHoch = 0;
+        for(let c = 0; c < mk.length; c++){ if(!mk[c]) continue; nZ++; if(F.h[c] > e.z + 0.05) nHoch++; }
+        if(nZ && nHoch > 0.02 * nZ){ out.unklar++; return; } }
+      const form = fKonturForm(kt); if(!form) return;
+      if(form.form === 'kreis' && loecher.some(L => Math.hypot(L.x - form.cx, L.y - form.cy) < 0.5 && Math.abs(L.d - form.d) < 0.3)) return;
+      nr++;
+      const typ = inseln.length ? 'konturTasche' : (form.form === 'kreis' ? 'tascheK' : form.form === 'rechteck' ? 'tascheR' : form.form === 'nut' ? 'nut' : 'konturTasche');
+      out.merkmale.push({nr, typ, form, z0:fRund(zMax), z1:fRund(e.z), tiefe:fRund(e.z - zMax), kontur:kt, inseln, flaeche:fRund(Math.abs(A2))});
+    });
+  });
+  // von oben nach unten, grosse zuerst
+  out.merkmale.sort((a, b) => (b.z1 - a.z1) || (b.flaeche - a.flaeche));
+  return out;
+}
+// Aus den Merkmalen die Schritte: Werkzeug = groesster Schaftfraeser mit
+// Eintauchwinkel, der samt Aufmass in die Form passt.
+function fPlanMerkmalSchritte(prog, A, F){
+  const M = fPlanMerkmale(A, F, prog);
+  const schritte = [], konturen = [], hinweise = M.hinweise.slice();
+  const wz = ((prog && prog.werkzeuge) || []).filter(w => w.art === 'fraeser' && (+w.d || 0) > 0 && !fPlanIstKugel(w) && (+w.angle || 0) > 0)
+    .sort((a, b) => (+b.d || 0) - (+a.d || 0));
+  const kein = [];
+  M.merkmale.forEach(m => {
+    let rMax;                                             // groesster Werkzeugradius, der passt
+    if(m.typ === 'tascheK') rMax = m.form.d / 2 - 0.3;
+    else if(m.typ === 'zapfenK') rMax = 1e9;                                       // rings um den Zapfen ist Platz
+    else if(m.typ === 'zapfenR') rMax = m.form.r > 0 ? m.form.r : 1e9;              // Eckenradius >= Werkzeugradius
+    else if(m.typ === 'tascheR') rMax = Math.min(m.form.l2 / 2 - 0.3, m.form.r > 0 ? m.form.r : 1e9);   // Eckenradius = Werkzeugradius ist erlaubt (die Steuerung setzt ihn sonst hoch)
+    else if(m.typ === 'nut') rMax = m.form.l2 / 2 - 0.3;   // gleich breit waere ein Langloch
+    else { const R = fBereichRadiusF(F, [fKonturPolygon(m.kontur)].concat(m.inseln.map(k => fKonturPolygon(k)).filter(Boolean))); rMax = R ? R.r - 0.5 : 0; }
+    const w = wz.find(x => (+x.d) / 2 <= rMax + 1e-9);
+    const was = (m.typ === 'tascheK' ? 'Kreistasche ⌀' + m.form.d : m.typ === 'tascheR' ? 'Rechtecktasche ' + m.form.l1 + 'x' + m.form.l2 + (m.form.r ? ' R' + m.form.r : '') :
+                 m.typ === 'zapfenK' ? 'Kreiszapfen ⌀' + m.form.d + ' in ⌀' + m.roh.d : m.typ === 'zapfenR' ? 'Rechteckzapfen ' + m.form.l1 + 'x' + m.form.l2 + ' in ' + m.roh.rx + 'x' + m.roh.ry :
+                 m.typ === 'nut' ? 'Nut ' + m.form.l1 + 'x' + m.form.l2 : 'Konturtasche' + (m.inseln.length ? ' mit ' + m.inseln.length + ' Insel(n)' : '')) +
+                ' auf Z' + m.z1;
+    if(!w){ kein.push(was + ' (passt: ⌀ bis ' + fRund(2 * Math.max(0, rMax)) + ')'); return; }
+    const rt = (+w.d) / 2;
+    const werte = {posArt:'xy', q203:m.z0, tiefe:m.tiefe, zust:fRund(Math.min(4, Math.max(1, (+w.d) / 3))),
+      aufSeite:0, aufTiefe:0, umfang:0, fraesart:1, eintauch:(+w.angle || 0) > 0 ? 1 : 0, ausgabe:'zyklus'};
+    let art;
+    if(m.typ === 'tascheK'){ art = 'tascheK'; Object.assign(werte, {posX:m.form.cx, posY:m.form.cy, dm:m.form.d}); }
+    else if(m.typ === 'zapfenK'){ art = 'zapfenK'; Object.assign(werte, {posX:m.form.cx, posY:m.form.cy, dm:m.form.d, dmRoh:m.roh.d}); }
+    else if(m.typ === 'zapfenR'){ art = 'zapfenR'; Object.assign(werte, {posX:m.form.cx, posY:m.form.cy, l1:m.form.l1, l2:m.form.l2, roh1:m.roh.rx, roh2:m.roh.ry, r:fRund(m.form.r), dreh:0, lage:0}); }
+    else if(m.typ === 'tascheR'){ art = 'tascheR'; Object.assign(werte, {posX:m.form.cx, posY:m.form.cy, l1:m.form.l1, l2:m.form.l2, r:fRund(Math.max(m.form.r, rt)), dreh:0, lage:0}); }
+    else if(m.typ === 'nut'){ art = 'nut'; Object.assign(werte, {posX:m.form.cx, posY:m.form.cy, l1:m.form.l1, l2:m.form.l2, dreh:m.form.dreh, lage:0}); }
+    else {
+      art = 'slRaeumen';
+      const k0 = konturen.length;
+      konturen.push(Object.assign({}, m.kontur, {name:'Tasche ' + m.nr + ' (Merkmal Z' + m.z1 + ')'}));
+      m.inseln.forEach((k, i) => konturen.push(Object.assign({}, k, {name:'Insel ' + m.nr + '.' + (i + 1) + ' (Merkmal)'})));
+      werte.konturRel = k0; werte.inselnRel = m.inseln.map((k, i) => k0 + 1 + i);
+      delete werte.posArt;
+    }
+    schritte.push({art, t:+w.nr, werte, text:was + ', Fraeser ' + w.nr + ' (⌀' + w.d + ')', merkmal:m.typ});
+    // NACHRAEUMEN [26.09.2026]: eine Konturtasche mit Ecken enger als der
+    // gewaehlte Fraeser (scharfe Ecken, oder die Insel hat den grossen
+    // Fraeser erzwungen) bekommt einen zweiten SL-Schritt mit dem
+    // kleinsten Fraeser, der noch enger kommt - Q18 nennt der Steuerung
+    // das Vorraeum-Werkzeug, sie faehrt dann nur, was der grosse liess.
+    // Gemessen am Pruefkoerper: 41,75 mm2 in den vier Ecken der 35x30-
+    // Tasche mit dem ⌀14 - genau 4 x r2 x (1 - pi/4).
+    if(art === 'slRaeumen'){
+      let rEcke = 1e9;
+      const alleK = [m.kontur].concat(m.inseln);
+      alleK.forEach(k => (k.elemente || []).forEach((e, i, arr) => {
+        if(e.typ === 'g'){ const n = arr[(i + 1) % arr.length]; if(!n || n.typ === 'g') rEcke = 0; }
+        else if(e.typ === 'b' && +e.r < rEcke) rEcke = +e.r;
+      }));
+      const w2 = wz.filter(x => (+x.d) / 2 < rt - 1e-9 && (+x.d) / 2 <= Math.max(rEcke, 0.5) + 1e-9).pop() || (rEcke < rt - 1e-9 ? wz[wz.length - 1] : null);
+      if(w2 && (+w2.d) < (+w.d)){
+        const werte2 = Object.assign({}, werte, {q18:+w.nr});
+        schritte.push({art, t:+w2.nr, werte:werte2, text:'Ecken nachraeumen mit Fraeser ' + w2.nr + ' (⌀' + w2.d + ', Vorraeum-Werkzeug T' + w.nr + ')', merkmal:'nachraeumen'});
+      }
+    }
+  });
+  if(M.merkmale.length) hinweise.push('MERKMALE aus den Boeden: ' + M.merkmale.length + ' Tasche(n)/Zapfen' +
+    (schritte.length ? ' -> ' + schritte.length + ' Zyklus(se): ' + schritte.map(s => s.text).join('; ') : '') + '.');
+  if(kein.length) hinweise.push('Ohne passenden Fraeser (Eintauchwinkel noetig): ' + kein.join('; ') + ' - bleibt beim Abspanen und Nachsetzen.');
+  if(M.absaetze) hinweise.push(M.absaetze + ' Boden/Boeden sind zum Rand offen (Absatz, offene Tasche) - die bleiben beim Abspanen; ihre Waende schlichtet Boeden & Waende.');
+  if(M.unklar) hinweise.push(M.unklar + ' Boden/Boeden tragen im Gebiet Material ueber dem Boden, das kein Loch des Modells ist (Absatz, Schraege) - kein Taschenzyklus, bleibt beim Abspanen.');
+  return {schritte, konturen, hinweise, merkmale:M.merkmale, absaetze:M.absaetze};
 }
 
 // Der ganze Vorschlag: Flaechen und Bohrungen in EINER Liste, in Daniels
@@ -9231,7 +9578,11 @@ function fPlanPhase(art){
 function fPlanProgramm(prog, A, F){
   const fl = fPlanFlaechen(prog, A, F);
   const bo = fPlanBohrSchritte(prog, A, F);
-  const hinweise = fl.hinweise.concat(bo.hinweise);
+  // Merkmale [26.09.2026]: Taschen, Nuten und Konturtaschen als Zyklen,
+  // NACH dem Abspanen (sie liefern die exakten Waende mit passendem Werkzeug)
+  let mk = {schritte:[], konturen:[], hinweise:[], merkmale:[], absaetze:0};
+  try{ mk = fPlanMerkmalSchritte(prog, A, F); }catch(e){ mk.hinweise.push('Merkmale nicht lesbar: ' + (e && e.message)); }
+  const hinweise = fl.hinweise.concat(mk.hinweise, bo.hinweise);
   // WAS IN DIESER AUFSPANNUNG GAR NICHT ERREICHBAR IST, wird nicht
   // geplant. Die Flaechenbearbeitung oeffnet das Teil bis zu einer
   // bestimmten Tiefe; eine Bohrung, deren BEZUGSFLAECHE darunter liegt,
@@ -9256,6 +9607,7 @@ function fPlanProgramm(prog, A, F){
     ' sind NICHT geplant: in dieser Aufspannung wird nur bis Z' + fRund(zOffen) +
     ' geoeffnet, das Werkzeug kaeme dort gar nicht hin. Das gehoert in die ZWEITE Aufspannung.');
   const roh = fl.schritte.map(sp => Object.assign({}, sp, {phase:fPlanPhase(sp.art), muster:null}))
+    .concat(mk.schritte.map(sp => Object.assign({}, sp, {phase:fPlanPhase(sp.art), muster:null})))
     .concat(bohrOk.map(sp => Object.assign({}, sp, {phase:fPlanPhase(sp.art)})));
   // Stabil nach Phase: innerhalb einer Phase bleibt die Reihenfolge, in
   // der die beiden Planer sie geliefert haben.
@@ -9276,8 +9628,8 @@ function fPlanProgramm(prog, A, F){
   if(!schritte.length) hinweise.unshift('Aus diesem Modell laesst sich kein Schritt ableiten.');
   // Was der Planer NICHT kann, gehoert in dieselbe Meldung - sonst haelt
   // man das Programm fuer vollstaendig.
-  hinweise.push('NICHT geplant: Taschen, Nuten und Zapfen als eigene Zyklen (das Modell wird als Ganzes abgespant), Gewindefraesen, Senkungen ohne Gewinde und die ZWEITE Aufspannung.');
-  return {schritte:schritte, muster:bo.muster, hinweise:hinweise, wechsel:wechsel,
+  hinweise.push('NICHT geplant: offene Absaetze und mehrere Zapfen in einem Absatz als eigene Zyklen (die bleiben beim Abspanen), Gewindefraesen, Senkungen ohne Gewinde und die ZWEITE Aufspannung.');
+  return {schritte:schritte, muster:bo.muster, konturen:mk.konturen, merkmale:mk.merkmale, hinweise:hinweise, wechsel:wechsel,
           mehrfach:mehrfach, flaechen:fl.schritte.length, bohrungen:bo.schritte.length,
           phasen:F_PLAN_PHASEN.map(ph => ({nr:ph.nr, name:ph.name, n:schritte.filter(x => x.phase === ph.nr).length}))};
 }
@@ -9290,10 +9642,16 @@ function fPlanProgrammAnlegen(prog, plan, F, ersetzen){
   if(F && plan.schritte.some(sp => (F_ZYKLEN[sp.art] || {}).modell)) fStepFeldSetzen(F, prog);
   const m0 = (prog.muster || []).length;
   prog.muster = (prog.muster || []).concat((plan.muster || []).map(m => ({name:m.name, typ:'punkte', punkte:m.punkte.slice()})));
+  // Konturen der Merkmale (Konturtaschen und ihre Inseln) ans Programm
+  const k0 = (prog.konturen || []).length;
+  if(plan.konturen && plan.konturen.length) prog.konturen = (prog.konturen || []).concat(plan.konturen.map(k => JSON.parse(JSON.stringify(k))));
   prog.schritte = prog.schritte || [];
   plan.schritte.forEach(sp => {
     const s2 = fSchrittNeu(prog, sp.art, sp.t, (sp.muster == null) ? null : (m0 + sp.muster));
-    Object.assign(s2, sp.werte);
+    const w = Object.assign({}, sp.werte);
+    if(w.konturRel != null){ s2.kontur = k0 + w.konturRel; delete w.konturRel; }
+    if(w.inselnRel){ s2.inseln = w.inselnRel.map(i => k0 + i); delete w.inselnRel; }
+    Object.assign(s2, w);
     prog.schritte.push(s2);
   });
   return plan.schritte.length;
@@ -16940,8 +17298,66 @@ function fStepTestkoerper(art){
     add("ADVANCED_FACE('',(#" + add("FACE_OUTER_BOUND('',#" + schleife(aussen) + ',.T.)') + '),#' + flId + ',.T.)');
   const quad = (x0, y0, x1, y1, z) => [kGer([x0, y0, z], [x1, y0, z]), kGer([x1, y0, z], [x1, y1, z]),
                                        kGer([x1, y1, z], [x0, y1, z]), kGer([x0, y1, z], [x0, y0, z])];
+  // Kreisbogen um c (Achse +Z), links = mathematisch positiv; Vollkreis ein
+  // Vertex, Start gleich Ende; Flaeche mit Loechern (FACE_BOUND) - wie
+  // step-bauen.js sie schreibt und der Leser sie seit dem 14.09. liest.
+  const kBog = (a, e, c, r, links) => {
+    const ci = add("CIRCLE('',#" + lage(c[0], c[1], a[2], 0, 0, 1, 1, 0, 0) + ',' + r + ')');
+    return add("EDGE_CURVE('',#" + vtx(a[0], a[1], a[2]) + ',#' + vtx(e[0], e[1], e[2]) + ',#' + ci + ',' + (links ? '.T.' : '.F.') + ')');
+  };
+  const kKreis = (c, r, z) => { const v = vtx(c[0] + r, c[1], z);
+    const ci = add("CIRCLE('',#" + lage(c[0], c[1], z, 0, 0, 1, 1, 0, 0) + ',' + r + ')');
+    return add("EDGE_CURVE('',#" + v + ',#' + v + ',#' + ci + ',.T.)'); };
+  const flaecheL = (flId, aussen, loecher) => {
+    const rd = ['#' + add("FACE_OUTER_BOUND('',#" + schleife(aussen) + ',.T.)')];
+    (loecher || []).forEach(l => rd.push('#' + add("FACE_BOUND('',#" + schleife(l) + ',.T.)')));
+    return add("ADVANCED_FACE('',(" + rd.join(',') + '),#' + flId + ',.T.)'); };
+  // Rechteck mit Eckenradius, gegen den Uhrzeigersinn
+  const rechtR = (x0, y0, x1, y1, rr, z) => rr > 0 ? [
+    kGer([x0 + rr, y0, z], [x1 - rr, y0, z]), kBog([x1 - rr, y0, z], [x1, y0 + rr, z], [x1 - rr, y0 + rr], rr, true),
+    kGer([x1, y0 + rr, z], [x1, y1 - rr, z]), kBog([x1, y1 - rr, z], [x1 - rr, y1, z], [x1 - rr, y1 - rr], rr, true),
+    kGer([x1 - rr, y1, z], [x0 + rr, y1, z]), kBog([x0 + rr, y1, z], [x0, y1 - rr, z], [x0 + rr, y1 - rr], rr, true),
+    kGer([x0, y1 - rr, z], [x0, y0 + rr, z]), kBog([x0, y0 + rr, z], [x0 + rr, y0, z], [x0 + rr, y0 + rr], rr, true)] : quad(x0, y0, x1, y1, z);
+  // Nut (Langloch) laengs x: zwei Geraden, zwei Halbkreise
+  const nutL = (xa, xb, yc, rr, z) => [
+    kGer([xa, yc - rr, z], [xb, yc - rr, z]), kBog([xb, yc - rr, z], [xb, yc + rr, z], [xb, yc], rr, true),
+    kGer([xb, yc + rr, z], [xa, yc + rr, z]), kBog([xa, yc + rr, z], [xa, yc - rr, z], [xa, yc], rr, true)];
   const w = Math.SQRT1_2;
-  if(art === 'ttasche'){
+  if(art === 'merkmale'){
+    // DIE MERKMALPLATTE [26.09.2026, Punkt 3]: Platte 120 x 80 x 15 mit vier
+    // geschlossenen Taschen, jede eine andere Form - der Pruefkoerper fuer
+    // die Merkmalerkennung. Alles im Kopf nachrechenbar:
+    //   A Kreistasche ⌀30 um (25,25), Boden Z-6
+    //   B Rechtecktasche 40 x 24 R5, x 50..90, y 8..32, Boden Z-8
+    //   C Nut 40 x 10 laengs x, x 45..85 (Mitten 50 und 80), y 50..60, Boden Z-4
+    //   D Rechtecktasche 35 x 30 (x 5..40, y 45..75) mit INSEL ⌀8 um (22,60),
+    //     Boden Z-5 - die Insel steht bis Z0: eine Konturtasche mit Insel.
+    // Die Deckflaeche ist EINE Flaeche mit vier Loechern (FACE_BOUND), wie
+    // ein CAD sie schreibt; die Insel traegt ihre eigene Deckflaeche.
+    flaeche(ebene(0, 0, -15, 0, 0, 1), quad(0, 0, 120, 80, -15));
+    flaeche(ebene(0, 0, -6, 0, 0, 1), [kKreis([25, 25], 15, -6)]);
+    flaeche(ebene(0, 0, -8, 0, 0, 1), rechtR(50, 8, 90, 32, 5, -8));
+    flaeche(ebene(0, 0, -4, 0, 0, 1), nutL(50, 80, 55, 5, -4));
+    flaecheL(ebene(0, 0, -5, 0, 0, 1), quad(5, 45, 40, 75, -5), [[kKreis([22, 60], 4, -5)]]);
+    flaeche(ebene(0, 0, 0, 0, 0, 1), [kKreis([22, 60], 4, 0)]);
+    //   E Absatz x 95..120, y 45..80 auf Z-3, zum Rand offen, darin EIN
+    //     Rechteckzapfen 12 x 10 um (107,62) bis Z0 -> Rechteckzapfen 256,
+    //     Rohteilmass 26 x 36 (die Ausdehnung des Absatzes um die Zapfenmitte).
+    //   F Absatz x 95..120, y 0..30 auf Z-2, zu zwei Raendern offen, OHNE
+    //     Insel -> kein Merkmal, bleibt beim Abspanen (der Bericht zaehlt ihn).
+    //   G Sackloch ⌀8,5 um (65,72), ebener Grund Z-10, mit Zylindermantel:
+    //     ein runder Boden, der eine BOHRUNG ist - gehoert dem Bohrplan
+    //     (Kernloch M10), nicht den Merkmalen.
+    flaeche(add("CYLINDRICAL_SURFACE('',#" + lage(65, 72, -10, 0, 0, 1, 1, 0, 0) + ',4.25)'), [kKreis([65, 72], 4.25, 0), kKreis([65, 72], 4.25, -10)]);
+    flaeche(ebene(0, 0, -10, 0, 0, 1), [kKreis([65, 72], 4.25, -10)]);
+    flaecheL(ebene(0, 0, -3, 0, 0, 1), quad(95, 45, 120, 80, -3), [quad(101, 57, 113, 67, -3)]);
+    flaeche(ebene(0, 0, 0, 0, 0, 1), quad(101, 57, 113, 67, 0));
+    flaeche(ebene(0, 0, -2, 0, 0, 1), quad(95, 0, 120, 30, -2));
+    flaecheL(ebene(0, 0, 0, 0, 0, 1), [kGer([0, 0, 0], [95, 0, 0]), kGer([95, 0, 0], [95, 30, 0]), kGer([95, 30, 0], [120, 30, 0]),
+                                       kGer([120, 30, 0], [120, 45, 0]), kGer([120, 45, 0], [95, 45, 0]),
+                                       kGer([95, 45, 0], [95, 80, 0]), kGer([95, 80, 0], [0, 80, 0]), kGer([0, 80, 0], [0, 0, 0])],
+      [[kKreis([25, 25], 15, 0)], rechtR(50, 8, 90, 32, 5, 0), nutL(50, 80, 55, 5, 0), quad(5, 45, 40, 75, 0), [kKreis([65, 72], 4.25, 0)]]);
+  } else if(art === 'ttasche'){
     // DIE T-TASCHE [19.09.2026]: Platte 60 x 40 x 12, Tasche 6 mm tief aus
     // einem Hauptfeld 40 x 30 (x 5..45, y 5..35) und einem FINGER von 14 mm
     // Breite (x 45..55, y 13..27). Ein ⌀20 raeumt das Hauptfeld und kommt in
@@ -17843,7 +18259,7 @@ function fArbeitsplanRender(){
     // 232 traegt seine Flaeche selbst (kein Bohrbild), 204 hat statt der
     // Tiefe die Senkung nach oben. Neutrale Kurzzeichen wie in der Maske
     // (Z1, SC ...); die Zyklusnummer der Steuerung steht nur im Titel.
-    const detail = (z.sl ? (kt ? 'Tasche ' + esc(kt.name) + ((s.inseln || []).length ? ' + ' + (s.inseln || []).length + ' Insel' + ((s.inseln || []).length > 1 ? 'n' : '') : '') : '<span style="color:#c0392b">keine Tasche</span>') : z.eigenePosition ? 'Fläche im Zyklus' : (z.kontur ? (kt ? 'Kontur ' + esc(kt.name) + ' · ' + (kt.geschlossen ? (s.seiteZu === 'aussen' ? 'außen' : 'innen') : (s.seiteAuf === 'rechts' ? 'rechts (RR)' : 'links (RL)')) : '<span style="color:#c0392b">keine Kontur</span>') : (m ? esc(m.name) : '<span style="color:#c0392b">kein Bohrbild</span>'))) +
+    const detail = (z.sl ? (kt ? 'Tasche ' + esc(kt.name) + ((s.inseln || []).length ? ' + ' + (s.inseln || []).length + ' Insel' + ((s.inseln || []).length > 1 ? 'n' : '') : '') : '<span style="color:#c0392b">keine Tasche</span>') : z.eigenePosition ? 'Fläche im Zyklus' : (z.kontur ? (kt ? 'Kontur ' + esc(kt.name) + ' · ' + (kt.geschlossen ? (s.seiteZu === 'aussen' ? 'außen' : 'innen') : (s.seiteAuf === 'rechts' ? 'rechts (RR)' : 'links (RL)')) : '<span style="color:#c0392b">keine Kontur</span>') : (m ? esc(m.name) : (fPosArt(s) === 'xy' ? 'X' + fRund(+s.posX || 0) + ' Y' + fRund(+s.posY || 0) : '<span style="color:#c0392b">kein Bohrbild</span>')))) +
       (z.fraes ? ' · ' + esc(fFormText(s)) : '') +
       (z.eigenePosition ? '' : (z.ohneTiefe ? ' · Senkung +' + (s.q249 || 0) : ' · Z1 ' + s.tiefe)) + (/^(gewinde|gewindeGS|gewindeSpan)$/.test(s.art) ? ' · P' + s.steigung : '') +
       ' · F' + s.f + ' S' + s.s + (s.kuehl === 'aus' ? ' · trocken' : '') + (s.ausgabe === 'einzel' ? ' · Einzelsätze' : '');
