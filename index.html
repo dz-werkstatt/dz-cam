@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="25.09.2026 23:18 (d3af888c)";</script>
+<script>window.__DZ_STAND="26.09.2026 08:56 (98e35441)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4561,10 +4561,10 @@ ein Blatt Papier in der Bohrung.
 <br><b>Was die Darstellung NICHT kann:</b> Das Werkzeug wird immer VOR dem Material
 gemalt, steckt also optisch nicht darin. Im Halbschnitt stimmt das Bild; in der
 Vollansicht sieht man den Bohrer durch die Wand. Grund ist, dass die 3D-Ansicht
-keinen Tiefenpuffer hat, sondern Fl&auml;chen von Hand sortiert. Und: als
-Kollisionsk&ouml;rper ist der Halter weiterhin nicht gepr&uuml;ft (offener Punkt,
-wartet auf Ma&szlig;e) &mdash; die Darstellung dient der Vorstellung, nicht der
-&Uuml;berwachung.
+keinen Tiefenpuffer hat, sondern Fl&auml;chen von Hand sortiert. Der gezeichnete
+Halter ist ein Schema; gepr&uuml;ft wird der <b>Pr&uuml;fkasten</b> aus der
+Werkzeugmaske (gestrichelt in der 2D-Simulation, seit 26.09.2026 &mdash; Absatz
+Kollisionspr&uuml;fung).
 <br><b>Abtrag und Werkzeug laufen im gleichen Takt (seit 06.09.2026).</b> Vorher
 hinkte das Material der Schneidplatte sichtbar nach und sprang in Stufen: die
 Platte wurde in jedem Bild an ihrer Zwischenstellung gemalt, die Materialkontur
@@ -4601,9 +4601,29 @@ Backen sind beim Spannen gesetzt und wandern nicht mit.
 <b>volle Klingenbreite</b> (seit 30.08.2026): die Pr&uuml;fung l&auml;uft ein
 zweites Mal, um die Klingenl&auml;nge versetzt &mdash; sonst s&auml;he sie ein
 Eintauchen der freien Klingenecke nicht. Sie fand damit sofort zwei echte
-Bahnfehler, die vorher unentdeckt waren. Was sie weiterhin NICHT pr&uuml;ft, ist
-der Werkzeug<b>halter</b> als K&ouml;rper &mdash; daf&uuml;r fehlen noch die
-Ma&szlig;e.</dd>
+Bahnfehler, die vorher unentdeckt waren.
+<br id="ba-sim-halter"><b>Der Halter als K&ouml;rper (seit 26.09.2026).</b> Jeder Satz
+&mdash; Schnitt wie Eilgang &mdash; wird mit dem <b>Pr&uuml;fkasten</b> des Halters
+gegen Materialstand, Futter, Backen und Reitstock gehalten: beim Au&szlig;endreher
+Kopf und Schaft als Trapez &mdash; die Kopffront l&auml;uft im
+Nebenschneidenwinkel (180&deg; &minus; Einstellwinkel &minus; Spitzenwinkel) von
+der Spitze weg, beim 95&deg;/80&deg;-Schrupper fast flach, beim 93&deg;/35&deg;-Schlichter
+mit 52&deg; &mdash;, bei der Bohrstange der Rundschaft unter der Spitze zur Achse
+hin &mdash; auch die gegen&uuml;berliegende Bohrungswand z&auml;hlt &mdash;, beim
+Stecher der Halterblock &uuml;ber der Klinge, aber NUR mit eingetragener
+Stichtiefe (ein Stechschwert reicht 26 mm, eine N123-Klinge 20, ein
+Abstechschwert 60: geraten w&auml;re jeder Wert falsch). Gepr&uuml;ft
+wird NACH dem Abtrag des Satzes (der Kopf l&auml;uft hinter der Platte &uuml;ber die
+Fl&auml;che, die sie gerade schneidet) und mit 0,4 mm Luft: Material muss so tief
+im Kasten stehen. Die Ma&szlig;e stehen in der Werkzeugmaske (Schaftbreite bzw.
+Bohrstangen-&empty;, Spitzen&uuml;berstand, max. Stichtiefe); leer gilt die Vorgabe
+25 mm Schaft, &empty;20 Bohrstange mit 2 mm &Uuml;berstand, Gewindestahl 3 mm
+&Uuml;berstand &mdash; <b>das sind Annahmen, keine Messungen</b>, und die
+Stichtiefe bleibt ohne Eintrag ungepr&uuml;ft. Wer den echten Halter nachmisst,
+tr&auml;gt ihn ein; der gestrichelte Kasten in der Simulation zeigt, was gilt. Ein
+Treffer steht als eigene Zeile in Simulation und Ampel: HALTER, Werkzeug, Satz,
+Stelle. Nicht gepr&uuml;ft: Bohrer (stecken im eigenen Loch) und die Breite des
+Halters quer zur Zeichenebene.</dd>
 <dt id="ba-sim-einschnitt">Einschnitt-W&auml;chter</dt>
 <dd>Frisst eine Bahn unter die Sollkontur, meldet es die Simulation am Ende von
 selbst (rotes EINSCHNITT-Band im Bild, Zeile obenan im Ma&szlig;bericht) &mdash;
@@ -5499,7 +5519,7 @@ vorschruppen.</dd>
      TT.MM.JJJJ" ergaenzt, MUSS dieses Datum mitziehen — sonst schlaegt
      der Pruefstand an. [Daniels Befund 06.09.2026: die Anleitung war
      inhaltlich nachgezogen, das Standdatum stand noch auf 31.08.] -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 25.09.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 26.09.2026. Sie
 w&auml;chst mit der App &mdash; das Inhaltsverzeichnis wird aus den Kapiteln
 erzeugt und ist damit immer vollst&auml;ndig.</p>
 
@@ -5648,6 +5668,9 @@ erzeugt und ist damit immer vollst&auml;ndig.</p>
            und Spitzenwinkel, Schaftquerschnitt und Halterlaenge. Damit
            wird der Halter spaeter zum Kollisionskoerper (Punkt 5). -->
       <div class="mrow"><label>ISO-Bezeichnung</label><input type="text" id="twIso" placeholder="z. B. PCLNR 2525 M12" style="width:170px;"></div>
+      <div class="mrow"><label>Halter: Schaftbreite / Bohrstangen-&empty;</label><input type="number" step="any" id="twHalterB" placeholder="25 / 20"><span class="unit">mm</span></div>
+      <div class="mrow"><label>Spitze &uuml;ber der Bohrstange</label><input type="number" step="any" id="twHalterAb" placeholder="2"><span class="unit">mm</span></div>
+      <div class="mrow"><label>max. Stichtiefe (Klinge)</label><input type="number" step="any" id="twStechTiefe" placeholder="20"><span class="unit">mm</span></div>
       <div class="msec">Schnittwerte (optional) — belegen die Zyklusmasken automatisch vor</div>
       <div class="mrow"><label>Vc Schnittgeschwindigkeit</label><input type="number" id="twVc" placeholder="z.B. 180" step="any"><span class="unit">m/min</span></div>
       <div class="mrow"><label>F Schruppen / F Schlichten</label><input type="number" id="twF1" placeholder="mm/U" step="any" style="width:76px;"><input type="number" id="twF2" placeholder="mm/U" step="any" style="width:76px;"><span class="unit">mm/U</span></div>
@@ -16736,6 +16759,10 @@ function readToolForm(){
     dm: +document.getElementById('twDM').value||0,
     refEdge: refBtn?refBtn.dataset.v:'links',
     iso: (document.getElementById('twIso')?document.getElementById('twIso').value.trim():'') || undefined,
+    // Halter als Kollisionskoerper [26.09.2026]: leer = Vorgabe (25 / ⌀20 / 2 / 20)
+    halterB: (v=>isNaN(v)?undefined:v)(parseFloat((document.getElementById('twHalterB')||{}).value)),
+    halterAb: (v=>isNaN(v)?undefined:v)(parseFloat((document.getElementById('twHalterAb')||{}).value)),
+    stechTiefe: (v=>isNaN(v)?undefined:v)(parseFloat((document.getElementById('twStechTiefe')||{}).value)),
     vc: (v=>isNaN(v)?undefined:v)(parseFloat(document.getElementById('twVc').value)),
     f1: (v=>isNaN(v)?undefined:v)(parseFloat(document.getElementById('twF1').value)),
     f2: (v=>isNaN(v)?undefined:v)(parseFloat(document.getElementById('twF2').value)),
@@ -16886,6 +16913,7 @@ function startToolEdit(i){
   document.getElementById('twLen').value=t.len||0;
   document.getElementById('twDM').value = t.dm!==undefined?t.dm:10;
   { const e=document.getElementById('twIso'); if(e) e.value = t.iso||''; }
+  [['twHalterB','halterB'],['twHalterAb','halterAb'],['twStechTiefe','stechTiefe']].forEach(([id,k])=>{ const e=document.getElementById(id); if(e) e.value=(t[k]!==undefined && t[k]!==null)? t[k] : ''; });
   document.getElementById('twVc').value = t.vc!==undefined?t.vc:'';
   document.getElementById('twF1').value = t.f1!==undefined?t.f1:'';
   document.getElementById('twF2').value = t.f2!==undefined?t.f2:'';
@@ -23456,6 +23484,7 @@ const PP_FEST=[
   'NC-Kommentare in ASCII, ohne Klammern im Text — die Steuerung schliesst den Kommentar an der ERSTEN \u0029.',
   'D Zustelltiefe und UX Aufmass gelten RADIAL (ap, je Seite); axiale Werte (Planzustellung, UZ) 1:1.',
   'Schneidenradiuskorrektur automatisch: Schruppen ohne, Schlichten G41/G42 nach Lage.',
+  'Kollisionspruefung mit HALTER (seit 26.09.2026): Schaft, Bohrstange und Stechblock als Pruefkasten gegen Material, Backen und Reitstock — Masse aus der Werkzeugmaske, leer = Annahme 25 mm Schaft / ⌀20 Bohrstange; Stichtiefe nur mit Eintrag.',
   'Bezugsschneide der Stecher: ab Werk LINKS (Bildansicht - der programmierte Punkt ist die linke Klingenkante). Die Z-Worte der Stech-, Einstech- und Abstechzyklen liegen dadurch um die Klingenbreite niedriger; das Teil ist dasselbe (Hoehenfeld Spalte fuer Spalte identisch, 24.09.2026). Der ZYKLUSSATZ bleibt unveraendert - dort steht die Nutgeometrie, die Steuerung bekommt die Meisselbreite im Satz. Die Stirnnut (axial) wird nicht verschoben: dort liegt die Breite radial. An der Maschine muss das Werkzeug ebenso eingemessen sein.',
   'Passt der Schneidenradius in die Kontur? Die Ampel misst auf den fertigen Bahnen, ob eine Hohlkehle enger ist als die Schneide und ob ein Element kuerzer ist als die Radiusschuld r/tan(theta/2) seiner konkaven Enden - beides weist die Steuerung als Konturverletzung zurueck (18.09.2026 am Masterteil: Innenstufe 0,7 mm gegen Nasenradius 1,2). Hinweis, kein Blocker.',
   'Werkzeugliste im Programmkopf (24.09.2026): eine Zeile je Werkzeug nach Platz sortiert - Art und Lage, SL, Schneidenradius (Bohrer: Durchmesser), beim Stecher Klingenbreite und Bezugsschneide. Sie ueberlebt das schlanke Senden und steht damit in der Datei an der Maschine; vor dem Start gegen die WZ-KORR halten.',
@@ -35076,6 +35105,22 @@ function hfVerwerfen(){ hfFeld=null; hfUpTo=-1; hfKey=''; }
 // Ausdehnung, und wer auf Anschlag an die Backe faehrt, hat schon
 // verloren.
 const FUTTER_SICHER=0.5;
+// EIN Punkt (z, Radius) gegen Futterkoerper und Backen — die eine Regel,
+// die futterTreffer (Bahnpunkt) und halterTreffer (Halterkasten) teilen.
+function futterPunkt(G, z, r){
+  // Futterkoerper: alles hinter der Stirn — aber NICHT der Durchgang
+  // [Daniel, Punkt 12]. Das Futter ist hohl: ⌀82 gehen mittig
+  // hindurch, sonst koennte man keine Stange durchschieben. Vorher galt
+  // ein Werkzeug auch dann als Treffer, wenn es mittig im Durchgang
+  // lief — die Innenbearbeitung waere damit hinter der Futterstirn
+  // grundsaetzlich als Kollision gemeldet worden.
+  if(z < G.zStirn-FUTTER_SICHER && r < G.rAussen-FUTTER_SICHER &&
+     r > FUTTER.rBohrung-FUTTER_SICHER) return 'Futterkoerper';
+  // Backen: im Spannbereich alles ausserhalb des Spann-⌀
+  if(z < G.zS-FUTTER_SICHER && z > G.zStirn-FUTTER_SICHER &&
+     r > G.rSpann+FUTTER_SICHER && r < G.rHoch) return 'Spannbacke';
+  return null;
+}
 function futterTreffer(mv){
   const G=futterGeometrie();
   if(!G) return null;
@@ -35083,22 +35128,152 @@ function futterTreffer(mv){
   const schritte=Math.max(2, Math.min(400, Math.ceil(len/0.4)));
   for(let k=0;k<=schritte;k++){
     const p=interpolateMove(mv, k/schritte);
-    const r=Math.abs(d2r(p.x));
-    // Futterkoerper: alles hinter der Stirn — aber NICHT der Durchgang
-    // [Daniel, Punkt 12]. Das Futter ist hohl: ⌀82 gehen mittig
-    // hindurch, sonst koennte man keine Stange durchschieben. Vorher galt
-    // ein Werkzeug auch dann als Treffer, wenn es mittig im Durchgang
-    // lief — die Innenbearbeitung waere damit hinter der Futterstirn
-    // grundsaetzlich als Kollision gemeldet worden.
-    if(p.z < G.zStirn-FUTTER_SICHER && r < G.rAussen-FUTTER_SICHER &&
-       r > FUTTER.rBohrung-FUTTER_SICHER)
-      return {z:p.z, x:p.x, was:'Futterkoerper'};
-    // Backen: im Spannbereich alles ausserhalb des Spann-⌀
-    if(p.z < G.zS-FUTTER_SICHER && p.z > G.zStirn-FUTTER_SICHER &&
-       r > G.rSpann+FUTTER_SICHER && r < G.rHoch)
-      return {z:p.z, x:p.x, was:'Spannbacke'};
+    const was=futterPunkt(G, p.z, Math.abs(d2r(p.x)));
+    if(was) return {z:p.z, x:p.x, was};
   }
   return null;
+}
+
+// =================================================================
+// DER HALTER ALS KOLLISIONSKOERPER [26.09.2026, Punkt 2 der Liste vom
+// 25.09.; als "Punkt 5" seit August offen: "die Geometrie steht, geprueft
+// wird sie gegen nichts"]. Die Simulation prueft bis hierher die Platte
+// (Stempel) und bei Stechern die Klingenecken — ein Halter, der in die
+// Backen, in eine Schulter oder mit der Bohrstange in die Bohrungswand
+// faehrt, blieb unsichtbar. Das ist die Crash-Klasse, die an der Maschine
+// am teuersten ist.
+//
+// Der Halter ist ein VIELECK im (z, r)-Halbschnitt, relativ zur
+// Schneidenspitze (dz nach +z rechts, dr nach aussen positiv) — die Form je
+// Werkzeugart steht bei halterKoerper. Masse aus der Werkzeugtabelle
+// (App-Spalten halterB, halterAb, stechTiefe, halterL; ISO-Schaft aus der
+// Bezeichnung), sonst Vorgaben 25 mm Schaft, ⌀20 Bohrstange mit 2 mm
+// Ueberstand. Die Vorgaben stehen in der Maske, damit sie niemand fuer
+// gemessen haelt; die Stichtiefe wird ohne Eintrag NICHT geprueft.
+const HALTER_SICHER=0.4;   // mm: Material muss so tief IM Koerper stehen — die
+                           // Rasterspalte an der frisch geschnittenen Flaeche
+                           // traegt beide Staende und traefe sonst jeden Satz
+// Koerper als VIELECKE {pts:[[dz,dr],...], was} relativ zur Spitze.
+//
+// GEMESSEN AN DEN ELF VORLAGEN, bevor die Form feststand (26.09.2026):
+// ein Kasten direkt hinter der Spitze meldete 1712 Treffer mit 2 mm Nase
+// (Plandrehen: die Nase stand im Teil) und danach 192 - Stechblock in den
+// Backen beim Abstechen 5 mm vor dem Futter, Stichtiefe 20 an jedem tiefen
+// Stich, und der VBMT-Schlichter am Ballen, dessen Kopf die zuruecklaufende
+// Kugelflanke traf. Keiner war ein Bahnfehler, alle drei ein zu grobes
+// Modell. Daraus die Form:
+//   AUSSEN: Trapez. Die Kopffront laeuft im NEBENSCHNEIDENWINKEL
+//     kappa' = 180 - Einstellwinkel - Spitzenwinkel von der Spitze weg
+//     (PCLNR 95/80: 5 Grad, fast flach; SVJBR 93/35: 52 Grad) - genau die
+//     Grenze, bis zu der die Platte eine fallende Flanke fahren darf. Ueber
+//     der Spitze beginnt der Koerper erst nach dem Spitzenueberstand
+//     (halterAb, Vorgabe 0,5; Gewindestahl 3). Breite B in z auf der
+//     Koerperseite (SL 3 rechts, SL 1 links), keine Nase vor der Spitze.
+//   INNEN: Rundschaft ⌀D laengs z unter der Spitze zur Achse hin (halterAb
+//     = Ueberstand der Spitze ueber den Schaft, Vorgabe 2). Ein Punkt unter
+//     der Achse zaehlt mit |r| - dort ist die andere Bohrungswand.
+//   STECHEN: die Klinge selbst prueft der Stempel. Der Block darueber wird
+//     NUR mit eingetragener Stichtiefe geprueft, einseitig zur Koerperseite (ein Stechschwert reicht
+//     26 mm, eine N123-Klinge 20, ein Abstechschwert 60 - geraten waere
+//     jeder Wert falsch), Breite halterB, Vorgabe = Klingenbreite.
+//   BOHREN: nichts - der Bohrer steckt im eigenen Loch.
+function halterKoerper(tool){
+  if(!tool) return [];
+  const art=tool.art||'aussen';
+  if(art==='bohren') return [];
+  const d=slDirection(tool.sl); const dz=d.dx||1, dr=-(d.dy||-1);
+  const L=+tool.halterL>0? +tool.halterL : 150;
+  const out=[];
+  if(art==='stechen'){
+    const T=+tool.stechTiefe>0? +tool.stechTiefe : 0;
+    if(!(T>0)) return [];
+    const bw=+tool.len>0? +tool.len : 3;
+    const Bb=Math.max(bw, +tool.halterB>0? +tool.halterB : 20);
+    const rechts=(tool.refEdge==='links');       // Klinge liegt rechts vom Punkt
+    // Der Block steht EINSEITIG ueber der Klinge, zur Koerperseite (dz) wie
+    // beim Aussenhalter: die Klinge sitzt an der Vorderkante des Halters. Ein
+    // beidseitiger Block traf beim Abstechen 5 mm vor dem Futter die Backen
+    // (Buchse), ein buendiger fand nie etwas - ueber der eigenen Nut ist frei.
+    const ue=Bb-bw;
+    const z0=(rechts? 0 : -bw)-(dz<0? ue : 0), z1=(rechts? bw : 0)+(dz>0? ue : 0);
+    out.push({was:'Halterblock', pts:[[z0,dr*T],[z1,dr*T],[z1,dr*(T+L)],[z0,dr*(T+L)]]});
+    return out;
+  }
+  if(dr>0){
+    const Bh=+tool.halterB>0? +tool.halterB : (+tool.schaftB>0? +tool.schaftB : 25);
+    const ab=+tool.halterAb>0? +tool.halterAb : (art==='gewinde'? 3 : 0.5);
+    const ew=+tool.ew>0? +tool.ew : 95, sw=(tool.sw!==undefined && tool.sw!==null && tool.sw!=='')? +tool.sw : 80;
+    const kappa=Math.max(0, Math.min(85, 180-ew-sw))*Math.PI/180;   // Nebenschneidenwinkel
+    const st=Math.tan(kappa);
+    // VORDERKANTE IM HAUPTSCHNEIDENWINKEL [gemessen 26.09.: Rotorwelle Satz
+    // 37 meldete 2,4 mm ueber der Spitze und 0,07 dahinter Material - das
+    // ist der Span, den die 95-Grad-Schneide erst 0,21 weiter hinten
+    // nimmt]. Die Hauptschneide laeuft um ew-90 zurueck; der Koerper
+    // beginnt erst hinter ihr.
+    const eps=Math.max(0, Math.min(45, ew-90))*Math.PI/180, te=Math.tan(eps);
+    const zo=Math.min(Bh, L*te);          // Vorderkante oben, hoechstens Schaftbreite
+    out.push({was:'Halter', pts:[[0,ab],[dz*Bh, ab+Bh*st],[dz*Bh, L],[dz*zo, L]]});
+  } else {
+    const D=+tool.halterB>0? +tool.halterB : (+tool.schaftB>0? +tool.schaftB : 20);
+    const ab=+tool.halterAb>0? +tool.halterAb : (art==='gewinde'? 3 : 2);
+    out.push({was:'Bohrstange', pts:[[dz*1,-ab],[dz*L,-ab],[dz*L,-(ab+D)],[dz*1,-(ab+D)]]});
+  }
+  return out;
+}
+// Randpunkte eines Koerpers an einer Spitzenlage: jede KANTE um HALTER_SICHER
+// nach innen versetzt (echter Versatz - die Ecken zum Schwerpunkt zu ruecken
+// verschob die Vorderkante nur 0,06 mm, gemessen), die Kanten alle 1,5 mm
+// abgetastet.
+function halterEinruecken(pts, e){
+  const n=pts.length; let fl=0; for(let i=0;i<n;i++){ const a=pts[i], b=pts[(i+1)%n]; fl+=a[0]*b[1]-b[0]*a[1]; }
+  const sg=fl>=0? 1 : -1;   // Umlaufsinn: Normale zeigt nach innen
+  const lin=[]; for(let i=0;i<n;i++){ const a=pts[i], b=pts[(i+1)%n]; const dx=b[0]-a[0], dy=b[1]-a[1], l=Math.hypot(dx,dy)||1;
+    const nx=-dy/l*sg, ny=dx/l*sg; lin.push({a:[a[0]+nx*e, a[1]+ny*e], d:[dx/l, dy/l]}); }
+  const out=[]; for(let i=0;i<n;i++){ const p=lin[(i+n-1)%n], q=lin[i];
+    const det=p.d[0]*q.d[1]-p.d[1]*q.d[0]; if(Math.abs(det)<1e-9){ out.push(q.a); continue; }
+    const tt=((q.a[0]-p.a[0])*q.d[1]-(q.a[1]-p.a[1])*q.d[0])/det; out.push([p.a[0]+p.d[0]*tt, p.a[1]+p.d[1]*tt]); }
+  return out;
+}
+function halterPunkte(k, tip, hf){
+  const n=k.pts.length;
+  const ecken=halterEinruecken(k.pts, HALTER_SICHER).map(p=>[tip.z+p[0], tip.r+p[1]]);
+  const pts=[]; const S=1.5;
+  for(let i=0;i<n;i++){ const a=ecken[i], b=ecken[(i+1)%n]; const l=Math.hypot(b[0]-a[0], b[1]-a[1]); const m=Math.max(1, Math.ceil(l/S));
+    for(let j=0;j<m;j++){ const u=j/m; pts.push([a[0]+(b[0]-a[0])*u, a[1]+(b[1]-a[1])*u]); } }
+  return pts;
+}
+function halterTreffer(mv, tool, hf, G, rsMin, zStirn){
+  const kk=halterKoerper(tool); if(!kk.length) return null;
+  const len=Math.hypot(mv.z2-mv.z1, d2r(mv.x2-mv.x1));
+  const schritte=Math.max(1, Math.min(150, Math.ceil(len/1.5)));
+  for(let s=0;s<=schritte;s++){
+    const p=interpolateMove(mv, s/schritte); const tip={z:p.z, r:Math.abs(d2r(p.x))};
+    for(const k of kk){
+      for(const q of halterPunkte(k, tip, hf)){
+        const ra=Math.abs(q[1]);
+        // Material nur im Feldbereich abfragen; Backen und Reitstock liegen
+        // auch ausserhalb (vor der Stirn, hinter dem Ende) - der erste Bau warf
+        // diese Punkte ganz weg, und der Reitstock war damit unsichtbar
+        if(hf && q[0]>=hf.z0-1 && q[0]<=hf.z0+hf.n*hf.dz+1 && hfMaterialAt(hf, q[0], r2d(ra))) return {z:q[0], x:r2d(ra), was:k.was+' im Material'};
+        if(G){ const f=futterPunkt(G, q[0], ra); if(f) return {z:q[0], x:r2d(ra), was:k.was+' trifft '+f}; }
+        if(rsMin>0 && q[0]>zStirn && ra<rsMin/2-HALTER_SICHER) return {z:q[0], x:r2d(ra), was:k.was+' trifft Reitstock'};
+      }
+    }
+  }
+  return null;
+}
+// Halter-Treffer getrennt von Material- und Futtertreffern gefuehrt: sie
+// haben eine eigene Ursache (Werkzeugwahl, Auskraglaenge, Bohrstangen-⌀)
+// und eine eigene Zeile in Statusanzeige und Ampel.
+var simHalterTreffer=[];
+function halterPruefen(i, mv, fallback){
+  if(simHalterTreffer.some(c=>c.moveIdx===i)) return;
+  const tool=(mv.t && toolTable.find(x=>String(x.t)===String(mv.t))) || fallback;
+  const G=futterGeometrie();
+  const rs=(typeof pkReitstockXmin==='function')? pkReitstockXmin() : 0;
+  const zA=(typeof pkZA==='function')? pkZA() : 0;
+  const h=halterTreffer(mv, tool, hfFeld, G, rs, zA);
+  if(h) simHalterTreffer.push({z:h.z, x:h.x, was:h.was, moveIdx:i, t:tool? tool.t : ''});
 }
 
 function hfFortschreiben(from, to){
@@ -35110,6 +35285,10 @@ function hfFortschreiben(from, to){
       const ft=futterTreffer(mv);
       if(ft) simFutterTreffer.push({z:ft.z, x:ft.x, was:ft.was, moveIdx:i});
     }
+    // HALTER bei Eilgaengen gegen den Stand VOR dem Satz (er aendert ihn
+    // nicht); bei Schnittsaetzen unten NACH dem Stempeln — der Kopf laeuft
+    // hinter der Platte ueber die Flaeche, die dieser Satz gerade schneidet.
+    if(mv.type==='rapid') halterPruefen(i, mv, fallback);
     if(mv.type==='rapid'){
       // SPANBRUCH-LUEFTER [Daniel, Testwelle Satz 319]: ein kurzer G00,
       // der direkt am Endpunkt des vorherigen Schneidsatzes startet, ist
@@ -35184,6 +35363,7 @@ function hfFortschreiben(from, to){
     }
     // Schrittweite automatisch, s. hfBahnStempeln
     hfBahnStempeln(hfFeld, mv, fallback, null, 4000);
+    halterPruefen(i, mv, fallback);
   }
 }
 
@@ -35191,12 +35371,12 @@ function ensureHoehenfeld(){
   const key=hfSchluessel();
   if(key!==hfKey || !hfFeld){
     hfKey=key; simEckenBestimmen();
-    hfFeld=hfNeu(hfStufe()); hfUpTo=-1; simCollisions=[]; simFutterTreffer=[];
+    hfFeld=hfNeu(hfStufe()); hfUpTo=-1; simCollisions=[]; simFutterTreffer=[]; simHalterTreffer=[];
   }
   if(!hfFeld) return null;
   const upTo=Math.floor(simProgress)-1;
   if(upTo<hfUpTo){                       // zurückgespult -> neu aufbauen
-    hfFeld=hfNeu(hfStufe()); hfUpTo=-1; simCollisions=[]; simFutterTreffer=[];
+    hfFeld=hfNeu(hfStufe()); hfUpTo=-1; simCollisions=[]; simFutterTreffer=[]; simHalterTreffer=[];
   }
   if(upTo>hfUpTo){ hfFortschreiben(hfUpTo+1, upTo); hfUpTo=upTo; }
   // LAUFENDER SATZ [Daniel]: Bis hierher wandert der Materialstand nur in
@@ -37360,6 +37540,28 @@ function drawSimOverlay(){
         12*devicePixelRatio, (hits.length?38:22)*devicePixelRatio);
       ctx.restore();
     }
+    // HALTERTREFFER [26.09.2026]: der Halter (Schaft, Bohrstange, Stechblock)
+    // steht im Material, in den Backen oder am Reitstock. Eigene Zeile und
+    // eigene Farbe — eine andere Ursache als eine Bahn durch Material.
+    const htr = simHalterTreffer.filter(c=>c.moveIdx<=upTo);
+    if(htr.length){
+      const puls = 0.55 + 0.45*Math.sin(Date.now()/180);
+      htr.forEach(c=>{
+        const [hx,hy]=toScreen(c.z, c.x);
+        ctx.save();
+        ctx.strokeStyle=`rgba(210,90,0,${puls.toFixed(2)})`;
+        ctx.lineWidth=3*devicePixelRatio;
+        ctx.beginPath(); ctx.rect(hx-9*devicePixelRatio, hy-9*devicePixelRatio, 18*devicePixelRatio, 18*devicePixelRatio); ctx.stroke();
+        ctx.restore();
+      });
+      ctx.save();
+      ctx.fillStyle='rgba(210,90,0,0.97)';
+      ctx.font='bold '+(12*uiF*devicePixelRatio)+'px Arial';
+      const h0=htr[0];
+      ctx.fillText('⛔ HALTER T'+h0.t+' — Satz '+(h0.moveIdx+1)+': '+h0.was+' (Z'+fmt(h0.z)+' ⌀'+fmt(h0.x)+')',
+        12*devicePixelRatio, ((hits.length?16:0)+(ftr.length?16:0)+22)*devicePixelRatio);
+      ctx.restore();
+    }
   }
   let pos=null;
   if(upTo<simMoves.length){
@@ -37387,6 +37589,20 @@ function drawSimOverlay(){
         dotColor:'#c8281f',
         nurPlatte: (typeof window!=='undefined' && window.__simHalterAus===true)
       });
+      // Der PRUEFKASTEN des Halters, gestrichelt: was die Kollisionspruefung
+      // wirklich gegen Material, Backen und Reitstock haelt — damit man
+      // sieht, ob die Masse in der Werkzeugmaske zum Halter passen.
+      if(typeof halterKoerper==='function'){
+        const rT=Math.abs(d2r(pos.x));
+        ctx.save(); ctx.setLineDash([5*devicePixelRatio,4*devicePixelRatio]); ctx.lineWidth=1*devicePixelRatio;
+        ctx.strokeStyle='rgba(210,90,0,0.75)';
+        halterKoerper(tool).forEach(k=>{
+          ctx.beginPath();
+          k.pts.forEach((p,i)=>{ const c=toScreen(pos.z+p[0], r2d(rT+p[1])); if(i) ctx.lineTo(c[0],c[1]); else ctx.moveTo(c[0],c[1]); });
+          ctx.closePath(); ctx.stroke();
+        });
+        ctx.restore();
+      }
     } else {
       ctx.fillStyle='#c8281f';
       ctx.beginPath(); ctx.arc(sx,sy,6*devicePixelRatio,0,7); ctx.fill();
@@ -38114,18 +38330,18 @@ function massBericht(){
 // wird der komplette Simulationsstand, im finally kommt er zurueck.
 function ampelSimBefunde(){
   if(!simMoves.length) return null;
-  const mFeld=hfFeld, mUp=hfUpTo, mKey=hfKey, mK=simCollisions, mF=simFutterTreffer;
+  const mFeld=hfFeld, mUp=hfUpTo, mKey=hfKey, mK=simCollisions, mF=simFutterTreffer, mH=simHalterTreffer;
   try{
     simEckenBestimmen();
     hfFeld=hfNeu(hfStufe()); hfUpTo=-1;
-    simCollisions=[]; simFutterTreffer=[];
+    simCollisions=[]; simFutterTreffer=[]; simHalterTreffer=[];
     if(!hfFeld) return null;
     hfFortschreiben(0, simMoves.length-1);
-    return {koll:simCollisions.slice(), futter:simFutterTreffer.slice()};
+    return {koll:simCollisions.slice(), futter:simFutterTreffer.slice(), halter:simHalterTreffer.slice()};
   }catch(e){ return null; }
   finally{
     hfFeld=mFeld; hfUpTo=mUp; hfKey=mKey;
-    simCollisions=mK; simFutterTreffer=mF;
+    simCollisions=mK; simFutterTreffer=mF; simHalterTreffer=mH;
   }
 }
 
@@ -38246,8 +38462,9 @@ function programmPruefen(){
   if(sb){
     sb.futter.forEach(c=>R("Satz "+(c.moveIdx+1)+": "+c.was+" — Bahn faehrt ins Spannmittel (Z"+fmt(c.z)+" ⌀"+fmt(c.x)+"). Ausspannlaenge LA pruefen."));
     sb.koll.forEach(c=>R("Satz "+(c.moveIdx+1)+": Eilgang G00 quer durch Vollmaterial (Z"+fmt(c.z)+" ⌀"+fmt(c.x)+")"));
-    if(!sb.futter.length && !sb.koll.length)
-      OK("Kollision: "+simMoves.length+" Bahnen gegen Material, Futter und Backen geprueft");
+    (sb.halter||[]).forEach(c=>R("Satz "+(c.moveIdx+1)+": HALTER T"+c.t+" — "+c.was+" (Z"+fmt(c.z)+" ⌀"+fmt(c.x)+"). Werkzeug, Bohrstangen-⌀ oder Auskraglaenge pruefen (Werkzeugmaske: Halter)."));
+    if(!sb.futter.length && !sb.koll.length && !(sb.halter||[]).length)
+      OK("Kollision: "+simMoves.length+" Bahnen gegen Material, Futter und Backen geprueft — Platte, Klinge und HALTER");
   }
 
   // ---- 3. Masse ----------------------------------------------------
