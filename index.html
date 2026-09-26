@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ CAM</title>
-<script>window.__DZ_STAND="26.09.2026 19:00 (a35d0373)";</script>
+<script>window.__DZ_STAND="26.09.2026 21:51 (14a17b63)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -154,6 +154,24 @@
   .wleiste .wl-app{padding:3px 10px;border:1px solid var(--line);border-radius:12px;color:var(--blue);font-weight:600;text-decoration:none;font-size:12px;line-height:1.3;}
   .wleiste .wl-app.hier{background:var(--blue);color:#fff;border-color:var(--blue);}
   body.dunkel .wleiste .wl-app{border-color:hsl(var(--ton), 14%, 32%);}
+  /* DIE WERKSTATT-KOPFZEILE [26.09.2026, Entwurf Paket A]: Emblem, Segment-
+     Schalter Drehen | Fraesen | Pipeline und Ruecksprung-Chip. Unter 900 px
+     UNSICHTBAR - dort bleiben Logo-Menue und Leiste, wie sie waren (Regel 3);
+     die Laptop-Regeln stehen in der 900-px-Query. */
+  .wseg{display:none;}
+  /* DIE BLENDE beim Wechsel [Paket B]: Emblem, Zielname, eine Zeile, ein
+     laufender Strich - haengt am body ueber allem, blendet in 0,4 s aus.
+     Sie ist Bild, kein Layout: kein Element der Seite bewegt sich. */
+  #wblende{position:fixed;inset:0;z-index:9990;background:rgba(255,255,255,.86);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;opacity:1;transition:opacity .4s ease;}
+  #wblende.weg{opacity:0;pointer-events:none;}
+  #wblende .wb-em{width:84px;height:84px;color:var(--text);}
+  #wblende .wb-ziel{font-size:28px;font-weight:700;color:var(--blue);letter-spacing:.5px;}
+  #wblende .wb-sub{font-size:13px;color:var(--text-dim);}
+  #wblende .wb-strich{width:220px;height:3px;margin-top:8px;background:hsl(var(--ton), 28%, 91%);border-radius:2px;overflow:hidden;}
+  #wblende .wb-strich i{display:block;height:100%;width:30%;background:hsl(var(--ton), 74%, 46%);animation:wbLauf .7s linear infinite;}
+  @keyframes wbLauf{from{transform:translateX(-100%);}to{transform:translateX(340%);}}
+  body.dunkel #wblende{background:hsla(var(--ton), 14%, 12%, .88);}
   #dunkelBtn{width:30px;border:1px solid var(--line);border-radius:4px;
     background:var(--panel);color:var(--text-dim);font-size:14px;}
   body.dunkel #dunkelBtn{background:var(--key);color:#f2d98c;}
@@ -1124,6 +1142,15 @@ body.artefakt .hsoftkeys{padding-right:48px;}
   .leerakt button:active{background:hsl(var(--ton), 25.8%, 87.8%);}
   .leerakt .la-ic{font-size:17px;line-height:1;opacity:.8;flex:0 0 auto;}
   .leerakt .la-sub{display:block;font-weight:400;font-size:11px;color:var(--text-dim);}
+  /* WEITERMACHEN [26.09.2026, Entwurf Paket B, Punkt 3]: die Dreh-App merkt
+     sich ihr offenes Programm (et_aktuell) und bietet es beim Start an - wie
+     die Fraes-App seit dem 20.09. Die Karte steht nur, wenn ein Stand da ist;
+     ohne Stand ist das Startbild Pixel fuer Pixel das alte. */
+  .leerweiter{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:6px 0 2px;}
+  .leerweiter button{padding:12px 16px;font-size:14px;font-weight:700;border-radius:6px;
+    background:hsl(var(--ton), 70%, 38%);border:1px solid hsl(var(--ton), 70%, 30%);color:#fff;}
+  .leerweiter button:active{background:hsl(var(--ton), 70%, 32%);}
+  .leerweiter .lw-sub{font-size:11px;color:var(--text-dim);}
   .demotitel{margin:16px 0 2px;font-size:11px;font-weight:700;letter-spacing:.4px;
     text-transform:uppercase;color:var(--text-dim);text-align:left;}
   /* Vorlagenkachel mit Teile-Silhouette: die Kontur der Demo selbst
@@ -1709,6 +1736,29 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     .mrow label{width:150px;}
     .mrow input,.mrow select{width:120px;}
     .logo{font-size:15px;padding:0 10px;}
+    /* DIE WERKSTATT-KOPFZEILE [26.09.2026, Entwurf Paket A, Bilder 11/12/14]:
+       am Laptop steht der Segment-Schalter links aussen im Kopf, das Logo und
+       die Leiste im Startbild sind dort ueberfluessig. Die Zahlen sind die des
+       abgenommenen Prototyps. */
+    .wseg{display:flex;align-items:center;gap:10px;padding:0 4px 0 6px;flex:0 0 auto;}
+    .wseg .we{display:flex;color:var(--text);flex:0 0 auto;}
+    .wseg .we svg{width:26px;height:26px;}
+    .wseg .wsg{display:flex;background:hsl(var(--ton), 28%, 91%);border-radius:10px;padding:3px;gap:2px;}
+    .wseg .wsg a,.wseg .wsg span{display:block;padding:6px 15px;border-radius:8px;font-size:12.5px;font-weight:600;color:hsl(var(--ton), 12%, 42%);text-decoration:none;line-height:1.2;white-space:nowrap;letter-spacing:.1px;}
+    .wseg .wsg a:hover{color:hsl(var(--ton), 74%, 36%);}
+    .wseg .wsg .hier{background:#fff;color:hsl(var(--ton), 74%, 36%);box-shadow:0 1px 2px rgba(0,0,0,.14), 0 0 0 1px hsla(var(--ton), 30%, 20%, .06);}
+    .wzur{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:hsl(var(--ton), 12%, 42%);border:1px dashed hsl(var(--ton), 18%, 78%);border-radius:999px;padding:3px 10px 3px 8px;text-decoration:none;white-space:nowrap;}
+    .wzur b{color:hsl(var(--ton), 74%, 36%);font-weight:600;}
+    .wzur:hover{border-style:solid;}
+    body.dunkel .wseg .wsg{background:hsl(var(--ton), 16%, 22%);}
+    body.dunkel .wseg .wsg a,body.dunkel .wseg .wsg span{color:hsl(var(--ton), 15%, 72%);}
+    body.dunkel .wseg .wsg .hier{background:hsl(var(--ton), 16%, 32%);color:#fff;}
+    body.dunkel .wseg .we{color:#dde;}
+    body.dunkel .wzur{border-color:hsl(var(--ton), 14%, 36%);color:hsl(var(--ton), 15%, 72%);}
+    .hdr .logo{display:none;}
+    .wleiste{display:none;}
+    .hdr{align-items:center;padding:4px 6px;gap:8px;}
+    .hdr .progbox{border-radius:8px;}
     /* (25) G-FUNKTIONEN-LISTE WEG [Daniel, 09.09.2026 spaetabends: "das
        liest keiner, das bringt keinen Mehrwert"]: die Nachschlageliste
        ueber dem Arbeitsplan bleibt auch am Laptop aus - am Handy war sie
@@ -5515,13 +5565,18 @@ Stand 08.09.2026.</dd>
 (&bdquo;Kein Anschlusspunkt&ldquo;, &bdquo;Der Vorg&auml;nger ist noch offen&ldquo;) &mdash; erscheint sieben Sekunden im Banner am unteren Bildrand; ein Tipp darauf
 schlie&szlig;t es. Bis zum 20.09.2026 lag das Banner hinter jeder offenen Maske: wer in einer Maske einen Hinweis ausl&ouml;ste, sah nichts. Seither liegt es &uuml;ber allem.</dd>
 <dt id="ba-be-werkstatt">Die Werkstatt: Drehen, Fr&auml;sen, Pipeline (26.09.2026)</dt><dd>Es gibt drei Apps, und sie geh&ouml;ren zusammen:
-<b>Drehen</b> (diese), <b>Fr&auml;sen</b> und die <b>Werkstatt-Pipeline</b> (Anfrage, Angebot, Auftrag). Ein Tipp auf das <b>Logo</b> oben
-&ouml;ffnet das Werkstatt-Men&uuml; mit allen dreien &mdash; die aktuelle ist markiert; dieselbe Leiste steht &uuml;ber dem Startbild.
-Der Weg f&uuml;hrt immer zur richtigen Datei: im Projektordner zur Nachbardatei, auf dem Handy und am Laptop mit der
-Verkn&uuml;pfung zur ver&ouml;ffentlichten Fassung. Gemeinsam sind der <b>Dunkelmodus</b> (ein Schalter, eine Einstellung) und der
-<b>Projektordner</b> (Kap.&nbsp;6: einmal gew&auml;hlt, gilt er in beiden Apps &mdash; jede zeigt nur ihre Dateien). Die
-<b>Werkzeugtabellen bleiben getrennt</b>: Drehmei&szlig;el und Fr&auml;ser sind zwei Maschinenwelten; gleich sind die Werkstoffliste
-und die Bedienung der Masken. Wer die Pipeline offline &ouml;ffnet, braucht ihren Ordner neben diesem (Desktop).</dd>
+<b>Drehen</b> (diese), <b>Fr&auml;sen</b> und die <b>Werkstatt-Pipeline</b> (Anfrage, Angebot, Auftrag). <b>Am Laptop</b> steht links oben in der
+Kopfzeile der <b>Werkstatt-Schalter</b> Drehen | Fr&auml;sen | Pipeline &mdash; in allen drei Apps an derselben Stelle, die aktuelle hervorgehoben,
+ein Klick wechselt. Daneben der <b>R&uuml;cksprung</b> (&bdquo;&#x25C2; Fr&auml;sen: DZ1&ldquo;): er wei&szlig;, woher Du kommst und was dort offen war,
+und f&uuml;hrt genau dorthin zur&uuml;ck (einen halben Tag lang). <b>Am Handy</b> ist das <b>Logo</b> der Schalter (ein Tipp &ouml;ffnet das Men&uuml;),
+und dieselbe Leiste steht &uuml;ber dem Startbild. Der Wechsel ist kein harter Schnitt: eine Blende mit Emblem und Zielname legt sich &uuml;ber die
+Seite, die Zielseite kommt mit demselben Bild. <b>Das offene Programm bleibt:</b> die App merkt es sich nach jeder &Auml;nderung auf diesem Ger&auml;t
+und bietet es beim n&auml;chsten Start als &bdquo;Weitermachen: NAME&ldquo; an &mdash; ein leeres Programm &uuml;berschreibt den gemerkten Stand nicht.
+Der Weg f&uuml;hrt immer zur richtigen Datei: im Projektordner zur Nachbardatei (die Pipeline liegt im Ordner daneben auf dem Desktop), auf dem
+Handy und am Laptop mit der Verkn&uuml;pfung zur ver&ouml;ffentlichten Fassung. Gemeinsam sind der <b>Dunkelmodus</b> (ein Schalter, eine Einstellung
+&mdash; auch die Pipeline liest sie) und der <b>Projektordner</b> (Kap.&nbsp;6: einmal gew&auml;hlt, gilt er in allen drei Apps &mdash; jede zeigt nur
+ihre Dateien). Die <b>Werkzeugtabellen bleiben getrennt</b>: Drehmei&szlig;el und Fr&auml;ser sind zwei Maschinenwelten; gleich sind die Werkstoffliste
+und die Bedienung der Masken.</dd>
 <dt id="ba-be-laptopdesign">Laptop-Ansicht: Tiefe und B&uuml;hne (19.09.2026)</dt><dd>Ab 900 px Breite tr&auml;gt die Oberfl&auml;che seit dem 19.09.2026 eine zweite Schicht,
 die am Handy fehlt (dort &auml;ndert sich kein Pixel): <b>Zeitbalken im Arbeitsplan</b> &mdash; hinter jeder Zyklus-Zeile ein
 blauer Balken, dessen L&auml;nge der Anteil an der l&auml;ngsten Hauptzeit ist; <b>Zeilennummern und Zebra in der NC-Ausgabe</b>
@@ -6171,38 +6226,54 @@ function poFakeOrdner(name){
   return griff;
 }
 // =====================================================================
-// DIE GEMEINSAME HUELLE [26.09.2026, Punkt 7 der Liste vom 25.09.]:
+// DIE GEMEINSAME HUELLE [26.09.2026, Punkt 7 der Liste vom 25.09.; am
+// selben Abend nach der Durchsicht auf "drei Dateien, eine Oberflaeche"
+// erweitert - Entwurf ENTWURF-HUELLE.md, Pakete A und B]:
 // "ein Start, eine Werkzeugverwaltung, ein Projektordner, ein Dunkelmodus,
 // und darin Drehen oder Fraesen - der sichtbare Sprung. Was fehlt, ist
 // nicht Glanz, sondern Einheit."
 //
-// Zwei Apps, zwei Dateien - das bleibt (Regel 1: eine Datei, Doppelklick,
-// offline). Die Huelle ist deshalb kein drittes Programm, sondern das,
-// was beide GLEICH haben und was den Weg zwischen ihnen kennt:
-//   - das Logo in der Kopfzeile ist der WERKSTATT-SCHALTER: ein Tipp
-//     oeffnet Drehen / Fraesen / Werkstatt-Pipeline, die aktuelle App ist
-//     markiert. Kein neues Element in der Kopfzeile (am iPhone bleibt sie
-//     Pixel fuer Pixel, wie sie war - Regel 3), nur ein Klick auf das,
-//     was schon da ist.
-//   - die WERKSTATT-LEISTE ueber dem Startbild beider Apps: dieselbe Zeile,
-//     dieselben Ziele.
-//   - EIN Projektordner (06-projektordner.js, Schluessel 'projekt'): wer ihn
-//     in einer App waehlt, hat ihn in der anderen.
-//   - EIN Dunkelmodus (etDunkel, seit dem 12.09. gemeinsam).
+// Drei Apps, drei Dateien - das bleibt (Regel 1: eine Datei, Doppelklick,
+// offline). Die Huelle ist deshalb kein viertes Programm, sondern das,
+// was alle drei GLEICH haben und was den Weg zwischen ihnen kennt:
+//   - die WERKSTATT-KOPFZEILE (ab 900 px): links aussen das Emblem und
+//     der Segment-Schalter Drehen | Fraesen | Pipeline, die eigene App
+//     hervorgehoben; daneben der RUECKSPRUNG-Chip "Drehen: Mastertestteil",
+//     wenn man von dort kommt. In allen drei Apps an derselben Stelle.
+//   - am Handy (unter 900 px) bleibt alles, wie es war: das Logo ist der
+//     Werkstatt-Schalter (ein Tipp oeffnet das Menue), die Leiste steht
+//     ueber dem Startbild. Regel 3: dort aendert sich kein Pixel.
+//   - der WECHSEL ist kein harter Schnitt mehr: eine Blende mit Emblem und
+//     Zielname legt sich ueber die Seite, der Stand (von wo, welches
+//     Programm, wann) geht ueber den gemeinsamen Speicherschluessel
+//     dz_werkstatt mit, die Zielseite zeigt ihn als Ruecksprung-Chip.
+//   - EIN Projektordner (06-projektordner.js, Schluessel 'projekt') und
+//     EIN Dunkelmodus (etDunkel) in allen drei Apps.
 //
 // WOHIN der Sprung fuehrt, haengt an der FORM, in der die App laeuft:
 // im Projektordner heissen die Dateien euroturn-kontur-cam.html und
 // dz-cam-fraesen.html, auf GitHub Pages (PWA) index.html und fraesen.html
 // (pwa-bauen.js benennt um). Die Pipeline ist ein eigenes Repo: auf Pages
-// ihre Adresse, im Projektordner der Nachbarordner auf dem Desktop.
+// ihre Adresse, im Projektordner der Nachbarordner auf dem Desktop - und
+// von ihr aus fuehrt der Weg zurueck in den Nachbarordner der CAM-Apps
+// (werkstatt-pipeline.html liegt eine Ebene tiefer als docs/index.html).
 // Ausgerechnet wird das aus dem eigenen Dateinamen, nicht aus einer
 // Einstellung - eine Einstellung wuerde beim naechsten Umbenennen luegen.
+//
+// DASSELBE MODUL liegt als Kopie im Repo der Pipeline (shared/07-huelle.js);
+// der Pruefstand der Pipeline haelt die Kopie byteidentisch, sobald der
+// Nachbarordner da ist. Zwei Fassungen einer Regel driften.
 // =====================================================================
 const HUELLE_APPS = [
-  {id:'dreh',     name:'Drehen',             sub:'Monforts 1000 / 1500, Siemens 810T / 840D', projekt:'euroturn-kontur-cam.html', pwa:'index.html'},
-  {id:'fraes',    name:'Fräsen',        sub:'iTNC 530, TNC 410, 840D powerline',        projekt:'dz-cam-fraesen.html',      pwa:'fraesen.html'},
-  {id:'pipeline', name:'Werkstatt-Pipeline', sub:'Anfrage, Angebot, Auftrag',                 projekt:'../werkstatt-pipeline/docs/index.html', pwa:'https://dz-werkstatt.github.io/werkstatt-pipeline/', https:'https://dz-werkstatt.github.io/werkstatt-pipeline/'},
+  {id:'dreh',     name:'Drehen',             kurz:'Drehen',   sub:'Monforts 1000 / 1500, Siemens 810T / 840D', projekt:'euroturn-kontur-cam.html', pwa:'index.html',   https:'https://dz-werkstatt.github.io/dz-cam/'},
+  {id:'fraes',    name:'Fräsen',        kurz:'Fräsen',  sub:'iTNC 530, TNC 410, 840D powerline',        projekt:'dz-cam-fraesen.html',      pwa:'fraesen.html', https:'https://dz-werkstatt.github.io/dz-cam/fraesen.html'},
+  {id:'pipeline', name:'Werkstatt-Pipeline', kurz:'Pipeline', sub:'Anfrage, Angebot, Auftrag',                 projekt:'../werkstatt-pipeline/docs/index.html', pwa:'https://dz-werkstatt.github.io/werkstatt-pipeline/', https:'https://dz-werkstatt.github.io/werkstatt-pipeline/', eigen:true},
 ];
+// Der gemeinsame Speicherschluessel des Wechsels und seine Fristen: der
+// Ruecksprung-Chip gilt einen halben Tag (danach ist "von wo komme ich"
+// keine Auskunft mehr), die Ankunftsblende nur, wenn der Wechsel gerade
+// eben war (sonst zeigte jeder spaetere Neustart eine Blende).
+const HUELLE_KEY = 'dz_werkstatt', HUELLE_RUECK_MS = 12 * 3600 * 1000, HUELLE_ANKUNFT_MS = 10000, HUELLE_BLENDE_MS = 260;
 // Der eigene Dateiname (letztes Pfadstueck, ohne ?query und #hash); ein
 // nackter Ordner ("…/dz-cam/") ist index.html - so liefert Pages die PWA.
 function huelleDateiname(href){
@@ -6212,9 +6283,13 @@ function huelleDateiname(href){
   let d = ''; try{ d = decodeURIComponent(teil); }catch(e){ d = teil; }
   return d || 'index.html';
 }
+// Die Pipeline heisst auf Pages UND im Projektordner index.html - erkannt
+// wird sie am Ordner im Pfad, nicht am Dateinamen.
 function huelleHier(href){
+  const voll = String(href || (typeof location !== 'undefined' && location.href) || '').toLowerCase();
+  if(voll.indexOf('werkstatt-pipeline') >= 0) return 'pipeline';
   const d = huelleDateiname(href).toLowerCase();
-  const a = HUELLE_APPS.find(x => x.projekt.toLowerCase() === d || String(x.pwa).toLowerCase() === d);
+  const a = HUELLE_APPS.find(x => !x.eigen && (x.projekt.toLowerCase() === d || String(x.pwa).toLowerCase() === d));
   return a ? a.id : 'dreh';
 }
 // 'pwa' = die umbenannten Dateien der Veroeffentlichung, sonst 'projekt'.
@@ -6225,50 +6300,172 @@ function huelleForm(href){
 function huelleZiel(id, href, protokoll){
   const a = HUELLE_APPS.find(x => x.id === id); if(!a) return null;
   const p = String(protokoll || (typeof location !== 'undefined' && location.protocol) || 'file:');
-  if(a.https) return (p === 'file:') ? a.projekt : a.https;
+  const hier = huelleHier(href);
+  if(a.eigen) return (p === 'file:') ? a.projekt : a.https;
+  if(hier === 'pipeline'){
+    // Von der Pipeline aus: docs/index.html liegt eine Ebene tiefer als
+    // werkstatt-pipeline.html - der Rueckweg in den Nachbarordner ist
+    // entsprechend laenger. Der Ordnername traegt ein Leerzeichen.
+    if(p === 'file:'){
+      const h = String(href || (typeof location !== 'undefined' && location.href) || '').split('#')[0].split('?')[0];
+      const tief = /\/docs\/[^\/]*$/i.test(h);
+      return (tief ? '../../' : '../') + 'Dokumente%20euroturn/' + a.projekt;
+    }
+    return a.https;
+  }
   return huelleForm(href) === 'pwa' ? a.pwa : a.projekt;
 }
-// Die Werkstatt-Leiste ueber dem Startbild (beide Apps dieselbe).
+// --- Der Stand des Wechsels: von wo, welches Programm, wann, wohin. ---
+function huelleStandLesen(){
+  try{ const r = localStorage.getItem(HUELLE_KEY); if(!r) return null; const o = JSON.parse(r); return (o && typeof o === 'object') ? o : null; }
+  catch(e){ return null; }
+}
+function huelleStandSchreiben(o){
+  try{ localStorage.setItem(HUELLE_KEY, JSON.stringify(o)); return true; }catch(e){ return false; }
+}
+// Der Ruecksprung: nur wenn man wirklich von einer ANDEREN App hierher
+// gekommen ist, und nur einen halben Tag lang. DOM-frei - der Stand kommt
+// als Parameter, damit der Pruefstand ihn ohne Browserspeicher misst.
+function huelleRueck(hier, stand, jetzt){
+  const s = (stand === undefined) ? huelleStandLesen() : stand;
+  const t = jetzt || Date.now();
+  if(!s || !s.von || s.von === hier || s.ziel !== hier) return null;
+  if(!((t - (+s.zeit || 0)) < HUELLE_RUECK_MS)) return null;
+  const a = HUELLE_APPS.find(x => x.id === s.von); if(!a) return null;
+  return {von:s.von, text:a.kurz + (s.programm ? ': ' + s.programm : '')};
+}
+// Die Ankunft: der Wechsel war gerade eben (Blende kurz zeigen).
+function huelleAnkunft(hier, stand, jetzt){
+  const s = (stand === undefined) ? huelleStandLesen() : stand;
+  const t = jetzt || Date.now();
+  if(!s || s.ziel !== hier || !((t - (+s.zeit || 0)) < HUELLE_ANKUNFT_MS)) return null;
+  return s;
+}
+// EIN Emblem, EINE Zeichnung: die Kopfzeile und die Blende KLONEN das Emblem aus
+// dem Logo der Seite (CAM: .logo svg, Pipeline: header .emblem svg) - wie das
+// Startbild seit dem 31.08. Kein zweiter Quelltext derselben Zeichnung.
+function huelleEmblemKlon(){
+  try{ const e = document.querySelector('.hdr .logo svg') || document.querySelector('header .emblem svg'); return (e && e.cloneNode) ? e.cloneNode(true) : null; }
+  catch(x){ return null; }
+}
+function huelleEmblemEinsetzen(ziel, klasse){
+  if(!ziel) return false; const k = huelleEmblemKlon(); if(!k) return false;
+  try{ k.setAttribute('class', klasse || ''); ziel.appendChild(k); return true; }catch(x){ return false; }
+}
+const HUELLE_EMBLEM = '<span class="we"></span>';
+function huelleEsc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+// Die Werkstatt-Kopfzeile: Emblem, Segment-Schalter, Ruecksprung-Chip.
+// Die eigene App ist ein span (kein Link), die anderen sind Links mit
+// echtem href UND data-wziel - der Klick laeuft ueber huelleWechsel (Blende,
+// Stand), faellt aber auf das href zurueck, wenn kein Skript laeuft.
+function huelleKopfHtml(hier, zurueck, href){
+  const h = hier || huelleHier(href);
+  return '<div class="wseg">' + HUELLE_EMBLEM + '<div class="wsg">' +
+    HUELLE_APPS.map(a => a.id === h
+      ? '<span class="hier" title="' + huelleEsc(a.name + ' — ' + a.sub) + '">' + huelleEsc(a.kurz) + '</span>'
+      : '<a class="wsa" href="' + huelleEsc(huelleZiel(a.id, href)) + '" data-wziel="' + a.id + '" title="' + huelleEsc(a.name + ' — ' + a.sub) + '">' + huelleEsc(a.kurz) + '</a>').join('') +
+    '</div>' +
+    (zurueck && zurueck.von ? '<a class="wzur" href="' + huelleEsc(huelleZiel(zurueck.von, href)) + '" data-wziel="' + huelleEsc(zurueck.von) + '" title="zurück, wo Du herkommst">&#x25C2; <b>' + huelleEsc(zurueck.text) + '</b></a>' : '') +
+    '</div>';
+}
+// Die Werkstatt-Leiste ueber dem Startbild (Handy; am Laptop ausgeblendet,
+// dort steht der Schalter im Kopf).
 function huelleLeisteHtml(hier, href){
   const h = hier || huelleHier(href);
-  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  const esc = huelleEsc;
   return '<div class="wleiste"><span class="wl-tit">DZ CAM · Werkstatt</span>' +
     HUELLE_APPS.map(a => a.id === h
       ? '<span class="wl-app hier" title="' + esc(a.sub) + '">' + esc(a.name) + '</span>'
-      : '<a class="wl-app" href="' + esc(huelleZiel(a.id, href)) + '" title="' + esc(a.sub) + '">' + esc(a.name) + '</a>').join('') +
+      : '<a class="wl-app" href="' + esc(huelleZiel(a.id, href)) + '" data-wziel="' + a.id + '" title="' + esc(a.sub) + '">' + esc(a.name) + '</a>').join('') +
     '</div>';
 }
 function huelleMenueHtml(hier, href){
   const h = hier || huelleHier(href);
-  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  const esc = huelleEsc;
   return HUELLE_APPS.map(a => a.id === h
     ? '<span class="wm-app hier">' + esc(a.name) + '<span class="wm-sub">hier</span></span>'
-    : '<a class="wm-app" href="' + esc(huelleZiel(a.id, href)) + '">' + esc(a.name) + '<span class="wm-sub">' + esc(a.sub) + '</span></a>').join('');
+    : '<a class="wm-app" href="' + esc(huelleZiel(a.id, href)) + '" data-wziel="' + a.id + '">' + esc(a.name) + '<span class="wm-sub">' + esc(a.sub) + '</span></a>').join('');
 }
-// Das Logo wird der Schalter. Das Menue haengt am body (Wurzelkontext -
-// dieselbe Lehre wie beim Meldebanner: in der Kopfzeile laege es unter
-// jeder offenen Maske) und steht unter dem Logo.
-function huelleStart(){
+// Die Blende: Emblem, Zielname, eine Zeile darunter, ein laufender Strich.
+// Sie haengt am body (Wurzelkontext, ueber allem) und ist reines Bild.
+function huelleBlende(ziel, sub){
+  let b = document.getElementById('wblende');
+  if(!b){ b = document.createElement('div'); b.id = 'wblende'; document.body.appendChild(b); }
+  b.className = '';
+  b.innerHTML = '<div class="wb-ziel">' + huelleEsc(ziel) + '</div>' +
+    (sub ? '<div class="wb-sub">' + huelleEsc(sub) + '</div>' : '') +
+    '<div class="wb-strich"><i></i></div>';
+  try{ const k = huelleEmblemKlon(); if(k){ k.setAttribute('class', 'wb-em'); b.insertBefore(k, b.firstChild); } }catch(e){}
+  return b;
+}
+function huelleBlendeWeg(b, nachMs){
+  setTimeout(() => { try{ b.classList.add('weg'); }catch(e){}
+    setTimeout(() => { try{ b.parentNode.removeChild(b); }catch(e){} }, 450); }, nachMs || 0);
+}
+// Der Wechsel: Stand merken, Blende zeigen, dann die Zielseite laden. Der
+// Programmname kommt aus der App (opt.programm liefert ihn), damit der
+// Ruecksprung-Chip der Zielseite "Drehen: Mastertestteil" sagen kann.
+function huelleWechsel(zielId, hier, opt){
+  const a = HUELLE_APPS.find(x => x.id === zielId); if(!a) return false;
+  const h = hier || huelleHier();
+  if(a.id === h) return false;
+  const href = huelleZiel(zielId); if(!href) return false;
+  let programm = '';
+  try{ if(opt && typeof opt.programm === 'function') programm = String(opt.programm() || ''); }catch(e){ programm = ''; }
+  huelleStandSchreiben({von:h, programm:programm, zeit:Date.now(), ziel:zielId});
+  const sub = (programm ? programm + ' bleibt gemerkt · ' : '') + 'Dunkelmodus und Projektordner gehen mit';
+  try{ huelleBlende(a.name, sub); }catch(e){}
+  setTimeout(() => { location.href = href; }, HUELLE_BLENDE_MS);
+  return true;
+}
+// Beim Start: Kopfzeile einsetzen, Klicks auf jedes [data-wziel] (Segment,
+// Ruecksprung, Menue, Leiste) ueber den Wechsel fuehren, die Ankunft
+// zeigen, das Logo-Menue (Handy) verdrahten. Das Menue haengt am body
+// (Wurzelkontext - dieselbe Lehre wie beim Meldebanner: in der Kopfzeile
+// laege es unter jeder offenen Maske) und steht unter dem Logo.
+function huelleStart(opt){
   if(typeof document === 'undefined') return false;
-  const logo = document.querySelector('.hdr .logo'); if(!logo || !logo.addEventListener) return false;
-  let m = document.getElementById('wmenue');
-  if(!m){ m = document.createElement('div'); m.id = 'wmenue'; m.className = 'wmenue'; document.body.appendChild(m); }
-  m.innerHTML = huelleMenueHtml();
-  logo.style.cursor = 'pointer';
-  logo.setAttribute('title', 'Werkstatt: Drehen · Fräsen · Pipeline');
-  const zu = () => { m.classList.remove('auf'); };
-  logo.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if(m.classList.contains('auf')){ zu(); return; }
-    m.classList.add('auf');
-    // Unter dem Logo, aber im Bild: das Logo steht rechts in der Kopfzeile, ein
-    // links buendiges Menue lief aus dem Fenster (Aufnahme 26.09.2026).
-    try{ const r = logo.getBoundingClientRect(), w = m.offsetWidth || 220;
-      m.style.top = (r.bottom + 4) + 'px';
-      m.style.left = Math.max(6, Math.min(r.left, window.innerWidth - w - 6)) + 'px'; }catch(x){}
+  opt = opt || {};
+  const hier = opt.hier || huelleHier();
+  const kopf = document.querySelector('.hdr') || document.querySelector('header');
+  if(!kopf) return false;
+  try{
+    if(kopf.insertBefore && !document.querySelector('.wseg')){
+      const d = document.createElement('div');
+      d.innerHTML = huelleKopfHtml(hier, huelleRueck(hier));
+      if(d.firstChild) kopf.insertBefore(d.firstChild, kopf.firstChild);
+      huelleEmblemEinsetzen(document.querySelector('.wseg .we'), 'we-svg');
+    }
+  }catch(e){}
+  document.addEventListener('click', (e) => {
+    const a = (e.target && e.target.closest) ? e.target.closest('[data-wziel]') : null;
+    if(!a) return;
+    if(huelleWechsel(a.getAttribute('data-wziel'), hier, opt)) e.preventDefault();
   });
-  document.addEventListener('click', (e) => { if(!m.contains(e.target)) zu(); });
-  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') zu(); });
+  // Ankunft ohne Startbild (Pipeline): die Blende kurz zeigen und ausblenden.
+  // Die CAM-Apps haben ihr Startbild - das ist dort die Ankunft, nur kuerzer.
+  try{ if(huelleAnkunft(hier) && !document.getElementById('splash')){ const a = HUELLE_APPS.find(x => x.id === hier); huelleBlendeWeg(huelleBlende(a ? a.name : 'DZ CAM', ''), 350); } }catch(e){}
+  const logo = document.querySelector('.hdr .logo');
+  if(logo && logo.addEventListener){
+    let m = document.getElementById('wmenue');
+    if(!m){ m = document.createElement('div'); m.id = 'wmenue'; m.className = 'wmenue'; document.body.appendChild(m); }
+    m.innerHTML = huelleMenueHtml(hier);
+    logo.style.cursor = 'pointer';
+    logo.setAttribute('title', 'Werkstatt: Drehen · Fräsen · Pipeline');
+    const zu = () => { m.classList.remove('auf'); };
+    logo.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if(m.classList.contains('auf')){ zu(); return; }
+      m.classList.add('auf');
+      // Unter dem Logo, aber im Bild: das Logo steht rechts in der Kopfzeile, ein
+      // links buendiges Menue lief aus dem Fenster (Aufnahme 26.09.2026).
+      try{ const r = logo.getBoundingClientRect(), w = m.offsetWidth || 220;
+        m.style.top = (r.bottom + 4) + 'px';
+        m.style.left = Math.max(6, Math.min(r.left, window.innerWidth - w - 6)) + 'px'; }catch(x){}
+    });
+    document.addEventListener('click', (e) => { if(!m.contains(e.target)) zu(); });
+    document.addEventListener('keydown', (e) => { if(e.key === 'Escape') zu(); });
+  }
   return true;
 }
 // =====================================================================
@@ -15785,7 +15982,18 @@ function refreshArbeitsplan(){
       }
     }catch(e){ hero=''; }
     // WERKSTATT-LEISTE [Huelle, 26.09.2026]: dieselbe Zeile wie im Fraesen.
-    empty.innerHTML=(typeof huelleLeisteHtml==='function'? huelleLeisteHtml('dreh') : '')+hero+
+    // WEITERMACHEN [26.09.2026, Paket B]: liegt ein Stand im Speicher (et_aktuell),
+    // steht er als erste Karte - wie in der Fraes-App. Ohne Stand: kein Element.
+    let weiter='';
+    try{
+      const L=(typeof programmLetzterStand==='function')? programmLetzterStand() : null;
+      if(L){
+        const nm=String(L.name).replace(/[<>&"]/g,'');
+        weiter='<div class="leerweiter"><button id="leerWeiter" type="button">Weitermachen: '+nm+'</button>'+
+          '<span class="lw-sub">'+L.schritte+' Schritt'+(L.schritte===1?'':'e')+' \u00b7 '+L.elemente+' Elemente \u2014 zuletzt bearbeitet</span></div>';
+      }
+    }catch(e){ weiter=''; }
+    empty.innerHTML=(typeof huelleLeisteHtml==='function'? huelleLeisteHtml('dreh') : '')+hero+weiter+
       '<div class="leerakt">'+
       '<button id="leerKontur"><span class="la-ic">\u271B</span><span>Kontur zeichnen<span class="la-sub">Startpunkt, Geraden, Radien \u2014 dann Zyklen darauf</span></span></button>'+
       '<button id="leerDxf"><span class="la-ic">\u21F2</span><span>DXF importieren<span class="la-sub">Fertigteilkontur aus CAD, danach Programmvorschlag</span></span></button>'+
@@ -15809,6 +16017,8 @@ function refreshArbeitsplan(){
     if(bHero) bHero.addEventListener('click', ()=>{
       try{ const abl=ablageLesen(); const l=abl[abl.length-1]; if(l && ablageLaden(l.name)){ skMode='kontur'; enterGrafischView(); } }catch(e){}
     });
+    const bWeiter=document.getElementById('leerWeiter');
+    if(bWeiter) bWeiter.addEventListener('click', ()=>{ try{ programmWeitermachen(); }catch(e){} });
     try{
       const hc=document.getElementById('leerHeroSil');
       if(hc){ const abl=ablageLesen(); const l=abl[abl.length-1]; if(l) silhouettePunkteMalen(hc, silhouetteAusEls(l.els), null); }
@@ -16329,6 +16539,9 @@ function refreshAll(){
   // rechnet refreshArbeitsplan() weiter oben erst neu — vorher gezeichnet
   // stuenden dort die Zeiten des vorigen Standes.
   try{ renderPlanVorschau(); }catch(e){ try{ console.error('Planvorschau:', e&&e.message); }catch(_){} }
+  // DAS OFFENE PROGRAMM BLEIBT [26.09.2026]: nach jeder Aenderung in den Speicher
+  // (s. programmStandMerken in 85-planer.js; ein leeres Programm schreibt nicht).
+  try{ if(typeof programmStandMerken==='function') programmStandMerken(); }catch(e){}
 }
 
 // ---------------------------------------------------------------
@@ -17785,7 +17998,10 @@ try{
     setTimeout(()=>{ try{ sp.parentNode.removeChild(sp); }catch(e){} }, 450);
   }
   if(sp) sp.addEventListener('click', splashWeg);
-  setTimeout(splashWeg, 2800);
+  // ANKUNFT [26.09.2026, Paket B]: kommt man gerade aus einer Schwester-App,
+  // ist das Startbild die Blende der Ankunft - kurz, nicht 2,8 s.
+  const splashMs=(typeof huelleAnkunft==='function' && huelleAnkunft())? 900 : 2800;
+  setTimeout(splashWeg, splashMs);
 }catch(e){}
 { const b=document.getElementById('baBtn'); if(b) b.onclick=()=>baOeffnen();
   const z=document.getElementById('baZu'); if(z) z.onclick=baSchliessen;
@@ -23539,6 +23755,48 @@ function programmDateiObjekt(name){
     toolTable:JSON.parse(JSON.stringify(toolTable)),
   };
 }
+// DAS OFFENE PROGRAMM BLEIBT [26.09.2026, Entwurf Paket B, Punkt 3]: die
+// Programme dieser App waren sitzungsfluechtig - wer von Drehen nach Fraesen
+// und zurueck ging, fand ein leeres Programm. Jetzt schreibt refreshAll nach
+// jeder Aenderung den Stand in den Browserspeicher (et_aktuell, dieselbe
+// Form wie die Direkt-Sicherung, ohne die Werkzeugtabelle - die hat ihren
+// eigenen Slot), und das Startbild bietet "Weitermachen: NAME" an. EIN
+// LEERES PROGRAMM UEBERSCHREIBT DEN STAND NICHT (dieselbe Regel wie fIstLeer
+// in der Fraes-App): der Start mit leerem Programm liefe sonst dem
+// Weitermachen davon, und "Neues Programm" wuerde den letzten Stand loeschen.
+const PROG_SLOT_AKT='et_aktuell';
+function programmIstLeer(){
+  if(programSteps.length) return false;
+  // Ein einzelner Startpunkt ist noch keine Arbeit.
+  return !contours.some(c=>c && c.els && c.els.length>1);
+}
+function programmStandObjekt(){
+  const nm=document.getElementById('pmSaveName').value.trim()||'Programm';
+  const o=programmDateiObjekt(nm);
+  delete o.toolTable;
+  return o;
+}
+function programmStandMerken(){
+  if(programmIstLeer()) return false;
+  try{ localStorage.setItem(PROG_SLOT_AKT, JSON.stringify(programmStandObjekt())); return true; }catch(e){ return false; }
+}
+// Was liegt im Speicher, ohne es zu laden? (fuer die Karte Weitermachen)
+function programmLetzterStand(){
+  try{
+    const r=localStorage.getItem(PROG_SLOT_AKT); if(!r) return null;
+    const o=JSON.parse(r);
+    if(!o || o.format!=='euroturn-cam-programm' || !Array.isArray(o.programSteps) || !Array.isArray(o.contours)) return null;
+    const el=o.contours.reduce((s,c)=>s+((c && c.els)? c.els.length : 0), 0);
+    if(!o.programSteps.length && el<=1) return null;
+    return {name:o.name||'Programm', schritte:o.programSteps.length, elemente:el, obj:o};
+  }catch(e){ return null; }
+}
+function programmWeitermachen(){
+  const L=programmLetzterStand(); if(!L) return false;
+  loadProgram(L.obj);
+  try{ alert('Weiter mit "'+L.name+'".'); }catch(e){}
+  return true;
+}
 document.getElementById('btnProgFileSave').onclick=()=>{
   const obj=programmDateiObjekt();
   exportiereDatei(obj.name+'-programm.json', JSON.stringify(obj,null,2), 'Programmstand', 'application/json');
@@ -23715,8 +23973,10 @@ function sdOeffnen(){
   try{ sdVorgabenAnwenden(); }catch(e){}
 }
 
-// DIE HUELLE [26.09.2026]: das Logo wird der Werkstatt-Schalter (07-huelle.js).
-try{ huelleStart(); }catch(e){}
+// DIE HUELLE [26.09.2026]: Werkstatt-Kopfzeile, Logo-Menue, Wechsel (07-huelle.js).
+// Der Programmname geht beim Wechsel mit - die Zielseite zeigt ihn im
+// Ruecksprung-Chip ("Drehen: Mastertestteil").
+try{ huelleStart({programm:()=>{ try{ if(programmIstLeer()) return ''; return document.getElementById('pmSaveName').value.trim()||'Programm'; }catch(e){ return ''; } }}); }catch(e){}
 setBodyMode('mode-arbeitsplan');
 resizeCanvas();
 refreshAll();
