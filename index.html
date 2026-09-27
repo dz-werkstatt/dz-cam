@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="27.09.2026 18:12 (22dac6ab)";</script>
+<script>window.__DZ_STAND="27.09.2026 23:10 (d72b4f85)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4629,8 +4629,10 @@ gespannt:</b> liegt an der Schulter eine Rundung, endet die Backe Radius&nbsp;+&
 wandert an den nächsten Absatz.<br>
 <b>Formbacke.</b> Kein Spannring &mdash; der Butzen (kleinster ⌀ der Backe, abgefragt) wird tief in die weichen
 Backen gespannt. Ausgedreht wird mit <b>zwei Werkzeugen</b>: Schruppen CNMG R0,8 (T8), Schlichten R0,4 (T10).
-Die Vorderkante bekommt immer <b>R0,4</b> (gratfrei), Schruppen und Schlichten beginnen bei <b>Z0,05</b> &mdash; die
-Backenstirn wird nicht nachgeschnitten. Liegt das Teil an einem Absatz in der Backe an, sitzt in der Ecke ein
+Die Vorderkante bekommt immer <b>R0,4</b> (gratfrei), der Schlichtzug beginnt bei <b>Z0,05</b> &mdash; die
+Backenstirn wird nicht nachgeschnitten. <b>Geschruppt wird ohne die Kante</b>: bis Spann-&#8960; minus
+Schlichtaufmaß, in wenigen Zügen; Rundung und Freistich nimmt der Schlichtmeißel in <b>einem</b> Zug mit
+(bis 27.09.2026 legte das Schruppen über der Rundung einen Zug je Stützpunkt, bis zu 13, einige davon in der Luft). Liegt das Teil an einem Absatz in der Backe an, sitzt in der Ecke ein
 Freistich <b>Form E</b> nur in X, mindestens 0,6&nbsp;mm tief (Radius der Schlichtplatte + 0,2), damit die Kante des
 Teils frei liegt. Unterbrochener Schnitt an den drei Backen: ap höchstens 1&nbsp;mm, F 0,12 schruppen, 0,05
 schlichten &mdash; alles in der Maske des Blocks änderbar.<br>
@@ -9448,6 +9450,15 @@ function autoFit(){
           let xLo=Infinity;
           for(let z=ziel.zHi; z>=ziel.zLo-1e-9; z-=0.5){
             const a=ziel.at(z); if(a!==null) xLo=Math.min(xLo,a);
+          }
+          // Nur innen bearbeitet (Formbacke, Plan "nur innen"): die Aussengrenze
+          // ist dann das Rohmass, und der Halbschnitt am Handy schnitte die
+          // Bohrung weg, um die es geht (27.09.2026, gemessen: Fenster ⌀107..119
+          // bei einer Backenbohrung ⌀50). Dann zaehlt die Innengrenze.
+          if(ziel.aussenRoh && ziel.hatInnen){
+            for(let z=ziel.innenZHi; z>=ziel.innenZLo-1e-9; z-=0.5){
+              const a=ziel.innenAt(z); if(a>0) xLo=Math.min(xLo,a);
+            }
           }
           if(isFinite(xLo) && xLo>2){
             const span=Math.max(view.xMax - xLo, 8);
@@ -37021,6 +37032,10 @@ function zielHuelleInnenRechnen(){
     .filter(v=>v!==undefined))];
   const envs=ids.map(id=>{ const c=contourById(id);
     return (c&&c.els.length>1)?innenSollgrenze(c.els):null; }).filter(Boolean);
+  // In der Formbacken-Lage ist die Bohrung der Backe die Innengrenze (die
+  // Schritte dieser Lage entstehen erst beim Bau, im Arbeitsplan stehen sie nicht).
+  if(!envs.length && typeof AUFSP!=='undefined' && AUFSP && AUFSP.aktiv==='F' && typeof AUFSP_FB_KONTUR_ID!=='undefined'){
+    const cF=contourById(AUFSP_FB_KONTUR_ID); if(cF && cF.els.length>1) envs.push(innenSollgrenze(cF.els)); }
   if(!envs.length) return null;
   let zLo=Infinity, zHi=-Infinity;
   envs.forEach(e=>{ zLo=Math.min(zLo,e.zLo); zHi=Math.max(zHi,e.zHi); });
@@ -37051,9 +37066,21 @@ function zielHuelleRechnen(){
     .filter(v=>v!==undefined))];
   const envs=ids.map(id=>{ const c=contourById(id);
     return (c&&c.els.length>1)?roughEnvelope(0,0,c.els):null; }).filter(Boolean);
+  let aussenRoh=false;
   if(!envs.length){
+    // NUR INNEN BEARBEITET [27.09.2026, Daniels Foto der Formbacke: die ganze
+    // Backe stand gelb als Restmaterial]: der Rueckfall nahm die aktive Kontur
+    // als AUSSENgrenze - bei einem Programm, das nur innen dreht (Formbacke,
+    // Plan "nur innen"), ist das die Bohrung, und alles darueber galt als Rest.
+    // Dann gilt aussen das Rohmass: dort wird nichts bearbeitet.
+    const aktId=(contours[activeContourIdx]||{}).id;
+    const nurInnen=(typeof AUFSP!=='undefined' && AUFSP && AUFSP.aktiv==='F') ||
+      programSteps.some(s2=>(s2.type==='abspanen_kontur'||s2.type==='stechdrehen') && (s2.params||{}).lage==='innen' && s2.params.contourId===aktId);
+    const dRoh=+((document.getElementById('stockDia')||{}).value)||0;
+    const zRA=+((document.getElementById('pkZA')||{}).value)||0, zRI=+((document.getElementById('pkZI')||{}).value);
+    if(nurInnen && dRoh>0 && isFinite(zRI)){ envs.push({zLo:Math.min(zRA,zRI), zHi:Math.max(zRA,zRI), at:()=>dRoh}); aussenRoh=true; }
     // Fallback: aktive Kontur (Verhalten wie frueher, aber gelb)
-    if(contour.length>1) envs.push(roughEnvelope(0,0,contour));
+    else if(contour.length>1) envs.push(roughEnvelope(0,0,contour));
     else return null;
   }
   let zLo=Infinity, zHi=-Infinity;
@@ -37116,7 +37143,7 @@ function zielHuelleRechnen(){
   // Ist ⌀26 — 14 mm scheinbares Restmaterial, das eine halbe Spalte
   // weiter verschwunden ist. Derselbe Randstreifen wie aussen; wer die
   // Innengrenze auswertet, muss ihn aussparen.
-  return {zLo, zHi, at, maskiert, innenAt, hatInnen:!!innen,
+  return {zLo, zHi, at, maskiert, innenAt, hatInnen:!!innen, aussenRoh,
           innenZLo: innen?innen.zLo:0, innenZHi: innen?innen.zHi:0};
 }
 function buildLeftover(){
@@ -42291,6 +42318,7 @@ let AUFSP = aufspVorgabe();
 let AUFSP_KANON = null;      // {contours, settings} der ersten Seite, solange Seite 2 / Formbacken angewaehlt ist
 let AUFSP_IM_BAU = false;    // Rekursionswache: der Siemens-Schreiber ruft buildProgram erneut
 const AUFSP_FB_KONTUR_ID = 990001;
+const AUFSP_FB_SCHRUPP_ID = 990003;   // Schruppkontur der Formbacke (ohne Vorderkante, s. aufspFormbackeSchritte)
 
 function aufspAn(){ return !!(AUFSP && AUFSP.an); }
 function aufspMerge(o){
@@ -42576,13 +42604,33 @@ function aufspFormbackeKontur(z){
   }
   return {els, tiefe:t, tiefeGes:tiefeGes + 1, butzen, fsT, rK, z0, frei, rP, durch, stange, zuEng, zuGross};
 }
+// SCHRUPPEN OHNE VORDERKANTE [Daniel, 27.09.2026, Foto der Simulation: "warum
+// zerspanst du den Radius an der weichen Backe vorne an der Kante so
+// treppenartig? Das muesste doch mit einem Schruppspan gehen"]. Geschruppt
+// wurde auf DERSELBEN Kontur wie geschlichtet: ueber der Rundung R0,4 und dem
+// Anfang Z0,05 legte das z-parallele Schruppen fuer jeden abgetasteten Punkt
+// eine eigene Ebene - 13 Zuege von X49,607 bis X50,8, jeder mit eigenem Eilgang,
+// die letzten vier vor der Backenstirn in der Luft. Die Rundung ist 0,4 mm
+// radial, das Schlichtaufmass 0,2: sie gehoert dem Schlichtmeissel in EINEM Zug.
+// Der Schruppschritt bekommt deshalb eine eigene Kontur - gleiche Bohrung,
+// gleicher Freistich, aber ab Z0 auf dem Spann-⌀ ohne Kante.
+function aufspFormbackeSchruppKontur(fk, d){
+  // Der Freistich unten in der Backe (groesser als d) ist fuer das Schruppen von
+  // vorn ein Hinterschnitt - er gehoert ebenfalls dem Schlichtmeissel; sonst legt
+  // das Schruppen fuer ihn noch einen Zug auf ⌀d+0,8 an, der vor der Stirn endet.
+  return [{kind:'start', z:0, x:d, trans:{type:'none', val:0}}].concat(JSON.parse(JSON.stringify(fk.els.slice(3))).map(e => { if(e.x > d) e.x = d; return e; }));
+}
 function aufspFormbackeSchritte(z, fk){
   const f = AUFSP.fb;
-  return [{ id:990002, type:'abspanen_kontur', aufsp:'F', params:{
-    bearbeitung:'beide', richtung:'z-parallel', lage:'innen', schlRicht:'rl',
-    contourId:AUFSP_FB_KONTUR_ID, stock:fk.butzen, stockZ:fk.z0, d:+f.apMax || 1, ux:0.2, uz:0.05, safeZ:2,
-    t:String(f.tR || '8'), t2:String(f.tS || '10'),
-    fr:+f.fr || 0.12, sr:+f.vc || 180, sMode:'vc', ff:+f.ff || 0.05, sf:+f.vc || 180, kuehl:'an' } }];
+  const gemein = { richtung:'z-parallel', lage:'innen', schlRicht:'rl', stock:fk.butzen, safeZ:2,
+    sr:+f.vc || 180, sMode:'vc', sf:+f.vc || 180, kuehl:'an' };
+  return [
+    { id:990002, type:'abspanen_kontur', aufsp:'F', params:Object.assign({}, gemein, {
+      bearbeitung:'schruppen', contourId:AUFSP_FB_SCHRUPP_ID, stockZ:0, d:+f.apMax || 1, ux:0.2, uz:0.05,
+      t:String(f.tR || '8'), t2:String(f.tR || '8'), fr:+f.fr || 0.12, ff:+f.ff || 0.05 }) },
+    { id:990004, type:'abspanen_kontur', aufsp:'F', params:Object.assign({}, gemein, {
+      bearbeitung:'schlichten', contourId:AUFSP_FB_KONTUR_ID, stockZ:fk.z0, d:+f.apMax || 1, ux:0.2, uz:0.05,
+      t:String(f.tS || '10'), t2:String(f.tS || '10'), fr:+f.fr || 0.12, ff:+f.ff || 0.05 }) }];
 }
 
 // ---- Reststand nach Seite 1 (fuer Programmkopf und Simulation der Seite 2)
@@ -42689,7 +42737,7 @@ function aufspWechseln(k){
     if(!z) return {fehler:'An der ersten Seite gibt es keine Stufe, die als Spannzone taugt (Zylinder, mindestens 5 mm Spanntiefe, nicht an der Grenze).'};
     const fk = aufspFormbackeKontur(z);
     AUFSP_KANON = kanon;
-    contours = [{id:AUFSP_FB_KONTUR_ID, name:'Formbacke', els:fk.els}];
+    contours = [{id:AUFSP_FB_KONTUR_ID, name:'Formbacke', els:fk.els}, {id:AUFSP_FB_SCHRUPP_ID, name:'Formbacke (schruppen)', els:aufspFormbackeSchruppKontur(fk, z.d)}];
     aufspSetzeDom({ progNo:aufspONr('F'), pkForm:'rohr', stockDia:+(z.d + 60).toFixed(1), pkXI:fk.butzen,
       pkZA:0, pkZI:-(Math.ceil(fk.tiefeGes) + 10), pkLA:0 });
     AUFSP.aktiv = 'F';
@@ -42715,7 +42763,7 @@ function aufspBauenIn(k){
       steps = aufspFormbackeSchritte(z, fk);
       if(fk.zuEng) warn.push('Formbacke: der Butzen ⌀' + fmt(fk.butzen) + ' ist enger als die Mindest-Vorbohrung ⌀' + fmt(fk.stange) + ' der Bohrstange — Butzen-⌀ in der Formbacken-Maske pruefen');
       if(fk.zuGross) warn.push('Formbacke: die Bohrstange braucht mindestens ⌀' + fmt(fk.stange) + ', die Spannbohrung ⌀' + fmt(z.d) + ' laesst dafuer keinen Platz — eine kleinere Bohrstange einsetzen');
-      cont = [{id:AUFSP_FB_KONTUR_ID, name:'Formbacke', els:fk.els}];
+      cont = [{id:AUFSP_FB_KONTUR_ID, name:'Formbacke', els:fk.els}, {id:AUFSP_FB_SCHRUPP_ID, name:'Formbacke (schruppen)', els:aufspFormbackeSchruppKontur(fk, z.d)}];
     } else {
       steps = programSteps.filter(st => aufspBlockVon(st) === k);
       if(!steps.length) return {code:null, warn:['In „' + aufspName(k) + '“ steht noch kein Schritt.']};
