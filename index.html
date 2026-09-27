@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="27.09.2026 14:20 (6c128e8a)";</script>
+<script>window.__DZ_STAND="27.09.2026 15:14 (05650df9)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3898,8 +3898,9 @@ Bogen mit falschem Drehsinn schuld (er l&auml;uft als 270&deg;- statt
 90&deg;-Bogen) &mdash; in der Kreis-Maske umschalten.</dd>
 <dt id="ba-ko-uebergang">&Uuml;bergang (Fase / Radius)</dt>
 <dd>Jeder Eckpunkt kann eine Fase oder Rundung tragen &mdash; als Eigenschaft des
-Punkts, nicht als eigenes Element. Der hohle Punktmarker zeigt die gebrochene Ecke;
-editiert wird immer der theoretische Eckpunkt.</dd>
+Punkts, nicht als eigenes Element. Editiert wird immer der theoretische Eckpunkt. Die
+Zeichnung trägt an den Verbindungen keine Punkte (seit 27.09.2026) &mdash; nur der Startpunkt und der
+angewählte Punkt sind markiert, beim angewählten zeigt ein Ring die gebrochene Ecke.</dd>
 <dt id="ba-k03-vorschub">F Vorschub je Element (Schlichten)</dt>
 <dd>Wie bei ShopTurn kann jede Gerade und jeder Kreis einen eigenen Vorschub tragen
 (seit 10.09.2026, Daniels Wunsch): Feld <b>F Vorschub je Element</b> in der
@@ -4633,8 +4634,19 @@ Backenstirn wird nicht nachgeschnitten. Liegt das Teil an einem Absatz in der Ba
 Freistich <b>Form E</b> nur in X, mindestens 0,6&nbsp;mm tief (Radius der Schlichtplatte + 0,2), damit die Kante des
 Teils frei liegt. Unterbrochener Schnitt an den drei Backen: ap höchstens 1&nbsp;mm, F 0,12 schruppen, 0,05
 schlichten &mdash; alles in der Maske des Blocks änderbar.<br>
-<b>Noch nicht gebaut:</b> der Planer teilt ein Teil noch nicht selbst auf zwei Seiten auf (die Schritte legst Du
-den Blöcken zu); der Maßbericht eines Blocks meldet auch die Stellen der anderen Seite als offen; Änderungen am
+<b>Der Planer plant beide Seiten</b> (seit 27.09.2026). Wird das Teil von einer Seite nicht fertig &mdash; ein
+<b>Bund</b>, hinter dem die Kontur kleiner wird und den ⌀ davor nicht wieder erreicht, oder eine Bohrung, die zum
+Futter hin weiter wird &mdash;, fragt er vor dem Vorschlag: <i>eine Aufspannung | zwei · mit Umspannen</i>, die Grenzen
+außen und innen (vorbelegt am Bund bzw. am Absatz), Formbacken oder harte Backen, die Spannzone und die Täler,
+Freistiche und Gewinde <b>je Seite</b> &mdash; die der zweiten Seite an der gewendeten Kontur gesucht (ein Freistich am
+Bundfuß liegt für Seite 2 vorn). Eine Nut, hinter der die Kontur wieder steigt, ist kein Grund. Dann plant er
+Aufspannung 1 in seiner Reihenfolge (nur was vor der Grenze liegt; die Plattenwahl sieht den Bund nicht), wendet
+das Teil mit dem <b>simulierten Stand</b> der ersten Seite als Rohteil, plant Aufspannung 2 (Planen auf Länge,
+außen, innen nur mit Grenze innen, kein Bohrschritt, wenn Seite 1 durchgebohrt hat) und prüft zum Schluss:
+entsteht jedes Programm, und was steht nach beiden Seiten noch &mdash; Seite 2 läuft dafür in ihrer Simulation auf dem
+Stand der Seite 1. Steht die Option im Programmkopf schon auf zwei, plant er beide Seiten auch ohne Bund
+(ohne Grenze plant Seite 2 nur die Rückseite auf Länge). Wählst Du „eine Aufspannung“, geht die Option aus.<br>
+<b>Noch offen:</b> der Maßbericht eines Blocks meldet auch die Stellen der anderen Seite als offen; Änderungen am
 Programmkopf in Aufspannung 2 sind abgeleitet und gehen beim Zurückwechseln verloren. An der Maschine ist
 noch keines dieser Programme gelaufen.</dd>
 <dt id="ba-pr-transform">Transformieren beim Laden</dt>
@@ -4686,6 +4698,9 @@ vor dem Ausdrehen), und der Planzug endet an der Bohrung. Dann entsteht nur
 Planen + Innen-Kette, au&szlig;en bleibt Rohteil &ndash; die Meldung sagt es. Ein
 blo&szlig;er Zylinder ohne Schulter und jede Kontur mit T&auml;lern (beide
 Richtungen) bleiben Au&szlig;enkontur.</li>
+<li id="ba-pl-zwei"><b>Zwei Aufspannungen:</b> Hat die Au&szlig;enkontur einen Bund (dahinter kleiner, ohne
+wieder aufzusteigen) oder wird die Bohrung zum Futter hin weiter, fragt der Planer, ob er beide Seiten plant
+&mdash; Einzelheiten unter <a href="#ba-pr-aufspannung">Zwei Aufspannungen und Formbacken</a>.</li>
 <li id="ba-pl-taeler"><b>T&auml;ler der Au&szlig;enkontur:</b> schmal und steil
 (Mund &le; 12 mm, Flanken &gt; 75&deg;) &rarr; EINSTECHEN als letzter Schritt, Werte
 aus der Talgeometrie, Stecher nach Klingenbreite. Breite Tasche mit beidseitigem
@@ -8211,7 +8226,14 @@ function futterGeometrie(){
     rSpann, rHoch, rVorn, stufen,
     rAussen: FUTTER.rAussen,
     zKoerper: zStirn-FUTTER.hoehe,
-    rNabe: Math.max(FUTTER.rBohrung, Math.min(rSpann, FUTTER.rAussen)),
+    // DIE DURCHGANGSBOHRUNG IST FEST [Daniel, 27.09.2026, Foto der 3D-Simulation:
+    // "die Bohrung im Dreibackenfutter passt sich dem Materialdurchmesser an -
+    // das ist falsch, die Bohrung ist immer gleich gross"]. Vorher war das Loch
+    // in der Futterstirn max(Durchgang, Spannradius): bei dickem Rohteil wuchs
+    // es mit, und die Wand zum Durchgang wurde ein Trichter. Ein Teil, das dicker
+    // als der Durchgang ist, endet VOR der Futterstirn - reicht es hinein, ist das
+    // eine Kollision (futterPunkt meldet den Futterkoerper), kein groesseres Loch.
+    rNabe: FUTTER.rBohrung,
     // Backenbreite in mm: die 3D-Backe hat seit dem 09.09.2026 parallele
     // Flanken (klotz in draw3D) und nimmt backeB direkt; halbWinkel bleibt
     // als Winkel am mittleren Backenradius stehen (frueher das Segment).
@@ -9113,11 +9135,17 @@ function draw(){
 
   // Punktmarker [Daniel]: In der SIMULATION gar keine Editier-Anfasser —
   // die gehören zur Konturbearbeitung, nicht ins Abtragsbild. Im EDITOR
-  // bekommt JEDE Ecke konsistent einen Marker: scharfe Ecken als Vollpunkt,
+  // bekam bis 27.09.2026 JEDE Ecke einen Marker: scharfe Ecken als Vollpunkt,
   // durch Fase/Radius gebrochene Ecken als hohlen Ring am THEORETISCHEN
   // Eckpunkt — das ist der programmierte Wert, den man dort editiert; die
   // echte Bahn läuft über den Übergang.
+  // KEINE PUNKTE AN DEN VERBINDUNGEN [Daniel, 27.09.2026: "diese Punkte, die die
+  // einzelnen Elemente miteinander verbinden, sieht nicht professionell aus -
+  // als Zerspaner weiss man, dass das der Schnittpunkt ist"]. Gezeichnet werden
+  // nur noch der Startpunkt (wo die Kontur beginnt) und der ANGEWAEHLTE Punkt,
+  // an dem gerade editiert wird. Das Antippen der Ecken bleibt, wie es war.
   if(!simActive) contour.forEach((p,i)=>{
+    if(i!==0 && i!==selectedIdx) return;
     const softened = i>0 && i<contour.length-1 && p.trans && p.trans.type!=='none' && p.trans.val>0;
     const [x,y]=toScreen(p.z,p.x);
     const col = i===selectedIdx ? '#f0a13a' : (i===0?'#1f8a3d':AKZENT);
@@ -22865,14 +22893,16 @@ function planerFunde(taeler){
 // pl-wahl-Knoepfe statt .radiobtns — die Radiogruppen-Wache
 // (Pruefung 99) verlangt fuer .radiobtns eine wireRadioGroup-
 // Verdrahtung, die es fuer dynamische Zeilen nicht gibt.
-function planerMaskeZeigen(funde){
+function planerMaskeZeigen(funde, opt){
   const m=document.getElementById('maskPlaner');
   const body=document.getElementById('plFundeBody');
   if(!m || !body) return;
-  body.innerHTML='';
-  const gruppe=(titel)=>{ const h=document.createElement('div'); h.className='msec'; h.textContent=titel; body.appendChild(h); };
+  const o=opt||{};
+  if(!o.anhaengen){ body.innerHTML=''; window.__planerZweiWahl=null; }
+  const tp=o.titel ? o.titel+' — ' : '';
+  const gruppe=(titel)=>{ const h=document.createElement('div'); h.className='msec'; h.textContent=tp+titel; body.appendChild(h); };
   const wahlZeile=(text, optionen, aktiv, extraHtml)=>{
-    const z=document.createElement('div'); z.className='mrow pl-zeile';
+    const z=document.createElement('div'); z.className='mrow pl-zeile'; z.dataset.seite=String(o.seite||'0');
     const l=document.createElement('div'); l.className='pl-text'; l.textContent=text; z.appendChild(l);
     const g=document.createElement('div'); g.className='pl-wahl';
     optionen.forEach(([wert,label])=>{
@@ -22913,9 +22943,12 @@ function planerMaskeZeigen(funde){
   try{ maskeSichtbarPruefen('maskPlaner'); }catch(e){}
 }
 function planerAntwortenLesen(){
+  if(window.__planerZweiWahl && typeof planerZweiAntwortenLesen==='function') return planerZweiAntwortenLesen();
+  return planerAntwortenSeite(window.__planerFunde||{taeler:[],freistiche:[],gewinde:[]}, '0');
+}
+function planerAntwortenSeite(funde, seite){
   const body=document.getElementById('plFundeBody');
-  const funde=window.__planerFunde||{taeler:[],freistiche:[],gewinde:[]};
-  const zeilen=[...body.querySelectorAll('.pl-zeile')];
+  const zeilen=[...body.querySelectorAll('.pl-zeile')].filter(z=>String((z.dataset||{}).seite||'0')===String(seite));
   const antw={taeler:[], freistiche:[], gewinde:[]};
   let z=0;
   funde.taeler.forEach(()=>{ const s=zeilen[z++].querySelector('.pl-wahl .sel'); antw.taeler.push(s?s.dataset.v:'ueberfahren'); });
@@ -22966,10 +22999,42 @@ function planerRohrXI(){
   const f=document.getElementById('pkForm'), x=document.getElementById('pkXI');
   return (f && f.value==='rohr' && x) ? (+x.value||0) : 0;
 }
+// ZWEI AUFSPANNUNGEN IM PLANER [Daniel, 27.09.2026: "dass der Planer das
+// komplett auch mit abdeckt. Und vielleicht mit einer Abfrage dazwischen,
+// wenn ich das moechte"]. Der Orchestrator planerZweiSeiten (98b) ruft
+// programmVorschlagen je Seite im RECHENMODUS: PL_RECHNEN = {seite, g, gI,
+// innen, nurPlanen, antw}. Dann gilt: keine Rueckfrage, kein Uebernehmen,
+// kein snapshot/alert - die Funktion liefert {neu, hinweise, ...}; Taeler,
+// Freistiche und Gewinde nur VOR der Grenze g (in der Lage der Seite, die
+// gerade geplant wird), die Plattenwahl sieht nur diesen Bereich. Ohne
+// PL_RECHNEN laeuft alles wie bisher.
+let PL_RECHNEN = null;
+function planerTaelerJetzt(){
+  let t=[];
+  try{
+    const envE=roughEnvelope(0,0);
+    const ptsE=sampleContourForRough();
+    if(envE && ptsE.length) t=findPockets(envE, ptsE[0].z, ptsE[ptsE.length-1].z);
+  }catch(e){}
+  return t;
+}
+// Ein Fund gehoert zur Seite, wenn er ganz VOR der Grenze liegt. Seite 2
+// nimmt die Kante AN der Grenze mit (inkl): ein Freistich am Bundfuss liegt
+// genau dort - fuer Seite 1 ist dieselbe Stelle schon Seite 2.
+function planerVorGrenze(z, g, inkl){ return g===null || g===undefined || !isFinite(+g) || (inkl ? z >= +g - 0.01 : z > +g + 0.01); }
+function planerFundeRegion(funde, g, inkl){
+  if(g===null || g===undefined) return funde;
+  return { taeler:funde.taeler.filter(t=>planerVorGrenze(t.zOut, g, inkl)),
+    freistiche:funde.freistiche.filter(k=>planerVorGrenze(k.z0, g, inkl)),
+    gewinde:funde.gewinde.filter(k=>planerVorGrenze(k.z1, g, inkl)) };
+}
 // interaktiv=true nur aus der Bedienung (Softkey/Rueckfrage-Maske):
 // dann duerfen Rueckfragen erscheinen. Direktaufrufe (Pruefstand,
 // Skripte) laufen wie bisher als reine Automatik durch.
 function programmVorschlagen(interaktiv){
+  const R2=PL_RECHNEN;
+  // Der Planer plant immer aus der Lage der ersten Seite heraus.
+  if(!R2 && typeof AUFSP_KANON!=='undefined' && AUFSP_KANON) aufspZurKanon();
   // AUSSENKONTUR SELBST WAEHLEN [Daniel-Test 2: an der Buchse war
   // die INNENkontur aktiv — der Planer plante sie als Aussenteil
   // (44 % Quote, Phantom-Flanken). Aussen = der groesste Max-⌀
@@ -22990,6 +23055,13 @@ function programmVorschlagen(interaktiv){
       if(konturIstInnen(c.els, xiRohr)){ if(mx>bestIMx){ bestIMx=mx; bestI=ci; } return; }
       if(mx>bestMx){ bestMx=mx; best=ci; } });
     if(best<0 && bestI>=0){ best=bestI; nurInnen=true; }
+    // Im Rechenmodus ist die Aussenkontur schon gewaehlt (Seite 1). Gewendet
+    // wuerde ein Teil, dessen groesster ⌀ futterseitig liegt, sonst als
+    // Innenkontur gelten - alle Schultern springen dann zur neuen Stirn hin.
+    if(R2 && R2.aussenId!==undefined && R2.aussenId!==null){
+      const ci=contours.findIndex(c=>c && c.id===R2.aussenId);
+      if(ci>=0){ best=ci; nurInnen=!!R2.nurInnen; }
+    }
     if(best>=0 && best!==activeContourIdx){
       try{ switchContour(best); }catch(e){ activeContourIdx=best; }
     }
@@ -23019,6 +23091,22 @@ function programmVorschlagen(interaktiv){
     alert('PROGRAMMVORSCHLAG NICHT MOEGLICH: Rohteil-⌀ '+fmt(stock)+' ist kleiner als der groesste Kontur-⌀ '+fmt(maxX)+'. Rohteil im Programmkopf pruefen.');
     return false;
   }
+  // WEICHE ZWEI AUFSPANNUNGEN: die Frage kommt nur, wenn das Teil von einer
+  // Seite nicht fertig wird (Bund, Innen-Hinterschnitt) oder die Option im
+  // Programmkopf schon an ist. Direktaufrufe planen zwei Seiten nur mit
+  // eingeschalteter Option oder ausdruecklicher Antwort - der Bestand bleibt.
+  if(!R2 && typeof planerZweiBefund==='function'){
+    const antw0=window.__planerAntworten||null;
+    const D=planerZweiBefund();
+    window.__planerZweiBefund=D;
+    if(interaktiv && !antw0 && (D.noetig || aufspAn())){
+      try{ planerZweiMaskeZeigen(D); }catch(e){ if(typeof console!=='undefined') console.error(e); }
+      return 'frage';
+    }
+    const zwei=(antw0 && antw0.aufsp) ? !!antw0.aufsp.an : aufspAn();
+    if(zwei){ window.__planerAntworten=null; return planerZweiSeiten((antw0 && antw0.aufsp) || {}, D, richtungGedreht); }
+    if(antw0 && antw0.aufsp && !antw0.aufsp.an && aufspAn()){ AUFSP.an=false; aufspKopfZeigen(); }
+  }
   const hinweiseVorab=[];
   if(richtungGedreht) hinweiseVorab.push('Die Kontur war vom FUTTER zur Stirn gezeichnet — fuer den Vorschlag wurde die Laufrichtung umgekehrt (gleiche Geometrie, Stirn -> Futter).');
   if(nurInnen) hinweiseVorab.push('INNENKONTUR erkannt (die Schultern springen zum Futter hin nach innen'+(xiRohr>0?' bzw. die Kontur endet auf der Rohrbohrung XI'+fmt(xiRohr):'')+') — geplant wird Planen + Innen-Kette; aussen bleibt Rohteil. Soll es doch eine Aussenkontur sein, ist es ein Hinterschnitt: Stechdrehen von Hand anlegen.');
@@ -23033,10 +23121,10 @@ function programmVorschlagen(interaktiv){
   // ueber das Rohteil hinaus, wird das VOR allem anderen benannt.
   { const zK=Math.min.apply(null, contour.filter(e=>isFinite(e.z)).map(e=>e.z));
     const zI=parseFloat(document.getElementById('pkZI').value);
-    if(isFinite(zK) && isFinite(zI) && zK < zI-0.001)
+    if(isFinite(zK) && isFinite(zI) && zK < zI-0.001 && !(R2 && R2.seite===2))
       hinweiseVorab.push("ROHTEIL ZU KURZ: Kontur endet bei Z"+fmt(zK)+", der Programmkopf traegt ZI "+fmt(zI)+" — Rohteillaenge im Kopf anpassen, sonst bleibt der Bereich dahinter als Restzone stehen");
   }
-  const fallMax=(()=>{ try{ return planerKonturMaxFall(sampleContourForRough()); }catch(e){ return 0; } })();
+  const fallMax=(()=>{ try{ return planerKonturMaxFall(sampleContourForRough().filter(p=>!(R2 && R2.g!==null && R2.g!==undefined) || p.z > +R2.g + 0.001)); }catch(e){ return 0; } })();
   const schrupp = planerSchruppWahl(fallMax)
                || toolTable.find(t=>t.art==='aussen');
   if(schrupp && fallMax>3.5 && !nurInnen){
@@ -23076,15 +23164,16 @@ function programmVorschlagen(interaktiv){
   // gefahrlos wiederholbar.
   // ================================================================
   const taeler=(()=>{ let t=[];
-    if(nurInnen) return t;
-    try{
-      const envE=roughEnvelope(0,0);
-      const ptsE=sampleContourForRough();
-      if(envE && ptsE.length) t=findPockets(envE, ptsE[0].z, ptsE[ptsE.length-1].z);
-    }catch(e){}
+    if(nurInnen || (R2 && R2.nurPlanen)) return t;
+    t=planerTaelerJetzt();
+    if(R2) t=t.filter(tal=>planerVorGrenze(tal.zOut, R2.g, R2.seite===2));
     return t; })();
-  const funde=nurInnen? {taeler:[], freistiche:[], gewinde:[]} : planerFunde(taeler);
-  const antw=window.__planerAntworten||null;
+  const funde=(nurInnen || (R2 && R2.nurPlanen))? {taeler:[], freistiche:[], gewinde:[]}
+    : (R2 ? planerFundeRegion(planerFunde(taeler), R2.g, R2.seite===2) : planerFunde(taeler));
+  // Im Rechenmodus kommen die Antworten der Seite vom Orchestrator, nach
+  // der LAGE zugeordnet (planerAntwortZuordnen) - nicht nach der Nummer.
+  const antw=R2 ? ((R2.antw && typeof planerAntwortZuordnen==='function') ? planerAntwortZuordnen(funde, R2.antw) : null)
+                : (window.__planerAntworten||null);
   window.__planerFunde=funde;             // Offenlegung fuer den Pruefstand
   if(interaktiv && !antw && (funde.taeler.length || funde.freistiche.length || funde.gewinde.length)){
     try{ planerMaskeZeigen(funde); }catch(e){}
@@ -23105,7 +23194,9 @@ function programmVorschlagen(interaktiv){
     .map(o=>({...o, mx:Math.max.apply(null,o.c.els.filter(e=>isFinite(e.x)).map(e=>e.x))}))
     .filter(o=> o.mx < maxX-0.5)
     .sort((a,b)=>b.mx-a.mx);
-  const innenK=nurInnen ? {c:contours[activeContourIdx], ci:activeContourIdx, mx:maxX} : (innenKandidaten[0]||null);
+  const innenAus=!!(R2 && (R2.innen===false || R2.nurPlanen));
+  if(innenAus && innenKandidaten.length && !R2.nurPlanen) hinweise.push('innen fertig von Aufspannung 1 (keine Grenze innen)');
+  const innenK=innenAus ? null : (nurInnen ? {c:contours[activeContourIdx], ci:activeContourIdx, mx:maxX} : (innenKandidaten[0]||null));
   if(innenKandidaten.length>1) hinweise.push('mehrere Innen-Kandidaten — geplant wird '+innenK.c.name);
   let innenPlan=null;
   if(innenK){
@@ -23354,7 +23445,11 @@ function programmVorschlagen(interaktiv){
   // KEIN automatisches Abstechen [Daniel: 'soll nicht grundsaetzlich
   // abstechen — die Praxis ist erste Aufspannung, umdrehen, zweite
   // Aufspannung als eigenes Programm'].
-  hinweise.push('Rueckseite: umspannen und als eigenes Programm fertigen (2. Aufspannung)');
+  if(!R2) hinweise.push('Rueckseite: umspannen und als eigenes Programm fertigen (2. Aufspannung) — oder im Programmkopf zwei Aufspannungen einschalten, dann plant der Planer beide Seiten');
+  if(R2){
+    if(R2.nurPlanen){ for(let i=neu.length-1;i>=0;i--) if(!(neu[i].type==='abspanen_einfach' && neu[i].params.richtung==='plan')) neu.splice(i,1); }
+    return {neu, hinweise, nurInnen, innen:!!innenPlan};
+  }
   // UEBERNAHME als normaler Arbeitsplan; snapshot traegt das Undo.
   snapshot();
   programSteps=neu;
@@ -37799,8 +37894,8 @@ function draw3D(opt){
       if(!sichtbar(0, Math.cos(pm), Math.sin(pm))){ cullWeg++; continue; }
       quads.push({d:(A[2]+B[2]+C[2]+D[2])/4, pts:[A,B,C,D], hell, rgbF:stahlK});
     }
-    // Futterstirn: Ring von aussen bis zur Durchgangsbohrung — bzw. bis
-    // zum Werkstueck, wenn dieses dicker ist als die Bohrung.
+    // Futterstirn: Ring von aussen bis zur Durchgangsbohrung (fest, s.
+    // futterGeometrie - das Loch waechst nicht mit dem Werkstueck).
     const rNabe=G.rNabe;
     if(sichtbar(1,0,0)) for(let k=0;k<NP;k++){    // Stirn schaut nach +Z
       const p1=2*Math.PI*k/NP, p2=2*Math.PI*(k+1)/NP;
@@ -37843,11 +37938,10 @@ function draw3D(opt){
     // Man schaut hier von INNEN auf die Wand, die Normale zeigt also zur
     // Achse — genau umgekehrt zum Aussenmantel.
     // Die Wand laeuft von rNabe (Loch in der Futterstirn) auf rBohrung
-    // (Loch in der Rueckseite). Beide Raender sitzen damit genau auf den
-    // Loechern, die Stirn und Rueckseite freilassen — bei der Rotorwelle
-    // ist rNabe der Spannradius ⌀305 und nicht der Durchgang ⌀82; mit
-    // fester Durchgangsweite waere dort ein Ring von 110 mm offen
-    // geblieben (gemessen: 75 Rasterzellen).
+    // (Loch in der Rueckseite). Seit dem 27.09.2026 sind beide der Durchgang
+    // [Daniel: die Bohrung ist immer gleich gross] - die Wand ist ein Zylinder.
+    // Frueher war rNabe bei dicken Teilen der Spannradius (Rotorwelle ⌀305)
+    // und die Wand ein Trichter.
     const rNabeW=G.rNabe, rDurch=FUTTER.rBohrung;
     { const drw=(rDurch-rNabeW), dzw=(G.zKoerper-zStirn)||1e-6;
       const nRadW=1/Math.hypot(1, drw/dzw), nAxW=(drw/dzw)*nRadW;
@@ -42626,15 +42720,9 @@ function aufspKopfZeigen(){
 function aufspGrenzeVorschlag(innen){
   const c = aufspKanonKonturen().find(q => q && q.els && q.els.length > 1 && aufspKonturIstInnen(q) === innen);
   if(!c) return null;
-  const V = c.els;
-  for(let k = 1; k < V.length; k++){
-    const a = V[k - 1], b = V[k];
-    if(Math.abs(a.z - b.z) < 1e-6 && Math.abs(a.x - b.x) > 1e-6 && a.z < -1e-6){
-      if(!innen && b.x < a.x && b.x > 0.5) return a.z;
-      if(innen && b.x > a.x) return a.z;
-    }
-  }
-  return null;
+  // Eine Nut (faellt ab und steigt wieder) ist keine Grenze [27.09.2026]:
+  // dahinter muss die Kontur unter dem Durchmesser davor bleiben.
+  return aufspGrenzeAus(c.els, innen);
 }
 
 // ---- Arbeitsplan: Bloecke -------------------------------------------------
@@ -42821,6 +42909,240 @@ function aufspMaskeOeffnen(k){
   };
   m.classList.add('show');
 }
+
+// =====================================================================
+// DER PLANER PLANT BEIDE SEITEN [Daniel, 27.09.2026: "Du solltest das
+// aber schon auch bauen, dass der Planer das komplett auch mit abdeckt.
+// Und vielleicht mit einer Abfrage dazwischen, wenn ich das moechte."]
+// ---------------------------------------------------------------------
+// planerZweiBefund: wird das Teil von EINER Seite fertig? Nein, wenn die
+// Aussenkontur an einem Absatz zum Futter hin kleiner wird und dahinter
+// nie wieder den Durchmesser davor erreicht (ein Bund - alles dahinter
+// ist von vorn ein Hinterschnitt), oder wenn die Bohrung zum Futter hin
+// weiter wird. Eine Nut (faellt ab und steigt wieder) ist KEIN Grund.
+// planerZweiMaskeZeigen: die Abfrage (eine | zwei, Grenzen, Formbacken,
+// Spannzone, dazu die Funde JE SEITE - Aufspannung 2 gewendet gesucht).
+// planerZweiSeiten: plant Seite 1, wendet (Kopf aus dem simulierten Stand
+// der Seite 1), plant Seite 2 und prueft den Endstand nach beiden Seiten.
+// =====================================================================
+function aufspGrenzeAus(els, innen){
+  if(!els) return null;
+  const V = els.filter(e => isFinite(e.z) && isFinite(e.x));
+  for(let k = 1; k < V.length; k++){
+    const a = V[k - 1], b = V[k];
+    if(!(Math.abs(a.z - b.z) < 1e-6 && Math.abs(a.x - b.x) > 1e-6 && a.z < -1e-6)) continue;
+    const rest = V.slice(k).filter(p => p.x > 0.5);
+    if(!innen && b.x < a.x && b.x > 0.5 && rest.every(p => p.x < a.x - 0.01)) return a.z;
+    if(innen && b.x > a.x && rest.every(p => p.x > a.x + 0.01)) return a.z;
+  }
+  return null;
+}
+function planerZweiBefund(){
+  const aus = contour || [];
+  const xiR = (typeof planerRohrXI === 'function') ? planerRohrXI() : 0;
+  const nurInnen = (typeof konturIstInnen === 'function') && konturIstInnen(aus, xiR);
+  const xs = aus.filter(e => isFinite(e.x)).map(e => e.x), zs = aus.filter(e => isFinite(e.z)).map(e => e.z);
+  const maxX = xs.length ? Math.max(...xs) : 0, L = zs.length ? Math.abs(Math.min(0, ...zs)) : 0;
+  const ik = nurInnen ? {c:contours[activeContourIdx]} : (contours.map((c, ci) => ({c, ci}))
+    .filter(o => o.ci !== activeContourIdx && o.c && o.c.els && o.c.els.length > 1)
+    .map(o => Object.assign(o, {mx:Math.max(...o.c.els.filter(e => isFinite(e.x)).map(e => e.x))}))
+    .filter(o => o.mx < maxX - 0.5).sort((p, q) => q.mx - p.mx)[0] || null);
+  const gA = nurInnen ? null : aufspGrenzeAus(aus, false);
+  const gI = ik ? aufspGrenzeAus(ik.c.els, true) : null;
+  const gruende = [];
+  if(gA !== null){
+    gruende.push('Bund an Z' + fmt(gA) + ': dahinter wird die Kontur kleiner und erreicht den ⌀ davor nicht wieder — von vorn ein Hinterschnitt'); }
+  if(gI !== null) gruende.push('Bohrung wird an Z' + fmt(gI) + ' zum Futter hin weiter — von vorn ein Innen-Hinterschnitt');
+  return {noetig:gA !== null || gI !== null, grenzeA:gA, grenzeI:gI, L, nurInnen, gruende};
+}
+// Funde einer Seite: Aufspannung 2 wird an der GEWENDETEN Kontur gesucht
+// (ein Freistich am Bund liegt fuer Seite 2 vorn - von Seite 1 aus sieht
+// der Planer ihn nicht). Rein geometrisch, ohne Simulation.
+function planerFundeSeite(seite, g, L){
+  const leer = {taeler:[], freistiche:[], gewinde:[]};
+  const altC = contours, altI = activeContourIdx;
+  try{
+    if(seite === 2){ contours = altC.map(c => Object.assign({}, c, {els:aufspWenden(c.els, L)})); switchContour(altI); }
+    const t = planerTaelerJetzt().filter(tal => planerVorGrenze(tal.zOut, g, seite === 2));
+    return planerFundeRegion(planerFunde(t), g, seite === 2);
+  }catch(e){ return leer; }
+  finally { if(seite === 2){ contours = altC; switchContour(altI); } }
+}
+// Antworten nach der LAGE zuordnen, nicht nach der Nummer: im Rechenlauf
+// steht ein anderer Rohteil-⌀ im Kopf als bei der Abfrage - die Liste
+// kann sich verschieben. Unbekannte Funde bekommen die Automatik.
+function planerAntwortZuordnen(funde, a){
+  if(!a) return null;
+  const F = a.funde || {taeler:[], freistiche:[], gewinde:[]};
+  const r = {taeler:[], freistiche:[], gewinde:[]};
+  funde.taeler.forEach(t => { const i = (F.taeler || []).findIndex(x => Math.abs(x.zIn - t.zIn) < 0.05 && Math.abs(x.zOut - t.zOut) < 0.05); r.taeler.push(i >= 0 ? (a.taeler || [])[i] || null : null); });
+  funde.freistiche.forEach(k => { const i = (F.freistiche || []).findIndex(x => Math.abs(x.z0 - k.z0) < 0.05 && Math.abs(x.x0 - k.x0) < 0.05); r.freistiche.push(i >= 0 ? !!(a.freistiche || [])[i] : false); });
+  funde.gewinde.forEach(k => { const i = (F.gewinde || []).findIndex(x => Math.abs(x.z0 - k.z0) < 0.05 && Math.abs(x.x0 - k.x0) < 0.05); r.gewinde.push(i >= 0 ? ((a.gewinde || [])[i] || {an:false}) : {an:false}); });
+  return r;
+}
+function planerZweiZonen(W){
+  const alt = AUFSP;
+  try{ AUFSP = aufspMerge(Object.assign({}, alt, {an:true, grenzeA:W.grenzeA, grenzeI:W.grenzeI})); return aufspZonen(); }
+  catch(e){ return []; }
+  finally { AUFSP = alt; }
+}
+function planerZweiMaskeZeigen(D){
+  const m = document.getElementById('maskPlaner'), body = document.getElementById('plFundeBody');
+  if(!m || !body) return;
+  const W0 = window.__planerZweiWahl;
+  const W = (W0 && W0.D === D) ? W0 : { D, an:true,
+    grenzeA:(aufspAn() && AUFSP.grenzeA !== null) ? AUFSP.grenzeA : D.grenzeA,
+    grenzeI:(aufspAn() && AUFSP.grenzeI !== null) ? AUFSP.grenzeI : D.grenzeI,
+    fb:aufspAn() ? AUFSP.fb.an : true, zone:aufspAn() ? AUFSP.fb.zone : null };
+  const neu = () => { try{ planerZweiMaskeZeigen(D); }catch(e){ if(typeof console !== 'undefined') console.error(e); } };
+  body.innerHTML = '';
+  const el = (tag, cls, txt) => { const e = document.createElement(tag); if(cls) e.className = cls; if(txt !== undefined) e.textContent = txt; return e; };
+  const knopfZeile = (text, opts, aktiv, klick) => {
+    const z = el('div', 'mrow pl-aufsp'); z.appendChild(el('div', 'pl-text', text));
+    const g = el('div', 'pl-wahl');
+    opts.forEach(([v, lab]) => { const b = el('button', v === aktiv ? 'sel' : '', lab); b.type = 'button'; b.dataset.v = v; b.onclick = () => klick(v); g.appendChild(b); });
+    z.appendChild(g); body.appendChild(z); return z;
+  };
+  body.appendChild(el('div', 'msec', 'Aufspannungen'));
+  body.appendChild(el('div', 'mrow pl-hinweis pl-aufsp-grund', D.noetig ? D.gruende.join(' · ') : 'Im Programmkopf stehen zwei Aufspannungen.'));
+  knopfZeile('Wie wird gespannt?', [['eine', 'eine Aufspannung'], ['zwei', 'zwei · mit Umspannen']], W.an ? 'zwei' : 'eine', v => { W.an = (v === 'zwei'); neu(); });
+  if(W.an){
+    const L = D.L;
+    const gz = el('div', 'mrow pl-aufsp');
+    gz.innerHTML = '<div class="pl-text">Grenze Z — außen / innen (leer = keine)</div><div class="pl-extra">'
+      + '<input type="text" inputmode="decimal" id="plGrenzeA" value="' + (W.grenzeA === null ? '' : fmt(W.grenzeA)) + '" style="width:64px;font-size:15px;"> / '
+      + '<input type="text" inputmode="decimal" id="plGrenzeI" value="' + (W.grenzeI === null ? '' : fmt(W.grenzeI)) + '" style="width:64px;font-size:15px;"></div>';
+    body.appendChild(gz);
+    const lies = id => { const e = document.getElementById(id); if(!e) return undefined; const s = String(e.value).trim().replace(',', '.'); if(s === '') return null; const n = parseFloat(s); return isFinite(n) ? n : undefined; };
+    ['plGrenzeA', 'plGrenzeI'].forEach(id => { const e = document.getElementById(id); if(e) e.onchange = () => { const a = lies('plGrenzeA'), i = lies('plGrenzeI'); if(a !== undefined) W.grenzeA = a; if(i !== undefined) W.grenzeI = i; neu(); }; });
+    knopfZeile('Seite 2 in Formbacken?', [['ja', 'Formbacken ausdrehen'], ['nein', 'harte Backen']], W.fb ? 'ja' : 'nein', v => { W.fb = (v === 'ja'); neu(); });
+    const zs = planerZweiZonen(W);
+    if(zs.length){
+      let vor = 0; zs.forEach((q, j) => { if(q.ld < zs[vor].ld) vor = j; });
+      const akt = (W.zone !== null && W.zone !== undefined && zs[W.zone]) ? W.zone : vor;
+      knopfZeile('Spannzone für Seite 2', zs.map((q, j) => [String(j), String.fromCharCode(65 + j) + ' ⌀' + fmt(q.d) + ' · L/D ' + q.ld.toFixed(1).replace('.', ',')]), String(akt), v => { W.zone = +v; neu(); });
+    } else body.appendChild(el('div', 'mrow pl-hinweis', 'Keine Stufe der ersten Seite taugt als Spannzone (Zylinder, mind. 5 mm, nicht an der Grenze) — Seite 2 wird trotzdem geplant, die Spannung ist von Hand festzulegen.'));
+    W.F1 = D.nurInnen ? {taeler:[], freistiche:[], gewinde:[]} : planerFundeSeite(1, W.grenzeA, L);
+    W.F2 = (D.nurInnen || W.grenzeA === null) ? {taeler:[], freistiche:[], gewinde:[]} : planerFundeSeite(2, +(-L - W.grenzeA).toFixed(4), L);
+    window.__planerZweiWahl = W;
+    planerMaskeZeigen(W.F1, {anhaengen:true, seite:'1', titel:'Aufspannung 1'});
+    planerMaskeZeigen(W.F2, {anhaengen:true, seite:'2', titel:'Aufspannung 2 (gewendet)'});
+    const leer = f => !f.taeler.length && !f.freistiche.length && !f.gewinde.length;
+    if(leer(W.F1) && leer(W.F2)) body.appendChild(el('div', 'mrow pl-hinweis', 'Keine Täler, Freistich- oder Gewinde-Kandidaten auf beiden Seiten.'));
+  } else {
+    const F0 = planerFunde(planerTaelerJetzt());
+    window.__planerFunde = F0;
+    window.__planerZweiWahl = W;
+    planerMaskeZeigen(F0, {anhaengen:true, seite:'0'});
+  }
+  window.__planerZweiWahl = W;
+  m.classList.add('show');
+}
+function planerZweiAntwortenLesen(){
+  const W = window.__planerZweiWahl;
+  if(!W.an) return Object.assign(planerAntwortenSeite(window.__planerFunde || {taeler:[], freistiche:[], gewinde:[]}, '0'), {aufsp:{an:false}});
+  const lies = id => { const e = document.getElementById(id); if(!e) return undefined; const s = String(e.value).trim().replace(',', '.'); if(s === '') return null; const n = parseFloat(s); return isFinite(n) ? n : undefined; };
+  const a = lies('plGrenzeA'), i = lies('plGrenzeI');
+  if(a !== undefined) W.grenzeA = a; if(i !== undefined) W.grenzeI = i;
+  const s1 = planerAntwortenSeite(W.F1, '1'); s1.funde = W.F1;
+  const s2 = planerAntwortenSeite(W.F2, '2'); s2.funde = W.F2;
+  return {aufsp:{an:true, grenzeA:W.grenzeA, grenzeI:W.grenzeI, fb:W.fb, zone:W.zone, s1, s2}};
+}
+// Endstand nach BEIDEN Seiten: Seite 2 laeuft in ihrer Simulation auf dem
+// Stand der Seite 1 (hfNeu fragt aufspRohstandFeld) - das Endfeld ist das
+// fertige Teil, gewendet. Verglichen wird es mit der ganzen Aussenkontur;
+// an Planflaechen (senkrechte Stuecke) ist der Spaltenvergleich mehrdeutig
+// und bleibt aussen vor (dieselbe Grenze wie Pruefung 8).
+function aufspEndkontrolle(){
+  if(!aufspAn() || AUFSP.aktiv !== 2) return null;
+  const r = aufspBauenIn(2); if(!r.code) return null;
+  const altMoves = simMoves, altQ = (typeof simMovesQuelle !== 'undefined') ? simMovesQuelle : null;
+  let hf = null;
+  try{ simMoves = parseGcodeForSim(r.code); hf = hfAufbauen(simMoves.length - 1, {raster:0.1}); }
+  catch(e){ hf = null; }
+  finally { simMoves = altMoves; try{ simMovesQuelle = altQ; }catch(e){} }
+  if(!hf) return null;
+  const pts = sampleContourForRough(), L = aufspLaenge(), R = HF_RINGE * 2;
+  const senk = [];
+  for(let i = 1; i < pts.length; i++) if(Math.abs(pts[i].z - pts[i - 1].z) < 1e-6 && Math.abs(pts[i].x - pts[i - 1].x) > 0.01) senk.push(pts[i].z);
+  let rest = 0, zRest = null, ein = 0, zEin = null, n = 0;
+  for(let z = -0.5; z > -L + 0.5; z -= 0.1){
+    if(senk.some(s => Math.abs(s - z) < 0.35)) continue;
+    const i = Math.floor((z - hf.z0) / hf.dz);
+    if(i < 0 || i >= hf.n || !hf.cnt[i]) continue;
+    const zc = hf.z0 + (i + 0.5) * hf.dz;                         // Spaltenmitte - dort gilt der Feldwert
+    const ra = hf.iv[i * R + (hf.cnt[i] - 1) * 2 + 1], soll = contourXatZ(zc, pts) / 2;
+    if(!isFinite(soll)) continue;
+    const d = ra - soll; n++;
+    if(d > rest){ rest = d; zRest = +z.toFixed(2); }
+    if(d < ein){ ein = d; zEin = +z.toFixed(2); }
+  }
+  return {rest:+rest.toFixed(3), zRest, ein:+ein.toFixed(3), zEin, n};
+}
+function planerZweiSeiten(a, D, gedreht){
+  a = a || {};
+  const alt = JSON.parse(JSON.stringify(AUFSP));
+  const num = v => (v === null || v === undefined || v === '') ? null : (isFinite(+v) ? +v : null);
+  const gA = ('grenzeA' in a) ? num(a.grenzeA) : ((alt.an && alt.grenzeA !== null) ? alt.grenzeA : D.grenzeA);
+  const gI = ('grenzeI' in a) ? num(a.grenzeI) : ((alt.an && alt.grenzeI !== null) ? alt.grenzeI : D.grenzeI);
+  AUFSP = aufspMerge(alt.an ? alt : {});
+  AUFSP.an = true; AUFSP.grenzeA = gA; AUFSP.grenzeI = gI;
+  if('fb' in a) AUFSP.fb.an = !!a.fb;
+  if('zone' in a) AUFSP.fb.zone = (a.zone === null || a.zone === undefined) ? null : +a.zone;
+  AUFSP_STAND = null; AUFSP_STAND_KEY = '';
+  const hin = [];
+  if(gedreht) hin.push('Die Kontur war vom FUTTER zur Stirn gezeichnet — fuer den Vorschlag wurde die Laufrichtung umgekehrt');
+  if(gA === null && gI === null) hin.push('keine Grenze: Aufspannung 1 dreht die ganze Kontur, Aufspannung 2 plant nur die Rueckseite auf Laenge');
+  else hin.push('Grenze aussen ' + (gA === null ? '—' : 'Z' + fmt(gA)) + ', innen ' + (gI === null ? '— (innen alles von Seite 1)' : 'Z' + fmt(gI)) + ', Ueberlauf ' + fmt(+AUFSP.ueberlauf));
+  let r1 = null;
+  const aussenId = (contours[activeContourIdx] || {}).id;
+  PL_RECHNEN = {seite:1, g:gA, gI, innen:true, nurPlanen:false, antw:a.s1 || null, aussenId, nurInnen:!!D.nurInnen};
+  try{ r1 = programmVorschlagen(false); } finally { PL_RECHNEN = null; }
+  if(!r1 || !r1.neu){ AUFSP = aufspMerge(alt); aufspKopfZeigen(); return false; }
+  snapshot();
+  r1.neu.forEach(s => { s.aufsp = 1; });
+  programSteps = r1.neu.slice();
+  let r2 = null, f2 = null, kontrolle = null;
+  const w = aufspWechseln(2);
+  if(w.fehler) f2 = w.fehler;
+  else {
+    const L = aufspLaenge();
+    const g2 = gA === null ? null : +(-L - gA).toFixed(4), g2i = gI === null ? null : +(-L - gI).toFixed(4);
+    PL_RECHNEN = {seite:2, g:g2, gI:g2i, innen:gI !== null, nurPlanen:(gA === null && gI === null), antw:a.s2 || null, aussenId, nurInnen:!!D.nurInnen};
+    try{ r2 = programmVorschlagen(false); }
+    catch(e){ f2 = String((e && e.message) || e); }
+    finally { PL_RECHNEN = null; }
+    if(r2 && r2.neu){ r2.neu.forEach(s => { s.aufsp = 2; }); programSteps = r1.neu.concat(r2.neu); }
+    else if(!f2) f2 = 'fuer die gewendete Seite entstand kein Vorschlag';
+    if(r2 && r2.neu && r2.neu.length){ try{ kontrolle = aufspEndkontrolle(); }catch(e){ kontrolle = null; } }
+    aufspWechseln(1);
+  }
+  selStepIdx = -1; editStepIdx = -1; userAdjustedView = false; fitPending = true;
+  aufspKopfZeigen();
+  try{ refreshAll(); }catch(e){}
+  // SELBSTKONTROLLE: jedes Programm muss entstehen - ohne ausgesparte
+  // Stelle und ohne Konturverletzung.
+  const prog = aufspBloecke().map(k => {
+    let r = null; try{ r = aufspBauen(k); }catch(e){ r = {code:null, warn:[String(e)]}; }
+    const lw = (typeof letzteWarnungen !== 'undefined' && letzteWarnungen ? letzteWarnungen : []).filter(x => /AUSGESPART|VERLETZT|⛔/.test(String(x)));
+    return {k, ok:!!(r && r.code), warn:((r && r.warn) || []).concat(r && r.code ? lw : [])};
+  });
+  const n1 = r1.neu.length, n2 = (r2 && r2.neu) ? r2.neu.length : 0;
+  (r1.hinweise || []).forEach(h => hin.push('A1: ' + h));
+  ((r2 && r2.hinweise) || []).forEach(h => hin.push('A2: ' + h));
+  if(f2) hin.push('AUFSPANNUNG 2 NICHT GEPLANT: ' + f2);
+  prog.forEach(p => { if(!p.ok) hin.push(aufspName(p.k) + ': kein Programm (' + p.warn.join(' · ') + ')'); else if(p.warn.length) hin.push(aufspName(p.k) + ': ' + p.warn.join(' · ')); });
+  let mess = 'PROGRAMMVORSCHLAG (zwei Aufspannungen): Aufspannung 1 ' + n1 + ' Schritte, Aufspannung 2 ' + n2 + ' Schritte' + (AUFSP.fb.an ? ', dazu Formbacken ausdrehen' : '') +
+    ' — ' + prog.filter(p => p.ok).length + ' von ' + prog.length + ' Programmen entstehen';
+  if(kontrolle) mess += ' — Endstand nach beiden Seiten: ' + (kontrolle.rest <= 0.05 ? 'kein Rest ueber 0,05 mm' : 'groesster Rest ' + fmt(kontrolle.rest) + ' mm (Radius) bei Z' + fmt(kontrolle.zRest) + ' der Seite 2') +
+    (kontrolle.ein < -0.05 ? ', EINSCHNITT ' + fmt(-kontrolle.ein) + ' mm bei Z' + fmt(kontrolle.zEin) : '');
+  window.__planerHinweise = hin;
+  window.__vorschlagStand = {zwei:true, schritte:n1 + n2, s1:n1, s2:n2, programme:prog.map(p => ({k:p.k, ok:p.ok, warn:p.warn.slice()})), kontrolle, hinweise:hin.slice()};
+  alert(mess + '.' + String.fromCharCode(10) + hin.join(' · ') + String.fromCharCode(10) +
+    'Jeder Schritt ist in seiner Maske aenderbar, die Bloecke im Arbeitsplan wechseln die Lage. Undo nimmt die Schritte zurueck; die Option im Programmkopf bleibt an.');
+  return true;
+}
+
 aufspKopfZeigen();
 </script>
 <script>
