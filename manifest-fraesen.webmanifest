@@ -1,9 +1,9 @@
 {
- "name": "DZ CAM Fraesen",
- "short_name": "DZ Fraesen",
+ "name": "DZ Fräsen",
+ "short_name": "DZ Fräsen",
  "description": "Werkstattprogrammierung Fraesen: Bohrbilder und Bohrzyklen als Heidenhain-Klartext (iTNC 530).",
  "start_url": "./fraesen.html",
- "scope": "./",
+ "scope": "/",
  "display": "standalone",
  "background_color": "#ffffff",
  "theme_color": "#00528c",

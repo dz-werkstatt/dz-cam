@@ -9,8 +9,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
-<title>DZ CAM</title>
-<script>window.__DZ_STAND="27.09.2026 09:18 (a1b34e71)";</script>
+<title>DZ Drehen</title>
+<script>window.__DZ_STAND="27.09.2026 10:20 (d6f8baba)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2849,12 +2849,12 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     <div id="meldeBanner"></div>
     <div class="progbox"><span id="hdrName">DZ1</span><span id="progBox">DZ1.H</span></div>
     <div class="msgline view-arbeitsplan" id="msgLine"><span id="statPts"></span></div>
-    <div class="logo" title="DZ CAM — Fräsen"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="none" stroke="var(--blue)" stroke-width="4"/><path d="M16 16.5 H32 L16 31.5 H32" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linejoin="miter"/></svg><span class="lz"><i>DZ</i><i class="lcam">CAM · FRÄSEN</i></span></div>
+    <div class="logo" title="DZ Fräsen"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="none" stroke="var(--blue)" stroke-width="4"/><path d="M16 16.5 H32 L16 31.5 H32" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linejoin="miter"/></svg><span class="lz"><i>DZ</i><i class="lcam">FRÄSEN</i></span></div>
     <button id="baBtn" title="Bedienungsanleitung" type="button">?</button>
     <button id="dunkelBtn" title="Dunkelmodus ein/aus" type="button">☾</button>
   </div>
 
-  <div id="splash"><div class="sname">DZ CAM</div><div class="ssub">Fräsen · Heidenhain iTNC 530 · Sinumerik 840D powerline</div><noscript><div style="max-width:340px;margin-top:18px;padding:12px 16px;border:1px solid #c8a24a;background:#fff6e0;color:#6b5320;font-size:14px;line-height:1.5;border-radius:6px;">Das ist nur die VORSCHAU &mdash; sie kann die App nicht ausf&uuml;hren.<br><b>Am Computer:</b> Datei speichern und per Doppelklick im Browser &ouml;ffnen.</div></noscript></div>
+  <div id="splash"><div class="sname">DZ Fräsen</div><div class="ssub">Heidenhain iTNC 530 · TNC 410 · Sinumerik 840D</div><noscript><div style="max-width:340px;margin-top:18px;padding:12px 16px;border:1px solid #c8a24a;background:#fff6e0;color:#6b5320;font-size:14px;line-height:1.5;border-radius:6px;">Das ist nur die VORSCHAU &mdash; sie kann die App nicht ausf&uuml;hren.<br><b>Am Computer:</b> Datei speichern und per Doppelklick im Browser &ouml;ffnen.</div></noscript></div>
 
   <div class="main">
     <div class="stage">
@@ -2993,7 +2993,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
           <button class="gcbtn" id="btnSimEnde" title="Sofort bis zum Ende rechnen">⏭ Ende</button>
           <button class="gcbtn" id="btnSimNeu" title="Rohteil neu, von vorn">↺ Neu</button>
           <button class="gcbtn" id="btnSimHilfe" title="Bedienhinweise ein- und ausblenden">&#x24D8;</button>
-          <button class="gcbtn" id="btnSimZeitExport" title="Laufzeit der Simulation, Zahl der Werkzeuge und Wechsel, Aufspannungen als Datei dz-cam-zeit — in der Werkstatt-Pipeline, Blatt 2, Zeit aus DZ CAM laden">&#x21EA; Zeit an die Pipeline</button>
+          <button class="gcbtn" id="btnSimZeitExport" title="Laufzeit der Simulation, Zahl der Werkzeuge und Wechsel, Aufspannungen als Datei dz-cam-zeit — in der DZ Aufträge, Blatt 2, Zeit aus DZ CAM laden">&#x21EA; Zeit an DZ Aufträge</button>
           <label style="font-size:11.5px;display:flex;align-items:center;gap:4px;">Tempo <select id="simTempo" class="tool-select" style="width:auto;min-width:0;"><option value="1">1×</option><option value="5" selected>5×</option><option value="25">25×</option><option value="max">max</option></select></label>
           <span style="display:inline-flex;gap:2px;"><button class="gcbtn" id="btnSimAnsicht2D" title="Draufsicht">2D</button><button class="gcbtn primary" id="btnSimAnsicht3D" title="3D-Ansicht: ziehen = drehen, Rad = Zoom, Doppelklick = Ausgangslage">3D</button></span>
           <label style="display:inline-flex;align-items:center;gap:4px;font-size:12px;white-space:nowrap;"><input type="checkbox" id="simKanten"> Rohteilkanten</label>
@@ -3184,7 +3184,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     <div class="hsk" id="hskProgs"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="2.5" width="16" height="11" rx="1.5"/><line x1="6" y1="6" x2="16" y2="6"/><line x1="6" y1="9.5" x2="13" y2="9.5"/></svg><span>Programme</span></div>
     <div class="hsk" id="hskSim" title="Eigene Simulation der Bahnen"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 3 L4 13 L14 8 Z"/><circle cx="17.5" cy="8" r="2.5"/></svg><span>Simulation</span></div>
     <div class="hsk" id="hskStep" title="STEP-Modell laden, ausrichten und ansehen"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 2 L19 6 L19 12 L11 15.5 L3 12 L3 6 Z"/><path d="M3 6 L11 9.5 L19 6"/><line x1="11" y1="9.5" x2="11" y2="15.5"/></svg><span>STEP</span></div>
-    <div class="hsk" id="hskKalk" title="Angebotskalkulation (Zuschlagskalkulation) — Grobkalkulation; den Angebotspreis rechnet die Werkstatt-Pipeline"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3.5 A6 6 0 1 0 15 12.5"/><line x1="5" y1="6.3" x2="13" y2="6.3"/><line x1="5" y1="9.7" x2="13" y2="9.7"/></svg><span>Kalkulation</span></div>
+    <div class="hsk" id="hskKalk" title="Angebotskalkulation (Zuschlagskalkulation) — Grobkalkulation; den Angebotspreis rechnet die DZ Aufträge"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3.5 A6 6 0 1 0 15 12.5"/><line x1="5" y1="6.3" x2="13" y2="6.3"/><line x1="5" y1="9.7" x2="13" y2="9.7"/></svg><span>Kalkulation</span></div>
     <div class="hsk primary" id="hskGcode" title="Klartext-Ausgabe"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3 L2.5 8 L7 13"/><path d="M15 3 L19.5 8 L15 13"/></svg><span>NC-Ausgabe</span></div>
   </div>
 
@@ -3212,12 +3212,12 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
       <!-- IST-ZEITEN AUS DER MASCHINE [26.09.2026, Punkt 9]: gestoppte Zeit je Programm, Faktor je Maschine (08-istzeiten.js). -->
       <div class="msec">Ist-Zeit an der Maschine (Kalibrierung)</div>
       <div id="izBlock"></div>
-      <div class="msec">Werkstatt-Pipeline</div>
+      <div class="msec">DZ Aufträge</div>
       <div class="mrow" style="flex-wrap:wrap;gap:6px;padding-right:12px;">
-        <button id="btnKalkZeitExport" style="flex:1 1 46%;font-size:12px;padding:7px;" title="Komplettzeit mit Werkzeugwechseln, Schnittzeit, Zahl der Werkzeuge und Wechsel, gemerkte Aufspannungen als Datei dz-cam-zeit — in der Pipeline, Blatt 2, Zeit aus DZ CAM laden">⇪ Zeit an die Pipeline</button>
-        <label class="gcbtn" style="flex:1 1 46%;font-size:12px;padding:7px;text-align:center;cursor:pointer;" title="Werkstoffliste der Pipeline (Blatt 5, Für die Dreh-App sichern — dieselbe Datei passt hier): die Preise je kg kommen in die Betriebswerte">⇩ Preise aus der Pipeline<input type="file" id="kalkWerkstoffDatei" accept=".json,.JSON" style="display:none;"></label>
+        <button id="btnKalkZeitExport" style="flex:1 1 46%;font-size:12px;padding:7px;" title="Komplettzeit mit Werkzeugwechseln, Schnittzeit, Zahl der Werkzeuge und Wechsel, gemerkte Aufspannungen als Datei dz-cam-zeit — in der Pipeline, Blatt 2, Zeit aus DZ CAM laden">⇪ Zeit an DZ Aufträge</button>
+        <label class="gcbtn" style="flex:1 1 46%;font-size:12px;padding:7px;text-align:center;cursor:pointer;" title="Werkstoffliste der Pipeline (Blatt 5, Für die Dreh-App sichern — dieselbe Datei passt hier): die Preise je kg kommen in die Betriebswerte">⇩ Preise aus DZ Aufträge<input type="file" id="kalkWerkstoffDatei" accept=".json,.JSON" style="display:none;"></label>
       </div>
-      <div id="kalkPipelineHinweis" style="font-size:11.5px;color:var(--text-dim);padding:0 10px 8px;line-height:1.45;">Den Angebotspreis rechnet die Werkstatt-Pipeline; dieses Blatt bleibt die Grobkalkulation fürs Gegenstück.</div>
+      <div id="kalkPipelineHinweis" style="font-size:11.5px;color:var(--text-dim);padding:0 10px 8px;line-height:1.45;">Den Angebotspreis rechnet die DZ Aufträge; dieses Blatt bleibt die Grobkalkulation fürs Gegenstück.</div>
       <div class="msec">Betriebswerte (werden gespeichert)</div>
       <div class="mrow"><label>Maschinenstundensatz</label><input type="number" step="any" id="kaSatz"><span class="unit">€/h</span></div>
       <div class="mrow"><label>Rüstzeit je Auftrag</label><input type="number" step="any" id="kaRuest"><span class="unit">min</span></div>
@@ -3231,14 +3231,14 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
   </div>
 
   <div id="baPanel">
-    <div class="ba-kopf"><b>Bedienungsanleitung — DZ CAM · Fräsen</b><span id="baStand" style="font-weight:400;font-size:11px;color:var(--text-dim);margin-left:10px;"></span>
+    <div class="ba-kopf"><b>Bedienungsanleitung — DZ Fräsen</b><span id="baStand" style="font-weight:400;font-size:11px;color:var(--text-dim);margin-left:10px;"></span>
       <button id="baInhaltBtn" type="button">Inhalt</button>
       <button id="baZu" type="button">✕</button></div>
     <div class="ba-inhalt" id="baScroll"><div id="baText">
       <div id="baTocWrap"><h2 id="ba-inhalt" style="padding-top:4px;">Inhalt</h2><div id="baToc"></div></div>
 
 <h2 id="ba-fk01">1 &nbsp;Was diese App ist &mdash; und was sie bewusst nicht ist</h2>
-<p>Der Fr&auml;sbereich von DZ CAM ist <b>Werkstattprogrammierung f&uuml;r 2,5D</b>: Bohrbilder,
+<p>DZ Fr&auml;sen (bis zum 27.09.2026 &bdquo;DZ CAM &middot; Fr&auml;sen&ldquo;; DZ CAM bleibt der Name der Familie aus Drehen und Fr&auml;sen) ist <b>Werkstattprogrammierung f&uuml;r 2,5D</b>: Bohrbilder,
 sp&auml;ter Taschen und Konturen, geschrieben als <b>Heidenhain-Klartext</b> f&uuml;r die iTNC&nbsp;530.
 Er ist kein CAM f&uuml;r Freiformfl&auml;chen &mdash; daf&uuml;r bleibt hyperMILL zust&auml;ndig. Der Gewinn liegt
 beim einfachen Teil: Programm am Handy oder Laptop anlegen, als .H-Datei auf den Stick, an der
@@ -3283,7 +3283,7 @@ Titel der Maske nennt den Dialekt. An der Steuerung: Datei laden, <b>Programm-Te
 fotografieren.</li>
 <li><b>Zeiten und Kalkulation</b>: der Arbeitsplan zeigt je Schritt die gesch&auml;tzte Laufzeit und in der Kopfzeile die
 Komplettzeit mit Werkzeugwechseln; der Knopf <b>Kalkulation</b> in der unteren Leiste rechnet daraus mit Rohteil und
-Betriebswerten einen St&uuml;ckpreis (Kap.&nbsp;6f). Den Angebotspreis macht die Werkstatt-Pipeline.</li>
+Betriebswerten einen St&uuml;ckpreis (Kap.&nbsp;6f). Den Angebotspreis macht die DZ Aufträge.</li>
 </ol>
 <p><b>Am Handy</b> ist der Arbeitsplan eine schmale Liste, und die Knopfsymbole
 &#9998; (&Auml;ndern) und &#10005; (L&ouml;schen) stehen nur an der Zeile, die gerade
@@ -3298,11 +3298,11 @@ Ordnungskn&ouml;pfe &#x25B2;&#x25BC;&#x23FB;&#x29C9; erscheinen weiter nur am an
 seit demselben Tag dunkel.</p>
 
 <h3 id="ba-fk02-werkstatt">Die Werkstatt: Drehen, Fr&auml;sen, Pipeline (26.09.2026)</h3>
-<p>Es gibt drei Apps, und sie geh&ouml;ren zusammen: <b>Drehen</b>, <b>Fr&auml;sen</b> (diese) und die <b>Werkstatt-Pipeline</b>
-(Anfrage, Angebot, Auftrag). <b>Am Laptop</b> steht links oben in der Kopfzeile der <b>Werkstatt-Schalter</b> Drehen | Fr&auml;sen | Pipeline
+<p>Es gibt drei Apps, und sie geh&ouml;ren zusammen: <b>Drehen</b>, <b>Fr&auml;sen</b> (diese) und <b>DZ Auftr&auml;ge</b>
+(Angebot, Auftrag, Planung; bis zum 27.09.2026 &bdquo;Werkstatt-Pipeline&ldquo;). <b>Am Laptop</b> steht links oben in der Kopfzeile der <b>Werkstatt-Schalter</b> Drehen | Fr&auml;sen | Pipeline
 &mdash; in allen drei Apps an derselben Stelle, die aktuelle hervorgehoben, ein Klick wechselt. Daneben der <b>R&uuml;cksprung</b>
 (&bdquo;&#x25C2; Drehen: Mastertestteil&ldquo;): er wei&szlig;, woher Du kommst und was dort offen war, und f&uuml;hrt genau dorthin zur&uuml;ck
-(einen halben Tag lang). <b>Am Handy</b> ist das <b>Logo</b> der Schalter (ein Tipp &ouml;ffnet das Men&uuml;), und dieselbe Leiste steht &uuml;ber der
+(einen halben Tag lang). <b>Am Handy</b> ist das <b>Logo</b> der Schalter (ein Tipp &ouml;ffnet das Men&uuml;), <b>Am iPhone gen&uuml;gt ein Symbol:</b> alle drei liegen unter derselben Adresse, und seit dem 27.09.2026 gilt jede Verkn&uuml;pfung f&uuml;r die ganze Werkstatt &mdash; der Wechsel bleibt in der installierten App, Dunkelmodus, Projektordner und Ablage sind ein Speicher. Eine &auml;ltere Verkn&uuml;pfung einmal l&ouml;schen und neu anlegen, sonst &ouml;ffnet der Wechsel noch die Safari-Ansicht. und dieselbe Leiste steht &uuml;ber der
 Startauswahl. Der Wechsel ist kein harter Schnitt: eine Blende mit Emblem und Zielname legt sich &uuml;ber die Seite, die Zielseite kommt mit
 demselben Bild. Das offene Programm bleibt hier wie dort (&bdquo;Weitermachen&ldquo;, Kap.&nbsp;2 oben; die Dreh-App kann das seit demselben Tag).
 Der Weg f&uuml;hrt immer zur richtigen Datei: im Projektordner zur Nachbardatei, auf dem Handy und am Laptop mit der Verkn&uuml;pfung zur
@@ -4363,7 +4363,7 @@ ohne vorgebohrte Bohrung eine Kollision. Helix und Pendeln ohne ANGLE laufen sen
 <p id="ba-fk06d-wzform"><b>Die Form des Werkzeugs kommt aus der Werkzeugtabelle</b> (20.09.2026) &mdash; und zwar aus den <b>Zahlen</b>, nie aus dem Namen. Ist der Eckenradius <b>R2 gleich dem halben Durchmesser</b>, ist es ein <b>Kugelfr&auml;ser</b> (Halbkugel); liegt R2 <b>dazwischen</b>, ein <b>Eckenradiusfr&auml;ser</b> (flache Mitte, aussen die Rundung); steht ein <b>Spitzenwinkel</b> in der Tabelle, ist es ein <b>Kegel</b> &mdash; beim Bohrer, beim Zentrierer und auch beim Fasenfr&auml;ser. Sonst ist die Stirn flach. Dieselbe Form nimmt der <b>Abtrag</b> und zeichnet das <b>3D-Bild</b>: was Du im Bild siehst, ist das, was das Material wegnimmt. Dar&uuml;ber folgt die Silhouette der Tabelle weiter &mdash; <b>Schneidenl&auml;nge LCUTS</b>, dann der Schaft bis zur <b>Auskragl&auml;nge</b> und der <b>Halter</b> mit seinem Durchmesser; was dort fehlt, wird nicht geraten: der letzte bekannte K&ouml;rper l&auml;uft als Zylinder weiter. In der <b>3D-Ansicht</b> tr&auml;gt jeder Teil seine Farbe (20.09.2026): die <b>Schneidenl&auml;nge gold</b>, der <b>Schaft bis zur Auskragl&auml;nge silber</b>, der <b>Halter schwarz</b> &mdash; dieselbe Sprache wie die Werkzeugbilder in der Liste (Kap.&nbsp;4). Was die Tabelle nicht f&uuml;hrt, wird nicht gefaerbt: <b>ohne Auskragl&auml;nge</b> endet das Silber nicht (kein Halter), <b>ohne Schneidenl&auml;nge</b> bleibt das ganze Werkzeug golden &mdash; dann wei&szlig; die App nicht, wo die Schneide aufh&ouml;rt. Die <b>Spannbacken</b> stehen seit dem 16.09.2026 im Bild (flach in der Draufsicht, als Kl&ouml;tze in 3D). Nicht dargestellt sind die <b>Schneiden selbst</b> (Drall, Z&auml;hnezahl) &mdash; f&uuml;r den Abtrag und die Kollision z&auml;hlt die H&uuml;llform, und die ist ein Drehk&ouml;rper.</p>
 <p id="ba-fk06d-vollbild"><b>Am Laptop f&uuml;llt die Simulation den Bildschirm</b> (19.09.2026) &mdash; wie im Drehteil geh&ouml;rt die ganze Fl&auml;che dem Bild,
 die Bedienhinweise stehen hinter dem Knopf &#x24D8; in der Kopfleiste (auf beiden Ger&auml;ten), das Kreuz oben rechts schlie&szlig;t.</p>
-<p id="ba-fk06d-pipeline"><b>Zeit an die Werkstatt-Pipeline</b> (19.09.2026): der Knopf in der Kopfleiste der Simulation (und derselbe in der
+<p id="ba-fk06d-pipeline"><b>Zeit an die DZ Aufträge</b> (19.09.2026): der Knopf in der Kopfleiste der Simulation (und derselbe in der
 Kalkulation, Kap.&nbsp;6f) schreibt die Zeiten des Arbeitsplans als Datei <code>dz-cam-zeit</code>: Komplettzeit mit Werkzeugwechseln, Schnittzeit
 der Zeitachse allein (Vorschub aus F, Eilgang 6&nbsp;m/min, Verweilzeiten), Zahl der Werkzeuge und Wechsel der aktiven Schritte und die
 Aufspannungen &mdash; die in der Kalkulation gemerkten, sonst zwei, wenn die Bewertung im STEP-Fenster unter 60&nbsp;% erreichbar sagt. In der
@@ -4435,8 +4435,8 @@ der Programmkopf im Arbeitsplan zeigt sie neben der Hauptzeit, und die Zeit-Date
 <code>kalibrierung</code>. Die NC &auml;ndert sich nicht. Ein Faktor au&szlig;erhalb 0,5 bis 3 wird als unplausibel gemeldet (falsche
 Einheit, St&ouml;rung w&auml;hrend der Messung): Eintrag pr&uuml;fen, mit &#10005; l&ouml;schen. Jede Zielmaschine hat ihre eigene Liste;
 die Dreh-App f&uuml;hrt eine getrennte.</p>
-<p id="ba-fk06f-pipeline"><b>Werkstatt-Pipeline:</b> den Angebotspreis rechnet die Pipeline &mdash; dieses Blatt bleibt die Grobkalkulation.
-<b>Zeit an die Pipeline</b> schreibt die Zeiten als Datei (Kap.&nbsp;6d), <b>Preise aus der Pipeline</b> liest deren Werkstoffliste (Blatt&nbsp;5,
+<p id="ba-fk06f-pipeline"><b>DZ Aufträge:</b> den Angebotspreis rechnet die Pipeline &mdash; dieses Blatt bleibt die Grobkalkulation.
+<b>Zeit an DZ Aufträge</b> schreibt die Zeiten als Datei (Kap.&nbsp;6d), <b>Preise aus DZ Aufträge</b> liest deren Werkstoffliste (Blatt&nbsp;5,
 <i>F&uuml;r die Dreh-App sichern</i> &mdash; dieselbe Datei passt hier) und &uuml;bernimmt die Preise je kg: zugeordnet nach Namen (S235 &rarr;
 Baustahl, C45 vor 42CrMo4 &rarr; Verg&uuml;tungsstahl, 1.4301 vor 1.4571 &rarr; Edelstahl, AlMgSi1 vor AlMg3 &rarr; Alu); was die Liste nicht
 f&uuml;hrt (Guss, Messing), bleibt und wird genannt.</p>
@@ -4632,7 +4632,7 @@ nicht belegt. Es fehlt eine echte .MPF, ein Lauf und die f&uuml;nfachsige Bahn.<
      man konnte ihr nicht ansehen, wie alt sie ist. Wer hier ein Kapitel
      aendert, zieht das Datum mit; der Pruefstand vergleicht es gegen das
      juengste Datum im Text. -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 26.09.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 27.09.2026. Sie
 wird mit jedem Paket mitgeschrieben &mdash; wer eine Funktion baut oder erweitert,
 schreibt ihren Absatz mit. Findest Du hier eine Aussage, die die App nicht mehr
 einl&ouml;st, ist das ein Fehler und geh&ouml;rt gemeldet.</p>
@@ -4977,9 +4977,9 @@ function poFakeOrdner(name){
 // Nachbarordner da ist. Zwei Fassungen einer Regel driften.
 // =====================================================================
 const HUELLE_APPS = [
-  {id:'dreh',     name:'Drehen',             kurz:'Drehen',   sub:'Monforts 1000 / 1500, Siemens 810T / 840D', projekt:'euroturn-kontur-cam.html', pwa:'index.html',   https:'https://dz-werkstatt.github.io/dz-cam/'},
-  {id:'fraes',    name:'Fräsen',        kurz:'Fräsen',  sub:'iTNC 530, TNC 410, 840D powerline',        projekt:'dz-cam-fraesen.html',      pwa:'fraesen.html', https:'https://dz-werkstatt.github.io/dz-cam/fraesen.html'},
-  {id:'pipeline', name:'Werkstatt-Pipeline', kurz:'Pipeline', sub:'Anfrage, Angebot, Auftrag',                 projekt:'../werkstatt-pipeline/docs/index.html', pwa:'https://dz-werkstatt.github.io/werkstatt-pipeline/', https:'https://dz-werkstatt.github.io/werkstatt-pipeline/', eigen:true},
+  {id:'dreh',     name:'DZ Drehen',          kurz:'Drehen',   sub:'Monforts 1000 / 1500, Siemens 810T / 840D', projekt:'euroturn-kontur-cam.html', pwa:'index.html',   https:'https://dz-werkstatt.github.io/dz-cam/'},
+  {id:'fraes',    name:'DZ Fräsen',     kurz:'Fräsen',  sub:'iTNC 530, TNC 410, 840D powerline',        projekt:'dz-cam-fraesen.html',      pwa:'fraesen.html', https:'https://dz-werkstatt.github.io/dz-cam/fraesen.html'},
+  {id:'pipeline', name:'DZ Aufträge',   kurz:'Aufträge', sub:'Angebot, Auftrag, Planung',                 projekt:'../werkstatt-pipeline/docs/index.html', pwa:'https://dz-werkstatt.github.io/werkstatt-pipeline/', https:'https://dz-werkstatt.github.io/werkstatt-pipeline/', eigen:true},
 ];
 // Der gemeinsame Speicherschluessel des Wechsels und seine Fristen: der
 // Ruecksprung-Chip gilt einen halben Tag (danach ist "von wo komme ich"
@@ -5089,10 +5089,13 @@ function huelleKopfHtml(hier, zurueck, href){
 function huelleLeisteHtml(hier, href){
   const h = hier || huelleHier(href);
   const esc = huelleEsc;
-  return '<div class="wleiste"><span class="wl-tit">DZ CAM · Werkstatt</span>' +
+  return '<div class="wleiste"><span class="wl-tit">DZ Werkstatt</span>' +
     HUELLE_APPS.map(a => a.id === h
-      ? '<span class="wl-app hier" title="' + esc(a.sub) + '">' + esc(a.name) + '</span>'
-      : '<a class="wl-app" href="' + esc(huelleZiel(a.id, href)) + '" data-wziel="' + a.id + '" title="' + esc(a.sub) + '">' + esc(a.name) + '</a>').join('') +
+      // Die eigene App als Kurzname: in den CAM-Apps derselbe Text (Drehen, Fraesen), in der
+      // Pipeline 'Pipeline' statt 'Werkstatt-Pipeline' - der lange Name brach die Leiste bei
+      // 390 px in zwei Zeilen (Aufnahme 27.09.2026).
+      ? '<span class="wl-app hier" title="' + esc(a.sub) + '">' + esc(a.kurz) + '</span>'
+      : '<a class="wl-app" href="' + esc(huelleZiel(a.id, href)) + '" data-wziel="' + a.id + '" title="' + esc(a.sub) + '">' + esc(a.kurz) + '</a>').join('') +
     '</div>';
 }
 function huelleMenueHtml(hier, href){
@@ -5155,7 +5158,9 @@ function huelleStandText(app, s){
   if(app === 'pipeline'){
     const a = +s.auftraege || 0, u = +s.ueberfaellig || 0;
     if(!a) return 'noch keine Aufträge';
-    return a + (a === 1 ? ' Auftrag' : ' Aufträge') + (u ? ', ' + u + ' überfällig' : '');
+    // 'offen' statt 'Auftraege': die App heisst seit dem 27.09.2026 selbst DZ Auftraege,
+    // und 'Auftraege: 10 Auftraege' liest sich doppelt.
+    return a + ' offen' + (u ? ', ' + u + ' überfällig' : '');
   }
   if(!s.name) return 'noch nichts gemerkt';
   const k = +s.schritte || 0;
@@ -5196,7 +5201,11 @@ function huelleStart(opt){
   // Ankunft ohne Startbild (Pipeline): die Blende kurz zeigen und ausblenden.
   // Die CAM-Apps haben ihr Startbild - das ist dort die Ankunft, nur kuerzer.
   try{ if(huelleAnkunft(hier) && !document.getElementById('splash')){ const a = HUELLE_APPS.find(x => x.id === hier); huelleBlendeWeg(huelleBlende(a ? a.name : 'DZ CAM', ''), 350); } }catch(e){}
-  const logo = document.querySelector('.hdr .logo');
+  // Der Oeffner: das Logo der CAM-Apps oder das Emblem der Pipeline. Bis zum 27.09.2026
+  // stand hier nur das Logo - die Pipeline hatte damit unter 900 px (wo der Segment-
+  // Schalter ausgeblendet ist) KEINEN Weg zurueck nach Drehen oder Fraesen (Befund vom
+  // iPhone). Ab 900 px ist das Pipeline-Emblem ausgeblendet, dort traegt der Schalter.
+  const logo = document.querySelector('.hdr .logo') || document.querySelector('header .emblem');
   if(logo && logo.addEventListener){
     let m = document.getElementById('wmenue');
     if(!m){ m = document.createElement('div'); m.id = 'wmenue'; m.className = 'wmenue'; document.body.appendChild(m); }
@@ -19335,7 +19344,7 @@ function fMeldungenOrdnen(warnungen){
 // 94-dnc.js, Stand 12.09.2026. Wer sie dort aendert, zieht sie hier
 // nach; ein gemeinsames Modul kommt, sobald der Fraesteil steht.
 // =====================================================================
-try{ document.title = 'DZ CAM · Fräsen'; }catch(e){}
+try{ document.title = 'DZ Fräsen'; }catch(e){}
 
 // ---- Meldebanner statt alert (Artefakt/PWA: alert ist stumm) --------
 let meldeTimer = null;
