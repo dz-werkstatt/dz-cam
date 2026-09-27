@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="27.09.2026 15:14 (05650df9)";</script>
+<script>window.__DZ_STAND="27.09.2026 16:29 (b715162a)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4796,6 +4796,11 @@ vollst&auml;ndig und in einem St&uuml;ck zu sehen. Tempo kostet das nichts
 gepr&uuml;ft; Eilg&auml;nge zus&auml;tzlich gegen den Materialstand ZU IHREM
 Zeitpunkt. Der Backensitz kommt aus dem ROHMASS, nicht aus dem laufenden Abtrag:
 Backen sind beim Spannen gesetzt und wandern nicht mit.
+<br><b>Die Backe steckt im Futter</b> (seit 27.09.2026): sie ist mindestens 20&nbsp;mm tief im
+Futterk&ouml;rper gef&uuml;hrt. Steht sie bei gro&szlig;em Spann-⌀ &uuml;ber den Futterrand,
+zeigen Kontureditor, 2D- und 3D-Simulation dort den Fu&szlig; der Backe, der aus dem Futter kommt,
+und die Kollisionspr&uuml;fung h&auml;lt ihn mit. Die Backenfront bleibt an LA; die 20&nbsp;mm sind ein
+Mindestwert, nicht gemessen.
 <br>Bei Stechwerkzeugen wird nicht nur der Bahnpunkt gepr&uuml;ft, sondern die
 <b>volle Klingenbreite</b> (seit 30.08.2026): die Pr&uuml;fung l&auml;uft ein
 zweites Mal, um die Klingenl&auml;nge versetzt &mdash; sonst s&auml;he sie ein
@@ -8128,13 +8133,25 @@ function toWorld(sx,sy){
 // 1500er GEMESSEN am 22.09.2026 (Daniel, am montierten Futter): 41,5 mm.
 // Die Annahme 45 lag 3,5 mm zu hoch — in die sichere Richtung, aber die
 // Kollisionspruefung haette 3,5 mm Luft verschenkt, die es nicht gibt.
+// DIE BACKE IST IM FUTTER GEFUEHRT [Daniel, 27.09.2026, Foto des Kontur-
+// editors: "die Spannbacken sind im Futter gefuehrt, mindestens so 20 mm tief
+// im Futterkoerper. Wenn die Backen so weit herausstehen wie auf dem Bild, muss
+// man den Backen sehen, wie er aus dem Futter herausragt"]. Bis dahin endete
+// die Backe genau an der Futterstirn - wo sie radial ueber den Futterrand
+// steht (grosser Spann-⌀), schwebte die Stufenbacke ohne Fuss vor dem Futter.
+// fuehrung ist die Tiefe, mit der die Backe HINTER der Futterstirn im
+// Futterkoerper steckt. Innerhalb des Futter-⌀ ist dieser Teil verdeckt;
+// sichtbar (und kollisionsrelevant) wird er erst ueber dem Futterrand. Die
+// Backenfront haengt weiter an LA, Stufen und Futterstirn bleiben, wo sie
+// waren - dazu kommt nur der Teil, der schon immer da war.
+// 20 mm ist Daniels Mindestwert, nicht gemessen.
 const FUTTER_JE_MASCHINE = {
   MONFORTS_1500_EUROTURN:   { rAussen:157.5, hoehe:95,  rBohrung:41,
                               backeB:32, backeH:90, backeL:41.5,
-                              stufenZ:[17.94, 19.14] },
+                              stufenZ:[17.94, 19.14], fuehrung:20 },
   MONFORTS_1000_MTC_K_6624B:{ rAussen:157.5, hoehe:117, rBohrung:41,
                               backeB:35, backeH:67, backeL:65,
-                              stufenZ:[14.99, 14.93] }
+                              stufenZ:[14.99, 14.93], fuehrung:20 }
 };
 const FUTTER = Object.assign({}, FUTTER_JE_MASCHINE.MONFORTS_1500_EUROTURN);
 function futterGeometrie(){
@@ -8234,6 +8251,10 @@ function futterGeometrie(){
     // als der Durchgang ist, endet VOR der Futterstirn - reicht es hinein, ist das
     // eine Kollision (futterPunkt meldet den Futterkoerper), kein groesseres Loch.
     rNabe: FUTTER.rBohrung,
+    // Fuehrungsteil der Backe hinter der Futterstirn (s. FUTTER_JE_MASCHINE):
+    // gezeichnet und geprueft wird nur, was ueber dem Futterrand liegt.
+    zFuehrung: zStirn-(+FUTTER.fuehrung||0),
+    fuehrungSichtbar: (+FUTTER.fuehrung||0) > 0 && rHoch > FUTTER.rAussen + 0.01,
     // Backenbreite in mm: die 3D-Backe hat seit dem 09.09.2026 parallele
     // Flanken (klotz in draw3D) und nimmt backeB direkt; halbWinkel bleibt
     // als Winkel am mittleren Backenradius stehen (frueher das Segment).
@@ -8275,6 +8296,14 @@ function drawSpannfutter(){
         const st2=G.stufen[s], d=r2d(st2.r);
         pts.push([st2.zBis, d]);
         pts.push([st2.zVon, d]);
+      }
+      // Fuehrungsteil: steht die Backe ueber den Futterrand, sieht man sie
+      // dort aus dem Futter kommen - Fuss bis zFuehrung, unten der Futterrand.
+      if(G.fuehrungSichtbar){
+        const dAus=r2d(G.rAussen);
+        pts.push([G.zFuehrung,dHoch]);
+        pts.push([G.zFuehrung,dAus]);
+        pts.push([G.zStirn,dAus]);
       }
       pts.push([G.zStirn,dSp]);
       const bg=ctx.createLinearGradient(0,toScreen(0,sg*dHoch)[1],0,toScreen(0,sg*dSp)[1]);
@@ -36480,6 +36509,10 @@ function futterPunkt(G, z, r){
   // Backen: im Spannbereich alles ausserhalb des Spann-⌀
   if(z < G.zS-FUTTER_SICHER && z > G.zStirn-FUTTER_SICHER &&
      r > G.rSpann+FUTTER_SICHER && r < G.rHoch) return 'Spannbacke';
+  // Fuehrungsteil der Backe hinter der Futterstirn, soweit er ueber den
+  // Futterrand steht (darunter meldet der Futterkoerper).
+  if(G.fuehrungSichtbar && z <= G.zStirn && z > G.zFuehrung-FUTTER_SICHER &&
+     r >= G.rAussen-FUTTER_SICHER && r < G.rHoch) return 'Spannbacke';
   return null;
 }
 function futterTreffer(mv){
@@ -38053,8 +38086,13 @@ function draw3D(opt){
     const zStufe=G.zStufe;
     // Dreistufige Backe: ein Klotz je Stufe, Hoehen aus G.stufen.
     [Math.PI/2, Math.PI/2+2*Math.PI/3, Math.PI/2+4*Math.PI/3].forEach(am=>{
+      // Fuehrungsteil hinter der Futterstirn, nur ueber dem Futterrand
+      // (darunter steckt er im Futterkoerper). Er schliesst an die hohe
+      // Stufe an - deren Rueckseite faellt dann weg, die Backe ist EIN Koerper.
+      if(G.fuehrungSichtbar)
+        klotz(am, tB, rF, rBackeHoch, G.zFuehrung, zStirn, stahlB, null, G.stufen[0].r);
       G.stufen.forEach((st2,si)=>{
-        const vor =si>0 ? G.stufen[si-1].r : null;              // Nachbar in -Z
+        const vor =si>0 ? G.stufen[si-1].r : (G.fuehrungSichtbar ? rBackeHoch : null);  // Nachbar in -Z
         const nach=si<G.stufen.length-1 ? G.stufen[si+1].r : null;  // Nachbar in +Z
         klotz(am, tB, rSpann, st2.r, st2.zVon, st2.zBis, stahlB, vor, nach);
       });
