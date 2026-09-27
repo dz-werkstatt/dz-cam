@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="27.09.2026 10:20 (d6f8baba)";</script>
+<script>window.__DZ_STAND="27.09.2026 14:20 (6c128e8a)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -162,6 +162,22 @@
   /* DIE WERKSTATT-KARTE [Paket D]: der Stand der anderen beiden Bereiche auf dem
      Startbild - nur am Laptop (unter 900 px kein Element). */
   .wkarte{display:none;}
+  /* ZWEI AUFSPANNUNGEN [27.09.2026]: nur neue Klassen - erscheinen nur, wenn die Option im Programmkopf an ist. */
+  .ap-row.ap-aufsp{background:hsl(var(--ton), 40%, 94%);border-top:1px solid hsl(var(--ton), 30%, 82%);font-weight:700;cursor:pointer;margin-top:4px;}
+  .ap-row.ap-aufsp.sel{background:hsl(var(--ton), 60%, 88%);box-shadow:inset 3px 0 0 var(--blue);}
+  .ap-row.ap-aufsp .ap-detail{font-weight:400;}
+  .ap-row.aufsp-fremd{opacity:.55;}
+  .aufsp-o{display:inline-block;font-size:11.5px;font-weight:600;color:var(--blue);border:1px solid hsl(var(--ton), 40%, 78%);background:#fff;border-radius:999px;padding:2px 9px;white-space:nowrap;}
+  .aufsp-anz{font-size:12px;color:var(--text-dim);margin-right:10px;}
+  .aufsp-reiter{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);}
+  .aufsp-reiter .gcbtn.an{background:var(--blue);color:#fff;border-color:var(--blue);}
+  .aufsp-reiter .aufsp-hin{font-size:11.5px;color:var(--text-dim);margin-left:auto;}
+  .aufsp-zone{display:block;width:100%;text-align:left;margin:4px 0;padding:8px 10px;line-height:1.35;}
+  .aufsp-zone span{display:block;font-size:11.5px;font-weight:400;color:var(--text-dim);}
+  .aufsp-zone.an{border-color:#e8850c;box-shadow:0 0 0 2px hsla(32,90%,50%,.3);}
+  .aufsp-hint{display:block !important;}
+  body.dunkel .ap-row.ap-aufsp{background:hsl(var(--ton), 16%, 20%);border-top-color:hsl(var(--ton), 14%, 30%);}
+  body.dunkel .aufsp-o{background:hsl(var(--ton), 14%, 18%);}
   /* DIE BLENDE beim Wechsel [Paket B]: Emblem, Zielname, eine Zeile, ein
      laufender Strich - haengt am body ueber allem, blendet in 0,4 s aus.
      Sie ist Bild, kein Layout: kein Element der Seite bewegt sich. */
@@ -4585,6 +4601,42 @@ das ist seine Regel, nicht unsere. <i>Ordner l&ouml;sen</i> vergisst ihn wieder,
 Importieren. Ein Programm aus dem Ordner wird beim Laden wie ein Import behandelt: fehlende Werkzeuge kommen
 dazu, vorhandene bleiben. Der Ordner gilt f&uuml;r <b>beide Apps</b> (einmal gew&auml;hlt, in Drehen wie in Fr&auml;sen da), jede zeigt nur ihre Dateien
 (<code>.dreh.json</code> / <code>.fraes.json</code>).</dd>
+<dt id="ba-pr-aufspannung">Zwei Aufspannungen und Formbacken (seit 27.09.2026)</dt>
+<dd>Ein Drehteil ist selten von einer Seite fertig. Im <b>Programmkopf</b> steht dafür der Schalter
+<i>Aufspannungen: eine (wie bisher) | zwei · mit Umspannen</i> &mdash; nur wenn er auf zwei steht, ändert sich
+etwas. Dann entstehen aus <b>einem</b> Arbeitsplan zwei oder drei NC-Programme mit fortlaufender O-Nummer:
+<b>Aufspannung 1</b>, auf Wunsch <b>Formbacken ausdrehen</b> und <b>Aufspannung 2</b>. Jedes Programm trägt hinter
+der O-Zeile seinen Namen aus Teilename und Zeichnungsnummer, z.&nbsp;B. <code>(WELLE MIT BUND 4711-01 - AUFSPANNUNG 2)</code>.
+Im Arbeitsplan stehen die Blöcke als eigene Zeilen; ein Tipp wählt den Block, ✎ öffnet seine Einstellungen.
+Neue Schritte gehören zum angewählten Block. In der NC-Ausgabe steht ein Reiter je Programm, <i>NC sichern</i>
+legt alle ab.<br>
+<b>Die Grenze.</b> Seite 1 dreht außen und innen bis zur Grenze plus <b>Überlauf</b> (Vorgabe 2&nbsp;mm): der
+Durchmesser läuft ein Stück weiter, die Kante <i>an</i> der Grenze und alles dahinter macht Seite 2 &mdash; von
+Seite 1 aus wäre es ein Hinterschnitt. Die App schlägt die Grenze am ersten Absatz vor, der zur Seite 2 hin
+kleiner (außen) bzw. größer (innen) wird. Normalerweise liegt sie an einem Absatz: Seite 2 dreht die
+Planfläche bis zum Durchmesser der Seite 1, macht die Kante und zieht hoch, ohne über den Durchmesser zu
+fahren. Nur wenn es nicht anders geht, am <b>gleichen Durchmesser</b>: 1&nbsp;mm Überlappung, dann 2&nbsp;mm unter
+5&nbsp;Grad Auslauf nach außen.<br>
+<b>Seite 2</b> sieht das Teil <b>gewendet</b>, mit einem Programmkopf aus dem <b>Stand nach Aufspannung 1</b>
+(aus deren Simulation, nicht aus dem Plan): Rohteil, Vorbohrung, ZA und ZI stimmen, die Simulation beginnt
+mit dem, was Seite 1 übriggelassen hat, und die Backen sitzen auf dem Spann-⌀. Zurück in Aufspannung 1 steht
+alles wieder in der Lage der ersten Seite; gespeichert wird immer diese.<br>
+<b>Spannzone.</b> Wo gespannt wird, entscheidest Du &mdash; die App bietet jede zylindrische Stufe der ersten
+Seite an, mit Spanntiefe, Auskragung und L/D, die stabilste zuerst. In Z liegt das Teil immer an (Schulter
+vorn an der Backe, Absatz tiefer in der Backe oder die Stirn) und im Durchmesser. <b>Ein Radius wird nie
+gespannt:</b> liegt an der Schulter eine Rundung, endet die Backe Radius&nbsp;+&nbsp;1&nbsp;mm davor, und die Anlage
+wandert an den nächsten Absatz.<br>
+<b>Formbacke.</b> Kein Spannring &mdash; der Butzen (kleinster ⌀ der Backe, abgefragt) wird tief in die weichen
+Backen gespannt. Ausgedreht wird mit <b>zwei Werkzeugen</b>: Schruppen CNMG R0,8 (T8), Schlichten R0,4 (T10).
+Die Vorderkante bekommt immer <b>R0,4</b> (gratfrei), Schruppen und Schlichten beginnen bei <b>Z0,05</b> &mdash; die
+Backenstirn wird nicht nachgeschnitten. Liegt das Teil an einem Absatz in der Backe an, sitzt in der Ecke ein
+Freistich <b>Form E</b> nur in X, mindestens 0,6&nbsp;mm tief (Radius der Schlichtplatte + 0,2), damit die Kante des
+Teils frei liegt. Unterbrochener Schnitt an den drei Backen: ap höchstens 1&nbsp;mm, F 0,12 schruppen, 0,05
+schlichten &mdash; alles in der Maske des Blocks änderbar.<br>
+<b>Noch nicht gebaut:</b> der Planer teilt ein Teil noch nicht selbst auf zwei Seiten auf (die Schritte legst Du
+den Blöcken zu); der Maßbericht eines Blocks meldet auch die Stellen der anderen Seite als offen; Änderungen am
+Programmkopf in Aufspannung 2 sind abgeleitet und gehen beim Zurückwechseln verloren. An der Maschine ist
+noch keines dieser Programme gelaufen.</dd>
 <dt id="ba-pr-transform">Transformieren beim Laden</dt>
 <dd>Beim Laden einer Ablage-Kontur: in Z verschieben, L&auml;nge und Durchmesser
 skalieren, in Z spiegeln &mdash; aus einer Wellenkontur wird eine Familie. Ungleiche
@@ -5708,6 +5760,10 @@ erzeugt und ist damit immer vollst&auml;ndig.</p>
     <canvas class="mask-help" id="help_maskParams"></canvas>
     <div class="mask-body">
       <div class="mrow"><label>Programm-Nr. (O)</label><input type="text" id="progNo" value="00005100"></div>
+      <!-- ZWEI AUFSPANNUNGEN [Daniel, 27.09.2026]: zuschaltbar. "eine" heisst: alles wie bisher. Bei "zwei"
+           entstehen aus EINEM Arbeitsplan zwei oder drei Programme (98b-aufspannung.js). -->
+      <div class="mrow"><label>Aufspannungen</label><select id="pkAufsp"><option value="1">eine (wie bisher)</option><option value="2">zwei · mit Umspannen</option></select></div>
+      <div class="mrow" id="pkFbRow" style="display:none;"><label>Formbacken ausdrehen</label><select id="pkFb"><option value="ja">ja · eigenes Programm</option><option value="nein">nein · harte Backen</option></select></div>
       <div class="mrow"><label>Rohteil</label>
         <select id="pkForm"><option value="zylinder">Zylinder</option><option value="rohr">Rohr</option></select>
       </div>
@@ -8114,6 +8170,9 @@ function futterGeometrie(){
     }
   }
   if(!(rSpann>0.1)) rSpann=sD/2;                   // Rohteil-⌀ aus dem Kopf
+  // ZWEI AUFSPANNUNGEN [27.09.2026]: in Aufspannung 2 sitzen die Backen auf
+  // dem Spann-⌀ der gewaehlten Zone (fertig von Seite 1), nicht auf dem Rohmass.
+  if(typeof aufspSpannR==='function'){ const rr=aufspSpannR(); if(rr>0) rSpann=rr; }
   // BACKEN DUERFEN UEBER DEN FUTTERRAND STEHEN [Daniel]: "Die Backen
   // haben eine gewisse Hoehe und koennen — muessen bei grossen
   // Rohdurchmessern sogar — ueber den Futterdurchmesser hinausstehen."
@@ -35693,6 +35752,10 @@ const hfAbzTmp=new Float32Array((HF_RINGE+2)*2);
 function hfNeu(raster){
   hfGen++;                       // Feldstand hat sich geaendert, s. hfGen
   const rst=Math.max(0.002, raster||HF_RASTER);
+  // ZWEI AUFSPANNUNGEN [27.09.2026]: in Aufspannung 2 ist das Rohteil der
+  // gewendete Stand nach Seite 1 (aus deren Simulation, 98b-aufspannung.js).
+  // Ist die Option aus, liefert die Abfrage null und hier aendert sich nichts.
+  if(typeof aufspRohstandFeld==='function'){ const f=aufspRohstandFeld(rst); if(f) return f; }
   const st=stockModel();
   let zLo, zHi, aussenAt=null;
   const firstAk = programSteps.find(x=>x.type==='abspanen_kontur' && x.params.blankContourId!==undefined);
@@ -41991,6 +42054,774 @@ function siMerkmale(pr){
 
   return M;
 }
+// =====================================================================
+// ZWEI AUFSPANNUNGEN UND FORMBACKEN [Daniel, 27.09.2026, Entwurf
+// ENTWURF-AUFSPANNUNG.md, Freigabe "Setz ihn so um ... Bauen"]
+// ---------------------------------------------------------------------
+// Ein Drehteil ist selten von einer Seite fertig. Seite 1 wird bis zu
+// einer GRENZE bearbeitet (aussen und innen, jeweils mit UEBERLAUF),
+// dann wird umgespannt - oft auf ausgedrehten FORMBACKEN - und Seite 2
+// macht das Teil fertig. Aus EINEM Arbeitsplan entstehen dann zwei oder
+// drei NC-Programme mit fortlaufender O-Nummer.
+//
+// ALLES IST EINE OPTION (Daniel: "nicht immer so machen muessen, sondern
+// zuschaltbar"). Steht der Programmkopf auf "eine Aufspannung", laeuft
+// jede Zeile hier ins Leere: buildProgram, hfNeu, futterGeometrie,
+// Arbeitsplan und Ablage verhalten sich Byte fuer Byte wie vorher, und
+// keine NC-Baseline aendert sich.
+//
+// DATENMODELL, bewusst klein:
+//  - AUFSP: die Einstellungen (Grenzen, Ueberlauf, Uebergang, Laenge,
+//    Formbacken), gespeichert im Programm unter settings.__aufsp.
+//  - st.aufsp am Schritt: 1 oder 2 (fehlt = 1). Formbacken sind KEIN
+//    Schritt im Arbeitsplan - ihr Programm entsteht aus der Spannzone.
+//  - Die Konturen liegen immer in der Lage der ersten Seite (kanonisch).
+//    Wer Aufspannung 2 anwaehlt, bekommt sie GEWENDET (z' = -L - z) samt
+//    einem Programmkopf aus dem Reststand; zurueck wird noch einmal
+//    gewendet - das Wenden ist seine eigene Umkehrung, Aenderungen an
+//    der Kontur gehen dabei nicht verloren.
+//
+// WAS DIE GENERATOREN SEHEN: je Block nur die eigenen Schritte und eine
+// an der Grenze GEKUERZTE Kontur - Seite 1 dreht bis zur Grenze plus
+// Ueberlauf (Durchmesser laeuft weiter, Kanten hinter der Grenze
+// entfallen), Seite 2 dreht bis zur Grenze samt Kante und zieht dann
+// hoch (am Absatz) bzw. ueberlappt und laeuft unter 5 Grad aus (gleicher
+// Durchmesser). Die Generatoren selbst sind nicht angefasst.
+// =====================================================================
+
+function aufspVorgabe(){
+  return { an:false, aktiv:1,
+    grenzeA:null, grenzeI:null,           // Z in Seite-1-Koordinaten
+    ueberlauf:2,                          // Daniel: Schneidenradius und etwas mehr, 2 mm immer richtig
+    uebergang:'absatz',                   // 'absatz' | 'gleich'
+    ueberlappung:1, auslaufW:5, auslaufL:2,   // nur bei 'gleich' (Daniels Werte)
+    laenge:null,                          // Fertigteil-Laenge; leer = aus der Aussenkontur
+    zeichnung:'',                         // Zeichnungsnummer fuer den Programmnamen
+    fb:{ an:true, zone:null,              // Spannzone = Index in aufspZonen()
+         tiefe:null,                      // Spanntiefe; leer = Vorschlag der Zone
+         butzenD:null, butzenAb:null,     // kleinster Backen-⌀ (Material, das da liegt), und ab welcher Tiefe
+         fsT:0.6, kante:0.4, z0:0.05,     // Freistich Form E in X, Vorderkante R, Anfang Z
+         apMax:1, fr:0.12, ff:0.05, vc:180, tR:'8', tS:'10' },
+    s2:{ spann:'form' } };
+}
+let AUFSP = aufspVorgabe();
+let AUFSP_KANON = null;      // {contours, settings} der ersten Seite, solange Seite 2 / Formbacken angewaehlt ist
+let AUFSP_IM_BAU = false;    // Rekursionswache: der Siemens-Schreiber ruft buildProgram erneut
+const AUFSP_FB_KONTUR_ID = 990001;
+
+function aufspAn(){ return !!(AUFSP && AUFSP.an); }
+function aufspMerge(o){
+  const v = aufspVorgabe();
+  if(!o || typeof o !== 'object') return v;
+  Object.keys(v).forEach(k => { if(k !== 'fb' && k !== 's2' && o[k] !== undefined) v[k] = o[k]; });
+  if(o.fb) Object.keys(v.fb).forEach(k => { if(o.fb[k] !== undefined) v.fb[k] = o.fb[k]; });
+  if(o.s2) Object.keys(v.s2).forEach(k => { if(o.s2[k] !== undefined) v.s2[k] = o.s2[k]; });
+  v.aktiv = 1;                     // geladen wird immer in der Lage der ersten Seite
+  return v;
+}
+function aufspBlockVon(st){ return (st && st.aufsp === 2) ? 2 : 1; }
+function aufspBloecke(){ return AUFSP.fb.an ? [1, 'F', 2] : [1, 2]; }
+function aufspName(k){ return k === 'F' ? 'Formbacken ausdrehen' : 'Aufspannung ' + k; }
+function aufspONr(k){
+  const b = parseInt((AUFSP_KANON ? AUFSP_KANON.settings.progNo : document.getElementById('progNo').value) || '0', 10) || 0;
+  const i = aufspBloecke().indexOf(k);
+  return String(b + Math.max(0, i)).padStart(8, '0');
+}
+
+// ---- Geometrie -------------------------------------------------------
+function aufspKanonKonturen(){ return AUFSP_KANON ? AUFSP_KANON.contours : contours; }
+function aufspKanonWert(id){ return AUFSP_KANON ? AUFSP_KANON.settings[id] : (document.getElementById(id) || {}).value; }
+// Aussen oder innen: aus den Schritten, die die Kontur nutzen; sonst aus
+// der Lage (eine Kontur, die nicht an der Achse beginnt, ist eine Bohrung).
+function aufspKonturIstInnen(c){
+  const st = programSteps.find(s => s.params && s.params.contourId === c.id && s.params.lage);
+  if(st) return st.params.lage === 'innen';
+  // Ohne Schritt: eine Kontur, die nicht an der Achse beginnt und nicht die erste ist, beschreibt eine Bohrungswand.
+  const s0 = c.els && c.els[0], erste = aufspKanonKonturen()[0];
+  return !!(s0 && s0.x > 0.5 && erste && c.id !== erste.id);
+}
+function aufspLaenge(){
+  if(+AUFSP.laenge > 0) return +AUFSP.laenge;
+  let zMin = 0;
+  aufspKanonKonturen().forEach(c => { if(!c || !c.els || c.els.length < 2) return;
+    if(aufspKonturIstInnen(c)) return;
+    c.els.forEach(e => { if(isFinite(e.z) && e.z < zMin) zMin = e.z; }); });
+  return Math.abs(zMin);
+}
+// Wenden: z' = -L - z, Reihenfolge umgekehrt, Uebergaenge bleiben an
+// ihren Ecken (konturTransformieren, das "Kontur umdrehen" der App).
+// Zweimal gewendet ist wieder das Original.
+function aufspWenden(els, L){
+  if(!els || els.length < 2) return JSON.parse(JSON.stringify(els || []));
+  const r = konturTransformieren(els, {spiegeln:true});
+  if(!r.els) return JSON.parse(JSON.stringify(els));
+  const zs = els.filter(e => e.z !== undefined).map(e => e.z);
+  const sh = -L - (Math.max(...zs) + Math.min(...zs));
+  r.els.forEach(e => { if(e.z !== undefined) e.z = +(e.z + sh).toFixed(6); if(e.cz !== undefined) e.cz = +(e.cz + sh).toFixed(6); });
+  return r.els;
+}
+function aufspPunktAufLinie(a, b, z){
+  if(Math.abs(b.z - a.z) < 1e-12) return a.x;
+  return a.x + (b.x - a.x) * (z - a.z) / (b.z - a.z);
+}
+const aufspG = (z, x, t, v) => ({kind:'gerade', z:+z.toFixed(4), x:+x.toFixed(4), trans:{type:t || 'none', val:v || 0}});
+// SEITE 1: bis zur Grenze g, dann u mm Ueberlauf in Richtung des letzten
+// Elements (am Zylinder: derselbe Durchmesser), dann eine Wand nach
+// aussen (innen: zur Achse). Die Kante AN der Grenze entfaellt - sie
+// gehoert der zweiten Seite (Daniel: "sonst ein Hinterschnitt der
+// ersten Seite").
+function aufspKuerzenS1(els, g, u, innen, wandX){
+  if(!els || els.length < 2 || g === null || !isFinite(g)) return {els, warn:null};
+  const e = JSON.parse(JSON.stringify(els));
+  // Der ERSTE Punkt, der die Grenze erreicht: dort endet Seite 1. Die
+  // Planflaeche AN der Grenze (Absatz zur zweiten Seite hin) ist von hier
+  // aus ein Hinterschnitt und gehoert der zweiten Seite - der erste
+  // Anlauf nahm sie mit (Rauchtest: Bundflaeche und Senkungsflaeche).
+  let k = -1;
+  for(let i = 0; i < e.length; i++){ if(e[i].z <= g + 1e-6){ k = i; break; } }
+  if(k < 0) return {els:e, warn:null};                          // ganz auf Seite 1
+  if(k === 0) return {els:null, warn:'liegt ganz hinter der Grenze'};
+  let neu, xg;
+  if(e[k].z >= g - 1e-6){
+    neu = e.slice(0, k + 1); neu[neu.length - 1].trans = {type:'none', val:0};
+    xg = e[k].x;
+  } else {
+    if(e[k].kind === 'kreis') return {els:e, warn:'Grenze liegt in einem Bogen - bitte an einen Absatz oder eine Gerade legen'};
+    xg = aufspPunktAufLinie(e[k - 1], e[k], g);
+    neu = e.slice(0, k); neu.push(aufspG(g, xg));
+  }
+  // Richtung des letzten Elements mit Laenge
+  let dirX = 0, dirZ = -1;
+  for(let i = neu.length - 1; i > 0; i--){
+    const a = neu[i - 1], b = neu[i];
+    if(Math.abs(b.z - a.z) > 1e-6){ dirZ = b.z - a.z; dirX = b.x - a.x; break; }
+    if(Math.abs(b.x - a.x) > 1e-6) break;               // letztes Element ist eine Planflaeche: axial weiter
+  }
+  const x2 = (dirZ < 0) ? xg + (dirX / dirZ) * (-u) : xg;
+  neu.push(aufspG(g - u, x2));
+  neu.push(aufspG(g - u, wandX));
+  return {els:neu, warn:null};
+}
+// SEITE 2 (gewendete Kontur, Grenze g2 = -L - g): am Absatz bis zur Grenze
+// samt der Kante dort, ein Stueck in Kantenlaenge auf dem Durchmesser der
+// ersten Seite, dann hoch; am gleichen Durchmesser Ueberlappung und
+// Auslauf unter 5 Grad.
+function aufspKuerzenS2(els, g2, innen, wandX){
+  if(!els || els.length < 2 || g2 === null || !isFinite(g2)) return {els, warn:null};
+  const e = JSON.parse(JSON.stringify(els));
+  let k = -1;
+  for(let i = 0; i < e.length; i++){ if(e[i].z < g2 - 1e-6){ k = i; break; } }
+  if(k < 0) return {els:e, warn:null};                          // ganz auf Seite 2
+  if(k === 0) return {els:null, warn:'liegt ganz auf der ersten Seite'};
+  const prev = e[k - 1], sgn = innen ? -1 : 1;
+  const amAbsatz = prev.z <= g2 + 1e-6 && AUFSP.uebergang !== 'gleich';
+  let neu;
+  if(amAbsatz){
+    neu = e.slice(0, k);
+    const t = prev.trans || {type:'none', val:0};
+    const c = (t.type === 'fase' || t.type === 'radius') ? (+t.val || 0) : 0;
+    if(c > 0) neu.push(aufspG(g2 - c, prev.x));
+    neu.push(aufspG(g2 - c, wandX));
+  } else {
+    if(e[k].kind === 'kreis') return {els:e, warn:'Grenze liegt in einem Bogen - bitte an einen Absatz oder eine Gerade legen'};
+    const ov = +AUFSP.ueberlappung || 0, L2 = +AUFSP.auslaufL || 0, w = (+AUFSP.auslaufW || 0) * Math.PI / 180;
+    // das Element, das die Stelle g2-ov enthaelt
+    let a = prev, b = e[k], kk = k;
+    while(kk < e.length - 1 && b.z > g2 - ov){ kk++; a = b; b = e[kk]; }
+    const zP = g2 - ov, xP = aufspPunktAufLinie(a, b, zP);
+    neu = e.slice(0, kk); if(neu[neu.length - 1].z > zP) neu.push(aufspG(zP, xP));
+    neu[neu.length - 1].trans = {type:'none', val:0};
+    neu.push(aufspG(zP - L2, xP + sgn * 2 * L2 * Math.tan(w)));
+    neu.push(aufspG(zP - L2, wandX));
+  }
+  return {els:neu, warn:null};
+}
+
+// ---- Spannzonen (Formbacken, Aufspannung 2) --------------------------
+// Jede zylindrische Stufe der ersten Seite ist ein Kandidat. Daniels
+// Regeln: in Z liegt das Teil IMMER an (Schulter vorn an der Backe oder
+// ein Absatz tiefer in der Backe) und im Durchmesser; EIN RADIUS WIRD NIE
+// GESPANNT - liegt an der Schulter eine Kehle, endet die Backe Radius +
+// 1 mm davor, und die Anlage wandert an den naechsten Absatz. Zonen, die
+// an die Grenze stossen, fallen weg: dort arbeitet die zweite Seite.
+// Die App schlaegt vor, entscheiden tut der Bediener (Stabilitaet und
+// Ausspannlaenge sind "von Fall zu Fall individuell").
+function aufspZonen(){
+  const c = aufspKanonKonturen().find(q => q && q.els && q.els.length > 1 && !aufspKonturIstInnen(q));
+  if(!c) return [];
+  const V = c.els, L = aufspLaenge(), g = (AUFSP.grenzeA === null || !isFinite(AUFSP.grenzeA)) ? -L : +AUFSP.grenzeA;
+  const out = [];
+  for(let k = 0; k < V.length - 1; k++){
+    const a = V[k], b = V[k + 1];
+    if(b.kind === 'kreis' || Math.abs(a.x - b.x) > 1e-6 || !(a.x > 0.5) || !(a.z > b.z + 0.5)) continue;
+    const d = a.x, von = a.z, bis = b.z;
+    if(bis <= g + 0.5) continue;                                  // stoesst an die Grenze
+    const nach = V[k + 2], vor = V[k - 1];
+    const schulterDa = !!(nach && Math.abs(nach.z - bis) < 1e-6 && nach.x > d + 1e-6);
+    const kehle = (b.trans && b.trans.type === 'radius') ? (+b.trans.val || 0) : 0;
+    const faseBis = (b.trans && b.trans.type === 'fase') ? (+b.trans.val || 0) : 0;
+    const faseVon = (a.trans && a.trans.type !== 'none') ? (+a.trans.val || 0) : 0;
+    const absatzDa = (k === 0 && a.z <= 1e-6) || !!(vor && Math.abs(vor.z - von) < 1e-6 && vor.x < d - 1e-6) || von >= -1e-6;
+    let anlage, front, tiefe;
+    if(schulterDa && !kehle){
+      anlage = 'schulter'; front = bis;
+      tiefe = Math.min(Math.floor(Math.abs(von - bis) - faseVon - 1), 30);
+    } else if(absatzDa){
+      anlage = von >= -1e-6 ? 'stirn' : 'absatz';
+      front = bis + (kehle ? kehle + 1 : (faseBis ? faseBis + 1 : 1));
+      // die Anlage in Z liegt am Absatz: dort muss die Backenstufe sitzen, gekappt wird nicht
+      tiefe = +(von - front).toFixed(3);
+    } else continue;
+    if(!(tiefe >= 5)) continue;
+    const auskrag = +(L - Math.abs(front)).toFixed(3);
+    const kleinere = V.filter(q => q.z > front && q.x < d - 1e-6 && q.x > 0.5).map(q => q.x);
+    out.push({ d, von, bis, anlage, front:+front.toFixed(3), tiefe, kehle, auskrag, ld:auskrag / d,
+      frei:+Math.abs(Math.max(von, 0) - 0).toFixed(3), klein:kleinere.length ? Math.max(...kleinere) : 0,
+      titel:'⌀' + fmt(d) + ' · ' + (anlage === 'schulter' ? 'Anlage an der Schulter Z' + fmt(bis)
+            : (kehle ? 'Backe endet ' + fmt(kehle + 1) + ' mm vor R' + fmt(kehle) + ' · ' : '') + (anlage === 'stirn' ? 'Anlage an der Stirnfläche' : 'Anlage am Absatz Z' + fmt(von))) });
+  }
+  return out;
+}
+// Vorschlag: die stabilste Zone (kleinstes L/D). Der Bediener waehlt um.
+function aufspZoneJetzt(){
+  const z = aufspZonen(); if(!z.length) return null;
+  let i = (AUFSP.fb.zone !== null && z[AUFSP.fb.zone]) ? AUFSP.fb.zone : -1;
+  if(i < 0){ i = 0; z.forEach((q, j) => { if(q.ld < z[i].ld) i = j; }); }
+  return Object.assign({index:i}, z[i]);
+}
+
+// ---- Die Formbacke als Innenkontur (Backenkoordinaten, Z0 = Backenstirn)
+// Daniels Regeln (27.09.2026): Vorderkante R0,4 (gratfrei), Anfang Z0,05
+// (die Backenstirn wird nicht nachgeschnitten), in der Ecke ein Freistich
+// Form E NUR IN X, Tiefe = Radius der Schlichtplatte + 0,2 (mindestens
+// 0,6) - die schlimmstenfalls scharfe Werkstueckkante liegt dann frei;
+// dahinter frei fuer die kleineren Stufen, zuletzt der Butzen.
+function aufspFormbackeKontur(z){
+  const f = AUFSP.fb, d = z.d;
+  const imJaw = Math.abs(z.front);                          // so tief steckt das Teil in der Backe (bis zur Stirn der ersten Seite)
+  // Spanntiefe: bei Anlage an der Schulter frei waehlbar (dahinter bleibt die
+  // Bohrung frei), bei Anlage am Absatz oder an der Stirn liegt sie fest - dort
+  // sitzt die Backenstufe, an der das Teil in Z anliegt.
+  // Bei Anlage an der Schulter traegt die Backe den ganzen Zylinder bis zur Stirn der ersten Seite:
+  // eine Freibohrung dahinter waere eine Stufe nach aussen, die der Schlichtmeissel innen nicht
+  // faehrt (Rauchtest: ausgespart, Butzenmaterial bliebe vor dem Teilende stehen).
+  const t = (z.anlage === 'schulter') ? +(Math.abs(z.von - z.bis) + 0.5).toFixed(3) : z.tiefe;
+  const rP = (() => { const tl = (typeof toolTable !== 'undefined') ? toolTable.find(q => String(q.t) === String(f.tS)) : null; return (tl && +tl.r > 0) ? +tl.r : 0.4; })();
+  const fsT = Math.max(+f.fsT || 0.6, +(rP + 0.2).toFixed(3));
+  const rK = +f.kante > 0 ? +f.kante : 0.4;
+  const z0 = (f.z0 !== null && f.z0 !== undefined && +f.z0 >= 0) ? +f.z0 : 0.05;
+  const frei = z.klein > 0 ? z.klein + 1 : 0;                 // Bohrung fuer die kleineren Stufen
+  const tiefeGes = Math.max(t, imJaw);
+  const butzen = +f.butzenD > 0 ? +f.butzenD : Math.max(1, Math.floor((frei > 0 ? frei : d) - 6));
+  const els = [{kind:'start', z:z0, x:d + 2 * rK, trans:{type:'none', val:0}},
+    aufspG(0, d + 2 * rK),
+    {kind:'kreis', z:-rK, x:d, cz:-rK, cx:d + 2 * rK, cw:true, trans:{type:'none', val:0}}];
+  if(z.anlage === 'schulter'){
+    els.push(aufspG(-t, d));
+    if(frei > 0 && imJaw + 1 > t + 1e-6){ els.push(aufspG(-t, frei)); els.push(aufspG(-(imJaw + 1), frei)); els.push(aufspG(-(imJaw + 1), Math.max(1, butzen - 2))); }
+    else els.push(aufspG(-t, Math.max(1, butzen - 2)));
+  } else {
+    const zAus = -t + rP + fsT / Math.tan(15 * Math.PI / 180);
+    els.push(aufspG(zAus, d));
+    els.push(aufspG(-t + rP, d + 2 * fsT));
+    els.push(aufspG(-t, d + 2 * fsT));
+    if(frei > 0){
+      els.push(aufspG(-t, frei));
+      els.push(aufspG(-(imJaw + 1), frei));
+      els.push(aufspG(-(imJaw + 1), Math.max(1, butzen - 2)));
+    } else els.push(aufspG(-t, Math.max(1, butzen - 2)));
+  }
+  return {els, tiefe:t, tiefeGes:tiefeGes + 1, butzen, fsT, rK, z0, frei, rP};
+}
+function aufspFormbackeSchritte(z, fk){
+  const f = AUFSP.fb;
+  return [{ id:990002, type:'abspanen_kontur', aufsp:'F', params:{
+    bearbeitung:'beide', richtung:'z-parallel', lage:'innen', schlRicht:'rl',
+    contourId:AUFSP_FB_KONTUR_ID, stock:fk.butzen, stockZ:fk.z0, d:+f.apMax || 1, ux:0.2, uz:0.05, safeZ:2,
+    t:String(f.tR || '8'), t2:String(f.tS || '10'),
+    fr:+f.fr || 0.12, sr:+f.vc || 180, sMode:'vc', ff:+f.ff || 0.05, sf:+f.vc || 180, kuehl:'an' } }];
+}
+
+// ---- Reststand nach Seite 1 (fuer Programmkopf und Simulation der Seite 2)
+// Aus der SIMULATION der ersten Seite, nicht aus dem Plan: der Plan sagt,
+// was Seite 1 nehmen wollte, die Simulation, was sie genommen hat.
+let AUFSP_STAND = null, AUFSP_STAND_KEY = '';
+function aufspStandRechnen(code1){
+  if(AUFSP_STAND && AUFSP_STAND_KEY === code1) return AUFSP_STAND;
+  const altMoves = simMoves, altQ = (typeof simMovesQuelle !== 'undefined') ? simMovesQuelle : null;
+  let hf = null;
+  try{
+    simMoves = parseGcodeForSim(code1);
+    hf = hfAufbauen(simMoves.length - 1, {raster:0.1});
+  }catch(e){ hf = null; }
+  finally{ simMoves = altMoves; try{ simMovesQuelle = altQ; }catch(e){} }
+  if(!hf) return null;
+  const L = aufspLaenge(), R = HF_RINGE * 2;
+  // gewendet: Spalte i der Seite 2 ist Spalte n-1-i der Seite 1
+  const n = hf.n, iv = new Float32Array(n * R), cnt = new Uint8Array(n);
+  for(let i = 0; i < n; i++){ const j = n - 1 - i; cnt[i] = hf.cnt[j]; for(let q = 0; q < R; q++) iv[i * R + q] = hf.iv[j * R + q]; }
+  const z0 = -L - (hf.z0 + n * hf.dz);
+  let zMin = Infinity, zMax = -Infinity, raMax = 0;
+  for(let i = 0; i < n; i++){ if(!cnt[i]) continue; const z = z0 + (i + 0.5) * hf.dz; zMin = Math.min(zMin, z); zMax = Math.max(zMax, z);
+    raMax = Math.max(raMax, iv[i * R + (cnt[i] - 1) * 2 + 1]); }
+  AUFSP_STAND = {z0, dz:hf.dz, n, iv, cnt, zMin, zMax, raMax};
+  AUFSP_STAND_KEY = code1;
+  return AUFSP_STAND;
+}
+function aufspStandRi(S, zVon, zBis){
+  let ri = Infinity; const R = HF_RINGE * 2;
+  for(let i = 0; i < S.n; i++){ const z = S.z0 + (i + 0.5) * S.dz; if(z < zVon || z > zBis || !S.cnt[i]) continue; ri = Math.min(ri, S.iv[i * R]); }
+  return isFinite(ri) ? ri : 0;
+}
+// hfNeu fragt hier nach (s. 95-hoehenfeld.js): in Aufspannung 2 beginnt
+// das Materialfeld mit dem gewendeten Stand der ersten Seite, auf das
+// verlangte Raster umgelegt. Sonst null - dann baut hfNeu wie immer.
+function aufspRohstandFeld(rst){
+  if(!aufspAn() || AUFSP.aktiv !== 2 || !AUFSP_STAND) return null;
+  const S = AUFSP_STAND, R = HF_RINGE * 2;
+  const zLo = S.z0 - rst, zHi = S.z0 + S.n * S.dz + rst;
+  const n = Math.min(HF_MAX_SPALTEN, Math.max(4, Math.ceil((zHi - zLo) / rst)));
+  const dz = (zHi - zLo) / n;
+  const hf = { z0:zLo, dz, n, iv:new Float32Array(n * R), cnt:new Uint8Array(n),
+               lo:new Float32Array(n), hi:new Float32Array(n), mark:new Int32Array(n), gen:0 };
+  for(let i = 0; i < n; i++){
+    const z = zLo + (i + 0.5) * dz, j = Math.floor((z - S.z0) / S.dz);
+    if(j < 0 || j >= S.n || !S.cnt[j]) continue;
+    hf.cnt[i] = S.cnt[j]; for(let q = 0; q < R; q++) hf.iv[i * R + q] = S.iv[j * R + q];
+  }
+  return hf;
+}
+// futterGeometrie fragt hier nach: in Aufspannung 2 sitzen die Backen
+// auf dem Spann-⌀ der gewaehlten Zone, nicht auf dem Rohmass.
+function aufspSpannR(){
+  if(!aufspAn() || AUFSP.aktiv !== 2) return 0;
+  const z = aufspZoneJetzt(); return z ? z.d / 2 : 0;
+}
+
+// ---- Lagen umschalten ------------------------------------------------
+const AUFSP_KOPF_IDS = ['progNo', 'pkForm', 'stockDia', 'pkXI', 'pkZA', 'pkZI', 'pkLA'];
+function aufspSetzeDom(werte){ Object.keys(werte).forEach(id => { const el = document.getElementById(id); if(el) el.value = werte[id]; }); }
+function aufspZurKanon(){
+  if(!AUFSP_KANON) return;
+  if(AUFSP.aktiv === 2){
+    const L = aufspLaenge();
+    contours = contours.map(c => Object.assign({}, c, {els:aufspWenden(c.els, L)}));     // Aenderungen in Seite 2 bleiben erhalten
+  } else if(AUFSP.aktiv === 'F'){
+    contours = JSON.parse(JSON.stringify(AUFSP_KANON.contours));
+  }
+  aufspSetzeDom(AUFSP_KANON.settings);
+  AUFSP_KANON = null; AUFSP.aktiv = 1;
+  try{ switchContour(Math.min(Math.max(0, activeContourIdx), contours.length - 1)); }catch(e){}
+}
+// Liefert Warnungen; bei einem Fehler bleibt die Lage, wie sie war.
+function aufspWechseln(k){
+  if(!aufspAn()) return {fehler:'Zwei Aufspannungen sind im Programmkopf nicht eingeschaltet.'};
+  if(k === AUFSP.aktiv) return {};
+  aufspZurKanon();
+  if(k === 1) return {};
+  const kanon = {contours:JSON.parse(JSON.stringify(contours)), settings:captureSettingsOrig()};
+  const L = aufspLaenge();
+  if(k === 2){
+    if(!(L > 0)) return {fehler:'Die Länge des Fertigteils ist unbekannt — bitte in „Aufspannung 1“ eintragen.'};
+    // Stand der ersten Seite aus ihrer Simulation
+    const r1 = aufspBauenIn(1);
+    if(!r1.code) return {fehler:'Das Programm der ersten Aufspannung entsteht nicht — ohne Seite 1 gibt es keinen Reststand für Seite 2.'};
+    const S = aufspStandRechnen(r1.code);
+    if(!S) return {fehler:'Der Reststand nach Seite 1 ließ sich nicht rechnen.'};
+    const z = aufspZoneJetzt();
+    AUFSP_KANON = kanon;
+    contours = kanon.contours.map(c => Object.assign({}, c, {els:aufspWenden(c.els, L)}));
+    const g2 = -L - (AUFSP.grenzeA === null ? -L : +AUFSP.grenzeA);
+    // Vorbohrung der zweiten Seite: im Bereich, den sie dreht (Grenze bis Fertigstirn) - nicht im
+    // Rohteilueberstand davor, dort stand im Rauchtest die Bohrerspitze (XI 3,16 statt 10).
+    const ri = aufspStandRi(S, g2, 0);
+    const za = Math.max(0, +S.zMax.toFixed(2));
+    const front2 = z ? -L - z.front : S.zMin;
+    aufspSetzeDom({ progNo:aufspONr(2), stockDia:+(2 * S.raMax).toFixed(2),
+      pkForm:ri > 0.5 ? 'rohr' : 'zylinder', pkXI:+(2 * ri).toFixed(2),
+      pkZA:za, pkZI:+(S.zMin).toFixed(2), pkLA:+(za - front2).toFixed(2) });
+    AUFSP.aktiv = 2;
+  } else if(k === 'F'){
+    const z = aufspZoneJetzt();
+    if(!z) return {fehler:'An der ersten Seite gibt es keine Stufe, die als Spannzone taugt (Zylinder, mindestens 5 mm Spanntiefe, nicht an der Grenze).'};
+    const fk = aufspFormbackeKontur(z);
+    AUFSP_KANON = kanon;
+    contours = [{id:AUFSP_FB_KONTUR_ID, name:'Formbacke', els:fk.els}];
+    aufspSetzeDom({ progNo:aufspONr('F'), pkForm:'rohr', stockDia:+(z.d + 60).toFixed(1), pkXI:fk.butzen,
+      pkZA:0, pkZI:-(Math.ceil(fk.tiefeGes) + 10), pkLA:0 });
+    AUFSP.aktiv = 'F';
+  }
+  try{ switchContour(0); }catch(e){}
+  return {};
+}
+
+// ---- Bauen je Block ---------------------------------------------------
+// Laeuft in der AKTUELLEN Lage (Konturen und Kopf passen dazu): nur die
+// Schritte des Blocks, die Konturen an der Grenze gekuerzt, im Programm
+// eine Namenszeile hinter der O-Zeile.
+function aufspBauenIn(k){
+  const altSteps = programSteps, altCont = contours, altNo = document.getElementById('progNo').value;
+  const warn = [];
+  let code = null;
+  AUFSP_IM_BAU = true;
+  try{
+    let steps, cont;
+    if(k === 'F'){
+      const z = aufspZoneJetzt(); const fk = z ? aufspFormbackeKontur(z) : null;
+      if(!fk) return {code:null, warn:['keine Spannzone']};
+      steps = aufspFormbackeSchritte(z, fk);
+      cont = [{id:AUFSP_FB_KONTUR_ID, name:'Formbacke', els:fk.els}];
+    } else {
+      steps = programSteps.filter(st => aufspBlockVon(st) === k);
+      if(!steps.length) return {code:null, warn:['In „' + aufspName(k) + '“ steht noch kein Schritt.']};
+      const L = aufspLaenge(), wandA = Math.max(+document.getElementById('stockDia').value || 0, 0) + 4;
+      cont = contours.map(c => {
+        const innen = aufspKonturIstInnen(c), gRoh = innen ? AUFSP.grenzeI : AUFSP.grenzeA;
+        if(gRoh === null || gRoh === '' || !isFinite(+gRoh)) return c;
+        const r = (k === 1) ? aufspKuerzenS1(c.els, +gRoh, +AUFSP.ueberlauf || 0, innen, innen ? 1 : wandA)
+                            : aufspKuerzenS2(c.els, -L - (+gRoh), innen, innen ? 1 : wandA);
+        if(r.warn) warn.push(c.name + ': ' + r.warn);
+        return r.els ? Object.assign({}, c, {els:r.els}) : c;
+      });
+    }
+    programSteps = steps; contours = cont;
+    document.getElementById('progNo').value = aufspONr(k);
+    code = buildProgramEinzeln();
+    const glob = (k === 'F') ? null : altSteps.map((st, i) => aufspBlockVon(st) === k ? i : -1).filter(i => i >= 0);
+    if(glob && typeof SCHRITT_INDEX !== 'undefined') SCHRITT_INDEX = SCHRITT_INDEX.map(i => (i >= 0 && glob[i] !== undefined) ? glob[i] : -1);
+    if(code){
+      const nm = aufspProgrammName(k);
+      const zl = code.split('\n'); zl.splice(1, 0, '(' + nm + ')'); code = zl.join('\n');
+      if(k === 'F'){
+        const z = aufspZoneJetzt(), fk = aufspFormbackeKontur(z);
+        const hin = ['(FORMBACKEN: BUTZEN D' + fmt(fk.butzen) + ' TIEF IN DIE WEICHEN BACKEN SPANNEN)',
+          '(AUSDREHEN AUF D' + fmt(z.d) + ' X ' + fmt(fk.tiefe) + ' TIEF - ANFANG Z' + fmt(fk.z0) + ', VORDERKANTE R' + fmt(fk.rK) + ')',
+          z.anlage !== 'schulter' ? '(FREISTICH FORM E ' + fmt(fk.fsT) + ' IN X - NUR DIE SCHLICHTPLATTE R' + fmt(fk.rP) + ' IM EINSTICH)' : '(ANLAGE AN DER SCHULTER - BACKENSTIRN)'];
+        const z2 = code.split('\n'); z2.splice(2, 0, ...hin); code = z2.join('\n');
+      }
+    }
+  } finally {
+    programSteps = altSteps; contours = altCont; document.getElementById('progNo').value = altNo;
+    AUFSP_IM_BAU = false;
+  }
+  return {code, warn};
+}
+function aufspProgrammName(k){
+  const teil = ((AUFSP_KANON ? AUFSP_KANON.settings.pmSaveName : null) || (document.getElementById('pmSaveName') || {}).value || '').trim();
+  const zn = String(AUFSP.zeichnung || '').trim();
+  const roh = [teil, zn].filter(Boolean).join(' ') || 'PROGRAMM';
+  const ascii = roh.toUpperCase().replace(/Ä/g, 'AE').replace(/Ö/g, 'OE').replace(/Ü/g, 'UE').replace(/ß/g, 'SS').replace(/[()]/g, '-').replace(/[^ -~]/g, '');
+  return ascii + ' - ' + (k === 'F' ? 'FORMBACKEN AUSDREHEN' : 'AUFSPANNUNG ' + k);
+}
+// Ein beliebiger Block, unabhaengig von der angewaehlten Lage.
+function aufspBauen(k){
+  const alt = AUFSP.aktiv;
+  if(k === alt) return aufspBauenIn(k);
+  const w = aufspWechseln(k); if(w.fehler) return {code:null, warn:[w.fehler]};
+  try{ return aufspBauenIn(k); }
+  finally { const w2 = aufspWechseln(alt); }
+}
+
+// ---- Einhaken ---------------------------------------------------------
+const buildProgramEinzeln = buildProgram;
+buildProgram = function(){
+  if(!aufspAn() || AUFSP_IM_BAU) return buildProgramEinzeln();
+  const r = aufspBauenIn(AUFSP.aktiv);
+  if(!r.code && r.warn && r.warn.length){
+    const wb = document.getElementById('warnBox');
+    if(wb){ wb.style.display = 'block'; wb.textContent = r.warn.join(' · '); }
+  }
+  return r.code;
+};
+const captureSettingsOrig = captureSettings;
+captureSettings = function(){
+  const s = AUFSP_KANON ? JSON.parse(JSON.stringify(AUFSP_KANON.settings)) : captureSettingsOrig();
+  if(aufspAn()){ const a = JSON.parse(JSON.stringify(AUFSP)); a.aktiv = 1; s.__aufsp = a; }
+  return s;
+};
+const applySettingsOrig = applySettings;
+applySettings = function(s){
+  if(AUFSP_KANON) aufspZurKanon();
+  applySettingsOrig(s);
+  AUFSP = (s && s.__aufsp) ? aufspMerge(s.__aufsp) : aufspVorgabe();
+  aufspKopfZeigen();
+};
+// Gespeichert wird immer die Lage der ersten Seite.
+const programmDateiObjektOrig = programmDateiObjekt;
+programmDateiObjekt = function(name){
+  if(!AUFSP_KANON) return programmDateiObjektOrig(name);
+  const lage = AUFSP.aktiv, cAlt = contours;
+  const L = aufspLaenge();
+  const kc = (lage === 2) ? contours.map(c => Object.assign({}, c, {els:aufspWenden(c.els, L)})) : AUFSP_KANON.contours;
+  contours = kc;
+  try{ return programmDateiObjektOrig(name); } finally { contours = cAlt; }
+};
+// Vorlagen und "Neues Programm" beginnen mit einer Aufspannung.
+['loadDemoStufenbolzen','loadDemoHinterschnitt','loadDemoSchmiedeteil','loadDemoStechdrehen',
+ 'loadDemoAbstechen','loadDemoKantenwelle','loadDemoFreistichwelle','loadDemoRotorwelle',
+ 'loadDemoBuchse','loadDemoMaster','loadDemoBallen'].forEach(nm => {
+  const orig = globalThis[nm];
+  if(typeof orig !== 'function') return;
+  globalThis[nm] = function(){
+    if(AUFSP_KANON) aufspZurKanon();
+    AUFSP = aufspVorgabe(); aufspKopfZeigen();
+    return orig.apply(this, arguments);
+  };
+});
+{
+  const b = document.getElementById('btnProgNew');
+  if(b){ const alt = b.onclick; b.onclick = function(ev){ if(AUFSP_KANON) aufspZurKanon(); AUFSP = aufspVorgabe(); aufspKopfZeigen(); return alt ? alt.call(this, ev) : undefined; }; }
+}
+const loadProgramOrig = loadProgram;
+loadProgram = function(prog){
+  if(AUFSP_KANON) aufspZurKanon();
+  const r = loadProgramOrig(prog);
+  // applySettings hat AUFSP gesetzt; aeltere Programme ohne Eintrag: eine Aufspannung
+  return r;
+};
+// Neue Schritte gehoeren zur angewaehlten Aufspannung und stehen in ihrem Block.
+const commitStepOrig = commitStep;
+commitStep = function(type, params){
+  const vorher = programSteps.slice();
+  commitStepOrig(type, params);
+  if(!aufspAn()) return;
+  const neu = programSteps.find(s => vorher.indexOf(s) < 0);
+  if(neu){ neu.aufsp = (AUFSP.aktiv === 2) ? 2 : 1; aufspSortieren(neu); }
+};
+function aufspSortieren(merk){
+  const a = programSteps.filter(s => aufspBlockVon(s) === 1), b = programSteps.filter(s => aufspBlockVon(s) === 2);
+  programSteps = a.concat(b);
+  if(merk) selStepIdx = programSteps.indexOf(merk);
+}
+
+// ---- Programmkopf: die Option ------------------------------------------
+function aufspKopfZeigen(){
+  const s = document.getElementById('pkAufsp'), f = document.getElementById('pkFb'), fr = document.getElementById('pkFbRow');
+  if(s) s.value = aufspAn() ? '2' : '1';
+  if(f) f.value = AUFSP.fb.an ? 'ja' : 'nein';
+  if(fr) fr.style.display = aufspAn() ? '' : 'none';
+}
+{
+  const s = document.getElementById('pkAufsp'), f = document.getElementById('pkFb');
+  if(s) s.addEventListener('change', () => {
+    const an = s.value === '2';
+    if(!an && AUFSP_KANON) aufspZurKanon();
+    AUFSP.an = an;
+    if(an){
+      programSteps.forEach(st => { if(st.aufsp === undefined) st.aufsp = 1; });
+      if(AUFSP.grenzeA === null) AUFSP.grenzeA = aufspGrenzeVorschlag(false);
+      if(AUFSP.grenzeI === null) AUFSP.grenzeI = aufspGrenzeVorschlag(true);
+    }
+    aufspKopfZeigen();
+    try{ refreshAll(); }catch(e){}
+  });
+  if(f) f.addEventListener('change', () => {
+    if(AUFSP.aktiv === 'F' && f.value !== 'ja') aufspZurKanon();
+    AUFSP.fb.an = f.value === 'ja'; try{ refreshAll(); }catch(e){}
+  });
+}
+// Vorschlag fuer die Grenze: der erste Absatz, an dem der Durchmesser
+// zur Seite 2 hin kleiner wird (aussen) bzw. groesser (innen) - dort ist
+// alles dahinter von Seite 1 aus ein Hinterschnitt. Sonst leer.
+function aufspGrenzeVorschlag(innen){
+  const c = aufspKanonKonturen().find(q => q && q.els && q.els.length > 1 && aufspKonturIstInnen(q) === innen);
+  if(!c) return null;
+  const V = c.els;
+  for(let k = 1; k < V.length; k++){
+    const a = V[k - 1], b = V[k];
+    if(Math.abs(a.z - b.z) < 1e-6 && Math.abs(a.x - b.x) > 1e-6 && a.z < -1e-6){
+      if(!innen && b.x < a.x && b.x > 0.5) return a.z;
+      if(innen && b.x > a.x) return a.z;
+    }
+  }
+  return null;
+}
+
+// ---- Arbeitsplan: Bloecke -------------------------------------------------
+const refreshArbeitsplanOrig = refreshArbeitsplan;
+refreshArbeitsplan = function(){
+  refreshArbeitsplanOrig();
+  if(!aufspAn()) return;
+  try{ aufspArbeitsplanBloecke(); }catch(e){ if(typeof console !== 'undefined') console.error(e); }
+};
+function aufspBlockZeile(k, det, sel){
+  const d = document.createElement('div');
+  d.className = 'ap-row ap-aufsp' + (k === 'F' ? ' fb' : '') + (sel ? ' sel' : '');
+  d.dataset.aufsp = String(k);
+  d.innerHTML = '<div class="ap-icon" style="background:' + (k === 'F' ? '#6b7a86' : 'var(--blue)') + ';">' + (k === 'F' ? 'F' : k) + '</div>' +
+    '<div class="ap-name">' + aufspName(k) + '</div><div class="ap-detail">' + det + '</div>' +
+    '<div class="ap-zeit"><span class="aufsp-o">O' + aufspONr(k).replace(/^0+/, '') + '</span></div>' +
+    '<button class="ap-edit" data-aufsp-edit="' + k + '" title="Einstellungen dieser Aufspannung">✎</button>';
+  d.addEventListener('click', ev => {
+    if(ev.target && ev.target.tagName === 'BUTTON') return;
+    const w = aufspWechseln(k); if(w.fehler){ melde(w.fehler); return; }
+    try{ refreshAll(); }catch(e){}
+  });
+  d.querySelector('[data-aufsp-edit]').addEventListener('click', () => {
+    const w = aufspWechseln(k); if(w.fehler){ melde(w.fehler); return; }
+    try{ refreshAll(); }catch(e){}
+    aufspMaskeOeffnen(k);
+  });
+  return d;
+}
+function aufspArbeitsplanBloecke(){
+  const body = document.getElementById('apBody'); if(!body || !body.querySelector) return;
+  const rows = Array.from(body.querySelectorAll('.ap-row[data-sidx]'));
+  const erste = k => rows.find(r => aufspBlockVon(programSteps[+r.dataset.sidx]) === k);
+  const z = aufspZoneJetzt(), L = aufspLaenge();
+  const gA = AUFSP.grenzeA === null ? '—' : 'Z' + fmt(+AUFSP.grenzeA), gI = AUFSP.grenzeI === null ? '—' : 'Z' + fmt(+AUFSP.grenzeI);
+  const det1 = 'harte Backen · Grenze außen ' + gA + ', innen ' + gI + ' · Überlauf ' + fmt(+AUFSP.ueberlauf) + (AUFSP.uebergang === 'gleich' ? ' · gleicher ⌀' : '');
+  const det2 = (AUFSP.fb.an ? 'Formbacken' : 'harte Backen') + (z ? ' ⌀' + fmt(z.d) : '') + ' · gewendet · Rohteil = Stand nach Aufspannung 1 · Länge ' + fmt(L);
+  const r1 = erste(1), r2 = erste(2);
+  const b1 = aufspBlockZeile(1, det1, AUFSP.aktiv === 1);
+  if(r1) body.insertBefore(b1, r1); else { const e = body.querySelector('.ap-ende'); body.insertBefore(b1, e || null); }
+  let vor2 = r2 || body.querySelector('.ap-ende');
+  if(AUFSP.fb.an){
+    const fdet = z ? ('Spannzone ⌀' + fmt(z.d) + ' · ' + (z.anlage === 'schulter' ? 'Anlage Schulter' : z.anlage === 'stirn' ? 'Anlage Stirn' : 'Anlage Absatz') + ' · Butzen ⌀' + fmt(aufspFormbackeKontur(z).butzen) + ' · T' + AUFSP.fb.tR + ' / T' + AUFSP.fb.tS) : 'keine Spannzone gefunden';
+    body.insertBefore(aufspBlockZeile('F', fdet, AUFSP.aktiv === 'F'), vor2 || null);
+  }
+  body.insertBefore(aufspBlockZeile(2, det2, AUFSP.aktiv === 2), vor2 || null);
+  // Zeilen der nicht angewaehlten Bloecke: gedimmt, ein Tipp wechselt dorthin
+  rows.forEach(r => { const k = aufspBlockVon(programSteps[+r.dataset.sidx]); if(k !== AUFSP.aktiv) r.classList.add('aufsp-fremd'); });
+  const e = body.querySelector('.ap-ende .zeit');
+  if(e && e.parentNode) e.parentNode.insertBefore(Object.assign(document.createElement('span'), {className:'aufsp-anz', textContent:aufspBloecke().length + ' Programme aus einem Arbeitsplan · angewählt: ' + aufspName(AUFSP.aktiv)}), e);
+}
+// Ein Tipp auf eine Zeile eines anderen Blocks wechselt zuerst die Lage -
+// bearbeitet wird immer in der Lage, zu der der Schritt gehoert.
+document.addEventListener('click', ev => {
+  if(!aufspAn()) return;
+  const r = ev.target && ev.target.closest ? ev.target.closest('.ap-row[data-sidx]') : null;
+  if(!r) return;
+  const st = programSteps[+r.dataset.sidx]; if(!st) return;
+  const k = aufspBlockVon(st);
+  if(k === AUFSP.aktiv) return;
+  const w = aufspWechseln(k); if(w.fehler){ melde(w.fehler); return; }
+  try{ refreshAll(); }catch(e){}
+}, true);
+
+// ---- NC-Ausgabe: ein Reiter je Programm, "NC sichern" legt alle ab ------
+const generateOrig = generate;
+generate = function(){
+  const c = generateOrig();
+  try{ aufspNcReiter(); }catch(e){}
+  return c;
+};
+{ const b = document.getElementById('btnGen'); if(b) b.onclick = generate;
+  const h = document.getElementById('hskGcode'); if(h){ const alt = h.onclick; h.onclick = function(ev){ const r = alt ? alt.call(this, ev) : undefined; try{ aufspNcReiter(); }catch(e){} return r; }; } }
+function aufspNcReiter(){
+  const m = document.getElementById('maskGcode'); if(!m) return;
+  let t = document.getElementById('aufspReiter');
+  if(!aufspAn()){ if(t) t.style.display = 'none'; return; }
+  if(!t){ t = document.createElement('div'); t.id = 'aufspReiter'; t.className = 'aufsp-reiter';
+    const kopf = m.querySelector('.gcode-head'); if(kopf && kopf.parentNode) kopf.parentNode.insertBefore(t, kopf); else m.appendChild(t); }
+  t.style.display = '';
+  t.innerHTML = aufspBloecke().map(k => '<button type="button" class="gcbtn' + (k === AUFSP.aktiv ? ' an' : '') + '" data-aufsp-nc="' + k + '">O' + aufspONr(k).replace(/^0+/, '') + ' · ' + aufspName(k) + '</button>').join('') +
+    '<span class="aufsp-hin">NC sichern legt alle ' + aufspBloecke().length + ' Programme ab</span>';
+  t.querySelectorAll('[data-aufsp-nc]').forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.aufspNc === 'F' ? 'F' : +b.dataset.aufspNc;
+    const w = aufspWechseln(k); if(w.fehler){ melde(w.fehler); return; }
+    try{ refreshAll(); }catch(e){}
+    generate();
+  }));
+}
+{
+  const b = document.getElementById('btnDownload');
+  if(b){ const alt = b.onclick; b.onclick = async function(ev){
+    if(!aufspAn()) return alt ? alt.call(this, ev) : undefined;
+    const liste = [];
+    for(const k of aufspBloecke()){ const r = aufspBauen(k); if(r.code) liste.push({name:'O' + aufspONr(k) + '.txt', code:r.code}); else melde(aufspName(k) + ': ' + (r.warn || []).join(' · ')); }
+    for(const q of liste){
+      const f = ncFuerMaschine(q.code);
+      if(typeof PO !== 'undefined' && PO.bereit && PO.griff){
+        try{ await poSchreiben(PO.griff, q.name, f.text); continue; }catch(e){}
+      }
+      await exportiereDatei(q.name, f.text, 'G-Code');
+    }
+    if(liste.length) exportToast(liste.length + ' Programme gesichert: ' + liste.map(q => q.name).join(', '));
+  }; }
+}
+
+// ---- Die Maske einer Aufspannung ------------------------------------------
+function aufspMaskeOeffnen(k){
+  let m = document.getElementById('maskAufsp');
+  if(!m){
+    m = document.createElement('div'); m.className = 'mask'; m.id = 'maskAufsp'; m.style.position = 'fixed';
+    const ref = document.getElementById('maskParams');
+    (ref && ref.parentNode ? ref.parentNode : document.body).appendChild(m);
+  }
+  const zeile = (lab, id, wert, einheit, hin) => '<div class="mrow"><label>' + lab + '</label><input type="text" id="' + id + '" value="' + (wert === null || wert === undefined ? '' : wert) + '">' + (einheit ? '<span class="unit">' + einheit + '</span>' : '') + '</div>' + (hin ? '<div class="small-hint aufsp-hint">' + hin + '</div>' : '');
+  const wahl = (lab, id, opts, wert) => '<div class="mrow"><label>' + lab + '</label><select id="' + id + '">' + opts.map(o => '<option value="' + o[0] + '"' + (String(o[0]) === String(wert) ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select></div>';
+  let body = '';
+  if(k === 1){
+    body = '<div class="msec">Programm</div>' + zeile('Zeichnungsnummer', 'aufZeich', AUFSP.zeichnung, '', 'Name im NC: ' + aufspProgrammName(1)) +
+      zeile('Länge Fertigteil', 'aufLaenge', AUFSP.laenge, 'mm', 'leer = aus der Außenkontur (' + fmt(aufspLaenge()) + ')') +
+      '<div class="msec">Grenze zur zweiten Aufspannung</div>' +
+      zeile('Grenze außen Z', 'aufGrenzeA', AUFSP.grenzeA, 'mm', 'am Absatz: Seite 2 dreht die Fläche bis zum ⌀, verrundet und zieht hoch') +
+      zeile('Grenze innen Z', 'aufGrenzeI', AUFSP.grenzeI, 'mm', 'leer = innen alles von Seite 1') +
+      zeile('Überlauf', 'aufUeberlauf', AUFSP.ueberlauf, 'mm', 'Seite 1 dreht außen und innen über die Grenze - Seite 2 nimmt es weg') +
+      wahl('Übergang', 'aufUebergang', [['absatz', 'am Absatz (Normalfall)'], ['gleich', 'gleicher ⌀ mit Überlappung']], AUFSP.uebergang) +
+      zeile('Überlappung', 'aufUeberlappung', AUFSP.ueberlappung, 'mm', 'nur bei gleichem ⌀: mit Schneidenradius überbrücken') +
+      zeile('Auslaufwinkel', 'aufAuslaufW', AUFSP.auslaufW, '°') + zeile('Auslauflänge', 'aufAuslaufL', AUFSP.auslaufL, 'mm');
+  } else if(k === 'F'){
+    const zs = aufspZonen(), zj = aufspZoneJetzt();
+    body = '<div class="msec">Wo soll das Teil in der Formbacke anliegen?</div>' +
+      (zs.length ? zs.map((q, i) => '<button type="button" class="gcbtn aufsp-zone' + (zj && zj.index === i ? ' an' : '') + '" data-zone="' + i + '"><b>' + String.fromCharCode(65 + i) + '</b> ' + q.titel +
+        '<span>Spanntiefe ' + fmt(q.tiefe) + ' · Auskragung ' + fmt(q.auskrag) + ' mm · L/D ' + q.ld.toFixed(1).replace('.', ',') + ' · ' + (q.ld > 3 ? 'lang - Reitstock oder andere Zone' : q.ld > 2 ? 'mittel' : 'stabil') + '</span></button>').join('')
+        : '<div class="small-hint aufsp-hint" id="aufKeineZone">An der ersten Seite gibt es keine Stufe, die als Spannzone taugt.</div>') +
+      '<div class="msec">Backen</div>' +
+      zeile('Spanntiefe', 'aufFbTiefe', AUFSP.fb.tiefe, 'mm', 'leer = Vorschlag der Zone' + (zj ? ' (' + fmt(zj.tiefe) + ')' : '')) +
+      zeile('kleinster ⌀ der Backe', 'aufFbButzen', AUFSP.fb.butzenD, 'mm', 'Butzen, der gerade da ist, tief in die Backen gespannt') +
+      zeile('Freistich Tiefe in X', 'aufFbFs', AUFSP.fb.fsT, 'mm', 'Form E, nur in X - mindestens Radius der Schlichtplatte + 0,2') +
+      zeile('Vorderkante R', 'aufFbKante', AUFSP.fb.kante, 'mm', 'immer entgratet') +
+      zeile('Anfang Z', 'aufFbZ0', AUFSP.fb.z0, 'mm', 'die Backenstirn wird nicht nachgeschnitten') +
+      zeile('ap höchstens', 'aufFbAp', AUFSP.fb.apMax, 'mm', 'unterbrochener Schnitt an den drei Backen') +
+      zeile('F Schruppen', 'aufFbFr', AUFSP.fb.fr, 'mm/U') + zeile('F Schlichten', 'aufFbFf', AUFSP.fb.ff, 'mm/U') + zeile('Vc', 'aufFbVc', AUFSP.fb.vc, 'm/min') +
+      zeile('Werkzeug Schruppen', 'aufFbTr', AUFSP.fb.tR, '', 'CNMG R0,8 - stabil für den unterbrochenen Schnitt') +
+      zeile('Werkzeug Schlichten', 'aufFbTs', AUFSP.fb.tS, '', 'eigener Schlichtdrehmeißel R0,4');
+  } else {
+    const zs = aufspZonen(), zj = aufspZoneJetzt();
+    body = '<div class="msec">Spannung der zweiten Seite</div>' +
+      wahl('Spannmittel', 'aufS2Spann', [['form', 'Formbacken'], ['hart', 'harte Backen']], AUFSP.fb.an ? 'form' : 'hart') +
+      (zs.length ? zs.map((q, i) => '<button type="button" class="gcbtn aufsp-zone' + (zj && zj.index === i ? ' an' : '') + '" data-zone="' + i + '"><b>' + String.fromCharCode(65 + i) + '</b> ' + q.titel +
+        '<span>Auskragung ' + fmt(q.auskrag) + ' mm · L/D ' + q.ld.toFixed(1).replace('.', ',') + '</span></button>').join('') : '') +
+      '<div class="small-hint aufsp-hint">Die Kontur ist gewendet, Z0 liegt an der neuen Stirn. Das Rohteil ist der Stand nach Aufspannung 1 aus der Simulation. Z wird geplant, die Gesamtlänge gemessen.</div>';
+  }
+  m.innerHTML = '<div class="mask-head"><span class="mtitel">' + aufspName(k) + '</span></div><div class="mask-body">' + body +
+    '<div class="mrow k-aktion"><button type="button" class="gcbtn ok-gruen" id="aufspOk">Übernehmen</button><button type="button" class="gcbtn ab-rot" id="aufspAb">Abbrechen</button></div></div>';
+  let zoneWahl = AUFSP.fb.zone;
+  m.querySelectorAll('.aufsp-zone').forEach(b => b.addEventListener('click', () => {
+    zoneWahl = +b.dataset.zone; m.querySelectorAll('.aufsp-zone').forEach(x => x.classList.toggle('an', x === b));
+  }));
+  const num = (id, leer) => { const el = document.getElementById(id); if(!el) return undefined; const v = String(el.value).trim().replace(',', '.'); if(v === '') return leer; const n = parseFloat(v); return isFinite(n) ? n : leer; };
+  document.getElementById('aufspAb').onclick = () => m.classList.remove('show');
+  document.getElementById('aufspOk').onclick = () => {
+    const altK = AUFSP.aktiv;
+    if(altK !== 1) aufspZurKanon();        // Aenderungen wirken auf die Lage der ersten Seite
+    if(k === 1){
+      AUFSP.zeichnung = (document.getElementById('aufZeich').value || '').trim();
+      AUFSP.laenge = num('aufLaenge', null); AUFSP.grenzeA = num('aufGrenzeA', null); AUFSP.grenzeI = num('aufGrenzeI', null);
+      AUFSP.ueberlauf = num('aufUeberlauf', 2); AUFSP.uebergang = document.getElementById('aufUebergang').value;
+      AUFSP.ueberlappung = num('aufUeberlappung', 1); AUFSP.auslaufW = num('aufAuslaufW', 5); AUFSP.auslaufL = num('aufAuslaufL', 2);
+    } else {
+      AUFSP.fb.zone = (zoneWahl === null || zoneWahl === undefined) ? null : zoneWahl;
+      if(k === 'F'){
+        AUFSP.fb.tiefe = num('aufFbTiefe', null); AUFSP.fb.butzenD = num('aufFbButzen', null); AUFSP.fb.fsT = num('aufFbFs', 0.6);
+        AUFSP.fb.kante = num('aufFbKante', 0.4); AUFSP.fb.z0 = num('aufFbZ0', 0.05); AUFSP.fb.apMax = num('aufFbAp', 1);
+        AUFSP.fb.fr = num('aufFbFr', 0.12); AUFSP.fb.ff = num('aufFbFf', 0.05); AUFSP.fb.vc = num('aufFbVc', 180);
+        AUFSP.fb.tR = (document.getElementById('aufFbTr').value || '8').trim(); AUFSP.fb.tS = (document.getElementById('aufFbTs').value || '10').trim();
+      } else {
+        AUFSP.fb.an = document.getElementById('aufS2Spann').value === 'form';
+      }
+    }
+    AUFSP_STAND = null; AUFSP_STAND_KEY = '';
+    m.classList.remove('show');
+    const w = aufspWechseln(altK === 'F' && !AUFSP.fb.an ? 1 : altK); if(w.fehler) melde(w.fehler);
+    aufspKopfZeigen();
+    try{ refreshAll(); }catch(e){}
+  };
+  m.classList.add('show');
+}
+aufspKopfZeigen();
 </script>
 <script>
 // PWA-Offline [pwa-bauen.js]: nur wenn ueber einen Server geladen —

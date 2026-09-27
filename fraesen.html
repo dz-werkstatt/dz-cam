@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="27.09.2026 10:20 (d6f8baba)";</script>
+<script>window.__DZ_STAND="27.09.2026 14:20 (6c128e8a)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -162,6 +162,22 @@
   /* DIE WERKSTATT-KARTE [Paket D]: der Stand der anderen beiden Bereiche auf dem
      Startbild - nur am Laptop (unter 900 px kein Element). */
   .wkarte{display:none;}
+  /* ZWEI AUFSPANNUNGEN [27.09.2026]: nur neue Klassen - erscheinen nur, wenn die Option im Programmkopf an ist. */
+  .ap-row.ap-aufsp{background:hsl(var(--ton), 40%, 94%);border-top:1px solid hsl(var(--ton), 30%, 82%);font-weight:700;cursor:pointer;margin-top:4px;}
+  .ap-row.ap-aufsp.sel{background:hsl(var(--ton), 60%, 88%);box-shadow:inset 3px 0 0 var(--blue);}
+  .ap-row.ap-aufsp .ap-detail{font-weight:400;}
+  .ap-row.aufsp-fremd{opacity:.55;}
+  .aufsp-o{display:inline-block;font-size:11.5px;font-weight:600;color:var(--blue);border:1px solid hsl(var(--ton), 40%, 78%);background:#fff;border-radius:999px;padding:2px 9px;white-space:nowrap;}
+  .aufsp-anz{font-size:12px;color:var(--text-dim);margin-right:10px;}
+  .aufsp-reiter{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);}
+  .aufsp-reiter .gcbtn.an{background:var(--blue);color:#fff;border-color:var(--blue);}
+  .aufsp-reiter .aufsp-hin{font-size:11.5px;color:var(--text-dim);margin-left:auto;}
+  .aufsp-zone{display:block;width:100%;text-align:left;margin:4px 0;padding:8px 10px;line-height:1.35;}
+  .aufsp-zone span{display:block;font-size:11.5px;font-weight:400;color:var(--text-dim);}
+  .aufsp-zone.an{border-color:#e8850c;box-shadow:0 0 0 2px hsla(32,90%,50%,.3);}
+  .aufsp-hint{display:block !important;}
+  body.dunkel .ap-row.ap-aufsp{background:hsl(var(--ton), 16%, 20%);border-top-color:hsl(var(--ton), 14%, 30%);}
+  body.dunkel .aufsp-o{background:hsl(var(--ton), 14%, 18%);}
   /* DIE BLENDE beim Wechsel [Paket B]: Emblem, Zielname, eine Zeile, ein
      laufender Strich - haengt am body ueber allem, blendet in 0,4 s aus.
      Sie ist Bild, kein Layout: kein Element der Seite bewegt sich. */
