@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="27.09.2026 16:29 (b715162a)";</script>
+<script>window.__DZ_STAND="27.09.2026 18:12 (22dac6ab)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4700,7 +4700,22 @@ blo&szlig;er Zylinder ohne Schulter und jede Kontur mit T&auml;lern (beide
 Richtungen) bleiben Au&szlig;enkontur.</li>
 <li id="ba-pl-zwei"><b>Zwei Aufspannungen:</b> Hat die Au&szlig;enkontur einen Bund (dahinter kleiner, ohne
 wieder aufzusteigen) oder wird die Bohrung zum Futter hin weiter, fragt der Planer, ob er beide Seiten plant
-&mdash; Einzelheiten unter <a href="#ba-pr-aufspannung">Zwei Aufspannungen und Formbacken</a>.</li>
+&mdash; Einzelheiten unter <a href="#ba-pr-aufspannung">Zwei Aufspannungen und Formbacken</a>.
+<br><b>Wie der Planer die Seiten trennt</b> (seit dem Durchlauf vom 27.09.2026 &uuml;ber neun gebaute Teile und die
+elf Vorlagen): Eine gerade Fase oder ein Kegel, der direkt vor dem Bund zum Futter hin abf&auml;llt, geh&ouml;rt
+der <b>zweiten Seite</b> &mdash; er zeigt zum Futter wie die Bundfl&auml;che selbst; die Grenze r&uuml;ckt an seinen Anfang.
+Endet die Kontur mit einer Planfl&auml;che, geh&ouml;ren diese Fl&auml;che und ihre Kante ebenfalls der zweiten Seite,
+auch ohne Grenze au&szlig;en; ohne Grenze au&szlig;en plant Seite 2 au&szlig;en sonst nur das Planen.
+<br><b>Bohrstange und Vorbohrung:</b> Der Planer bohrt mit dem gr&ouml;&szlig;ten Bohrer unter dem kleinsten
+Innen-&#8960;. Braucht die Bohrstange mehr (Schaft plus &Uuml;berstand), sagt er es in der Meldung &mdash;
+&bdquo;BOHRSTANGE PASST NICHT IN DIE VORBOHRUNG&ldquo; &mdash; und die Simulation zeigt die Stelle.
+Ohne eingetragenen Schaft rechnet er mit &#8960;20 als Annahme; der wirkliche Schaft geh&ouml;rt in die Werkzeugtabelle.
+<br><b>Formbacken:</b> Eine Spannzone taugt nur, wenn alles davor (zur Stirn der ersten Seite) durch
+die Spannbohrung passt; eine Anlage an einem Absatz braucht davor einen echten Sprung nach unten (eine
+Nutflanke z&auml;hlt nicht). Die Freibohrung hinter der Spannstufe wird aus der ganzen Kontur gerechnet, auch
+&uuml;ber Kegel; reicht das Teil dort bis an den Spann-&#8960;, l&auml;uft die Spannbohrung durch. Der Butzen ist
+mindestens so weit wie die Bohrstange braucht. Taugt keine Stufe, schaltet der Planer auf <b>harte Backen</b>
+und sagt es.</li>
 <li id="ba-pl-taeler"><b>T&auml;ler der Au&szlig;enkontur:</b> schmal und steil
 (Mund &le; 12 mm, Flanken &gt; 75&deg;) &rarr; EINSTECHEN als letzter Schritt, Werte
 aus der Talgeometrie, Stecher nach Klingenbreite. Breite Tasche mit beidseitigem
@@ -23240,12 +23255,29 @@ function programmVorschlagen(interaktiv){
     const zentrierer=toolTable.find(t=>t.art==='bohren' && /zentrier/i.test(t.name||''));
     const iSchrupp=toolTable.find(t=>t.art==='innen' && (+t.sw||0)>=55) || toolTable.find(t=>t.art==='innen');
     const iSchlicht=toolTable.find(t=>t.art==='innen' && (+t.sw||99)<=40) || iSchrupp;
+    // PASST DIE BOHRSTANGE IN DIE VORBOHRUNG? [27.09.2026, s. halterMinBohrung]:
+    // der groesste Bohrer unter dem kleinsten Innen-⌀ ist nicht immer gross
+    // genug fuer den Schaft. Einen groesseren gibt es dann nicht (die Wahl
+    // nimmt schon den groessten, der passt) - innen wird trotzdem geplant und
+    // die Luecke BENANNT; welche Bohrstangen Daniel wirklich hat, weiss die
+    // Tabelle nur, wenn ihr Schaft eingetragen ist.
+    const bohrerW=bohrer; let stangeHin=null;
+    if(iSchrupp && typeof halterMinBohrung==='function'){
+      const need=Math.max(halterMinBohrung(iSchrupp), iSchlicht? halterMinBohrung(iSchlicht) : 0);
+      const vorb0=bohrer? +bohrer.dm : xiRohr;
+      if(need>0 && vorb0>0 && vorb0 < need-0.01){
+        const st=[iSchrupp, iSchlicht].find(t=>t && halterMinBohrung(t)>=need-0.001);
+        const annahme=(st && !(+st.halterB>0)) ? ' (Schaft ⌀20 ist eine Annahme — in der Werkzeugtabelle nachtragen)' : '';
+        stangeHin='BOHRSTANGE PASST NICHT IN DIE VORBOHRUNG: T'+st.t+' braucht mindestens ⌀'+fmt(need)+', vorgebohrt '+(bohrer? 'wird ⌀'+fmt(vorb0) : ((R2 && R2.seite===2) ? 'ist ⌀'+fmt(vorb0)+' aus Aufspannung 1' : 'ist die Rohrbohrung ⌀'+fmt(vorb0)))+annahme+' — eine kleinere Bohrstange oder einen Bohrer ⌀'+fmt(need)+'..'+fmt(minInnen)+' einsetzen; die Simulation zeigt die Stelle als Halterkollision';
+      }
+    }
     if(!bohrer && !(xiRohr>0)) hinweise.push('INNEN AUSGELASSEN: kein Bohrer <= ⌀'+fmt(minInnen)+' in der Tabelle');
     else if(!iSchrupp) hinweise.push('INNEN AUSGELASSEN: kein Innen-Drehwerkzeug in der Tabelle');
     else {
-      innenPlan={iEls, minInnen, zInnenEnde, bohrer, zentrierer, iSchrupp, iSchlicht, cid:innenK.c.id,
-        rohr:(xiRohr>0), vorb:(bohrer? +bohrer.dm : xiRohr)};
-      if(xiRohr>0 && !bohrer) hinweise.push('Rohr: Vorbohrung = Rohrbohrung ⌀'+fmt(xiRohr)+', kein Bohrschritt');
+      if(stangeHin) hinweise.push(stangeHin);
+      innenPlan={iEls, minInnen, zInnenEnde, bohrer:bohrerW, zentrierer, iSchrupp, iSchlicht, cid:innenK.c.id,
+        rohr:(xiRohr>0), vorb:(bohrerW? +bohrerW.dm : xiRohr)};
+      if(xiRohr>0 && !bohrerW) hinweise.push('Rohr: Vorbohrung = Rohrbohrung ⌀'+fmt(xiRohr)+', kein Bohrschritt');
     }
     // KEIN Hinweis bei kleinerem Bohrer: vorbohren und aufdrehen ist
     // der Normalfall (Buchse: ⌀26 -> 40/48,4). Gewarnt wird nur,
@@ -23477,6 +23509,11 @@ function programmVorschlagen(interaktiv){
   if(!R2) hinweise.push('Rueckseite: umspannen und als eigenes Programm fertigen (2. Aufspannung) — oder im Programmkopf zwei Aufspannungen einschalten, dann plant der Planer beide Seiten');
   if(R2){
     if(R2.nurPlanen){ for(let i=neu.length-1;i>=0;i--) if(!(neu[i].type==='abspanen_einfach' && neu[i].params.richtung==='plan')) neu.splice(i,1); }
+    // Ohne Grenze aussen (aber mit Grenze innen) ist die Aussenkontur Sache der
+    // ersten Seite: Seite 2 plant aussen nur das Planen [27.09.2026, Durchlauf].
+    if(R2.aussenAus){ for(let i=neu.length-1;i>=0;i--){ const q=neu[i], pp=q.params||{};
+      const aussen=(pp.lage||'aussen')!=='innen';
+      if(aussen && !(q.type==='abspanen_einfach' && pp.richtung==='plan') && q.type!=='bohren') neu.splice(i,1); } }
     return {neu, hinweise, nurInnen, innen:!!innenPlan};
   }
   // UEBERNAHME als normaler Arbeitsplan; snapshot traegt das Undo.
@@ -36571,6 +36608,20 @@ const HALTER_SICHER=0.4;   // mm: Material muss so tief IM Koerper stehen — di
 //     26 mm, eine N123-Klinge 20, ein Abstechschwert 60 - geraten waere
 //     jeder Wert falsch), Breite halterB, Vorgabe = Klingenbreite.
 //   BOHREN: nichts - der Bohrer steckt im eigenen Loch.
+// MINDEST-VORBOHRUNG EINER BOHRSTANGE [27.09.2026, Durchlauf Planer mit zwei
+// Aufspannungen]: der Planer bohrte eine ⌀24-Bohrung mit dem Spiralbohrer ⌀10
+// vor und schruppte danach mit der Bohrstange T8 (Schaft ⌀20) - die steckt in
+// einem ⌀10-Loch nicht, die Halterpruefung meldete 23 Saetze "Bohrstange im
+// Material", auch mit EINER Aufspannung. Der Schaft liegt ab dem Ueberstand ab
+// unter der Spitze und ist D dick; steht die Spitze am Rand der Vorbohrung r0,
+// reicht er bis r0 - ab - D, und das darf die gegenueberliegende Wand (-r0)
+// nicht erreichen: 2*r0 >= ab + D. Gerechnet aus halterKoerper, damit Pruefung
+// und Planer dieselbe Bohrstange meinen. 0 = kein Innenwerkzeug.
+function halterMinBohrung(tool){
+  const k=halterKoerper(tool).find(q=>q.was==='Bohrstange');
+  if(!k) return 0;
+  return +Math.max.apply(null, k.pts.map(p=>-p[1])).toFixed(3);
+}
 function halterKoerper(tool){
   if(!tool) return [];
   const art=tool.art||'aussen';
@@ -42329,7 +42380,18 @@ function aufspKuerzenS1(els, g, u, innen, wandX){
     if(Math.abs(b.z - a.z) > 1e-6){ dirZ = b.z - a.z; dirX = b.x - a.x; break; }
     if(Math.abs(b.x - a.x) > 1e-6) break;               // letztes Element ist eine Planflaeche: axial weiter
   }
-  const x2 = (dirZ < 0) ? xg + (dirX / dirZ) * (-u) : xg;
+  let x2 = (dirZ < 0) ? xg + (dirX / dirZ) * (-u) : xg;
+  // KEINE KUENSTLICHE TASCHE [27.09.2026, Durchlauf: Rotorwelle]: faellt das
+  // letzte Element zur Grenze hin ab (Fase oder Kegel ⌀300 -> ⌀290 vor dem
+  // Absatz bei Z-400), lief der Ueberlauf die Schraege weiter hinunter auf
+  // ⌀286, und die Wand dahinter stieg auf ⌀309. Das Ab und Auf hielt der
+  // Generator fuer einen Hinterschnitt: er uebersprang ihn und fuhr am Fuss
+  // der Wand wieder ein - im Rohteil (Eilgang X307 Z2 -> X302 Z-402, Material
+  // bis ⌀305). Jetzt bleibt der Ueberlauf dann auf dem Durchmesser an der
+  // Grenze; die Nase kommt trotzdem frei. Innen gilt dasselbe spiegelbildlich
+  // (die Bohrung, die zur Grenze hin weiter wird).
+  if(!innen && x2 < xg) x2 = xg;
+  if(innen && x2 > xg) x2 = xg;
   neu.push(aufspG(g - u, x2));
   neu.push(aufspG(g - u, wandX));
   return {els:neu, warn:null};
@@ -42405,14 +42467,44 @@ function aufspZonen(){
       tiefe = +(von - front).toFixed(3);
     } else continue;
     if(!(tiefe >= 5)) continue;
+    // DAS TEIL MUSS DURCH DIE BACKE [27.09.2026, Durchlauf]: was zur Stirn der
+    // ersten Seite hin liegt, wird zuerst durch die Spannbohrung ⌀d gesteckt.
+    // Ist dort etwas dicker als d, taugt die Stufe nicht als Zone. Gemessen am
+    // Polygon der Kontur, nicht an den Eckpunkten: am Master laeuft vor der
+    // ⌀75-Stufe ein Kegel von ⌀55 auf ⌀75 - die Eckpunkte meldeten ⌀55, die
+    // Backe bekam dahinter eine ⌀56-Freibohrung, und der Kegel steckte 9 mm tief
+    // im Backenmaterial.
+    const hinten = aufspMaxDurchmesser(V, von + 0.01);
+    if(hinten > d + 0.01) continue;
+    // Anlage an einem Absatz braucht davor einen echten Sprung nach unten: die
+    // Backenstufe, an der das Teil anliegt, muss alles durchlassen, was davor
+    // liegt. An der Rotorwelle war der "Absatz" die Flanke einer Nut, davor lief
+    // das Teil wieder auf ⌀184 - es haette durch die eigene Anlage gemusst.
+    if(anlage === 'absatz' && hinten + 1 > d - 0.5) continue;
     const auskrag = +(L - Math.abs(front)).toFixed(3);
-    const kleinere = V.filter(q => q.z > front && q.x < d - 1e-6 && q.x > 0.5).map(q => q.x);
+    const kleinere = hinten > 0.5 ? [hinten] : [];
     out.push({ d, von, bis, anlage, front:+front.toFixed(3), tiefe, kehle, auskrag, ld:auskrag / d,
       frei:+Math.abs(Math.max(von, 0) - 0).toFixed(3), klein:kleinere.length ? Math.max(...kleinere) : 0,
       titel:'⌀' + fmt(d) + ' · ' + (anlage === 'schulter' ? 'Anlage an der Schulter Z' + fmt(bis)
             : (kehle ? 'Backe endet ' + fmt(kehle + 1) + ' mm vor R' + fmt(kehle) + ' · ' : '') + (anlage === 'stirn' ? 'Anlage an der Stirnfläche' : 'Anlage am Absatz Z' + fmt(von))) });
   }
   return out;
+}
+// Groesster Durchmesser der Kontur fuer z >= zAb (Stirnseite der ersten Seite),
+// am Streckenzug gemessen - Boegen fein abgetastet, an zAb interpoliert.
+function aufspMaxDurchmesser(els, zAb){
+  let pts = [];
+  try{ pts = sampleContourForRough(els); }catch(e){ pts = els.filter(q => isFinite(q.z) && isFinite(q.x)).map(q => ({z:q.z, x:q.x})); }
+  let m = 0;
+  for(let i = 0; i < pts.length; i++){
+    const p = pts[i];
+    if(p.z >= zAb - 1e-9 && p.x > m) m = p.x;
+    if(i > 0){
+      const a = pts[i - 1], b = p;
+      if((a.z - zAb) * (b.z - zAb) < 0){ const t = (zAb - a.z) / (b.z - a.z); const x = a.x + t * (b.x - a.x); if(x > m) m = x; }
+    }
+  }
+  return +m.toFixed(4);
 }
 // Vorschlag: die stabilste Zone (kleinstes L/D). Der Bediener waehlt um.
 function aufspZoneJetzt(){
@@ -42442,15 +42534,34 @@ function aufspFormbackeKontur(z){
   const fsT = Math.max(+f.fsT || 0.6, +(rP + 0.2).toFixed(3));
   const rK = +f.kante > 0 ? +f.kante : 0.4;
   const z0 = (f.z0 !== null && f.z0 !== undefined && +f.z0 >= 0) ? +f.z0 : 0.05;
-  const frei = z.klein > 0 ? z.klein + 1 : 0;                 // Bohrung fuer die kleineren Stufen
+  // Freibohrung hinter der Spannstufe: alles, was dort vom Teil in der Backe
+  // steckt, plus 1 mm. Reicht das bis an die Spannbohrung, laeuft die Spann-
+  // bohrung durch (eine Freibohrung GROESSER als d waere ein Hinterschnitt, den
+  // der Schlichtmeissel nicht faehrt) - durchgesteckt wird das Teil ohnehin.
+  const cA = aufspKanonKonturen().find(q => q && q.els && q.els.length > 1 && !aufspKonturIstInnen(q));
+  const hintenD = cA ? aufspMaxDurchmesser(cA.els, z.front + t) : (z.klein || 0);
+  const freiRoh = hintenD > 0.5 ? hintenD + 1 : 0;
+  const durch = freiRoh > d - 1e-6;
+  const frei = durch ? 0 : freiRoh;                          // Bohrung fuer die kleineren Stufen
   const tiefeGes = Math.max(t, imJaw);
-  const butzen = +f.butzenD > 0 ? +f.butzenD : Math.max(1, Math.floor((frei > 0 ? frei : d) - 6));
+  // BUTZEN UND BOHRSTANGE [27.09.2026, Durchlauf]: an der ⌀28-Zone der
+  // Abstech-Vorlage lag der Butzen bei ⌀22 - genau die Mindest-Vorbohrung der
+  // ⌀20-Bohrstange T8, die Halterpruefung meldete sie im Backenmaterial. Der
+  // Butzen (Material, das in den weichen Backen schon liegt) ist daher
+  // mindestens die Mindest-Vorbohrung der beiden Bohrstangen + 1 mm.
+  const stange = (typeof halterMinBohrung === 'function' && typeof toolTable !== 'undefined')
+    ? Math.max(0, ...[f.tR, f.tS].map(n => { const tl = toolTable.find(q => String(q.t) === String(n)); return tl ? halterMinBohrung(tl) : 0; })) : 0;
+  const butzenVorschlag = Math.max(1, Math.floor((frei > 0 ? frei : d) - 6), stange > 0 ? Math.ceil(stange + 1) : 0);
+  const butzen = +f.butzenD > 0 ? +f.butzenD : butzenVorschlag;
+  const zuEng = stange > 0 && butzen < stange + 0.5;
+  const zuGross = butzen > (frei > 0 ? frei : d) - 1;
   const els = [{kind:'start', z:z0, x:d + 2 * rK, trans:{type:'none', val:0}},
     aufspG(0, d + 2 * rK),
     {kind:'kreis', z:-rK, x:d, cz:-rK, cx:d + 2 * rK, cw:true, trans:{type:'none', val:0}}];
   if(z.anlage === 'schulter'){
-    els.push(aufspG(-t, d));
-    if(frei > 0 && imJaw + 1 > t + 1e-6){ els.push(aufspG(-t, frei)); els.push(aufspG(-(imJaw + 1), frei)); els.push(aufspG(-(imJaw + 1), Math.max(1, butzen - 2))); }
+    els.push(aufspG(durch ? -(Math.max(t, imJaw + 1)) : -t, d));
+    if(durch){ els.push(aufspG(-(Math.max(t, imJaw + 1)), Math.max(1, butzen - 2))); }
+    else if(frei > 0 && imJaw + 1 > t + 1e-6){ els.push(aufspG(-t, frei)); els.push(aufspG(-(imJaw + 1), frei)); els.push(aufspG(-(imJaw + 1), Math.max(1, butzen - 2))); }
     else els.push(aufspG(-t, Math.max(1, butzen - 2)));
   } else {
     const zAus = -t + rP + fsT / Math.tan(15 * Math.PI / 180);
@@ -42463,7 +42574,7 @@ function aufspFormbackeKontur(z){
       els.push(aufspG(-(imJaw + 1), Math.max(1, butzen - 2)));
     } else els.push(aufspG(-t, Math.max(1, butzen - 2)));
   }
-  return {els, tiefe:t, tiefeGes:tiefeGes + 1, butzen, fsT, rK, z0, frei, rP};
+  return {els, tiefe:t, tiefeGes:tiefeGes + 1, butzen, fsT, rK, z0, frei, rP, durch, stange, zuEng, zuGross};
 }
 function aufspFormbackeSchritte(z, fk){
   const f = AUFSP.fb;
@@ -42602,16 +42713,26 @@ function aufspBauenIn(k){
       const z = aufspZoneJetzt(); const fk = z ? aufspFormbackeKontur(z) : null;
       if(!fk) return {code:null, warn:['keine Spannzone']};
       steps = aufspFormbackeSchritte(z, fk);
+      if(fk.zuEng) warn.push('Formbacke: der Butzen ⌀' + fmt(fk.butzen) + ' ist enger als die Mindest-Vorbohrung ⌀' + fmt(fk.stange) + ' der Bohrstange — Butzen-⌀ in der Formbacken-Maske pruefen');
+      if(fk.zuGross) warn.push('Formbacke: die Bohrstange braucht mindestens ⌀' + fmt(fk.stange) + ', die Spannbohrung ⌀' + fmt(z.d) + ' laesst dafuer keinen Platz — eine kleinere Bohrstange einsetzen');
       cont = [{id:AUFSP_FB_KONTUR_ID, name:'Formbacke', els:fk.els}];
     } else {
       steps = programSteps.filter(st => aufspBlockVon(st) === k);
       if(!steps.length) return {code:null, warn:['In „' + aufspName(k) + '“ steht noch kein Schritt.']};
       const L = aufspLaenge(), wandA = Math.max(+document.getElementById('stockDia').value || 0, 0) + 4;
+      // INNEN ENDET DIE WAND AN DER VORBOHRUNG [27.09.2026, Durchlauf: Rohr mit
+      // Bund]: sie lief bis ⌀1, und der Schlichtmeissel fuhr sie hinunter - die
+      // Bohrstange tauchte unter die Achse in die gegenueberliegende Wand
+      // (Halterpruefung, beide Seiten). Die Wand ist nur der Abschluss fuer den
+      // Generator; 1 mm unter der Vorbohrung des Blocks genuegt.
+      const vorbI = steps.filter(st => st.type === 'abspanen_kontur' && (st.params.lage || 'aussen') === 'innen' && +st.params.stock > 0).map(st => +st.params.stock);
+      const xiKopf = (document.getElementById('pkForm') || {}).value === 'rohr' ? +((document.getElementById('pkXI') || {}).value) || 0 : 0;
+      const wandI = vorbI.length ? Math.max(1, Math.min(...vorbI) - 1) : (xiKopf > 2 ? xiKopf - 1 : 1);
       cont = contours.map(c => {
         const innen = aufspKonturIstInnen(c), gRoh = innen ? AUFSP.grenzeI : AUFSP.grenzeA;
         if(gRoh === null || gRoh === '' || !isFinite(+gRoh)) return c;
-        const r = (k === 1) ? aufspKuerzenS1(c.els, +gRoh, +AUFSP.ueberlauf || 0, innen, innen ? 1 : wandA)
-                            : aufspKuerzenS2(c.els, -L - (+gRoh), innen, innen ? 1 : wandA);
+        const r = (k === 1) ? aufspKuerzenS1(c.els, +gRoh, +AUFSP.ueberlauf || 0, innen, innen ? wandI : wandA)
+                            : aufspKuerzenS2(c.els, -L - (+gRoh), innen, innen ? wandI : wandA);
         if(r.warn) warn.push(c.name + ': ' + r.warn);
         return r.els ? Object.assign({}, c, {els:r.els}) : c;
       });
@@ -42970,10 +43091,46 @@ function aufspGrenzeAus(els, innen){
     const a = V[k - 1], b = V[k];
     if(!(Math.abs(a.z - b.z) < 1e-6 && Math.abs(a.x - b.x) > 1e-6 && a.z < -1e-6)) continue;
     const rest = V.slice(k).filter(p => p.x > 0.5);
-    if(!innen && b.x < a.x && b.x > 0.5 && rest.every(p => p.x < a.x - 0.01)) return a.z;
-    if(innen && b.x > a.x && rest.every(p => p.x > a.x + 0.01)) return a.z;
+    // EINE ABFALLENDE FASE VOR DEM ABSATZ GEHOERT DER ZWEITEN SEITE [27.09.2026,
+    // Durchlauf: Rotorwelle]: am Bund ⌀300 lief vor dem Absatz bei Z-400 ein
+    // Kegel auf ⌀290 - er zeigt zum Futter wie die Bundflaeche selbst, fuer den
+    // Schlichtmeissel der ersten Seite war er zu steil (ausgespart), und der
+    // Wiedereinstieg dahinter lag an der Wand im Rohteil. Die Grenze rueckt an
+    // den Anfang solcher Geraden (innen: die Bohrung, die davor weiter wird).
+    // Eine Fase als Kantenuebergang (trans) haengt am Punkt und bleibt, wie sie war.
+    const zurueck = () => { let j = k - 1;
+      while(j > 0){ const p = V[j - 1], q = V[j];
+        if(q.kind === 'kreis' || !(q.z < p.z - 1e-6)) break;
+        if(!innen && !(q.x < p.x - 1e-6)) break;
+        if(innen && !(q.x > p.x + 1e-6)) break;
+        j--; }
+      return V[j].z; };
+    if(!innen && b.x < a.x && b.x > 0.5 && rest.every(p => p.x < a.x - 0.01)) return zurueck();
+    if(innen && b.x > a.x && rest.every(p => p.x > a.x + 0.01)) return zurueck();
   }
   return null;
+}
+// DIE RUECKSEITE GEHOERT DER ZWEITEN SEITE [27.09.2026, Durchlauf: Teil mit
+// glattem Aussen-⌀ und Innen-Hinterschnitt]: ohne Grenze aussen drehte Seite 1
+// die ganze Aussenkontur samt Fase und Planflaeche am Teilende - beide zeigen
+// zum Futter, dahinter steht Rohteil, der Halter des Schlichtmeissels fuhr
+// hinein. Und Seite 2 fuhr die ganze Aussenkontur noch einmal, ueber die alte
+// Stirn hinweg: 20 mm Einschnitt. Endet die Kontur mit einer Planflaeche, liegt
+// die Grenze an deren Oberkante (abfallende Geraden davor gehoeren mit dazu);
+// Seite 1 endet davor mit Ueberlauf, Seite 2 macht Planflaeche und Kante.
+// null = die Kontur endet ohne Planflaeche (auf einem Zylinder).
+function aufspGrenzeRueckseite(els){
+  if(!els) return null;
+  const V = els.filter(e => isFinite(e.z) && isFinite(e.x));
+  const n = V.length;
+  if(n < 3) return null;
+  const a = V[n - 2], b = V[n - 1];
+  if(!(Math.abs(a.z - b.z) < 1e-6 && b.x < a.x - 1e-6 && a.z < -1e-6)) return null;
+  let j = n - 2;
+  while(j > 0){ const p = V[j - 1], q = V[j];
+    if(q.kind === 'kreis' || !(q.z < p.z - 1e-6) || !(q.x < p.x - 1e-6)) break;
+    j--; }
+  return V[j].z < -1e-6 ? V[j].z : null;
 }
 function planerZweiBefund(){
   const aus = contour || [];
@@ -43053,8 +43210,9 @@ function planerZweiMaskeZeigen(D){
     body.appendChild(gz);
     const lies = id => { const e = document.getElementById(id); if(!e) return undefined; const s = String(e.value).trim().replace(',', '.'); if(s === '') return null; const n = parseFloat(s); return isFinite(n) ? n : undefined; };
     ['plGrenzeA', 'plGrenzeI'].forEach(id => { const e = document.getElementById(id); if(e) e.onchange = () => { const a = lies('plGrenzeA'), i = lies('plGrenzeI'); if(a !== undefined) W.grenzeA = a; if(i !== undefined) W.grenzeI = i; neu(); }; });
-    knopfZeile('Seite 2 in Formbacken?', [['ja', 'Formbacken ausdrehen'], ['nein', 'harte Backen']], W.fb ? 'ja' : 'nein', v => { W.fb = (v === 'ja'); neu(); });
     const zs = planerZweiZonen(W);
+    if(!zs.length) W.fb = false;
+    knopfZeile('Seite 2 in Formbacken?', [['ja', 'Formbacken ausdrehen'], ['nein', 'harte Backen']], W.fb ? 'ja' : 'nein', v => { W.fb = (v === 'ja') && zs.length > 0; neu(); });
     if(zs.length){
       let vor = 0; zs.forEach((q, j) => { if(q.ld < zs[vor].ld) vor = j; });
       const akt = (W.zone !== null && W.zone !== undefined && zs[W.zone]) ? W.zone : vor;
@@ -43121,7 +43279,12 @@ function planerZweiSeiten(a, D, gedreht){
   a = a || {};
   const alt = JSON.parse(JSON.stringify(AUFSP));
   const num = v => (v === null || v === undefined || v === '') ? null : (isFinite(+v) ? +v : null);
-  const gA = ('grenzeA' in a) ? num(a.grenzeA) : ((alt.an && alt.grenzeA !== null) ? alt.grenzeA : D.grenzeA);
+  let gA = ('grenzeA' in a) ? num(a.grenzeA) : ((alt.an && alt.grenzeA !== null) ? alt.grenzeA : D.grenzeA);
+  let gRueck = false;
+  if(gA === null && !D.nurInnen){
+    const gR = aufspGrenzeRueckseite((contours[activeContourIdx] || {}).els);
+    if(gR !== null){ gA = gR; gRueck = true; }
+  }
   const gI = ('grenzeI' in a) ? num(a.grenzeI) : ((alt.an && alt.grenzeI !== null) ? alt.grenzeI : D.grenzeI);
   AUFSP = aufspMerge(alt.an ? alt : {});
   AUFSP.an = true; AUFSP.grenzeA = gA; AUFSP.grenzeI = gI;
@@ -43129,7 +43292,15 @@ function planerZweiSeiten(a, D, gedreht){
   if('zone' in a) AUFSP.fb.zone = (a.zone === null || a.zone === undefined) ? null : +a.zone;
   AUFSP_STAND = null; AUFSP_STAND_KEY = '';
   const hin = [];
+  // OHNE SPANNZONE KEINE FORMBACKE [27.09.2026, Durchlauf: Buchse, glatter
+  // Innen-Hinterschnitt-Koerper]: das Formbacken-Programm entstand nicht, der
+  // Vorschlag meldete "1 von 3 Programmen fehlt". Jetzt harte Backen mit Ansage.
+  if(AUFSP.fb.an && !aufspZonen().length){
+    AUFSP.fb.an = false;
+    hin.push('Formbacken: keine Stufe der ersten Seite taugt als Spannzone (Zylinder, mind. 5 mm Spanntiefe, nicht an der Grenze, nichts Dickeres davor) — Seite 2 in harten Backen, die Spannung ist von Hand festzulegen');
+  }
   if(gedreht) hin.push('Die Kontur war vom FUTTER zur Stirn gezeichnet — fuer den Vorschlag wurde die Laufrichtung umgekehrt');
+  if(gRueck) hin.push('keine Grenze aussen: Aufspannung 1 dreht die Aussenkontur bis Z' + fmt(gA) + ', Planflaeche und Kante am Teilende macht Aufspannung 2');
   if(gA === null && gI === null) hin.push('keine Grenze: Aufspannung 1 dreht die ganze Kontur, Aufspannung 2 plant nur die Rueckseite auf Laenge');
   else hin.push('Grenze aussen ' + (gA === null ? '—' : 'Z' + fmt(gA)) + ', innen ' + (gI === null ? '— (innen alles von Seite 1)' : 'Z' + fmt(gI)) + ', Ueberlauf ' + fmt(+AUFSP.ueberlauf));
   let r1 = null;
@@ -43146,7 +43317,7 @@ function planerZweiSeiten(a, D, gedreht){
   else {
     const L = aufspLaenge();
     const g2 = gA === null ? null : +(-L - gA).toFixed(4), g2i = gI === null ? null : +(-L - gI).toFixed(4);
-    PL_RECHNEN = {seite:2, g:g2, gI:g2i, innen:gI !== null, nurPlanen:(gA === null && gI === null), antw:a.s2 || null, aussenId, nurInnen:!!D.nurInnen};
+    PL_RECHNEN = {seite:2, g:g2, gI:g2i, innen:gI !== null, nurPlanen:(gA === null && gI === null), aussenAus:(gA === null && gI !== null), antw:a.s2 || null, aussenId, nurInnen:!!D.nurInnen};
     try{ r2 = programmVorschlagen(false); }
     catch(e){ f2 = String((e && e.message) || e); }
     finally { PL_RECHNEN = null; }
