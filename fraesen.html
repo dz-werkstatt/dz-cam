@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="03.10.2026 18:17 (c1bf62d8)";</script>
+<script>window.__DZ_STAND="03.10.2026 20:43 (9fffa756)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2551,6 +2551,13 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
   /* ===== HANDYANSICHT DER HAUPTMASKE (14.09.2026, Daniels Befund) ========
      Beides gilt NUR unter 900 px und NUR hier — das gemeinsame Stylesheet
      bleibt unberuehrt, damit die Handyansicht des Drehteils gleich bleibt. */
+  /* STEP-FENSTER IN ZWEI GESICHTERN [03.10.2026]: STEP-Modell (abspanen) und Tiefziehform. */
+  #maskStep[data-modus="form"] .nur-step, #maskStep:not([data-modus="form"]) .nur-form{display:none !important;}
+  #maskStep[data-modus="form"] #stufeLaden{order:1;} #maskStep[data-modus="form"] #stufeForm{order:2;}
+  #maskStep[data-modus="form"] #stufeProgramm{order:3;} #maskStep[data-modus="form"] #stufeVakuum{order:4;}
+  #maskStep[data-modus="form"] #stufeRueck{order:5;} #maskStep[data-modus="form"] .stufe-ansicht{order:6;}
+  /* Mit dem Knopf Form hat die Fussleiste sieben Knoepfe - am Handy vier und drei statt drei, drei und einer. */
+  @media(max-width:899.98px){ .hsoftkeys .hsk{min-width:80px;} }
   @media(max-width:899px){
     /* (1) Das Meldebanner stand auf der Zyklusleiste. Die gemeinsame Regel
        haelt 104 px frei — die Fussleiste des Drehteils. Die Fraes-App hat
@@ -3064,33 +3071,38 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
                Rohteil gegen das Modell und rechnet die Sollform aus dem Raster. Die Einzelknoepfe (Flaechen,
                Bohrungen, Konturen einer Z-Ebene) stehen in der Klappe "einzeln"; Sollform, Raster und Genauigkeit
                erklaert die Anleitung Kap. 5c (Knopf i). Alle Knopf-IDs bleiben, die Verdrahtung in F20 auch. -->
-          <div class="stufe" id="stufeLaden"><span class="nr">1</span><span class="tit">Laden</span><label class="gcbtn primary" style="padding:8px 12px;cursor:pointer;" title="STEP-Datei (.stp oder .step) laden">&#x2B06; Modell laden<input type="file" id="stepFile" accept=".stp,.step,.STP,.STEP" style="display:none;"></label></div>
-          <div class="stufe" id="stufeAusrichten"><span class="nr">2</span><span class="tit">Ausrichten</span><span class="lbl">Werkzeugachse</span><span class="radiobtns" id="stepAchseBtns"><button data-v="+X">+X</button><button data-v="-X">-X</button><button data-v="+Y">+Y</button><button data-v="-Y">-Y</button><button data-v="+Z" class="sel">+Z</button><button data-v="-Z">-Z</button></span><span class="lbl">Nullpunkt</span><span class="radiobtns" id="stepNullBtns"><button data-v="ecke" class="sel">Ecke, Oberkante</button><button data-v="mitte">Mitte, Oberkante</button></span><button class="gcbtn" id="btnStepVorschlag" title="Alle sechs Aufspannlagen bewerten: gr&ouml;&szlig;te Auflage nach unten, dann m&ouml;glichst viel in dieser Aufspannung fertig">Aufspannung vorschlagen</button></div>
-          <div class="stufe" id="stufeRohteil"><span class="nr">3</span><span class="tit">Rohteil &amp; Sollform</span><button class="gcbtn" id="btnStepRoh" title="Huellquader des Modells als BLK FORM in den Programmkopf">Als Rohteil übernehmen</button><label class="gcbtn" style="padding:8px 10px;cursor:pointer;" title="Ein zweites STEP-Modell als ROHTEIL (Gussteil, Schmiedeteil, Vorbearbeitung): Modell abspanen, Restmaterial, Böden &amp; Wände und die Simulation rechnen dann mit seiner Oberfläche statt mit dem Quader">&#x2B06; Rohteil-Modell<input type="file" id="stepRohFile" accept=".stp,.step,.STP,.STEP" style="display:none;"></label><button class="gcbtn" id="btnStepRohWeg" style="display:none;" title="Rohform entfernen: es gilt wieder der Quader der BLK FORM">Rohform weg</button><span class="lbl">Raster</span><input type="number" id="stepRaster" step="any" placeholder="auto" title="Rasterweite der Sollform in mm. Leer = automatisch nach Teilgröße (0,3 bis 2 mm). Feiner rechnen kostet Zeit und Speicher (die Zellzahl wächst quadratisch) und bringt zweierlei: den Bahnabstand, den die Rautiefe verlangt, UND die Genauigkeit auf den Flächen. Die KANTEN des Modells gehen seit 17.09.2026 exakt ein; an einer scharfen konvexen Kante bleiben rund ein Vierzigstel der Rasterweite (gemessen 0,0174 mm bei 0,60, 0,0066 bei 0,30, 0,0024 bei 0,15)." style="width:62px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepFeld" title="Die Sollform an das Programm geben — danach rechnen die Zyklen Modell abspanen, Restmaterial abspanen und Schrägen schlichten damit">Sollform ans Programm</button></div>
-          <!-- FORM AUS DEM BLISTER (20.09.2026, Daniels Auftrag). Kein Schritt der normalen
+          <div class="stufe" id="stufeLaden"><span class="nr">1</span><span class="tit">Laden</span><label class="gcbtn primary" style="padding:8px 12px;cursor:pointer;" title="STEP-Datei (.stp oder .step) laden">&#x2B06; <span class="nur-step">Modell laden</span><span class="nur-form">Blister-Modell laden</span><input type="file" id="stepFile" accept=".stp,.step,.STP,.STEP" style="display:none;"></label></div>
+          <div class="stufe nur-step" id="stufeAusrichten"><span class="nr">2</span><span class="tit">Ausrichten</span><span class="lbl">Werkzeugachse</span><span class="radiobtns" id="stepAchseBtns"><button data-v="+X">+X</button><button data-v="-X">-X</button><button data-v="+Y">+Y</button><button data-v="-Y">-Y</button><button data-v="+Z" class="sel">+Z</button><button data-v="-Z">-Z</button></span><span class="lbl">Nullpunkt</span><span class="radiobtns" id="stepNullBtns"><button data-v="ecke" class="sel">Ecke, Oberkante</button><button data-v="mitte">Mitte, Oberkante</button></span><button class="gcbtn" id="btnStepVorschlag" title="Alle sechs Aufspannlagen bewerten: gr&ouml;&szlig;te Auflage nach unten, dann m&ouml;glichst viel in dieser Aufspannung fertig">Aufspannung vorschlagen</button></div>
+          <div class="stufe nur-step" id="stufeRohteil"><span class="nr">3</span><span class="tit">Rohteil &amp; Sollform</span><button class="gcbtn" id="btnStepRoh" title="Huellquader des Modells als BLK FORM in den Programmkopf">Als Rohteil übernehmen</button><label class="gcbtn" style="padding:8px 10px;cursor:pointer;" title="Ein zweites STEP-Modell als ROHTEIL (Gussteil, Schmiedeteil, Vorbearbeitung): Modell abspanen, Restmaterial, Böden &amp; Wände und die Simulation rechnen dann mit seiner Oberfläche statt mit dem Quader">&#x2B06; Rohteil-Modell<input type="file" id="stepRohFile" accept=".stp,.step,.STP,.STEP" style="display:none;"></label><button class="gcbtn" id="btnStepRohWeg" style="display:none;" title="Rohform entfernen: es gilt wieder der Quader der BLK FORM">Rohform weg</button><span class="lbl">Raster</span><input type="number" id="stepRaster" step="any" placeholder="auto" title="Rasterweite der Sollform in mm. Leer = automatisch nach Teilgröße (0,3 bis 2 mm). Feiner rechnen kostet Zeit und Speicher (die Zellzahl wächst quadratisch) und bringt zweierlei: den Bahnabstand, den die Rautiefe verlangt, UND die Genauigkeit auf den Flächen. Die KANTEN des Modells gehen seit 17.09.2026 exakt ein; an einer scharfen konvexen Kante bleiben rund ein Vierzigstel der Rasterweite (gemessen 0,0174 mm bei 0,60, 0,0066 bei 0,30, 0,0024 bei 0,15)." style="width:62px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepFeld" title="Die Sollform an das Programm geben — danach rechnen die Zyklen Modell abspanen, Restmaterial abspanen und Schrägen schlichten damit">Sollform ans Programm</button></div>
+          <!-- [03.10.2026, Daniels Ansage: "dieses Form erstellen ... sollte ein eigener Block sein, ein eigener Button"]
+               Die Zeilen Form ableiten, Vakuumbohrungen und Rueckseite stehen NUR im Modus "form"
+               (Fussleiste Form), die Stufen des STEP-Fensters nur im Modus "step". Ein Fenster, zwei
+               Gesichter - die Rechnung dahinter ist dieselbe. Reihenfolge im Modus form: laden, Form
+               ableiten, Programm, Vakuumbohrungen (sie haengen sich ins Programm), Rueckseite.
+               FORM AUS DEM BLISTER (20.09.2026, Daniels Auftrag). Kein Schritt der normalen
                Kette, sondern ein ANDERER Einstieg in Stufe 3: statt Huellquader und Sollform
                des Teils entsteht hier die PLATTE mit der Kavitaet. Deshalb eigene Zeile ohne
                Nummer - wie Ansicht und einzeln. -->
-          <div class="stufe" id="stufeForm"><span class="tit">Form aus Blister</span><span class="lbl">Rand</span><input type="number" id="formRand" step="any" value="15" title="Wieviel Platte um den Blister herum stehen bleibt, in mm je Seite. Hier wird gespannt und abgedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Boden</span><input type="number" id="formBoden" step="any" value="15" title="Wieviel Platte unter der tiefsten Stelle der Kavit&auml;t bleibt, in mm. Durch diesen Boden gehen sp&auml;ter die Vakuumbohrungen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Entformung</span><input type="number" id="formEntform" step="any" value="5" title="Geforderter Entformungswinkel in Grad, gemessen von der Senkrechten. Die App PR&Uuml;FT ihn nur und nennt jede Stelle, die steiler steht &mdash; die Formschr&auml;ge geh&ouml;rt ins CAD, nicht ins CAM." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Schr&auml;ge</span><select id="formKorr" title="Was tun, wenn eine Wand steiler steht, als der Entformungswinkel erlaubt? MELDEN (Vorgabe) l&auml;sst die Form wie das Modell und nennt die Stellen. BODEN VERJ&Uuml;NGEN neigt die W&auml;nde, indem der Boden kleiner wird. &Ouml;FFNUNG WEITEN neigt sie, indem die &Ouml;ffnung gr&ouml;&szlig;er wird &mdash; das frisst in den Flansch. Beides &auml;ndert das BAUTEIL; die Meldung nennt die Fl&auml;che vorher und nachher." style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:150px;"><option value="aus">nur melden</option><option value="boden">Boden verj&uuml;ngen</option><option value="oeffnung">&Ouml;ffnung weiten</option></select><button class="gcbtn" id="btnStepForm" title="Aus dem Modell des fertigen Blisters die Platte machen, in der er tiefgezogen wird: Kavit&auml;t = Au&szlig;enfl&auml;che des Blisters, Platte drumherum, Sollform ans Programm">Form ableiten</button></div>
-          <div class="stufe" id="stufeVakuum"><span class="tit">Vakuumbohrungen</span><span class="lbl">&#x2300;</span><input type="number" id="vakD" step="any" value="1" title="Durchmesser der Vakuumbohrung in mm. Ueblich sind 0,5 bis 1 mm &mdash; gross genug fuer die Luft, klein genug, dass sich die Folie nicht hineinzieht und einen Pickel macht." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Abstand</span><input type="number" id="vakAbstand" step="any" value="30" title="Groesster Abstand zweier Bohrungen in mm. Die App setzt zuerst in die Ecken, dann fuellt sie auf, bis nirgends mehr als dieser Abstand bleibt." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Tiefe</span><input type="number" id="vakTiefe" step="any" value="0" title="Bohrtiefe ab der Kavitaetsflaeche in mm. 0 = durch die ganze Platte. Bei duennen Bohrungen ist das ueblicherweise nicht machbar: dann hier 1 bis 2 mm eintragen und die Kammer von der Rueckseite aufbohren (zweite Aufspannung: R&uuml;ckseite als Programm)." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepVakuum" title="Die Entlueftung setzen: in jede ebene Flaeche der Kavitaet, von der es nicht weiter nach unten geht, kommen Punkte in die Ecken und dazwischen. Daraus werden Bohrbilder und &mdash; wenn ein passender Bohrer in der Tabelle steht &mdash; Bohrschritte vor dem Schlichten.">Vakuumbohrungen setzen</button></div>
-          <div class="stufe" id="stufeRueck"><span class="tit">R&uuml;ckseite</span><span class="lbl">Wand</span><input type="number" id="rsWand" step="any" value="3" title="Restwandst&auml;rke zwischen dem tiefsten Punkt der Kavit&auml;t und der Decke der Absaugkammer, in mm. Sie bestimmt zugleich, wie tief die Vakuumbohrungen von oben noch sein m&uuml;ssen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Spannkante</span><input type="number" id="rsSpann" step="any" value="15" title="Breite des Randes, der ringsum stehen bleibt, in mm. Dort wird die Form eingebaut und gedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepRueck" title="Die zweite Aufspannung als eigenes Programm: die gewendete Platte als Rohteil und die Absaugkammer als Rechtecktasche. Das Programm der Vorderseite kommt vorher in die Ablage.">R&uuml;ckseite als Programm</button></div>
+          <div class="stufe nur-form" id="stufeForm"><span class="nr">2</span><span class="tit">Form ableiten</span><span class="lbl">Rand</span><input type="number" id="formRand" step="any" value="15" title="Wieviel Platte um den Blister herum stehen bleibt, in mm je Seite. Hier wird gespannt und abgedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Boden</span><input type="number" id="formBoden" step="any" value="15" title="Wieviel Platte unter der tiefsten Stelle der Kavit&auml;t bleibt, in mm. Durch diesen Boden gehen sp&auml;ter die Vakuumbohrungen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Entformung</span><input type="number" id="formEntform" step="any" value="5" title="Geforderter Entformungswinkel in Grad, gemessen von der Senkrechten. Die App PR&Uuml;FT ihn nur und nennt jede Stelle, die steiler steht &mdash; die Formschr&auml;ge geh&ouml;rt ins CAD, nicht ins CAM." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Schr&auml;ge</span><select id="formKorr" title="Was tun, wenn eine Wand steiler steht, als der Entformungswinkel erlaubt? MELDEN (Vorgabe) l&auml;sst die Form wie das Modell und nennt die Stellen. BODEN VERJ&Uuml;NGEN neigt die W&auml;nde, indem der Boden kleiner wird. &Ouml;FFNUNG WEITEN neigt sie, indem die &Ouml;ffnung gr&ouml;&szlig;er wird &mdash; das frisst in den Flansch. Beides &auml;ndert das BAUTEIL; die Meldung nennt die Fl&auml;che vorher und nachher." style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:150px;"><option value="aus">nur melden</option><option value="boden">Boden verj&uuml;ngen</option><option value="oeffnung">&Ouml;ffnung weiten</option></select><button class="gcbtn" id="btnStepForm" title="Aus dem Modell des fertigen Blisters die Platte machen, in der er tiefgezogen wird: Kavit&auml;t = Au&szlig;enfl&auml;che des Blisters, Platte drumherum, Sollform ans Programm">Form ableiten</button></div>
+          <div class="stufe nur-form" id="stufeVakuum"><span class="nr">4</span><span class="tit">Vakuumbohrungen</span><span class="lbl">&#x2300;</span><input type="number" id="vakD" step="any" value="1" title="Durchmesser der Vakuumbohrung in mm. Ueblich sind 0,5 bis 1 mm &mdash; gross genug fuer die Luft, klein genug, dass sich die Folie nicht hineinzieht und einen Pickel macht." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Abstand</span><input type="number" id="vakAbstand" step="any" value="30" title="Groesster Abstand zweier Bohrungen in mm. Die App setzt zuerst in die Ecken, dann fuellt sie auf, bis nirgends mehr als dieser Abstand bleibt." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Tiefe</span><input type="number" id="vakTiefe" step="any" value="0" title="Bohrtiefe ab der Kavitaetsflaeche in mm. 0 = durch die ganze Platte. Bei duennen Bohrungen ist das ueblicherweise nicht machbar: dann hier 1 bis 2 mm eintragen und die Kammer von der Rueckseite aufbohren (zweite Aufspannung: R&uuml;ckseite als Programm)." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepVakuum" title="Die Entlueftung setzen: in jede ebene Flaeche der Kavitaet, von der es nicht weiter nach unten geht, kommen Punkte in die Ecken und dazwischen. Daraus werden Bohrbilder und &mdash; wenn ein passender Bohrer in der Tabelle steht &mdash; Bohrschritte vor dem Schlichten.">Vakuumbohrungen setzen</button></div>
+          <div class="stufe nur-form" id="stufeRueck"><span class="nr">5</span><span class="tit">R&uuml;ckseite</span><span class="lbl">Wand</span><input type="number" id="rsWand" step="any" value="3" title="Restwandst&auml;rke zwischen dem tiefsten Punkt der Kavit&auml;t und der Decke der Absaugkammer, in mm. Sie bestimmt zugleich, wie tief die Vakuumbohrungen von oben noch sein m&uuml;ssen." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><span class="lbl">Spannkante</span><input type="number" id="rsSpann" step="any" value="15" title="Breite des Randes, der ringsum stehen bleibt, in mm. Dort wird die Form eingebaut und gedichtet." style="width:52px;font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);"><button class="gcbtn" id="btnStepRueck" title="Die zweite Aufspannung als eigenes Programm: die gewendete Platte als Rohteil und die Absaugkammer als Rechtecktasche. Das Programm der Vorderseite kommt vorher in die Ablage.">R&uuml;ckseite als Programm</button></div>
           <!-- AUSWAHL [23.09.2026]: der Schritt vom Autopilot zum Werkzeug.
                In der Sollform-Ansicht waehlt ein Tipp die Flaeche, die dort
                oben liegt; aus ihrem Rand wird eine Begrenzungskontur, und ein
                Modell-Schritt mit dieser Kontur arbeitet NUR dort. -->
-          <div class="stufe" id="stufeBereich"><span class="tit">Bereich</span>
+          <div class="stufe nur-step" id="stufeBereich"><span class="tit">Bereich</span>
             <span class="small-hint" id="bereichStand" style="min-width:150px;">Ansicht <b>Sollform</b>, dann eine Fl&auml;che antippen</span>
             <button class="gcbtn" id="btnBereichKontur" title="Aus den gew&auml;hlten Fl&auml;chen Begrenzungskonturen anlegen. Danach in der Maske eines Modell-Schritts unter &bdquo;Bereich&ldquo; anhaken - dieser Schritt arbeitet dann nur dort.">Als Begrenzung &uuml;bernehmen</button>
             <button class="gcbtn" id="btnBereichSchritt" title="Legt gleich einen Schritt &bdquo;Restmaterial abspanen&ldquo; an, der nur in diesem Bereich arbeitet - mit dem Werkzeug, das dort hineinpasst.">Schritt nur hier</button>
             <button class="gcbtn" id="btnBereichLeeren" title="Auswahl verwerfen">leeren</button>
           </div>
-          <div class="stufe" id="stufeProgramm"><span class="nr">4</span><span class="tit">Programm</span><button class="gcbtn primary" id="btnStepPlan" title="Der ganze Vorschlag in einem Zug: planen, schruppen, bohren, schlichten &mdash; in dieser Reihenfolge und mit so wenig Werkzeugwechseln wie m&ouml;glich">Programm vorschlagen</button><button class="gcbtn" id="btnStepEinzeln" title="Nur Teile des Vorschlags: die Fl&auml;chen, die Bohrungen oder die Konturen einer Z-Ebene">einzeln &#x25BE;</button></div>
+          <div class="stufe" id="stufeProgramm"><span class="nr nur-step">4</span><span class="nr nur-form">3</span><span class="tit">Programm</span><button class="gcbtn primary" id="btnStepPlan" title="Der ganze Vorschlag in einem Zug: planen, schruppen, bohren, schlichten &mdash; in dieser Reihenfolge und mit so wenig Werkzeugwechseln wie m&ouml;glich">Programm vorschlagen</button><button class="gcbtn nur-step" id="btnStepEinzeln" title="Nur Teile des Vorschlags: die Fl&auml;chen, die Bohrungen oder die Konturen einer Z-Ebene">einzeln &#x25BE;</button></div>
           <!-- DIE ZWEITE AUFSPANNUNG [26.09.2026, Punkt 4]: das Teil wird auf die Gegenachse gewendet,
                das Rohteil der zweiten Seite ist der Stand nach der ersten (aus der eigenen Simulation),
                das Programm der ersten Seite geht in die Ablage, der Planer legt die zweite Seite an. -->
-          <div class="stufe" id="stufeAufsp2"><span class="nr">5</span><span class="tit">Zweite Aufspannung</span><button class="gcbtn" id="btnStepAufsp2" title="Das Teil wenden und die zweite Seite planen: Rohteil = der Stand nach der ersten Seite (aus der Simulation, Durchbr&uuml;che ohne Material), Sollform der Gegenachse, Programm der ersten Seite vorher in die Ablage. Schon durchgebohrte L&ouml;cher werden nicht noch einmal geplant.">Wenden und Seite 2 planen</button><button class="gcbtn" id="btnStepAngestellt" title="3+2: erst in der Ansicht Sollform eine schr&auml;ge (oder senkrechte) ebene Fl&auml;che antippen. Die App stellt die Werkzeugachse darauf, dreht das Modell in das geschwenkte System und plant dort ein eigenes Programm; Rohteil = der Stand dieses Programms. Die NC bekommt den Schwenksatz der Zielmaschine (PLANE SPATIAL bzw. CYCLE800) davor und die Abwahl dahinter &mdash; nach Handbuch, an keiner Maschine gelaufen.">Angestellt planen (3+2)</button></div>
+          <div class="stufe nur-step" id="stufeAufsp2"><span class="nr">5</span><span class="tit">Zweite Aufspannung</span><button class="gcbtn" id="btnStepAufsp2" title="Das Teil wenden und die zweite Seite planen: Rohteil = der Stand nach der ersten Seite (aus der Simulation, Durchbr&uuml;che ohne Material), Sollform der Gegenachse, Programm der ersten Seite vorher in die Ablage. Schon durchgebohrte L&ouml;cher werden nicht noch einmal geplant.">Wenden und Seite 2 planen</button><button class="gcbtn" id="btnStepAngestellt" title="3+2: erst in der Ansicht Sollform eine schr&auml;ge (oder senkrechte) ebene Fl&auml;che antippen. Die App stellt die Werkzeugachse darauf, dreht das Modell in das geschwenkte System und plant dort ein eigenes Programm; Rohteil = der Stand dieses Programms. Die NC bekommt den Schwenksatz der Zielmaschine (PLANE SPATIAL bzw. CYCLE800) davor und die Abwahl dahinter &mdash; nach Handbuch, an keiner Maschine gelaufen.">Angestellt planen (3+2)</button></div>
           <div class="stufe stufe-ansicht"><span class="tit">Ansicht</span><span style="display:inline-flex;gap:2px;"><button class="gcbtn primary" id="btnStepDraht" title="Drahtbild des Modells">Drahtbild</button><button class="gcbtn" id="btnStepSoll" title="Sollform von oben: die Höhe, auf die gefräst werden muss">Sollform</button><button class="gcbtn" id="btnStepRest" title="Materialstand nach dem letzten Schruppschritt des Arbeitsplans (Modell abspanen / Restmaterial abspanen) — rot, was über der Sollform samt Aufmaß steht: das Restmaterial für den nächsten Schritt">Reststand</button></span><button class="gcbtn" id="btnStepHilfe" title="Anleitung Kap. 5c: Aufspannung, Sollform, Raster, Genauigkeit">&#x24D8;</button></div>
-          <div class="stufe stufe-einzeln" id="stepEinzeln" style="display:none;"><span class="tit">einzeln &uuml;bernehmen</span><button class="gcbtn" id="btnStepFlaechen" title="Nur die Fl&auml;chen: planen, Modell abspanen, Schr&auml;gen schlichten &mdash; die Schritte stehen danach VOR den Bohrungen">Fl&auml;chen übernehmen</button><button class="gcbtn" id="btnStepBohren" title="Die Bohrungen des Modells als Bohrbilder und Schritte anlegen: ein Zentrierschritt über alle Stellen, danach je Durchmesser einer — größter zuerst">Bohrungen übernehmen</button><span class="lbl">Z-Ebene</span><select id="stepEbene" style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:210px;"></select><button class="gcbtn" id="btnStepKonturen" title="Die Schleifen dieser Ebene als XY-Konturen in den Arbeitsplan legen">Konturen übernehmen</button></div>
+          <div class="stufe stufe-einzeln nur-step" id="stepEinzeln" style="display:none;"><span class="tit">einzeln &uuml;bernehmen</span><button class="gcbtn" id="btnStepFlaechen" title="Nur die Fl&auml;chen: planen, Modell abspanen, Schr&auml;gen schlichten &mdash; die Schritte stehen danach VOR den Bohrungen">Fl&auml;chen übernehmen</button><button class="gcbtn" id="btnStepBohren" title="Die Bohrungen des Modells als Bohrbilder und Schritte anlegen: ein Zentrierschritt über alle Stellen, danach je Durchmesser einer — größter zuerst">Bohrungen übernehmen</button><span class="lbl">Z-Ebene</span><select id="stepEbene" style="font-size:11px;padding:5px 6px;border:1px solid var(--line);border-radius:3px;background:var(--card);color:var(--text);max-width:210px;"></select><button class="gcbtn" id="btnStepKonturen" title="Die Schleifen dieser Ebene als XY-Konturen in den Arbeitsplan legen">Konturen übernehmen</button></div>
         </div>
         <div class="mask-body" style="display:flex;flex-direction:column;gap:6px;min-height:0;">
           <canvas id="stepCv" style="width:100%;flex:1 1 auto;min-height:260px;display:block;border:1px solid var(--line);border-radius:4px;background:#e9edf1;touch-action:none;cursor:grab;"></canvas>
@@ -3224,6 +3236,7 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     <div class="hsk" id="hskProgs"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="2.5" width="16" height="11" rx="1.5"/><line x1="6" y1="6" x2="16" y2="6"/><line x1="6" y1="9.5" x2="13" y2="9.5"/></svg><span>Programme</span></div>
     <div class="hsk" id="hskSim" title="Eigene Simulation der Bahnen"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 3 L4 13 L14 8 Z"/><circle cx="17.5" cy="8" r="2.5"/></svg><span>Simulation</span></div>
     <div class="hsk" id="hskStep" title="STEP-Modell laden, ausrichten und ansehen"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 2 L19 6 L19 12 L11 15.5 L3 12 L3 6 Z"/><path d="M3 6 L11 9.5 L19 6"/><line x1="11" y1="9.5" x2="11" y2="15.5"/></svg><span>STEP</span></div>
+    <div class="hsk" id="hskForm" title="Tiefziehform aus dem Modell eines Blisters: Platte mit Kavit&auml;t, Programm, Vakuumbohrungen, R&uuml;ckseite &mdash; getrennt vom STEP-Modell"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4 L20 4 L20 14 L2 14 Z"/><path d="M5 4 L6.5 10 L10 10 L11.5 4"/><path d="M12.5 4 L13.5 8 L16 8 L17 4"/></svg><span>Form</span></div>
     <div class="hsk" id="hskKalk" title="Angebotskalkulation (Zuschlagskalkulation) — Grobkalkulation; den Angebotspreis rechnet die DZ Aufträge"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3.5 A6 6 0 1 0 15 12.5"/><line x1="5" y1="6.3" x2="13" y2="6.3"/><line x1="5" y1="9.7" x2="13" y2="9.7"/></svg><span>Kalkulation</span></div>
     <div class="hsk primary" id="hskGcode" title="Klartext-Ausgabe"><svg class="hsk-ic" viewBox="0 0 22 16" width="22" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3 L2.5 8 L7 13"/><path d="M15 3 L19.5 8 L15 13"/></svg><span>NC-Ausgabe</span></div>
   </div>
@@ -3600,8 +3613,7 @@ Zug; hinter <i>einzeln</i> liegen Fl&auml;chen, Bohrungen und die Konturen einer
 Absatz weiter unten). Rohteil und Sollform stehen VOR dem Vorschlag, weil der
 Vorschlag das Rohteil gegen das Modell pr&uuml;ft und ohne Sollform keine Bahn rechnen kann. Rechts <b>Ansicht</b> (Drahtbild / Sollform / Reststand) und der
 Knopf &#x24D8;, der diese Anleitung an dieser Stelle &ouml;ffnet. Unter dem Bild steht nur noch die Farblegende; was Sollform, Raster und
-Genauigkeit bedeuten, steht in den Abs&auml;tzen darunter. Die Zeile <b>Form aus Blister</b> ist keine f&uuml;nfte Stufe, sondern ein ANDERER Einstieg in
-Stufe 3: statt H&uuml;llquader und Sollform des Teils entsteht dort die Platte mit der Kavit&auml;t (Absatz <i>Form aus dem Blister</i> weiter unten).</dd>
+Genauigkeit bedeuten, steht in den Abs&auml;tzen darunter. Die <b>Tiefziehform</b> hat seit dem 03.10.2026 ihren eigenen Knopf <b>Form</b> in der Fu&szlig;leiste: dasselbe Fenster, aber nur mit ihren Stufen &mdash; <i>1 Blister-Modell laden, 2 Form ableiten, 3 Programm, 4 Vakuumbohrungen, 5 R&uuml;ckseite</i>. Im STEP-Fenster stehen diese Zeilen nicht mehr (Absatz <i>Form aus dem Blister</i> weiter unten).</dd>
 <dt id="ba-fk05c-aufspannung">Aufspannung &mdash; welche Seite nach unten</dt><dd>Beim Drehen gibt es zwei Lagen, beim Fr&auml;sen sechs. Die App bewertet alle
 sechs, sobald ein Modell geladen ist, und zeigt sie als Tafel unter dem Bild. Die Regel dahinter ist die aus der Werkstatt: <b>die gr&ouml;&szlig;te ebene Fl&auml;che
 zeigt nach unten</b>, damit das Teil satt aufliegt und nicht federt &mdash; und in dieser ersten Aufspannung soll m&ouml;glichst viel fertig werden. Die Spalten
@@ -3997,7 +4009,7 @@ her. Wie die Sollform wird die Rohform nicht mit dem Programm gespeichert; nach 
 Zapfen, Bohrungen und den Steuerungszyklen &mdash; die kennen nur die BLK FORM.</dd>
 <dt id="ba-fk05c-form">Form aus dem Blister &mdash; die Tiefziehform aus dem Modell des Teils (20.09.2026)</dt><dd>Eine Blisterverpackung wird in einer
 Platte tiefgezogen. Das Modell, das vom Auftraggeber kommt, ist meist das <b>fertige Teil</b> und nicht die Form &mdash; die muss man selbst herstellen. Genau das macht der Knopf
-<b>Form ableiten</b> in der Zeile <i>Form aus Blister</i>: das Teil wird nach unten in die Form gezogen, also ist die Kavit&auml;t genau die <b>Au&szlig;enfl&auml;che</b> des Blisters.
+<b>Form ableiten</b> im Fenster <b>Form</b> (Fu&szlig;leiste, Stufe 2): das Teil wird nach unten in die Form gezogen, also ist die Kavit&auml;t genau die <b>Au&szlig;enfl&auml;che</b> des Blisters.
 Die App nimmt daf&uuml;r die <b>untere H&uuml;lle</b> des Modells (f&uuml;r jeden Rasterpunkt die tiefste Fl&auml;che, die dar&uuml;ber liegt), legt sie in eine Platte und gibt beides
 an das Programm: die Platte wird die BLK FORM, die Kavit&auml;t die Sollform. Danach l&auml;uft der ganze &uuml;brige Weg wie bei jedem Modell &mdash; <i>Programm vorschlagen</i>, abspanen,
 schlichten, simulieren. <b>Die Lage dreht die App notfalls selbst:</b> die Bewertung der Aufspannung stellt einen Blister von sich aus mit dem Flansch
@@ -4150,6 +4162,7 @@ Kehle ist, was dessen Werkzeug stehen l&auml;sst) und ein Werkzeug mit kleinerem
 Planer h&auml;ngt ihn von selbst hinter das Schlichten, wenn in der Tabelle ein kleinerer Kugelfr&auml;ser steht &mdash; und nennt sonst die
 Kehlenfl&auml;che. Bleibt auch danach eine Kehle, folgt der n&auml;chstkleinere Kugel- oder Eckenradiusfr&auml;ser der Tabelle (h&ouml;chstens zwei weitere Runden). Was auch der kleinste nicht erreicht, bleibt stehen und steht im Restmaterialbericht der
 Simulation. Am Programmierplatz und an der Maschine ist der Schritt noch nicht gelaufen.</dd>
+<dt id="ba-fk05d-kontakt">Gefahren wird, wo die Kugel ber&uuml;hrt (03.10.2026)</dt><dd>Eine Kugel R ber&uuml;hrt eine Schr&auml;ge nicht unter ihrer Mitte, sondern um R&middot;sin&alpha; seitlich versetzt (R5 auf 45&nbsp;Grad: 3,5&nbsp;mm). Die Bahn w&auml;hlt ihre Stellen deshalb nach dem <b>Ber&uuml;hrpunkt</b>: gefahren wird, wo die Fl&auml;che, die die Kugel dort ber&uuml;hrt, im Winkelband liegt. Oben an einer Kante endet die Zeile, sobald die Schr&auml;ge fertig ist &mdash; vorher lief die Mitte bis auf die Kante, und die Kugel rollte die letzten Millimeter nur dar&uuml;ber (Rampenblock: 7,6 statt 6,8&nbsp;min, gleiches Restmaterial).</dd>
 <dt id="ba-fk05d-kante">&Uuml;ber die Teilkante hinaus</dt><dd>Eine runde Schneide ber&uuml;hrt eine
 geneigte Fl&auml;che nicht unter sich, sondern seitlich versetzt &mdash; bei einem Kugelfr&auml;ser R5 auf
 45&nbsp;Grad um 3,5&nbsp;mm. Endet die Fl&auml;che an einer Kante und darf die Werkzeugmitte nicht
@@ -15433,13 +15446,16 @@ function fSollfeldRand(F, mm){
   const nx = F.nx + 2 * m, ny = F.ny + 2 * m;
   const h = new Float32Array(nx * ny), quelle = new Uint8Array(nx * ny);
   h.fill(F.unten);
+  // F.wer auf das gerandete Gitter umrechnen [03.10.2026]: Object.assign nahm die
+  // ALTE Liste mit, deren Index zu einem anderen nx gehoert.
+  const wer = F.wer ? new Int32Array(nx * ny).fill(-1) : null;
   for(let j = 0; j < F.ny; j++) for(let i = 0; i < F.nx; i++){
     const c = (j + m) * nx + (i + m), o = j * F.nx + i;
-    h[c] = F.h[o]; quelle[c] = F.quelle[o];
+    h[c] = F.h[o]; quelle[c] = F.quelle[o]; if(wer) wer[c] = F.wer[o];
   }
   return Object.assign({}, F, {x0:F.x0 - m * F.raster, y0:F.y0 - m * F.raster,
     x1:F.x1 + m * F.raster, y1:F.y1 + m * F.raster,
-    nx:nx, ny:ny, h:h, quelle:quelle, __rand:m});
+    nx:nx, ny:ny, h:h, quelle:quelle, wer:wer, __rand:m});
 }
 
 function fBahnSchlichten(s, tool, prog){
@@ -15578,6 +15594,7 @@ function fBahnSchlichten(s, tool, prog){
   // im Teil soll die Bahn nicht mitnehmen. Und nur in Reichweite - sonst
   // faehrt sie rundum ins Leere.
   let nUeber = 0;   // der Ueberlauf faellt erst mit der Versatzflaeche (s. u.)
+  const gutBand = gut.slice();   // die Stellen im Winkelband, vor Ueberlauf und Beruehrpunkt (s. u.)
   // Bahnabstand aus der Rautiefe: h = s²/(8r) beim Kugelfraeser, also
   // s = wurzel(8 r h) LAENGS der Flaeche. Waagerecht gemessen ist der
   // Abstand auf einer Schraege um cos alpha kleiner — gerechnet wird mit der
@@ -15645,6 +15662,71 @@ function fBahnSchlichten(s, tool, prog){
         }
       }
     }
+  }
+  // DER BERUEHRPUNKT ENTSCHEIDET, NICHT DIE MITTE [03.10.2026, Daniels Befund am
+  // Rampenblock: "fraest ja mit dem Schneidenradius, muss ja gar nicht so weit
+  // hochziehen"]. Eine Kugel R beruehrt eine Schraege um R*sin(alpha) seitlich
+  // versetzt. Gewaehlt wurden die Stellen bisher nach der Neigung UNTER DER
+  // MITTE: oben lief die Mitte bis auf die Kante (am Rampenblock X 18,15, die
+  // letzten 3,5 mm rollte die Kugel nur ueber die Kante), unten hoerte sie
+  // 3,5 mm vor dem Fuss auf. Jetzt bekommt jede Mittelstellung ihren
+  // Beruehrpunkt (das Maximum ueber die Werkzeugkappe, dieselbe Rechnung wie die
+  // Versatzflaeche), und gefahren wird, wo DER im Winkelband liegt.
+  {
+    const kugelig = !stirn || stirn.art === "kugel" || !(stirn.rt > rk);
+    const reichK = kugelig ? rk : stirn.rt;
+    const hebeK = kugelig ? (d2) => Math.sqrt(Math.max(0, rk * rk - d2)) : (d2) => rk - fStirnHoehe(stirn, Math.sqrt(d2));
+    const kk = Math.max(1, Math.round(reichK / r)), oi = [], oj = [], oh = [];
+    for(let b2 = -kk; b2 <= kk; b2++) for(let a2 = -kk; a2 <= kk; a2++){ const d2 = (a2 * a2 + b2 * b2) * r * r; if(d2 > reichK * reichK) continue; oi.push(a2); oj.push(b2); oh.push(hebeK(d2)); }
+    let nNeu = 0, nWeg = 0; const gut2 = new Uint8Array(nx * ny);
+    const medC = new Int8Array(nx * ny);   // 0 = ungerechnet, 1 = im Band, -1 = nicht
+    // Am liebsten die Neigung der FLAECHE, auf der der Beruehrpunkt liegt (Median ueber
+    // ihre Zellen): die erste Plateauzelle hinter einer Rampe liest im Gefaelle bis
+    // 14 Grad mit, ihre Flaeche ist waagerecht. Ohne Flaechenkennung der 3x3-Median.
+    const flMed = {};
+    if(F.wer){
+      const lis = {}; for(let q = 0; q < nx * ny; q++){ const w = F.wer[q]; if(w >= 0 && F.quelle[q]) (lis[w] = lis[w] || []).push(NF[q]); }
+      for(const w in lis){ const a = lis[w].sort((x, y) => x - y); flMed[w] = a[Math.floor(a.length / 2)]; }
+    }
+    const bandMed = (q) => {
+      if(medC[q]) return medC[q] > 0;
+      if(F.wer && F.wer[q] >= 0 && flMed[F.wer[q]] != null){
+        const md0 = flMed[F.wer[q]];
+        const ok0 = !(md0 > grenz + F_WINKEL_TOL) && !(grenzU > 0 && md0 < grenzU - F_WINKEL_TOL);
+        medC[q] = ok0 ? 1 : -1; return ok0;
+      }
+      const qi = q % nx, qj = Math.floor(q / nx), w = [];
+      for(let b2 = -1; b2 <= 1; b2++) for(let a2 = -1; a2 <= 1; a2++){
+        const ii = qi + a2, jj = qj + b2; if(ii < 0 || jj < 0 || ii >= nx || jj >= ny) continue;
+        const qq = jj * nx + ii; if(F.quelle[qq]) w.push(NF[qq]);
+      }
+      w.sort((x, y) => x - y); const md = w.length ? w[Math.floor(w.length / 2)] : NF[q];
+      const ok = !(md > grenz + F_WINKEL_TOL) && !(grenzU > 0 && md < grenzU - F_WINKEL_TOL);
+      medC[q] = ok ? 1 : -1; return ok;
+    };
+    for(let j = 0; j < ny; j++) for(let i = 0; i < nx; i++){
+      const c = j * nx + i;
+      if(!isFinite(BF[c])) continue;
+      if(!F.quelle[c] && !(F.__rand && gut[c])) continue;   // neben dem Teil nur, wo der Ueberlauf es erlaubt
+      let m = -Infinity, best = -1;
+      for(let t = 0; t < oi.length; t++){
+        const ii = i + oi[t], jj = j + oj[t];
+        if(ii < 0 || jj < 0 || ii >= nx || jj >= ny) continue;
+        const q = jj * nx + ii; if(!F.quelle[q]) continue;
+        const v = F.h[q] + oh[t];
+        if(v > m + 1e-9){ m = v; best = q; }
+      }
+      // Die Neigung am Beruehrpunkt als MEDIAN der 3x3-Nachbarschaft: die erste
+      // Zelle hinter einer Kante traegt im Gefaelle die Nachbarin mit (eine
+      // Plateauzelle an der Rampe liest 25 Grad) - ihr Median ist das Plateau.
+      // An der Blisterform fallen so 22610 Stellen weg - dort lag die Kugel nur auf der
+      // 85-Grad-Wand und erreichte den Boden nicht; gleiches Restmaterial, 60 statt 79 min.
+      if(best >= 0 && gutBand[best] && bandMed(best)){ gut2[c] = 1; if(!gut[c]) nNeu++; }
+      else if(gut[c]) nWeg++;
+    }
+    let n2 = 0; for(let c = 0; c < nx * ny; c++) n2 += gut2[c];
+    if(n2){ gut.set(gut2); if(nWeg || nNeu) warn.push('Gefahren wird, wo die Kugel die Flaeche im Winkelband BERUEHRT, nicht wo ihre Mitte darueber steht: '
+      + nWeg + ' Rasterstelle(n) fallen weg (die Kugel rollte dort nur ueber eine Kante), ' + nNeu + ' kommen dazu (Fuss einer Schraege).'); }
   }
   if(nUeber) warn.push('Die Bahn laeuft an ' + nUeber + ' Rasterstelle(n) UEBER DIE TEILKANTE hinaus '
     + '(bis ' + fRund(rt) + ' mm, der Werkzeugradius) - nur an den Kanten, an denen die bearbeitete '
@@ -20240,6 +20322,7 @@ const F_BAHNBERICHT = [
   /^BOEDEN UND WAENDE SCHLICHTEN:/,
   /^\d+ Kantensegment\(e\) mit Hoehensprung/,
   /^\d+ Eilgang\/Eilgaenge der Wandbahn liegen hoeher/,   // Anfahrt ueber Rest am Wandfuss (03.10.2026)
+  /^Gefahren wird, wo die Kugel die Flaeche im Winkelband BERUEHRT/,   // 03.10.2026
 ];
 
 // Die Schrittnummer steht vorn ("Schritt 2: ..."); fuer die Einteilung
@@ -20632,7 +20715,7 @@ function fArbeitsplanRender(){
       if(d.start){
         if(d.start === 'weiter'){ const L = fLetzterStand(); if(L){ fProgrammSetzen(L.prog); melde('Weiter mit ' + L.prog.kopf.name + '.'); } }
         else if(d.start === 'vorlagen'){ fProgListe(); fVorlagenListe(); try{ fPoZeigen(); }catch(e){} setVal('pmSaveName', fProg.kopf.name); maskZeigen('maskProgramme'); }
-        else if(d.start === 'step'){ maskZeigen('maskStep'); setTimeout(()=>{ try{ fStepBericht(); fStepPlanMalen(); fStepZeichnen(); }catch(e){} }, 0); }
+        else if(d.start === 'step'){ fStepOeffnen('step'); }
         else if(d.start === 'kopf'){ fKopfOeffnen(); }
         return;
       }
@@ -24762,6 +24845,22 @@ function fStepZweiteAufspannung(){
         R.plan.schritte.map((sp, i) => (i + 1) + '. ' + (sp.text || sp.art)).join('; ') + '. ' + abgelegt + R.hinweise.join(' '));
   return true;
 }
+// EIN FENSTER, ZWEI GESICHTER [03.10.2026, Daniels Ansage]: STEP-Modell (abspanen) und
+// Tiefziehform aus dem Blister. Der Modus blendet die Stufen des anderen aus (F03); die
+// Rechnung dahinter ist dieselbe, deshalb kein zweites Fenster.
+function fStepModus(m){
+  const mk = document.getElementById('maskStep'); if(!mk) return;
+  const form = (m === 'form');
+  try{ mk.dataset.modus = form ? 'form' : 'step'; }catch(e){}
+  if(mk.setAttribute) mk.setAttribute('data-modus', form ? 'form' : 'step');
+  const t = mk.querySelector ? mk.querySelector('.mtitel') : null;
+  if(t) t.textContent = form ? 'TIEFZIEHFORM AUS DEM BLISTER' : 'STEP-MODELL';
+}
+function fStepOeffnen(m){
+  fStepModus(m);
+  maskZeigen('maskStep');
+  setTimeout(()=>{ try{ fStepBericht(); fStepPlanMalen(); fStepZeichnen(); }catch(e){} }, 0);
+}
 function fStepVakuum(){
   if(!STEP.form || !STEP.form.ok || !STEP.form.F){
     melde('Erst die Form ableiten — die Vakuumbohrungen brauchen die Kavitaet, nicht das Modell des Blisters.');
@@ -24968,7 +25067,8 @@ function fStepRohUebernehmen(){
 }
 {
   const on = (id, fn) => { const el = document.getElementById(id); if(el) el.onclick = fn; };
-  on('hskStep', ()=>{ maskZeigen('maskStep'); setTimeout(()=>{ try{ fStepBericht(); fStepPlanMalen(); fStepZeichnen(); }catch(e){} }, 0); });
+  on('hskStep', ()=>fStepOeffnen('step'));
+  on('hskForm', ()=>fStepOeffnen('form'));
   on('btnStepZu', ()=>maskZu('maskStep'));
   // Stufenleiste (19.09.2026): die Einzelknoepfe liegen in einer Klappe, der i-Knopf springt in die Anleitung.
   on('btnStepEinzeln', ()=>{ const e = document.getElementById('stepEinzeln'); if(!e) return; const zu = e.style.display === 'none'; e.style.display = zu ? '' : 'none'; const b = document.getElementById('btnStepEinzeln'); if(b) b.classList.toggle('primary', zu); });

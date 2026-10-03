@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="03.10.2026 18:17 (c1bf62d8)";</script>
+<script>window.__DZ_STAND="03.10.2026 20:43 (9fffa756)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16163,7 +16163,10 @@ function refreshArbeitsplan(){
     });
     body.appendChild(row);
   });
-  konturenBei(programSteps.length);    // und was hinter dem letzten Schritt steht
+  // und was hinter dem letzten Schritt steht. OHNE Schritte ist "hinter dem letzten"
+  // dieselbe Stelle wie "vor dem ersten" (0) - dort stand jede Kontur ZWEIMAL im
+  // Arbeitsplan (Daniels Befund 03.10.2026, neues Programm mit einer Kontur).
+  if(programSteps.length) konturenBei(programSteps.length);
   // PROGRAMMENDE [ShopTurn-Bildversion, Bild 10-41]: die Liste
   // schliesst mit der Gesamtzeit ab. Nur wenn es etwas zu summieren
   // gibt — eine leere Liste braucht kein Ende.
@@ -41516,6 +41519,17 @@ function siDrehProgramm(opt){
   kom('ERSTEN LAUF IM EINZELSATZ FAHREN UND JEDEN SATZ PRUEFEN.');
   kom('Rohteil ' + siZ(stock) + ' x ' + siZ(za - feld('pkZI', -100)) + ' mm');
 
+  // GLIEDERUNG WIE BEI DEN MONFORTS [Daniel, 03.10.2026: "diese
+  // Uebersichtlichkeit, also mit den Leerzeilen und Absaetzen"]: Kopf,
+  // Zielmaschine mit Werkzeugliste, Trennlinie, dann je Schritt ein Block mit
+  // Leerzeile davor. Leerzeilen sind an der 810T erprobt: die Sicherung der
+  // Steuerung von 2020 traegt sie mitten in gelaufenen Programmen (25 von 146
+  // Dateien). Die 840D liest eine Leerzeile als leeren Satz.
+  const leer = () => { L.push(''); };
+  leer();
+  kom('=== ZIELMASCHINE: ' + S.label + ' ===');
+  kom('WERKZEUGE - VOR DEM START GEGEN DIE WERKZEUGKORREKTUR PRUEFEN');
+
   // Die WERKZEUGUEBERSICHT [Daniel, Termin 18.09.2026]: die Steuerung prueft
   // gegen das Werkzeug, das auf dem Platz steckt. Stimmen App-Tabelle und
   // Maschinentabelle nicht ueberein, meldet die Steuerung zu Recht - und man
@@ -41532,6 +41546,9 @@ function siDrehProgramm(opt){
       });
     });
   }
+  leer();
+  kom('='.repeat(55));
+  leer();
 
   // G18 ist beim Drehen die Bearbeitungsebene (840D-Zyklenhandbuch Kap. 4.2:
   // "In der Regel wird es sich beim Drehen um die G18 (ZX-Ebene) handeln").
@@ -41562,7 +41579,12 @@ function siDrehProgramm(opt){
   let aktT = null;
   schritte.forEach((st, idx) => {
     const p = st.params || {};
-    kom('--- SCHRITT ' + (idx+1) + ': ' + siSchrittName(st) + ' ---');
+    // Der Kopf traegt BEWUSST keinen Doppelpunkt hinter der Nummer:
+    // berechneHauptzeiten (94-dnc.js) erkennt die Schrittgrenzen der Monforts
+    // an "=== SCHRITT n:" und liefe sonst ueber den Siemens-Text, dessen
+    // Zyklen es nicht lesen kann.
+    leer();
+    kom('=== SCHRITT ' + (idx+1) + ' - ' + siSchrittName(st) + ' ===');
 
     // Werkzeugwechsel: vorher auf den Wechselpunkt, wie bei den Monforts
     // (Daniels Ansage 10.09.2026: "wenn ein Werkzeug neu eingewechselt werden
@@ -41602,6 +41624,8 @@ function siDrehProgramm(opt){
   });
 
   // ---- Fuss ----------------------------------------------------------------
+  leer();
+  kom('=== PROGRAMMENDE ===');
   satz('G0 X' + siZ(wwpX) + ' Z' + siZ(wwpZ));
   satz('M5');
   satz('M9');
