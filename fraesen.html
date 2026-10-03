@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="03.10.2026 15:23 (d0971ca1)";</script>
+<script>window.__DZ_STAND="03.10.2026 18:17 (c1bf62d8)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3673,6 +3673,7 @@ waagerechten Fl&auml;chen). Der <b>Nullpunkt</b> liegt wahlweise in der Ecke ode
 in der Mitte, die Oberkante des Teils immer auf Z0, so wie ein Fr&auml;steil aufgespannt wird.</dd>
 <dt>Als Rohteil &uuml;bernehmen</dt><dd>Schreibt den H&uuml;llquader des ausgerichteten Modells als <b>BLK FORM</b> in den Programmkopf. Aufma&szlig; f&uuml;r das echte
 Rohteil kommt danach von Hand dazu.</dd>
+<dt id="ba-fk05c-planer-d">Was der Planer w&auml;hlt (03.10.2026)</dt><dd><b>Zustellung D</b> nach dem Werkzeug: ein Viertel des Durchmessers in halben Millimetern, h&ouml;chstens 5&nbsp;mm, nie mehr als 80&nbsp;% der Schneidenl&auml;nge (&#x2300;20: 5, &#x2300;16: 4, &#x2300;10: 2,5, &#x2300;6: 1,5). Vorher stand D fest auf 2&nbsp;mm. <b>Nachsetzen:</b> nach dem Abspanen probiert der Planer auch Fr&auml;ser, die breiter sind als der stehengebliebene Streifen &mdash; an einer Wand steht das Werkzeug zur H&auml;lfte in der Luft; was weniger als 5&nbsp;% bringt, kommt nicht ins Programm. <b>Steile Schr&auml;gen</b> (zum Beispiel Formschr&auml;gen von 85&nbsp;Grad) schlichtet der Schritt <i>Schr&auml;gen schlichten</i> Z-konstant, auch wenn im Band 5 bis 45&nbsp;Grad nichts liegt. <b>B&ouml;den &amp; W&auml;nde</b> k&uuml;rzt ein offenes Wandst&uuml;ck an den Enden, wenn das Werkzeug dort in der Nachbarwand st&uuml;nde, statt die ganze Wand auszulassen.</dd>
 <dt id="ba-fk05c-reihenfolge">Programm vorschlagen &mdash; die Reihenfolge</dt><dd>Der Knopf macht in einem Zug, was die beiden Knöpfe daneben
 einzeln tun, und bringt es in die <b>Reihenfolge, in der man f&auml;hrt</b>. Vier Phasen, jede mit ihrem Grund:
 <br><b>1 Planen</b> &mdash; die Oberfl&auml;che zuerst; erst dann stimmen alle Tiefen, und ein Bohrer wandert nicht auf der S&auml;gehaut.
@@ -4147,7 +4148,7 @@ mit derselben Zeilenbahn wie das Schlichten &mdash; die Zeilen laufen quer zum G
 dem Bahnabstand aus der Rautiefe. <b>Der Schritt braucht einen Schritt &bdquo;Schr&auml;gen schlichten&ldquo; davor</b> im Arbeitsplan (die
 Kehle ist, was dessen Werkzeug stehen l&auml;sst) und ein Werkzeug mit kleinerem Eckenradius; sonst sagt er, warum er nichts tut. Der
 Planer h&auml;ngt ihn von selbst hinter das Schlichten, wenn in der Tabelle ein kleinerer Kugelfr&auml;ser steht &mdash; und nennt sonst die
-Kehlenfl&auml;che. Was auch der kleine nicht erreicht (Kehlen enger als sein Radius), bleibt stehen und steht im Restmaterialbericht der
+Kehlenfl&auml;che. Bleibt auch danach eine Kehle, folgt der n&auml;chstkleinere Kugel- oder Eckenradiusfr&auml;ser der Tabelle (h&ouml;chstens zwei weitere Runden). Was auch der kleinste nicht erreicht, bleibt stehen und steht im Restmaterialbericht der
 Simulation. Am Programmierplatz und an der Maschine ist der Schritt noch nicht gelaufen.</dd>
 <dt id="ba-fk05d-kante">&Uuml;ber die Teilkante hinaus</dt><dd>Eine runde Schneide ber&uuml;hrt eine
 geneigte Fl&auml;che nicht unter sich, sondern seitlich versetzt &mdash; bei einem Kugelfr&auml;ser R5 auf
@@ -10248,6 +10249,17 @@ function fPlanFlaechenBefund(A, F, winkelMin, winkelMax, loecher){
 // der globalen Ablage; hier wird sie geliehen und danach zurueckgegeben -
 // sonst haengt sie hinterher am falschen Feld.
 var F_PLAN_PROBE = null;
+// D ZUSTELLUNG NACH DEM WERKZEUG [03.10.2026, Daniel zu Bauteil-2: "stell die
+// Zustellung einfach mal auf 5 mm"]. Fest stand 2 mm fuer jedes Werkzeug - ein
+// ⌀20 schruppte ein 114 mm tiefes Teil in 57 Ebenen (833 min). Jetzt ein Viertel
+// des Durchmessers in halben Millimetern, hoechstens 5, mindestens 1, und nie
+// mehr als 80 % der Schneidenlaenge: ⌀20 -> 5, ⌀16 -> 4, ⌀10 -> 2,5, ⌀6 -> 1,5.
+function fPlanZustellung(w){
+  const d = +(w && w.d) || 0, lc = +(w && w.lcuts) || 0;
+  let z = Math.max(1, Math.min(5, Math.round(d * 0.25 * 2) / 2));
+  if(lc > 0) z = Math.min(z, Math.max(0.5, Math.floor(lc * 0.8 * 2) / 2));
+  return fRund(z);
+}
 function fPlanBahnProbe(prog, tool, werte, F){
   const schluessel = [tool.nr, tool.d, werte.tiefe, werte.q203, werte.aufSeite, werte.aufTiefe,
                       werte.zust, werte.ae, werte.aeArt, werte.ueberl, werte.dVor].join('|');
@@ -10351,8 +10363,9 @@ function fPlanFlaechen(prog, A, F){
       .sort((a, b) => (+b.d || 0) - (+a.d || 0));
     let wahl = null, bahn = null, ersterGrund = '';
     for(let q = 0; q < fr.length; q++){
-      const b = fPlanBahnProbe(prog, fr[q], grundWerte, F);
-      if(b && b.ok){ wahl = fr[q]; bahn = b; break; }
+      const wq = Object.assign({}, grundWerte, {zust:fPlanZustellung(fr[q])});
+      const b = fPlanBahnProbe(prog, fr[q], wq, F);
+      if(b && b.ok){ wahl = fr[q]; bahn = b; Object.assign(grundWerte, wq); break; }
       if(!ersterGrund && b && b.grund) ersterGrund = b.grund;
     }
     if(!wahl){
@@ -10382,15 +10395,23 @@ function fPlanFlaechen(prog, A, F){
       const saum = F ? F.raster * 1.5 : 0;
       let vorher = wSchrupp2, bAkt = bahn, runden = 0;
       let versuche = 0;
-      while(bAkt && bAkt.ok && bAkt.rest > 0 && runden < 3 && versuche < 6){
+      while(bAkt && bAkt.ok && bAkt.rest > 0 && runden < 4 && versuche < 7){
         versuche++;
-        if(bAkt.restBreit <= saum){
+        // Ein Streifen, nicht breiter als Seitenaufmass plus Rasterweite, ist das, was
+        // Boeden & Waende ohnehin wegnimmt - dafuer kein eigener Nachsetzer [03.10.2026].
+        if(bAkt.restBreit <= Math.max(saum, (+grundWerte.aufSeite || 0) + (F ? F.raster : 0))){
           hinweise.push('Nach dem Abspanen bleibt nur ein Saum von ' + bAkt.restBreit +
-            ' mm (Arbeitsraster ' + fRund(F ? F.raster : 0) + ' mm) — das ist Rechengenauigkeit, kein Nachsetzen noetig.');
+            ' mm (Arbeitsraster ' + fRund(F ? F.raster : 0) + ' mm, Seitenaufmass ' + fRund(+grundWerte.aufSeite || 0) + ' mm) — das ist Rechengenauigkeit oder der Streifen, den Boeden & Waende wegnimmt; kein Nachsetzen noetig.');
           break;
         }
         const kand = fr.filter(w => (+w.d || 0) < (+vorher.d || 0));
-        const passt = kand.filter(w => (+w.d || 0) <= bAkt.restBreit + 0.001)[0];
+        // DIE BREITE IST NICHT DER SPALT [03.10.2026, Testkampagne Fraesen, Uebung-1]:
+        // restBreit misst das stehengebliebene MATERIAL. Ein Streifen von 3,6 mm an
+        // einer Wand holt auch ein ⌀6 - daneben ist geraeumt, das Werkzeug steht
+        // zur Haelfte in der Luft (Simulation: ⌀6 erreicht 100 %). Passt keiner in
+        // die Breite, wird trotzdem der groesste kleinere probiert; ob er etwas
+        // bringt, entscheidet die Probe darunter (5 %).
+        const passt = kand.filter(w => (+w.d || 0) <= bAkt.restBreit + 0.001)[0] || kand[0];
         if(!passt){
           hinweise.push('Nach dem Abspanen bleiben ' + bAkt.flaeche + ' mm2 stehen, bis ' + bAkt.restMax +
             ' mm hoch und ' + bAkt.restBreit + ' mm breit — der kleinste Fraeser mit Eintauchwinkel in der Tabelle ist ⌀' +
@@ -10399,7 +10420,7 @@ function fPlanFlaechen(prog, A, F){
         }
         // dVor bleibt im Schritt: die Probe (kein Vorgaenger im Programm)
         // rechnet damit; im Arbeitsplan gilt die Kette zum Schritt davor.
-        const werteR = Object.assign({}, grundWerte, {dVor:fRund(+vorher.d || 0), restAb:0});
+        const werteR = Object.assign({}, grundWerte, {dVor:fRund(+vorher.d || 0), restAb:0, zust:fPlanZustellung(passt)});
         schritte.push({art:'modellRest', t:passt.nr, werte:werteR,
           text:'Restmaterial abspanen (' + bAkt.flaeche + ' mm2, bis ' + bAkt.restBreit + ' mm breit), Fraeser ' + passt.nr + ' (⌀' + passt.d + ')'});
         // Der Stand, den die Schlichtbahn braucht, ist der NACH dem letzten
@@ -10452,7 +10473,7 @@ function fPlanFlaechen(prog, A, F){
     try{
       const GP = fModellGitter(F, k, 0);
       const zNach = fRund(B ? B.z1 : (+k.z1 || 0));
-      for(let q = 0; q < GP.nx * GP.ny; q++) if(GP.imRoh[q] && GP.stand[q] > zNach) GP.stand[q] = zNach;
+      for(let q = 0; q < GP.nx * GP.ny; q++) if(GP.imRoh[q] && GP.stand[q] > zNach){ GP.stand[q] = zNach; if(GP.hoch) GP.hoch[q] = zNach; }
       F.standG = GP; F.standTol = 0;          // 0 = die Bahn nimmt den Kugelradius
     }catch(e){ /* kein Stand ist besser als ein falscher */ }
   }
@@ -10469,7 +10490,7 @@ function fPlanFlaechen(prog, A, F){
   //     sie gibt es nur den Boden, und das sagt die Bahn selbst.
   if(F && wLetzt && werteSchrupp && ((+werteSchrupp.aufSeite || 0) > 0 || (+werteSchrupp.aufTiefe || 0) > 0)){
     schritte.push({art:'modellSchlichtenEben', t:wLetzt.nr, werte:{
-      q203:werteSchrupp.q203, tiefe:werteSchrupp.tiefe, zust:fRund(+werteSchrupp.zust || 2), ebWas:'beide', ausgabe:'einzel'},
+      q203:werteSchrupp.q203, tiefe:werteSchrupp.tiefe, zust:fPlanZustellung(wLetzt), ebWas:'beide', ausgabe:'einzel'},
       text:'Boeden und Waende schlichten (Aufmass ' + fRund(+werteSchrupp.aufSeite || 0) + ' seitlich / ' + fRund(+werteSchrupp.aufTiefe || 0) + ' am Boden weg), Fraeser ' + wLetzt.nr + ' (⌀' + wLetzt.d + ')'});
   }
 
@@ -10477,7 +10498,21 @@ function fPlanFlaechen(prog, A, F){
   //     liegt — sonst schlichtet ein Kugelfraeser 93 Prozent Ebene.
   const wKugel = fPlanFraeser(prog, 'kugel');
   const anteil = bef.zellen ? Math.round(bef.imBand / bef.zellen * 100) : 0;
-  if(F && bef.imBand > 0 && wKugel){
+  // STEILE SCHRAEGEN [03.10.2026, Testkampagne Fraesen, blister-teil]: Waende mit
+  // Formschraege (85 Grad) sind keine senkrechten Waende fuer "Boeden & Waende" und
+  // liegen ueber dem Band 5 bis 45 Grad - geschlichtet hat sie niemand, an jeder
+  // Napfwand blieb das Aufmass samt Treppe stehen (bis 13 mm). Der Schritt
+  // "Schraegen schlichten" faehrt alles steiler als sein Band Z-konstant; er wird
+  // deshalb auch angelegt, wenn nur solche Flaechen da sind (gezaehlt am Modell:
+  // ebene Flaechen zwischen Bandende und 89,5 Grad).
+  const steileFl = (A && A.flaechen ? A.flaechen : []).filter(fl => fl.lage === 'schraege' && +fl.neigung > wMax + 0.5 && +fl.neigung < 89.5).length;
+  if(F && wKugel && !(bef.imBand > 0) && steileFl > 0){
+    schritte.push({art:'modellSchlichten', t:wKugel.nr, werte:{
+      q203:fRund(B ? B.z1 : (+k.z1 || 0)), tiefe:fRund(zTief - (B ? B.z1 : 0)),
+      winkelMin:wMin, winkel:wMax, rautiefe:0.01, tolBahn:0.005, strategie:2, ausgabe:'einzel'},
+      text:'Steile Schraegen schlichten (' + steileFl + ' ebene Flaeche(n) steiler als ' + wMax + ' Grad, Z-konstant), ' + (fWerkzeugStirn(wKugel).art === 'kugel' ? 'Kugelfraeser ' : 'Eckenradiusfraeser R' + fRund(+wKugel.r2 || 0) + ' ') + wKugel.nr + ' (⌀' + wKugel.d + ')'});
+  }
+  else if(F && bef.imBand > 0 && wKugel){
     schritte.push({art:'modellSchlichten', t:wKugel.nr, werte:{
       q203:fRund(B ? B.z1 : (+k.z1 || 0)), tiefe:fRund(zTief - (B ? B.z1 : 0)),
       winkelMin:wMin, winkel:wMax, rautiefe:0.01, tolBahn:0.005, strategie:2, ausgabe:'einzel'},
@@ -10500,6 +10535,21 @@ function fPlanFlaechen(prog, A, F){
             q203:fRund(B ? B.z1 : (+k.z1 || 0)), tiefe:fRund(zTief - (B ? B.z1 : 0)), rautiefe:0.01, tolBahn:0.005, ausgabe:'einzel'},
           text:'Kehlen nachschlichten (nach R' + fRund(+wKugel.r2) + ' bleiben ' + K.flaeche + ' mm2 bis ' + K.maxRest + ' mm in Kehlen), Kugelfraeser R' + fRund(+kleiner.r2) + ' (' + (kleiner.name || ('T' + kleiner.nr)) + ')'});
         else hinweise.push('KEHLEN: nach dem Kugelfraeser R' + fRund(+wKugel.r2) + ' bleiben ' + K.flaeche + ' mm2 in Kehlen stehen (bis ' + K.maxRest + ' mm, bei X' + K.x + ' Y' + K.y + ') - die Tabelle hat keinen kleineren Kugel- oder Eckenradiusfraeser.');
+        // ZWEITE RUNDE [03.10.2026, Testkampagne Fraesen]: was auch der kleinere nicht
+        // erreicht, holt der naechstkleinere - solange die Tabelle einen hat und dort
+        // noch mindestens 1 mm2 steht (hoechstens zwei weitere Runden).
+        let wK = kleiner;
+        for(let rd = 0; kleiner && wK && rd < 2; rd++){
+          const K2 = fKehlenRest(F, +wK.r2, fWerkzeugStirn(wK));
+          if(!K2 || !K2.zellen || K2.flaeche < 1) break;
+          const noch = ((prog && prog.werkzeuge) || []).filter(w => w.art === 'fraeser' && (+w.r2 || 0) > 0 && +w.r2 < +wK.r2 - 1e-9)
+            .sort((a2, b2) => ((+b2.r2 || 0) - (+a2.r2 || 0)) || ((+a2.d || 0) - (+b2.d || 0)))[0];
+          if(!noch){ hinweise.push('KEHLEN: nach R' + fRund(+wK.r2) + ' bleiben ' + K2.flaeche + ' mm2 (bis ' + K2.maxRest + ' mm) - kein kleinerer Kugelfraeser in der Tabelle.'); break; }
+          schritte.push({art:'modellKehlen', t:noch.nr, werte:{
+              q203:fRund(B ? B.z1 : (+k.z1 || 0)), tiefe:fRund(zTief - (B ? B.z1 : 0)), rautiefe:0.01, tolBahn:0.005, ausgabe:'einzel'},
+            text:'Kehlen nachschlichten (nach R' + fRund(+wK.r2) + ' bleiben ' + K2.flaeche + ' mm2 bis ' + K2.maxRest + ' mm), Kugelfraeser R' + fRund(+noch.r2) + ' (' + (noch.name || ('T' + noch.nr)) + ')'});
+          wK = noch;
+        }
       }
     }catch(e){ hinweise.push('Kehlen: Rechnung ausgefallen (' + (e && e.message) + ').'); }
   }
@@ -11619,6 +11669,25 @@ function fStepSollfeld(A, raster, opt){
     if(!eben && !isFinite(G.zMax)) return;
     fStepFuellen(F, G, eben, f.achse, f.ort, r, fi, eben ? null : f.netz);
   });
+  // NAHTLUECKEN [03.10.2026, Testkampagne Fraesen, Bauteil-2]: liegt eine
+  // Zellenmitte genau auf der Naht zweier Flaechen, trifft sie keine von beiden
+  // und traegt die Unterkante (oder die Unterseite des Teils gewinnt sie) - ein Loch von einer Zelle, 50 mm tief, das es im
+  // Teil nicht gibt (der Restmaterialbericht meldete dort 50 mm "stehen
+  // geblieben"). Eine leere Zelle, deren vier Nachbarn ALLE eine Flaeche tragen,
+  // bekommt den hoechsten Nachbarn - zu hoch ist die sichere Seite. Ein echtes
+  // Loch ist breiter als eine Rasterweite und bleibt.
+  if(!unten){
+    for(let j = 1; j < ny - 1; j++) for(let i = 1; i < nx - 1; i++){
+      const q = j * nx + i;
+      const nb = [q - 1, q + 1, q - nx, q + nx];
+      if(!nb.every(c => quelle[c])) continue;
+      // leer, oder nur von einer viel tieferen Flaeche getroffen (die Unterseite
+      // des Teils gewinnt die Zelle, wenn der Boden darueber sie verfehlt)
+      const hMin = Math.min.apply(null, nb.map(c => h[c]));
+      if(quelle[q] && !(h[q] < hMin - 2 * r)) continue;
+      h[q] = Math.max.apply(null, nb.map(c => h[c])); quelle[q] = 2;
+    }
+  }
   for(let q = 0; q < quelle.length; q++){
     if(quelle[q] === 1) exakt++; else if(quelle[q] === 2) geschaetzt++; else if(unten) h[q] = B.z1;
   }
@@ -12648,6 +12717,14 @@ function fModellGitter(F, k, rand, polys){
       G.stand[o + q] = st;
     }
   }
+  // DER VORSICHTIGE STAND [03.10.2026, Testkampagne Fraesen, Bauteil-2 mit D 5]:
+  // eine Zelle gilt im Stand als geraeumt, sobald ihre MITTE im Werkzeug liegt.
+  // Bei 1 mm Arbeitsraster bleibt vom Rest der Zelle bis zu 0,7 mm stehen, und
+  // genau dort sah die Simulation (0,5 mm) eine Stufe 4,9 mm hoeher: ein Eilgang
+  // des Restmaterial-Schritts fuhr hinein. G.hoch zaehlt eine Zelle erst als
+  // geraeumt, wenn sie GANZ im Werkzeug liegt; nur die Eilganghoehen
+  // (fStandMax) lesen ihn - die Bahn selbst entscheidet weiter am Stand.
+  G.hoch = new Float32Array(G.stand);
   // AUSSERHALB DER BEGRENZUNG gilt der Materialstand als Sollhoehe: dort ist
   // nichts abzutragen, also faehrt keine Bahn hin, und der
   // Restmaterialbericht meldet dort auch nichts. Der Stand bleibt stehen,
@@ -12683,6 +12760,7 @@ function fStandStempel(G, x0, y0, x1, y1, rt, z){
       const ex = cx - (x0 + dx * t), ey = cy - (y0 + dy * t);
       if(ex * ex + ey * ey > r2) continue;
       if(St[o + q] > z) St[o + q] = z;
+      if(G.hoch && G.hoch[o + q] > z && Math.sqrt(ex * ex + ey * ey) + r * Math.SQRT1_2 <= rt + 1e-9) G.hoch[o + q] = z;
     }
   }
 }
@@ -12706,7 +12784,7 @@ function fStandAt(G, x, y){
 // ihren Rand) plus die Zugabe, mit der die Kreise laengs der Strecke
 // lueckenlos aneinanderreichen.
 function fStandMax(G, x0, y0, x1, y1, rt){
-  const r = G.raster, St = G.stand;
+  const r = G.raster, St = G.hoch || G.stand;   // der vorsichtige Stand, s. fModellGitter
   const schritt = Math.max(r, rt / 3);
   const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / schritt));
   const sAbt = Math.hypot(x1 - x0, y1 - y0) / n;
@@ -12926,9 +13004,10 @@ function fStandUebernehmen(G, Gp){
       if(!G.imRoh[c]) continue;
       const cx = G.x0 + (i + 0.5) * r;
       const i0 = Math.max(0, Math.floor((cx - r / 2 - Gp.x0) / rp)), i1 = Math.min(Gp.nx - 1, Math.floor((cx + r / 2 - 1e-9 - Gp.x0) / rp));
-      let m = -Infinity;
-      for(let jj = j0; jj <= j1; jj++){ const o = jj * Gp.nx; for(let ii = i0; ii <= i1; ii++){ const v = Gp.stand[o + ii]; if(v > m) m = v; } }
+      let m = -Infinity, mh = -Infinity; const Hp = Gp.hoch || Gp.stand;
+      for(let jj = j0; jj <= j1; jj++){ const o = jj * Gp.nx; for(let ii = i0; ii <= i1; ii++){ const v = Gp.stand[o + ii]; if(v > m) m = v; if(Hp[o + ii] > mh) mh = Hp[o + ii]; } }
       if(m > -Infinity && m < G.stand[c]) G.stand[c] = m;
+      if(G.hoch && mh > -Infinity && mh < G.hoch[c]) G.hoch[c] = mh;
     }
   }
 }
@@ -13123,31 +13202,72 @@ function fBahnSchlichtenEben(s, tool, prog){
       if(polysE && !fImGebiet(polysE, m.x, m.y)){ Z.wandAus++; return; }
       const ktW = {name:kt.name + (geschlossen ? '' : ' Wand'), geschlossen:geschlossen, x0:fRund(S2[0].x0), y0:fRund(S2[0].y0), elemente:S2.map(segZuElement)};
       const o = geschlossen ? fKonturUmlauf(S2) : 0;
-      const sK = Object.assign({}, s, {art:'konturzug', kontur:0, q203:oben, tiefe:fRund(unten - oben), zust:dzW, zustSchl:dzW, umfang:2, aufSeite:0, fSchl:f,
-        fraesart:(+s.bahnSinn < 0) ? -1 : 1, seiteZu:(links === (o > 0)) ? 'innen' : 'aussen', seiteAuf:links ? 'links' : 'rechts'});
-      const b = fBahnKontur(sK, tool, Object.assign({}, prog, {konturen:[ktW]}));
+      // GEKUERZT STATT UEBERSPRUNGEN [03.10.2026, Testkampagne Fraesen, Schraubstock]:
+      // trifft das Werkzeug nur OBEN etwas (Fase oder Rundung an der Nachbarwand), wird
+      // die Wand von UNTER dem tiefsten Treffer an gefahren - vorher fiel die ganze
+      // 126 mm hohe Wand weg, und ihr Aufmass blieb stehen. Trifft es auch dort, faellt
+      // sie wie bisher aus.
+      // Ein OFFENES Wandstueck endet an einer Ecke; dort kann das Werkzeug in die
+      // Nachbarwand reichen. kuerz nimmt an beiden Enden ein gerades Stueck weg.
+      const kontKurz = (kuerz) => {
+        if(!kuerz || geschlossen) return ktW;
+        const S3 = S2.map(sg => Object.assign({}, sg));
+        const a = S3[0], e = S3[S3.length - 1];
+        const lA = Math.hypot(a.x1 - a.x0, a.y1 - a.y0), lE = Math.hypot(e.x1 - e.x0, e.y1 - e.y0);
+        if(a.typ !== 'g' || e.typ !== 'g' || lA <= kuerz + 0.5 || lE <= kuerz + 0.5 || (S3.length === 1 && lA <= 2 * kuerz + 0.5)) return null;
+        a.x0 += (a.x1 - a.x0) * kuerz / lA; a.y0 += (a.y1 - a.y0) * kuerz / lA;
+        e.x1 -= (e.x1 - e.x0) * kuerz / lE; e.y1 -= (e.y1 - e.y0) * kuerz / lE;
+        return {name:ktW.name, geschlossen:false, x0:fRund(S3[0].x0), y0:fRund(S3[0].y0), elemente:S3.map(segZuElement)};
+      };
+      const rechne = (obenX, kuerz) => {
+        const ktX = kontKurz(kuerz); if(!ktX) return {b:{ok:false, grund:'zu kurz', bahn:[]}, sK:{}, treffer:1};
+        const sK = Object.assign({}, s, {art:'konturzug', kontur:0, q203:obenX, tiefe:fRund(unten - obenX), zust:dzW, zustSchl:dzW, umfang:2, aufSeite:0, fSchl:f,
+          fraesart:(+s.bahnSinn < 0) ? -1 : 1, seiteZu:(links === (o > 0)) ? 'innen' : 'aussen', seiteAuf:links ? 'links' : 'rechts'});
+        const b = fBahnKontur(sK, tool, Object.assign({}, prog, {konturen:[ktX]}));
+        if(!b.ok) return {b:b, sK:sK, treffer:0};
+        // Kollisionsblick: im Kreis rt - 0,75 r um jeden Bahnpunkt darf keine Zelle hoeher stehen als seine Ebene.
+        let treffer = 0, x = null, y = null, z = null, erst = null, zMin = Infinity; const R2 = Math.max(0, rt - 0.75 * r);
+        b.bahn.forEach(mm => {
+          const ax = mm.x != null ? mm.x : x, ay = mm.y != null ? mm.y : y, az = mm.z != null ? mm.z : z;
+          if(mm.a === 'vor' && ax != null && az != null && az < obenX - 1e-6 && !(az >= zMin)){
+            const i0 = Math.max(0, Math.floor((ax - R2 - F.x0) / r)), i1 = Math.min(F.nx - 1, Math.ceil((ax + R2 - F.x0) / r));
+            const j0 = Math.max(0, Math.floor((ay - R2 - F.y0) / r)), j1 = Math.min(F.ny - 1, Math.ceil((ay + R2 - F.y0) / r));
+            let hit = false;
+            for(let j = j0; j <= j1 && !hit; j++) for(let i = i0; i <= i1; i++){
+              const cx = F.x0 + (i + 0.5) * r, cy = F.y0 + (j + 0.5) * r;
+              if((cx - ax) * (cx - ax) + (cy - ay) * (cy - ay) > R2 * R2) continue;
+              if(F.quelle[j * F.nx + i] && F.h[j * F.nx + i] > az + 0.05){ hit = true; if(!erst) erst = [ax, ay, az, cx, cy, F.h[j * F.nx + i]]; break; }
+            }
+            if(hit){ treffer++; zMin = Math.min(zMin, az); }
+          }
+          x = ax; y = ay; z = az;
+        });
+        return {b:b, sK:sK, treffer:treffer, erst:erst, zMin:zMin};
+      };
+      let obenW = oben, Rw = rechne(obenW);
+      const b = Rw.b, sK = Rw.sK;
       if(s.__debugWand) s.__debugWand.push({lauf:ktW.name, idx:idx.slice(), geschlossen:geschlossen, links:links, oben:oben, unten:unten, seiteZu:sK.seiteZu, seiteAuf:sK.seiteAuf, start:[ktW.x0, ktW.y0], ok:b.ok, grund:b.grund || ''});
       if(!b.ok){ Z.uebersprungen.push('Wand Z' + oben + '..Z' + unten + ' (' + ktW.name + '): ' + b.grund); return; }
-      // Kollisionsblick: im Kreis rt - 0,75 r um jeden Bahnpunkt darf keine Zelle hoeher stehen als seine Ebene.
-      let treffer = 0, x = null, y = null, z = null, erst = null; const R2 = Math.max(0, rt - 0.75 * r);
-      b.bahn.forEach(mm => {
-        const ax = mm.x != null ? mm.x : x, ay = mm.y != null ? mm.y : y, az = mm.z != null ? mm.z : z;
-        if(mm.a === 'vor' && ax != null && az != null && az < oben - 1e-6 && !treffer){
-          const i0 = Math.max(0, Math.floor((ax - R2 - F.x0) / r)), i1 = Math.min(F.nx - 1, Math.ceil((ax + R2 - F.x0) / r));
-          const j0 = Math.max(0, Math.floor((ay - R2 - F.y0) / r)), j1 = Math.min(F.ny - 1, Math.ceil((ay + R2 - F.y0) / r));
-          for(let j = j0; j <= j1 && !treffer; j++) for(let i = i0; i <= i1; i++){
-            const cx = F.x0 + (i + 0.5) * r, cy = F.y0 + (j + 0.5) * r;
-            if((cx - ax) * (cx - ax) + (cy - ay) * (cy - ay) > R2 * R2) continue;
-            if(F.quelle[j * F.nx + i] && F.h[j * F.nx + i] > az + 0.05){ treffer++; erst = [ax, ay, az, cx, cy, F.h[j * F.nx + i]]; break; }
-          }
+      if(Rw.treffer && isFinite(Rw.zMin) && Rw.zMin - dzW > unten + 1e-6){
+        const R3 = rechne(fRund(Rw.zMin - 0.01));
+        if(R3.b.ok && !R3.treffer){ Z.gekuerzt = (Z.gekuerzt || 0) + 1; Z.gekuerztOrte = (Z.gekuerztOrte || []).concat('Z' + oben + '..Z' + fRund(Rw.zMin)); obenW = fRund(Rw.zMin - 0.01); Rw = R3; }
+      }
+      // [03.10.2026, Schraubstock] Trifft es an jeder Hoehe, liegt es meist am ENDE eines
+      // offenen Wandstuecks (Ecke zur Nachbarwand): die Enden werden gekuerzt, in
+      // Schritten bis zum Werkzeugdurchmesser. Was an der Ecke stehen bleibt, ist ein
+      // Zwickel von hoechstens dieser Laenge.
+      if(Rw.treffer && !geschlossen){
+        for(const k of [0.5 * rt, rt, 1.5 * rt, 2 * rt]){
+          const R4 = rechne(oben, k);
+          if(R4.b.ok && !R4.treffer){ Z.endenKurz = (Z.endenKurz || 0) + 1; Rw = R4; obenW = oben; break; }
         }
-        x = ax; y = ay; z = az;
-      });
-      if(s.__debugWand){ const d = s.__debugWand[s.__debugWand.length - 1]; d.treffer = treffer; d.erst = erst; d.saetze = b.bahn.length; }
+      }
+      const treffer = Rw.treffer, erst = Rw.erst;
+      if(s.__debugWand){ const d = s.__debugWand[s.__debugWand.length - 1]; d.treffer = treffer; d.erst = erst; d.saetze = Rw.b.bahn.length; d.obenW = obenW; }
       if(treffer){ Z.uebersprungen.push('Wand Z' + oben + '..Z' + unten + ' (' + ktW.name + '): das Werkzeug ⌀' + fRund(2 * rt) + ' stuende in hoeherem Material (zweite Wand oder Insel naeher als der Durchmesser)'); return; }
-      b.bahn = senken(heben(b.bahn, GK), GK);   // Eilgaenge gegen den Stand (s. heben, senken)
+      Rw.b.bahn = senken(heben(Rw.b.bahn, GK), GK);   // Eilgaenge gegen den Stand (s. heben, senken)
       gesehen.add(key);
-      anhaengen(b); Z.waende++; Z.ebenenW += Math.max(1, Math.ceil((oben - unten) / dzW - 1e-9));
+      anhaengen(Rw.b); Z.waende++; Z.ebenenW += Math.max(1, Math.ceil((obenW - unten) / dzW - 1e-9));
     };
     ebenen.forEach(e => e.konturen.forEach(kt => {
       const K = fKonturSegmente(kt); if(K.fehler.length || !K.seg.length) return;
@@ -13253,6 +13373,8 @@ function fBahnSchlichtenEben(s, tool, prog){
   if(Z.angehoben) warn.push(Z.angehoben + ' Eilgang/Eilgaenge der Wandbahn liegen hoeher als die Wandoberkante: neben der Wand steht nach dem Schruppen noch Material (meist im Fuss einer Rundung). Angefahren wird SC ueber diesem Stand, der Rest im Vorschub.');
   if(Z.schraegen) warn.push(Z.schraegen + ' Kante(n) grenzen an eine SCHRAEGE — keine Wand fuer diesen Schritt; Schraegen gehoeren dem Schritt Schraegen schlichten (Kugel- oder Eckenradiusfraeser).');
   if(Z.gemischt) warn.push('MODELL: ' + Z.gemischt + ' Kante(n) wechseln laengs ihrer Laenge die Nachbarflaeche (' + Z.gemischtOrte.slice(0, 3).join('; ') + (Z.gemischt > 3 ? '; …' : '') + ') — das Modell teilt seine Kanten nicht an den Nachbarflaechen. Diese Waende werden NICHT geschlichtet, weil die Trennstelle nur auf eine halbe Rasterweite genau laege: das Modell im CAD nachbauen oder die Wand als Konturzug programmieren.');
+  if(Z.endenKurz) warn.push(Z.endenKurz + ' offene(s) Wandstueck(e) an den Enden gekuerzt (bis zum Werkzeugdurchmesser): am Ende stuende das Werkzeug in der Nachbarwand. Der Zwickel an der Ecke bleibt dem Restmaterial.');
+  if(Z.gekuerzt) warn.push(Z.gekuerzt + ' Wand/Waende erst UNTER einer Fase oder Rundung der Nachbarwand gefahren (' + Z.gekuerztOrte.slice(0, 3).join('; ') + ') - darueber stuende das Werkzeug im Material; dort bleibt das Aufmass, das holt das Schraegen-Schlichten.');
   if(Z.uebersprungen.length) warn.push('UEBERSPRUNGEN: ' + Z.uebersprungen.join(' | '));
   return {ok:true, bahn:B, warn:warn, waende:Z.waende, ebenenW:Z.ebenenW, boeden:Z.boeden, zuege:Z.zuege, bodenHoehen:boeden, uebersprungen:Z.uebersprungen, ausgelassen:Z.ausgelassen, ohneMaterial:Z.ohneMaterial, anBoden:Z.anBoden, schraegen:Z.schraegen, gemischt:Z.gemischt};
 }
@@ -21517,6 +21639,11 @@ function fZyklusWerkzeugVorschlag(art){
     (art === 'modellSchlichten' ? fr.find(w => +w.r2 > 0 && Math.abs(+w.r2 - (+w.d) / 2) < 1e-6) : null) ||
     // Kehlen: der KLEINSTE Kugelfraeser - er kommt am weitesten hinein [26.09.2026].
     (art === 'modellKehlen' ? fr.filter(w => +w.r2 > 0).sort((a, b) => (+a.r2 || 0) - (+b.r2 || 0))[0] : null) ||
+    // Gewindefraesen [03.10.2026]: ein Gewindefraeser, wenn die Tabelle einen
+    // fuehrt, sonst der groesste Schaftfraeser bis ⌀8 (Soll-⌀ = doppelter
+    // Werkzeug-⌀, also M16). Der Planfraeser T1 ⌀80 stand vorher als Vorschlag.
+    ((F_ZYKLEN[art] || {}).gewf ? (fr.find(w => /gewinde/i.test(String(w.name || '')))
+      || fr.filter(w => +w.d > 0 && +w.d <= 8 && !(+w.r2 > 0)).sort((a, b) => (+b.d || 0) - (+a.d || 0))[0]) : null) ||
     // Tasche, Nut, Zapfen: ein Schaftfraeser mit Eintauchwinkel bis ⌀20, der
     // groesste zuerst - nicht der Messerkopf T1, mit dem eine 50x30-Tasche
     // in der Vorgabe gar nicht anzulegen war (Durchlauf 19.09.2026).
