@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="29.09.2026 23:37 (5ff5e8be)";</script>
+<script>window.__DZ_STAND="03.10.2026 06:01 (2b16878e)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3950,6 +3950,14 @@ liegt dann von selbst richtig: Stirn bei Z0, Teil in Z&minus;.</dd>
 <dt id="ba-dxf-lage">Wenn die Lage trotzdem nicht stimmt</dt>
 <dd>Z-Ma&szlig;e im Plus &rarr; <b>&plusmn;Z ins Minus</b>. Falsches Ende vorn &rarr;
 <b>Kontur umdrehen</b>. Beides in derselben Softkey-Gruppe, Kapitel 3.</dd>
+<dt id="ba-dxf-innen">Bohrung als zweite Kette</dt>
+<dd>Seit dem 02.10.2026 &uuml;bernimmt die App auch eine <b>Innenkontur</b> aus derselben
+Zeichnung: jede weitere Kette, die ganz &uuml;ber der Achse liegt, kleiner bleibt als
+der Au&szlig;en-&empty; und innerhalb der L&auml;nge des Teils liegt, wird eine eigene
+Innenkontur (Name &bdquo;&hellip; innen&ldquo;). Eine einzelne kurze Linie z&auml;hlt nicht
+&mdash; das ist eher eine Ma&szlig;linie; eine einzelne waagerechte Linie erst ab der
+halben Teill&auml;nge. Der Planer findet die Bohrung danach wie bei einer gezeichneten
+Kontur.</dd>
 <dt id="ba-dxf-einheit">Einheiten</dt>
 <dd>DXF-Koordinaten werden als Millimeter gelesen, X als Radius der Zeichnung und in
 der App als Durchmesser gef&uuml;hrt (2&middot;|y|).</dd>
@@ -4447,7 +4455,12 @@ nicht die Werkst&uuml;ckstirn).</dd>
 G-S&auml;tze. <b>Die Simulation f&auml;hrt IMMER die G-Code-Bahn mit G42/G40</b>:
 nur so stimmt die Kehle im Materialbild mit der DIN-Form &uuml;berein (gemessen
 0,08 mm &empty; statt 0,39 ohne SRK). Der 15&deg;-Einstieg und der tangentiale
-Viertelkreis r1 sind Satz f&uuml;r Satz nachgerechnet.</dd>
+Viertelkreis r1 sind Satz f&uuml;r Satz nachgerechnet.
+<br><b>Angefahren wird &uuml;ber dem Rohteil</b> (seit 02.10.2026): vor dem schr&auml;gen
+Einstieg steht ein eigener Eilgang auf X = Rohteil-&empty; + 2&middot;SC, erst dann geht es
+schr&auml;g an den Freistich. Vorher kam die Diagonale direkt von der Werkzeugwechsellage
+&mdash; und lief, wo das Rohteil noch voll stand, quer hindurch. Innen (Lage 1 und 3) steht
+der Satz auf dem Anfahr-&empty; in der Bohrung.</dd>
 </dl>
 
 <h3 id="ba-k05-abstechen">5.6 &nbsp;Abstechen</h3>
@@ -4725,6 +4738,9 @@ R&uuml;ckanstieg &rarr; <b>STECHDREHEN (schruppen+schlichten, eingegrenzt auf da
 Tal) VOR der Schlichtkette</b> &mdash; das z-parallele Schruppen erreicht solche
 Taschen nicht, und ohne Vorschruppen f&uuml;hre der Schlichtzug ins Volle. Ohne
 passenden Stecher plant er das nicht still, sondern warnt hart.</li>
+<li id="ba-pl-gwvorlauf"><b>Gewinde nur mit freiem Vorlauf</b> (seit 02.10.2026): steht vor dem Gewindeanfang auf der
+L&auml;nge des Vorlaufs Kontur &uuml;ber dem Nenn-&empty; (ein Hals hinter einer Kugel, ein Absatz), legt der Planer das Gewinde
+nicht an und sagt warum &mdash; der erste Schnitt st&uuml;nde sonst im Material.</li>
 <li id="ba-pl-rohteil"><b>Rohteil-W&auml;chter:</b> ragt die Kontur &uuml;ber das
 Kopf-ZI hinaus, steht das als erste Zeile in der Meldung (&bdquo;ROHTEIL ZU
 KURZ&ldquo;) &mdash; sonst r&auml;tselt man an einer schlechten Quote, deren Ursache
@@ -4818,6 +4834,12 @@ Futterk&ouml;rper gef&uuml;hrt. Steht sie bei gro&szlig;em Spann-⌀ &uuml;ber d
 zeigen Kontureditor, 2D- und 3D-Simulation dort den Fu&szlig; der Backe, der aus dem Futter kommt,
 und die Kollisionspr&uuml;fung h&auml;lt ihn mit. Die Backenfront bleibt an LA; die 20&nbsp;mm sind ein
 Mindestwert, nicht gemessen.
+<br><b>Der Gewindestahl nimmt im Bild Material weg</b> (seit 02.10.2026): als V im
+Spitzenwinkel aus der Werkzeugtabelle, die Spitze auf dem Bahnpunkt. Vorher trug die
+Simulation beim Gewinde nichts ab &mdash; endete ein Gewinde ohne Freistich im Vollen,
+galt der normale R&uuml;ckzug aus der eigenen Rille als Eilgang durch Material, und die
+Ampel stand rot auf einem richtigen Programm. Die Gewindeflanken sind im Halbschnitt
+der Gewindegrund; der Ma&szlig;bericht wertet das Gewindefenster nicht als Fehlma&szlig;.
 <br>Bei Stechwerkzeugen wird nicht nur der Bahnpunkt gepr&uuml;ft, sondern die
 <b>volle Klingenbreite</b> (seit 30.08.2026): die Pr&uuml;fung l&auml;uft ein
 zweites Mal, um die Klingenl&auml;nge versetzt &mdash; sonst s&auml;he sie ein
@@ -5780,7 +5802,7 @@ vorschruppen.</dd>
      TT.MM.JJJJ" ergaenzt, MUSS dieses Datum mitziehen — sonst schlaegt
      der Pruefstand an. [Daniels Befund 06.09.2026: die Anleitung war
      inhaltlich nachgezogen, das Standdatum stand noch auf 31.08.] -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 27.09.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 02.10.2026. Sie
 w&auml;chst mit der App &mdash; das Inhaltsverzeichnis wird aus den Kapiteln
 erzeugt und ist damit immer vollst&auml;ndig.</p>
 
@@ -7002,6 +7024,17 @@ function importDxfDatei(file){
       const els=dxfUebernehmen(k, warnHin);
       contours.push({id:nextContourId++, name:'DXF '+(file.name||'Import'), els});
       activeContourIdx=contours.length-1;
+      // BOHRUNG ALS ZWEITE KETTE [02.10.2026, Testkampagne Drehen]: uebernommen
+      // wurde nur die LAENGSTE Kette. Steht die Bohrung in der Zeichnung als
+      // eigener Zug (Halbschnitt mit Aussen- und Innenlinie), fiel sie still
+      // weg — der Planer plante eine Buchse als Vollteil (an jedem Rohr und
+      // jeder Buchse der Testteile). Weitere Ketten kommen als Innenkontur
+      // dazu, aber nur, wenn sie wie eine Bohrung aussehen: ganz ueber der
+      // Achse, im Laengenbereich des Teils, mit kleinerem groessten ⌀ als die
+      // Aussenkontur, mindestens 2 Elemente (eine einzelne Gerade nur waage-
+      // recht und halb so lang wie das Teil). Rahmen, Masslinien und
+      // Schraffur erfuellen das nicht und bleiben draussen.
+      try{ dxfInnenKettenAnhaengen(ketten, els, file.name||'Import', warnHin); }catch(e){ console.error('DXF-Innenkette:', e); }
       contour=contours[activeContourIdx].els;
       warnHin.forEach(w=>console.log('DXF-Hinweis:', w));
       userAdjustedView=false; fitPending=true;
@@ -7010,6 +7043,46 @@ function importDxfDatei(file){
     }catch(e){ try{ console.error('DXF-Import fehlgeschlagen:', e&&(e.stack||e.message)||e); }catch(_){} }
   };
   rd.readAsText(file);
+}
+// Weitere Ketten einer DXF als Innenkontur(en) anhaengen (s. importDxfDatei).
+// Dieselbe Ausrichtung wie die Hauptkette: DXF-X -> Z, Stirn der Hauptkette
+// auf Z0, |Y| -> Radius. Gibt die Zahl der angehaengten Konturen zurueck.
+function dxfInnenKettenAnhaengen(ketten, aussenEls, name, warnHin){
+  if(!ketten || ketten.length<2) return 0;
+  const haupt=ketten[0];
+  const xsH=[]; haupt.forEach(s2=>{ xsH.push(s2.a[0], s2.b[0]); });
+  // Verschiebung wie dxfUebernehmen: rechtes Ende der Hauptkette auf Z0
+  const zLinks=Math.min.apply(null, xsH);
+  // genau der Bezug von dxfUebernehmen: Anfang der so gedrehten Hauptkette,
+  // dass sie am groesseren DXF-X beginnt
+  const zRechts=(haupt[0].a[0] < haupt[haupt.length-1].b[0]) ? haupt[haupt.length-1].b[0] : haupt[0].a[0];
+  const rMaxA=Math.max.apply(null, aussenEls.filter(e=>isFinite(e.x)).map(e=>e.x))/2;
+  let n=0;
+  for(let k=1;k<ketten.length;k++){
+    let kt=ketten[k];
+    // zwei Elemente reichen (Fase + Bohrung); eine einzelne Gerade nur, wenn
+    // sie waagerecht und mindestens halb so lang wie das Teil ist — sonst
+    // koennte es eine Masslinie sein
+    if(kt.length<2){
+      const s1=kt[0]; if(!s1 || s1.arc) continue;
+      if(Math.abs(s1.a[1]-s1.b[1])>0.01 || Math.abs(s1.a[0]-s1.b[0]) < 0.5*(Math.max.apply(null, xsH)-zLinks)) continue;
+    }
+    const ys=[], zs=[]; kt.forEach(s2=>{ ys.push(s2.a[1], s2.b[1]); zs.push(s2.a[0], s2.b[0]); });
+    const yMin=Math.min.apply(null, ys), yMax=Math.max.apply(null, ys);
+    if(yMin < 0.5) continue;                                  // beruehrt/kreuzt die Achse: keine Bohrung
+    if(yMax > rMaxA - 0.5) continue;                          // nicht kleiner als aussen
+    if(Math.min.apply(null, zs) < zLinks-0.01 || Math.max.apply(null, zs) > zRechts+0.01) continue;
+    if(kt[0].a[0] < kt[kt.length-1].b[0]) kt=kt.slice().reverse().map(flipSeg);
+    const P=(pt)=>({z: pt[0]-zRechts, x: 2*Math.abs(pt[1])});
+    const e=[{kind:'start', z:P(kt[0].a).z, x:P(kt[0].a).x, trans:{type:'none',val:0}}];
+    kt.forEach(s2=>{ const p=P(s2.b);
+      if(!s2.arc) e.push({kind:'gerade', z:p.z, x:p.x, trans:{type:'none',val:0}});
+      else e.push({kind:'kreis', z:p.z, x:p.x, cz:s2.arc.cx-zRechts, cx:2*Math.abs(s2.arc.cy), cw:!s2.arc.ccw, trans:{type:'none',val:0}}); });
+    contours.push({id:nextContourId++, name:'DXF '+name+' innen'+(n?' '+(n+1):''), els:e});
+    n++;
+  }
+  if(n && warnHin) warnHin.push('DXF: '+n+' weitere Kette(n) als INNENKONTUR uebernommen (Bohrung) — im Kontureditor pruefen.');
+  return n;
 }
 function setActiveContourEls(els){
   if(activeContourIdx<0 || !contours[activeContourIdx]){
@@ -22935,7 +23008,15 @@ function planerFunde(taeler){
         // anliegen; die Schrittanlage nimmt z1/z0 dann um
         // Auslauf + 2 Steigungen zurueck (Gewindeauslauf-Faustmass
         // ohne Freistich).
-        const schulter = !!(c && c.kind==='gerade' && isFinite(c.x) && c.x > b.x + 0.5);
+        // Schulter auch, wenn der Uebergang ein KREISBOGEN ist [02.10.2026,
+        // Testkampagne Drehen]: aus einer DXF kommt die Rundung an der
+        // Schulter als eigenes Bogenelement, nicht als Kantenattribut — die
+        // Regel griff nur bei einer Geraden, und das Gewinde lief mit seinem
+        // Auslauf in die Schulterrundung (Halter des Gewindestahls in der
+        // Schulter). Ebenso am KONTURENDE: dahinter steht das Rohteil weiter,
+        // fuer den Auslauf ist dort genauso wenig Platz.
+        const schulter = !!(c && (c.kind==='gerade'||c.kind==='kreis') && isFinite(c.x) && c.x > b.x + 0.5)
+                       || (!c && i===contour.length-1);
         const bund     = (i>=2) && isFinite(contour[i-2].x) && contour[i-2].x > a.x + 0.5
                           && Math.abs(a.x-b.x)<0.02;
         f.gewinde.push({x0:b.x, z0:+a.z.toFixed(3), z1:+b.z.toFixed(3), p, schulter, bund});
@@ -23416,6 +23497,21 @@ function programmVorschlagen(interaktiv){
           const stecherB=toolTable.filter(t=>t.art==='stechen' && +t.len>0 && +t.len<=breite-0.1)
             .sort((a,b)=>+b.len-+a.len)[0]||null;
           if(stecherB){
+            // FENSTER NUR IN EINE WAND AUF MUNDHOEHE UEBERLAPPEN [02.10.2026,
+            // Testkampagne Drehen]: das Fenster ragt 0,5 mm in beide Waende,
+            // damit die Wandfuesse sicher dabei sind. Das Stechdrehen kennt als
+            // Rohteil aber nur den Talmund + 2 mm. Steht die Wand HOEHER als
+            // der Mund (Hinterschnitt vor einer groesseren Schulter, Kugelkopf),
+            // hielt der Generator diese 0,5 mm fuer Luft: die Ueberfluege auf
+            // Mund + 2 liefen durch die Wand, und am Fensterende stach die
+            // Klinge bis zum Talgrund hinein (gemessen 5 bis 10 mm zu tief,
+            // 18 von 20 Teilen der Familien Hinterschnitt und Kugelkopf).
+            // Dort endet das Fenster jetzt um das Planaufmass (UZ 0,2) VOR der
+            // Wand; die Wand selbst schlichtet der beidseitige Flankenzug.
+            const xBei=(z)=>{ try{ return contourXatZ(z, sampleContourForRough()); }catch(e){ return NaN; } };
+            const hoch=(z)=>{ const x=xBei(z); return isFinite(x) && x > tal.mouthX + 0.01; };
+            const zaF = hoch(tal.zIn+0.5) ? tal.zIn-0.2 : tal.zIn+0.5;
+            const zbF = hoch(tal.zOut-0.5) ? tal.zOut+0.2 : tal.zOut-0.5;
             stechVor.push({id:stepCounter++, type:'stechdrehen', params:{
               // 'beide', nicht 'schruppen': der KONTURSCHLICHTZUG spart
               // Taschen aus (Taschen-Split) — nach reinem Vorschruppen
@@ -23429,7 +23525,7 @@ function programmVorschlagen(interaktiv){
               t:String(stecherB.t), t2:String(stecherB.t),
               fr:sd.stech.f, fl:sd.stech.f, ff:sd.stech.f,
               sr:sd.stech.vc, sf:sd.stech.vc, sMode:'vc',
-              eingrenz:'ja', za:+(tal.zIn+0.5).toFixed(2), zb:+(tal.zOut-0.5).toFixed(2) }});
+              eingrenz:'ja', za:+zaF.toFixed(2), zb:+zbF.toFixed(2) }});
             hinweise.push('Tasche Z'+fmt(tal.zIn)+'..Z'+fmt(tal.zOut)+' ('+fmt(breite)+' mm): STECHDREHEN schruppt vor (T'+stecherB.t+'), der Schlichtzug laeuft danach im Aufmass');
           } else {
             hinweise.push('WARNUNG Tasche Z'+fmt(tal.zIn)+'..Z'+fmt(tal.zOut)+': KEIN Stecher mit Klinge <= '+fmt(breite-0.1)+' mm — die Tasche bleibt VOLL und der Schlichtzug faehrt dort ins Volle. Stecher anlegen oder von Hand vorschruppen.');
@@ -23496,6 +23592,17 @@ function programmVorschlagen(interaktiv){
         hinweise.push('Gewinde auf ⌀'+fmt(gk.x0)+' ausgelassen: nach Schulter-/Bund-Ruecknahme bleiben nur '+fmt(z0eff-z1eff)+' mm Gewindelaenge');
         return;
       }
+      // IST DER VORLAUF FREI? [02.10.2026, Testkampagne Drehen, Kugelkopf]: das Gewinde
+      // am Hals hinter einer Kugel begann mit seinem Vorlauf (W 3) im Uebergang zur Kugel
+      // (⌀21,3 bei Gewinde ⌀19) - der erste Schnitt stach im Eilgang ins Material.
+      // Liegt im Vorlauf Kontur ueber dem Nenn-⌀, wird das Gewinde nicht angelegt.
+      { const zA=z0eff, zB=z0eff+gwLw+0.5; let dMax=0;
+        try{ (contours||[]).forEach(c=>{ expandContour(c.els||[]).forEach(sg=>{
+          const pts=[[sg.z1,sg.x1],[sg.z2,sg.x2]];
+          if(sg.type==='arc'){ const r=Math.hypot(sg.z1-sg.cz,sg.x1-sg.cx), a1=Math.atan2(sg.x1-sg.cx,sg.z1-sg.cz), a2=Math.atan2(sg.x2-sg.cx,sg.z2-sg.cz); let d=a2-a1; while(d<=-Math.PI) d+=2*Math.PI; while(d>Math.PI) d-=2*Math.PI; for(let k=1;k<16;k++){ const w=a1+d*k/16; pts.push([sg.cz+r*Math.cos(w), sg.cx+r*Math.sin(w)]); } }
+          else { for(let k=1;k<8;k++) pts.push([sg.z1+(sg.z2-sg.z1)*k/8, sg.x1+(sg.x2-sg.x1)*k/8]); }
+          pts.forEach(q=>{ if(q[0]>zA+0.01 && q[0]<zB && 2*q[1]>dMax) dMax=2*q[1]; }); }); }); }catch(e){ dMax=0; }
+        if(dMax > +gk.x0 + 0.05){ hinweise.push('Gewinde auf ⌀'+fmt(gk.x0)+' ausgelassen: im Vorlauf vor dem Anfang (Z'+fmt(zB)+' bis Z'+fmt(zA)+') steht Kontur bis ⌀'+fmt(dMax)+' - der erste Schnitt stuende im Material. Ein Gewinde dort braucht einen Einstich davor oder einen kuerzeren Vorlauf von Hand.'); return; } }
       if(gk.schulter) hinweise.push('Gewinde ⌀'+fmt(gk.x0)+': Ende auf Z'+fmt(z1eff)+' zurueckgenommen (Auslauf + 2P vor der Schulter — Freistich DIN 76 waere die saubere Loesung)');
       neu.push({id:stepCounter++, type:'gewinde', params:{
         bearbeitung:'beide', lage:'aussen', form:'zyl',
@@ -29084,6 +29191,26 @@ function genAbspanenKontur(p, N, bump, lines, warnings){
 // Umlaufsinn und Korrekturseite (G02<->G03, G42<->G41), zwei
 // stellen sie zurueck. Zyklussaetze (FREISTI) bleiben unangetastet:
 // dort traegt PJ die Lage und die STEUERUNG spiegelt selbst.
+// SICHERE ANFAHRT DES FREISTICHS [02.10.2026, Testkampagne Drehen]: alle
+// drei Formen fuhren direkt nach dem Werkzeugaufruf SCHRAEG im Eilgang auf
+// X0+4 / Z0+4. Das ist nur sicher, wenn das Werkzeug vorher am Wechselpunkt
+// stand. Folgt der Freistich einem Schritt mit DEMSELBEN Werkzeug (Schlicht-
+// zug T3, dann Freistich T3 — kein Werkzeugwechsel, also keine Abfahrt),
+// startet die Schraege am Ende des Schlichtzugs und schneidet jede Stufe
+// dazwischen (gemessen: G00 X31 Z-51 aus X23 Z-28.5 durch die ⌀27-Stufe).
+// Wie es das Bedienhandbuch fuer jeden Zyklus verlangt (S0313: der folgende
+// Zyklus faehrt auf die Rueckzugsebene), geht es erst radial ueber das
+// Rohteil. INNEN nicht ueber das Rohteil: dort spiegelt fsLageWandeln die
+// Bahn an X0, ein Rohteilmass laege gespiegelt im Nichts. Innen faehrt der
+// Satz radial auf den Anfahr-⌀ in der Bohrung (gespiegelt X0-4) — sicher nur,
+// wenn das Werkzeug vorher in der Bohrungsluft stand (offen).
+function fsAnfahrtSicher(lines, N, bump, xZiel, innen){
+  // innen: derselbe Satz auf dem Anfahr-⌀ selbst — fsLageWandeln spiegelt ihn
+  // an X0 in die Bohrung; die Lagen bleiben gleich lang (Pruefung 160)
+  const roh=+((document.getElementById('stockDia')||{}).value)||0;
+  const xR=innen ? xZiel : Math.max(xZiel, roh+2*pkSC());
+  lines.push(`${N()} (GERADE  ) G94 G00 G90 X${fmt(xR)}`); bump();
+}
 function fsLageWandeln(s, sp, inn, x0, z0){
   if(s.indexOf('(FREISTI )')>=0) return s;
   if(inn) s=s.replace(/X(-?\d+(?:\.\d+)?)/g, (m,v)=>'X'+fmt(2*x0-parseFloat(v)));
@@ -29187,6 +29314,7 @@ function genFreistich(p, N, bump, lines, warnings){
   lines.push(`${N()} (M-BEFEHL) M03`); bump();
   lines.push(`${N()} (M-BEFEHL) ${kuehlWort(p)}`); bump();
   lines.push(`${N()} (VORSCHUB) G95 F${fmt(p.fr)}`); bump();
+  fsAnfahrtSicher(lines, N, bump, p.x0+4, ((+p.pj||0)===1||(+p.pj||0)===3));
   lines.push(`${N()} (GERADE  ) G94 G00 G90 X${fmt(p.x0+4)} Z${fmt(p.z0+4)}`); bump();
   if(!gcodeAus && mtckFs){
     // Grund = Welle minus 2t (aussen) bzw. Bohrung plus 2t (innen: der
@@ -29388,6 +29516,7 @@ function genFreistich76(p, N, bump, lines, warnings){
   lines.push(`${N()} (M-BEFEHL) M03`); bump();
   lines.push(`${N()} (M-BEFEHL) ${kuehlWort(p)}`); bump();
   lines.push(`${N()} (VORSCHUB) G95 F${fmt(p.fr)}`); bump();
+  fsAnfahrtSicher(lines, N, bump, p.x0+4, ((+p.pj||0)===1||(+p.pj||0)===3));
   lines.push(`${N()} (GERADE  ) G94 G00 G90 X${fmt(p.x0+4)} Z${fmt(p.z0+4)}`); bump();
   if(ausg==='zyklus'){
     // Satzschema DV 610-0C S. 3-46: G73 G90 X64 Z-200 G91 PG2.5 PH60
@@ -29540,6 +29669,7 @@ function genFreistichGW(p, N, bump, lines, warnings){
   lines.push(`${N()} (M-BEFEHL) M03`); bump();
   lines.push(`${N()} (M-BEFEHL) ${kuehlWort(p)}`); bump();
   lines.push(`${N()} (VORSCHUB) G95 F${fmt(p.fr)}`); bump();
+  fsAnfahrtSicher(lines, N, bump, x0+4, ((+p.pj||0)===1||(+p.pj||0)===3));
   lines.push(`${N()} (GERADE  ) G94 G00 G90 X${fmt(x0+4)} Z${fmt(z1+4)}`); bump();
   if(ausg==='zyklus'){
     const rsG=+((t&&t.r)||0);
@@ -31669,7 +31799,24 @@ function schlichteTaschenBeidseitig(pk, pts, bw, xSicher, p, N, bump, lines, war
       // Zweistufig: erst auf die sichere Hoehe, dann seitlich — die
       // alte Diagonale sank schon ueber der Tasche unter den Kragen
       // (gemessen: Punktkollision bei Z-9,6/⌀62 an der Nutwelle).
-      lines.push(`${N()} (GERADE  ) G94 G00 X${fmt(xFrei)}`); bump();
+      // ANFAHRHOEHE UEBER DEM ZUGANFANG [02.10.2026, Testkampagne Drehen]:
+      // der Zug beginnt 0,3 mm im Mantel hinter der Tasche. Steht dort eine
+      // Wand HOEHER als der Talmund (Hinterschnitt vor groesserer Schulter,
+      // Kugelkopf), lag zug[0].x ueber xFrei — die axiale Fahrt auf xFrei
+      // lief durch die Wand, gemessen bis 10 mm zu tief. Dann erst ueber
+      // den Zuganfang, axial, und im Vorschub die letzten 1 mm hinunter.
+      // Liegt der Zuganfang unter xFrei (Normalfall), bleibt alles wie bisher.
+      // Auf der Wand steht nach dem Schruppen noch dessen Aufmass, auf einer
+      // Fase dahinter die Treppe des z-parallelen Schruppens: gemessen wird
+      // der hoechste Konturpunkt im Klingenband um den Zuganfang, plus
+      // Aufmass radial, plus 1 mm.
+      let xAn = xFrei;
+      if(zug[0].x > xFrei - 1e-6){
+        let xMax = zug[0].x;
+        for(let zz=zug[0].z-bw; zz<=zug[0].z+bw+1e-9; zz+=0.1){ const xc=contourXatZ(zz, pts); if(isFinite(xc) && xc>xMax) xMax=xc; }
+        xAn = xMax + 2*Math.max(0, +p.ux||0, 0.3) + 1;
+      }
+      lines.push(`${N()} (GERADE  ) G94 G00 X${fmt(xAn)}`); bump();
       lines.push(`${N()} (GERADE  ) G00 Z${fmt(zug[0].z)}`); bump();
       lines.push(`${N()} (GERADE  ) G95 F${fmt(p.ff)} G01 X${fmt(zug[0].x)}`); bump();
       for(let i=1;i<zug.length;i++){ lines.push(`${N()} (GERADE  ) G01 X${fmt(zug[i].x)} Z${fmt(zug[i].z)}`); bump(); }
@@ -35529,7 +35676,25 @@ function toolCutPolygon(tool){
     pts.push({z:z1,x:H},{z:z0,x:H});
     return pts;
   }
-  return null;   // Bohren/Gewinde ändern die ZX-Silhouette nicht sinnvoll
+  if(art==='gewinde'){
+    // GEWINDESTAHL ALS V [02.10.2026, Testkampagne Drehen]: bis dahin trug
+    // die Simulation beim Gewinde NICHTS ab ("aendert die ZX-Silhouette
+    // nicht sinnvoll"). Endete ein Gewinde ohne Freistich im Vollen, galt
+    // dann der ganz normale radiale Rueckzug aus der eigenen Gewinderille
+    // als "Eilgang durch Vollmaterial", und der Halter ueber dem Gewinde
+    // als "im Material" — rote Ampel auf ein richtiges Programm (gemessen:
+    // jedes Gewinde ohne Freistich in 100 Testteilen). Die Spitze liegt
+    // auf dem Bahnpunkt, die Flanken im Spitzenwinkel der Tabelle (60 Grad
+    // metrisch, 55 Whitworth, 30 Trapez), Hoehe mindestens bis zum Halter
+    // (halterAb 3). Um die Achse gestempelt nimmt das V die Gewinderille
+    // als Ring auf den Kern-⌀ — im Halbschnitt ist das der Gewindegrund;
+    // der Massbericht wertet Gewindefenster ohnehin nicht als Fehlmass.
+    const sw=Math.max(20, Math.min(90, +tool.sw||60));
+    const H=Math.max(3.5, +tool.len||4);
+    const b=H*Math.tan((sw/2)*Math.PI/180);
+    return [{z:0,x:0},{z:b,x:H},{z:-b,x:H}];
+  }
+  return null;   // Bohren mit Sonderform (Zentrierer) ändert die ZX-Silhouette nicht sinnvoll
 }
 
 // =================================================================
@@ -37106,8 +37271,22 @@ function zielHuelleRechnen(){
       masken.push({z1:links-2, z2:+q.z0+2});
     }
     if(s2.type==='gewinde'){
+      // FENSTER BIS UEBER VOR- UND AUSLAUF [02.10.2026]: der G33-Zug laeuft
+      // um den Auslauf LR (und die Flankenzustellung) ueber Z1 hinaus und
+      // schneidet dort die Gewinderille weiter — an der Maschine wie in der
+      // Simulation, seit der Gewindestahl abtraegt. Das starre Fenster von
+      // 2 mm endete an der Buchse bei Z-17, der Zug bei Z-17,14.
       const a=Math.max(+q.z0||0,+q.z1||0), b2=Math.min(+q.z0||0,+q.z1||0);
-      masken.push({z1:b2-2, z2:a+2});
+      // Auslauf auf der Auslaufseite, Vorlauf auf der Vorlaufseite (beim
+      // Linksgewinde tauschen sie), dazu Flankenversatz und halbe V-Breite —
+      // beide aus der Gewindetiefe h1 (je h1·tan30, gemessen an der Buchse:
+      // letzter Zug bis Z-17,45, Rille bis Z-17,9; 1,2·h1 + 0,3 deckt das). NICHT pauschal mehr: dahinter liegt oft eine
+      // gedrehte Flaeche (an der Buchse die Bohrung bis Z-20), die weiter
+      // gemessen werden muss.
+      const links=(q.richt==='links');
+      const lr=+q.lr>0? +q.lr : 2, lw=+q.lw>0? +q.lw : 2;
+      const zu=1.2*(+q.h1>0? +q.h1 : 1)+0.3;
+      masken.push({z1:b2-(links? lw : lr)-zu, z2:a+(links? lr : lw)+zu});
     }
     if(s2.type==='abstechen'){
       const tw=toolTable.find(x=>String(x.t)===String(q.t));
@@ -39585,7 +39764,21 @@ function massBericht(){
       const dA=2*sg.x1, dB=2*sg.x2;
       if(Math.abs(dB-dA)<1.0) return;                      // zu kurz: Fasen-/Rundungsrest
       const zSoll=sg.z1;
-      const dLo=Math.min(dA,dB), dHi=Math.max(dA,dB);
+      let dLo=Math.min(dA,dB);
+      const dHi=Math.max(dA,dB);
+      // STIRN EINES TEILS MIT BOHRUNG [02.10.2026, Testkampagne Drehen]: die
+      // Aussenkontur beginnt ueblicherweise an der Achse, die Planflaeche
+      // reicht im Soll also von ⌀0 bis zur Fase. Bei einem Rohr oder einer
+      // Buchse ist der Teil unter der Bohrung aber keine Flaeche, er wird
+      // ausgedreht. Geprueft wurde auf halber Hoehe (⌀32 in einer ⌀37-
+      // Bohrung), dort lief nur der Planschrupp — "Laenge bei Z0 um 0,1 mm
+      // daneben" auf ein Teil, dessen Stirn sauber war. Die Flaeche beginnt
+      // jetzt an der Innenkontur.
+      if(seite==='aussen' && sollI && typeof sollI.at==='function'){
+        const bi=Math.max(+sollI.at(zSoll-0.25)||0, +sollI.at(zSoll+0.25)||0);
+        if(isFinite(bi) && bi>dLo) dLo=bi;
+        if(dHi-dLo<1.0) return;
+      }
       const xP=(dLo+dHi)/2;                                // Pruefdurchmesser auf halber Hoehe
       // Auf welcher Seite steht das Material? Danach richtet sich, welcher
       // Planschnitt die Flaeche endgueltig erzeugt (der am weitesten
@@ -39717,6 +39910,15 @@ function massBericht(){
       const sv=soll.at(z);
       if(sv===null || !isFinite(sv)) continue;
       if(maskiert(z)){ maskLen+=dz; continue; }
+      // STUETZSTELLE AUF EINER SENKRECHTEN WAND [02.10.2026, Testkampagne
+      // Drehen]: liegt sie genau auf einem Sprung der Sollkontur, hat das
+      // Soll dort zwei Werte (Fuss und Kopf der Schulter) und der Vergleich
+      // ist mehrdeutig. Am Kugelkopf hinter einem Hinterschnitt meldete das
+      // eine Zone der Laenge null "10 mm zu tief, nicht mehr rettbar" auf
+      // ein Teil, das auf Hundertstel stimmte. Die Wand misst die
+      // Laengenpruefung; hier zaehlt das Fach nicht.
+      { const sl=soll.at(z-0.002), sr=soll.at(z+0.002);
+        if(sl!==null && sr!==null && isFinite(sl) && isFinite(sr) && Math.abs(sl-sr)>0.05) continue; }
       // ROHTEIL BLEIBT ROHTEIL: liegt das Ist noch exakt auf dem Rohmass,
       // hat dort kein Schnitt stattgefunden — dann ist der Verursacher
       // "unbearbeitet" und nicht der Zyklus, der nur daneben gefahren ist.
@@ -40273,6 +40475,11 @@ function openSimulation(){
     return;
   }
   if(!code) return;
+  // HERKUNFT DER SIMULATION [Daniel, 02.10.2026: "wenn ich zurueck will,
+  // lande ich immer im Kontureditor — ich moechte im Arbeitsplan landen"].
+  // Die Simulation leiht sich die Zeichenflaeche des Editors (viewMode
+  // grafisch); simSchliessen kehrt dorthin zurueck, woher sie gerufen wurde.
+  window.__simVon = viewMode;
   viewMode='grafisch';
   // SPIEGELUNG NACH BILDSCHIRM [Daniel, Laptop-Screenshots]:
   // Am Handy bleibt es beim Halbschnitt — die halbe Kontur gibt dort mehr
@@ -40652,6 +40859,12 @@ function simSchliessen(){
   resizeCanvas();
   document.getElementById('zoomCtrl').classList.remove('hidden');
   draw();
+  // Zurueck dorthin, woher die Simulation kam — in der Regel der
+  // Arbeitsplan. Wer sie aus dem Kontureditor startet, bleibt im Editor.
+  // backToArbeitsplan ruft simSchliessen nur bei laufender Sim (simActive
+  // ist hier schon false), also keine Rekursion.
+  const von = window.__simVon; window.__simVon = null;
+  if(von==='arbeitsplan' && typeof backToArbeitsplan==='function') backToArbeitsplan();
 }
 document.getElementById('simClose').onclick=simSchliessen;
 document.getElementById('simSlider').addEventListener('input',(e)=>{
