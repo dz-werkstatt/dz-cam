@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="03.10.2026 07:01 (46d23c24)";</script>
+<script>window.__DZ_STAND="03.10.2026 15:23 (d0971ca1)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1714,6 +1714,22 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
    der 900er-Query. */
 #simBuehne{display:none;}
 .leerhero{display:none;}
+
+/* UEBERNEHMEN AM HANDY IMMER IM BILD [Daniel, 03.10.2026: "die Masken
+   auch unten festhalten"]. Der Maskentest vom selben Morgen fand bei 390 px
+   in fuenf Dreh-Zyklusmasken, im Programmkopf und in den meisten Fraes-
+   Masken "Uebernehmen" unter dem Bildrand - man musste erst ans Ende rollen.
+   Die Aktionszeile klebt jetzt am Boden des rollenden Bereichs, wie am
+   Laptop seit dem 09.09. (Vollbild) bzw. 19.09. (Fraes-Zyklusmaske).
+   Ausdrueckliche Ausnahme von Regel 3, von Daniel verlangt. Die Klasse
+   k-aktion setzt die Kachelansicht (Vorgabe); die Fraes-Zeilen haben ids. */
+@media(max-width:899.98px){
+  .mask .mask-body > .mrow.k-aktion, #zyAktion, #fkAktion{
+    position:sticky;bottom:0;z-index:3;background:var(--panel);
+    border-top:1px solid var(--line-light);box-shadow:0 -10px 14px -12px rgba(0,0,0,.35),0 18px 0 0 var(--panel);
+    margin-bottom:0;padding-top:6px;padding-bottom:8px;
+  }
+}
 
 @media(min-width:900px){
     /* Arbeitsplanzeile bleibt am Desktop EINZEILIG. Dort ist Platz
@@ -4738,9 +4754,13 @@ R&uuml;ckanstieg &rarr; <b>STECHDREHEN (schruppen+schlichten, eingegrenzt auf da
 Tal) VOR der Schlichtkette</b> &mdash; das z-parallele Schruppen erreicht solche
 Taschen nicht, und ohne Vorschruppen f&uuml;hre der Schlichtzug ins Volle. Ohne
 passenden Stecher plant er das nicht still, sondern warnt hart.</li>
-<li id="ba-pl-gwvorlauf"><b>Gewinde nur mit freiem Vorlauf</b> (seit 02.10.2026): steht vor dem Gewindeanfang auf der
-L&auml;nge des Vorlaufs Kontur &uuml;ber dem Nenn-&empty; (ein Hals hinter einer Kugel, ein Absatz), legt der Planer das Gewinde
-nicht an und sagt warum &mdash; der erste Schnitt st&uuml;nde sonst im Material.</li>
+<li id="ba-pl-gwvorlauf"><b>Gewinde nur mit freiem Vorlauf</b> (seit 02.10.2026, gemessen gegen den KERN-&empty; seit 03.10.2026):
+der Gewindestahl stellt im Eilgang bis zum Kern-&empty; (Nenn-&empty; minus 2&middot;H1) zu. Direkt vor dem Gewindeanfang darf
+deshalb h&ouml;chstens eine kurze Fase (bis 2 Steigungen) &uuml;ber dem Kern stehen &mdash; durch sie schneidet der Stahl im
+Vorschub, der Vorlauf W wird dann so gelegt, dass sein Anfang dahinter frei liegt. Steht l&auml;nger Kontur &uuml;ber dem Kern
+(ein Kegel, der auf das Gewinde zul&auml;uft, ein Hals hinter einer Kugel), legt der Planer das Gewinde nicht an und sagt
+warum &mdash; der Stahl st&uuml;nde im Material oder zerschnitte die Kontur. Eine Nut oder ein Freistich direkt davor ist
+freier Vorlauf: dort setzt der Eilgang an, auch wenn der Vorlauf dann k&uuml;rzer als 3 mm wird.</li>
 <li id="ba-pl-rohteil"><b>Rohteil-W&auml;chter:</b> ragt die Kontur &uuml;ber das
 Kopf-ZI hinaus, steht das als erste Zeile in der Meldung (&bdquo;ROHTEIL ZU
 KURZ&ldquo;) &mdash; sonst r&auml;tselt man an einer schlechten Quote, deren Ursache
@@ -5684,6 +5704,7 @@ Zeichnung und Elementliste l&auml;sst sich ziehen; Doppelklick auf die Linie ste
 wieder her, die Breite wird gemerkt.
 <button class="gcbtn" id="baTrennReset" type="button" style="padding:4px 10px;font-size:11.5px;">Spaltenbreiten zur&uuml;cksetzen</button>
 Stand 08.09.2026.</dd>
+<dt id="ba-be-uebernehmen">&Uuml;bernehmen steht immer im Bild (03.10.2026)</dt><dd>Am Handy klebt die Zeile mit <b>&Uuml;bernehmen</b> und <b>Abbrechen</b> am unteren Rand jeder Maske: wer eine lange Maske hinunterscrollt, hat die Kn&ouml;pfe trotzdem vor sich. Am Laptop war das schon so.</dd>
 <dt id="ba-be-banner">Meldungen liegen &uuml;ber der Maske (20.09.2026)</dt><dd>Jede Meldung der App &mdash; auch die Hinweise der Masken und des Kontur-Editors
 (&bdquo;Kein Anschlusspunkt&ldquo;, &bdquo;Der Vorg&auml;nger ist noch offen&ldquo;) &mdash; erscheint sieben Sekunden im Banner am unteren Bildrand; ein Tipp darauf
 schlie&szlig;t es. Bis zum 20.09.2026 lag das Banner hinter jeder offenen Maske: wer in einer Maske einen Hinweis ausl&ouml;ste, sah nichts. Seither liegt es &uuml;ber allem.</dd>
@@ -5802,7 +5823,7 @@ vorschruppen.</dd>
      TT.MM.JJJJ" ergaenzt, MUSS dieses Datum mitziehen — sonst schlaegt
      der Pruefstand an. [Daniels Befund 06.09.2026: die Anleitung war
      inhaltlich nachgezogen, das Standdatum stand noch auf 31.08.] -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 02.10.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 03.10.2026. Sie
 w&auml;chst mit der App &mdash; das Inhaltsverzeichnis wird aus den Kapiteln
 erzeugt und ist damit immer vollst&auml;ndig.</p>
 
@@ -23347,8 +23368,17 @@ function programmVorschlagen(interaktiv){
     const bohrer=toolTable.filter(t=>t.art==='bohren' && !(/zentrier/i.test(t.name||'')) && +t.dm>0 && +t.dm<=minInnen+0.01 && +t.dm>xiRohr+0.5)
       .sort((a,b)=>+b.dm-+a.dm)[0]||null;
     const zentrierer=toolTable.find(t=>t.art==='bohren' && /zentrier/i.test(t.name||''));
-    const iSchrupp=toolTable.find(t=>t.art==='innen' && (+t.sw||0)>=55) || toolTable.find(t=>t.art==='innen');
-    const iSchlicht=toolTable.find(t=>t.art==='innen' && (+t.sw||99)<=40) || iSchrupp;
+    // DIE BOHRSTANGE, DIE HINEINPASST [03.10.2026, Testkampagne Drehen]: bis dahin
+    // nahm der Planer die ERSTE Innen-Schruppplatte der Tabelle, auch wenn daneben
+    // eine schlankere Stange lag, die in die Vorbohrung passt. Jetzt gewinnt die
+    // passende; passt keine, bleibt es bei der ersten, und die Luecke wird unten benannt.
+    const vorbWahl=bohrer? +bohrer.dm : xiRohr;
+    const passtRein=(t)=>!(vorbWahl>0) || typeof halterMinBohrung!=='function' || halterMinBohrung(t) <= vorbWahl-0.01;
+    const iSchrupp=toolTable.find(t=>t.art==='innen' && (+t.sw||0)>=55 && passtRein(t)) || toolTable.find(t=>t.art==='innen' && passtRein(t))
+                || toolTable.find(t=>t.art==='innen' && (+t.sw||0)>=55) || toolTable.find(t=>t.art==='innen');
+    const iSchlicht=toolTable.find(t=>t.art==='innen' && (+t.sw||99)<=40 && passtRein(t))
+                 || (passtRein(iSchrupp||{})? iSchrupp : null)
+                 || toolTable.find(t=>t.art==='innen' && (+t.sw||99)<=40) || iSchrupp;
     // PASST DIE BOHRSTANGE IN DIE VORBOHRUNG? [27.09.2026, s. halterMinBohrung]:
     // der groesste Bohrer unter dem kleinsten Innen-⌀ ist nicht immer gross
     // genug fuer den Schaft. Einen groesseren gibt es dann nicht (die Wahl
@@ -23597,14 +23627,36 @@ function programmVorschlagen(interaktiv){
       // IST DER VORLAUF FREI? [02.10.2026, Testkampagne Drehen, Kugelkopf]: das Gewinde
       // am Hals hinter einer Kugel begann mit seinem Vorlauf (W 3) im Uebergang zur Kugel
       // (⌀21,3 bei Gewinde ⌀19) - der erste Schnitt stach im Eilgang ins Material.
-      // Liegt im Vorlauf Kontur ueber dem Nenn-⌀, wird das Gewinde nicht angelegt.
-      { const zA=z0eff, zB=z0eff+gwLw+0.5; let dMax=0;
-        try{ (contours||[]).forEach(c=>{ expandContour(c.els||[]).forEach(sg=>{
-          const pts=[[sg.z1,sg.x1],[sg.z2,sg.x2]];
-          if(sg.type==='arc'){ const r=Math.hypot(sg.z1-sg.cz,sg.x1-sg.cx), a1=Math.atan2(sg.x1-sg.cx,sg.z1-sg.cz), a2=Math.atan2(sg.x2-sg.cx,sg.z2-sg.cz); let d=a2-a1; while(d<=-Math.PI) d+=2*Math.PI; while(d>Math.PI) d-=2*Math.PI; for(let k=1;k<16;k++){ const w=a1+d*k/16; pts.push([sg.cz+r*Math.cos(w), sg.cx+r*Math.sin(w)]); } }
-          else { for(let k=1;k<8;k++) pts.push([sg.z1+(sg.z2-sg.z1)*k/8, sg.x1+(sg.x2-sg.x1)*k/8]); }
-          pts.forEach(q=>{ if(q[0]>zA+0.01 && q[0]<zB && 2*q[1]>dMax) dMax=2*q[1]; }); }); }); }catch(e){ dMax=0; }
-        if(dMax > +gk.x0 + 0.05){ hinweise.push('Gewinde auf ⌀'+fmt(gk.x0)+' ausgelassen: im Vorlauf vor dem Anfang (Z'+fmt(zB)+' bis Z'+fmt(zA)+') steht Kontur bis ⌀'+fmt(dMax)+' - der erste Schnitt stuende im Material. Ein Gewinde dort braucht einen Einstich davor oder einen kuerzeren Vorlauf von Hand.'); return; } }
+      // [03.10.2026, Kegelwelle] Gemessen wird gegen den KERN-⌀ (Nenn-⌀ minus 2·H1), nicht
+      // gegen den Nenn-⌀: der Stahl stellt im Eilgang bis zum Kern zu. Ein Kegel, der auf
+      // ⌀53,78 vor einem M54 endete, lag unter dem Nenn-⌀ und ging durch - der Eilgang
+      // stand bei ⌀52,16 im Kegel. Eine kurze FASE vor dem Gewinde (bis 2 Steigungen) ist
+      // erlaubt: durch sie schneidet der Stahl im Vorschub, der Vorlauf wird dann so weit
+      // verlaengert, dass sein Anfang frei liegt. Laenger als 2P ueber dem Kern: das ist
+      // Kontur (Kegel, Kugel, Bund), die der Gewindestahl zerschneiden wuerde - ausgelassen.
+      let gwLwEff=gwLw;
+      { const dKern=+gk.x0 - 2*0.6134*p, bis=z0eff+gwLw+2*p+1; const bin=0.05;
+        const nB=Math.ceil((bis-z0eff)/bin)+1; const dB=new Array(nB).fill(0);
+        // Je Abschnitt die Kontur an drei Stellen AUSWERTEN (nicht Stuetzpunkte
+        // einsammeln): ein Abschnitt ohne Bogenpunkt galt sonst als frei, und am
+        // Kugelkopf lag der Vorlauf mitten in der Kugel [03.10.2026].
+        try{ const kp=sampleContourForRough(); for(let i=0;i<nB;i++){ [0.001,0.5,0.999].forEach(t=>{ const z=z0eff+(i+t)*bin; if(z<bis){ const x=contourXatZ(z,kp); if(isFinite(x) && x>dB[i]) dB[i]=x; } }); } }catch(e){}
+        // Von der Gewindekante weg: erst ein Stueck UEBER dem Kern (Fase, hoechstens
+        // 2P), dann muss ein FREIES Stueck folgen - dort setzt der Eilgang an. Was
+        // danach kommt (Mantel vor einer Nut), ist dem Gewinde egal: ein Gewinde
+        // hinter einer Nut laeuft mit seinem Vorlauf in der Nut an.
+        const ueber=(i)=>dB[i] > dKern+0.05;
+        let iF=0; while(iF<nB && ueber(iF)) iF++;
+        let iE=iF; while(iE<nB && !ueber(iE)) iE++;
+        const lUeber=iF*bin, lFrei=(iE-iF)*bin;
+        if(lUeber > 2*p + 0.01 || lFrei < 0.5){
+          const dMax=Math.max(...dB);
+          hinweise.push('Gewinde auf ⌀'+fmt(gk.x0)+' ausgelassen: vor dem Anfang (Z'+fmt(z0eff)+') '+(lUeber > 2*p + 0.01 ? 'steht auf '+fmt(lUeber)+' mm Laenge Kontur ueber dem Kern-⌀ '+fmt(dKern)+' (bis ⌀'+fmt(dMax)+')' : 'liegt kein freier Vorlauf ueber dem Kern-⌀ '+fmt(dKern))+' - der Gewindestahl stuende dort im Material oder zerschnitte die Kontur. Ein Gewinde dort braucht einen Einstich/Freistich davor.'); return; }
+        // Vorlauf: Vorgabe 3 mm, wenn das im freien Stueck liegt; sonst so weit,
+        // dass der Anfang 0,2 mm im freien Stueck liegt.
+        if(gwLw > lUeber + 0.3 && gwLw <= lUeber + lFrei - 0.2) gwLwEff=gwLw;
+        else gwLwEff=+Math.max(lUeber + 0.3, Math.min(lUeber + 1, lUeber + lFrei - 0.2)).toFixed(2);
+        if(gwLwEff!==gwLw) hinweise.push('Gewinde ⌀'+fmt(gk.x0)+': Vorlauf W '+fmt(gwLwEff)+' mm statt '+fmt(gwLw)+' - '+(lUeber>0? 'die Fase davor steht '+fmt(lUeber)+' mm ueber dem Kern-⌀, ' : '')+'frei sind davor '+fmt(lFrei)+' mm, dort setzt der Eilgang an'); }
       if(gk.schulter) hinweise.push('Gewinde ⌀'+fmt(gk.x0)+': Ende auf Z'+fmt(z1eff)+' zurueckgenommen (Auslauf + 2P vor der Schulter — Freistich DIN 76 waere die saubere Loesung)');
       neu.push({id:stepCounter++, type:'gewinde', params:{
         bearbeitung:'beide', lage:'aussen', form:'zyl',
@@ -23614,7 +23666,7 @@ function programmVorschlagen(interaktiv){
         // (Doktrin vom 29.08., DV 594 S. 132).
         u:0, verf:'B', nd:Math.max(4,Math.round(5*p)), n:1, d:0.3,
         // Gewinde faehrt G97: Drehzahl aus dem Blatt-Vc am Nenn-Durchmesser.
-        lw:3, lr:2, s:Math.max(50,Math.round(1000*sd.gewinde.vc/(Math.PI*Math.max(1,+gk.x0))/10)*10),
+        lw:gwLwEff, lr:2, s:Math.max(50,Math.round(1000*sd.gewinde.vc/(Math.PI*Math.max(1,+gk.x0))/10)*10),
         t:String(gwStahl.t), ausg:'gcode', gart:'metrisch',
         alpha:29, flanke:'wechselnd', vr:2 }});
       gwAngelegt++;
@@ -25426,7 +25478,14 @@ function sampleContourForRough(srcContour, sehnenTol){
         // bleiben exakt (Anschluss an die Nachbarelemente). Konkave Boegen
         // (Hohlkehlen) lassen ihre Sehnen ohnehin im Freien.
         const xMitte=s.cx+r*Math.sin(a1+da/2);
-        if(xMitte > s.cx + 1e-9) ab=sehnenTol;
+        // VERSATZ AUS DER WIRKLICHEN SCHRITTWEITE [03.10.2026, Testkampagne Drehen]:
+        // pauschal um den Sehnenfehler versetzt, stand bei einem kleinen Radius
+        // (R0,5, 12 Mindestschritte, viel feiner als noetig) schon der erste Punkt
+        // 0,002 mm UEBER der Tangente des Mantels - am glatten Uebergang entstand
+        // eine Innenecke, die Eckenbahn des Stechers schnitt dort 0,011 mm ein.
+        // r·(1/cos(Schritt/2) - 1) legt den Halbschritt-Punkt genau auf die
+        // Tangente; die Sehnenmitten bleiben ausserhalb des Bogens.
+        if(xMitte > s.cx + 1e-9) ab=Math.min(sehnenTol, r*(1/Math.cos(Math.abs(da)/steps/2)-1));
       }
       // Die erste und die letzte Sehne halb so lang (Zwischenpunkt bei einem
       // halben Schritt): vom exakten Endpunkt zum ersten versetzten Punkt sank
@@ -28649,7 +28708,18 @@ function genAbspanenKontur(p, N, bump, lines, warnings){
         lines.push(`${N()} (GERADE  ) G95 F${fmt(p.ff)} G01 ${cc}Z${fmt(zStart)}`); bump();
       } else {
       lines.push(`${N()} (SCHRAEG ) G00 G90 X${fmt(startX + clearSign2*anWeg)} Z${fmt(zAppr)}`); bump();
-      if(zStart < zAppr - 0.01){ lines.push(`${N()} (GERADE  ) G00 Z${fmt(zStart)}`); bump(); }
+      // SPITZE AN DER ACHSE OHNE PLANFLAECHE [03.10.2026, Testkampagne Drehen,
+      // Kugelkopf]: beginnt die Kontur auf der Achse mit einer Kugel oder einem
+      // Kegel, liegt die Flaeche beim Anwahlpunkt (X2) nur Hundertstel unter
+      // der Startebene - darueber steht das Schruppaufmass. Der Eilgang auf Z0
+      // stand im Material. Dort endet er vor dem Aufmass, der Rest geht im Vorschub.
+      const spitzeAchse = !startsWithFace && pts[0].x < 0.001;
+      if(spitzeAchse && zStart < zAppr - 0.01){
+        const zVor = Math.min(zAppr, zStart + Math.max(0, +p.uz||0) + 2*Math.max(0, +p.ux||0) + 0.5);
+        if(zVor > zStart + 0.01){ lines.push(`${N()} (GERADE  ) G00 Z${fmt(zVor)}`); bump(); }
+        lines.push(`${N()} (GERADE  ) G95 F${fmt(p.ff)} G01 Z${fmt(zStart)}`); bump();
+      }
+      else if(zStart < zAppr - 0.01){ lines.push(`${N()} (GERADE  ) G00 Z${fmt(zStart)}`); bump(); }
       lines.push(`${N()} (GERADE  ) G95 F${fmt(p.ff)} G01 ${cc}X${fmt(startX)}`); bump();
       }
     }
@@ -31559,6 +31629,13 @@ function genGewinde(p, N, bump, lines, warnings){
     const beide = (p.flanke==="wechselnd");
     warnings.push('Gewinde: Flankenzustellung verschiebt den Endpunkt um bis zu '+fmt(tanAl*K)+' mm in Z'+(beide?' NACH BEIDEN SEITEN (wechselnde Flanke)':'')+' — Gewindeauslauf LR='+fmt(p.lr||0)+' mm ist dafür knapp (Freistich prüfen).');
   }
+  // ERST X, DANN Z [03.10.2026, Testkampagne Drehen, Hinterschnitt]: der erste
+  // Anfahrsatz G00 X(frei) Z(Anfang) ging SCHRAEG von dort, wo der vorige Schritt
+  // stand. Endete der davor mit demselben Stahl an der Stirn (X50 Z7) und liegt
+  // das Gewinde hinter einem Bund (Z-48), fuhr der Halter quer durch die Stufe.
+  // Ein eigener Satz auf den freien ⌀ an der aktuellen Z-Lage (vor der Stirn
+  // oder am Wechselpunkt) macht die Anfahrt achsparallel.
+  lines.push(`${N()} (GERADE  ) G94 G00 G90 X${fmt(clearX)}`); bump();
   for(let gang=0; gang<p.n; gang++){
     const qOffset = gang*(360/p.n);
     if(p.n>1) lines.push(`(--- Gang ${gang+1}/${p.n}, Startwinkelversatz Q${fmt(qOffset)}° ---)`);
@@ -31702,8 +31779,17 @@ function stechEckenBahn(punkte, r, bw, ecke, sinn){
     } else {                                                 // Aussenecke: Bogen um den Eckpunkt
       const a0=Math.atan2(nA.r, nA.z), a1=Math.atan2(nB.r, nB.z);
       let da=a1-a0; while(da>Math.PI) da-=2*Math.PI; while(da<-Math.PI) da+=2*Math.PI;
+      // TANGENTENPOLYGON statt Sehnen [03.10.2026, Testkampagne Drehen, Saat 7]:
+      // die Punkte lagen AUF dem Kreis um die Ecke - die Sehnen dazwischen
+      // liegen innen, und der Eckenkreis der Klinge schnitt an der Kante
+      // Mantel/steile Flanke 0,012 mm ins Teil. Zwischen den exakten Enden
+      // liegen die Ecken jetzt bei r/cos(Halbschritt): die Bahn bleibt ganz
+      // ausserhalb, es bleibt hoechstens r·(1/cos-1) Rest (0,003 mm bei r 0,4).
       const k=Math.max(1, Math.ceil(Math.abs(da)/(Math.PI/12)));
-      for(let j=0;j<=k;j++){ const a=a0+da*j/k; M.push({z:V.z+r*Math.cos(a), r:V.r+r*Math.sin(a)}); }
+      const st=da/k, rT=r/Math.cos(Math.abs(st)/2);
+      M.push({z:V.z+r*Math.cos(a0), r:V.r+r*Math.sin(a0)});
+      for(let j=0;j<k;j++){ const a=a0+st*(j+0.5); M.push({z:V.z+rT*Math.cos(a), r:V.r+rT*Math.sin(a)}); }
+      M.push({z:V.z+r*Math.cos(a1), r:V.r+r*Math.sin(a1)});
     }
   }
   const e=Q.length-2;
@@ -31764,9 +31850,25 @@ function schlichteTaschenBeidseitig(pk, pts, bw, xSicher, p, N, bump, lines, war
       const lo=Math.min(z1,z2)+1e-6, hi=Math.max(z1,z2)-1e-6;
       pts.forEach(pt=>{ if(pt.z>lo && pt.z<hi) roh.push({z:pt.z, x:pt.x}); });
       roh.sort((a,b)=> abw ? (b.z-a.z) : (a.z-b.z));
-      for(let i=roh.length-1;i>0;i--){
-        if(Math.abs(roh[i].z-roh[i-1].z)<1e-6){ roh[i-1].x=Math.max(roh[i-1].x, roh[i].x); roh.splice(i,1); }
-      }
+      // SENKRECHTE WAND: BEIDE ECKEN [03.10.2026, Testkampagne Drehen, Nutwelle]:
+      // nur den groesseren ⌀ zu behalten liess den Fusspunkt der Wand fallen -
+      // der naechste Rasterpunkt lag 0,05 im Grund, und der Zug fuhr die Wand
+      // SCHRAEG (gemessen 0,043 mm Versatz am Fuss, Nutbreite 0,018 daneben).
+      // Echte Duplikate (gleicher Punkt) verschmelzen weiter; zwei Ecken auf
+      // einem Z bleiben beide, in Fahrtrichtung geordnet: zuerst die, die dem
+      // vorigen Punkt naeher liegt.
+      { const neuR=[];
+        for(let i=0;i<roh.length;){
+          let j=i; const grp=[];
+          while(j<roh.length && Math.abs(roh[j].z-roh[i].z)<1e-6){ if(!grp.some(g=>Math.abs(g.x-roh[j].x)<1e-6)) grp.push(roh[j]); j++; }
+          if(grp.length>1){
+            const vor=neuR.length? neuR[neuR.length-1].x : grp[0].x;
+            const xs=grp.map(g=>g.x), hi=Math.max(...xs), lo=Math.min(...xs);
+            grp.sort((a,b)=> Math.abs(hi-vor) <= Math.abs(lo-vor) ? b.x-a.x : a.x-b.x);
+          }
+          grp.forEach(g=>neuR.push(g)); i=j;
+        }
+        roh.length=0; neuR.forEach(g=>roh.push(g)); }
     }
     const arr=[roh[0]];
     for(let i=1;i+1<roh.length;i++){
@@ -31812,14 +31914,29 @@ function schlichteTaschenBeidseitig(pk, pts, bw, xSicher, p, N, bump, lines, war
       // Fase dahinter die Treppe des z-parallelen Schruppens: gemessen wird
       // der hoechste Konturpunkt im Klingenband um den Zuganfang, plus
       // Aufmass radial, plus 1 mm.
+      // [03.10.2026, Testkampagne Drehen, Saat 7]: auch wenn der Zuganfang knapp
+      // UNTER xFrei liegt, kann eine Wand im Klingenband mit ihrem Aufmass bis
+      // auf xFrei reichen (Bund ⌀62 bei xFrei 62: Eilgang endete in der Fase des
+      // Bundes). Gefragt wird deshalb, ob Wand + Aufmass + 1 mm ueber xFrei liegt.
       let xAn = xFrei;
-      if(zug[0].x > xFrei - 1e-6){
+      {
         let xMax = zug[0].x;
         for(let zz=zug[0].z-bw; zz<=zug[0].z+bw+1e-9; zz+=0.1){ const xc=contourXatZ(zz, pts); if(isFinite(xc) && xc>xMax) xMax=xc; }
-        xAn = xMax + 2*Math.max(0, +p.ux||0, 0.3) + 1;
+        const xNoetig = xMax + 2*Math.max(0, +p.ux||0, 0.3) + 1;
+        if(zug[0].x > xFrei - 1e-6 || xNoetig > xFrei + 1e-6) xAn = Math.max(xFrei, xNoetig);
       }
       lines.push(`${N()} (GERADE  ) G94 G00 X${fmt(xAn)}`); bump();
-      lines.push(`${N()} (GERADE  ) G00 Z${fmt(zug[0].z)}`); bump();
+      if(xAn > xFrei + 1e-6){
+        // LETZTER MILLIMETER IM VORSCHUB [03.10.2026, Testkampagne Drehen,
+        // Hinterschnitt vor einem Bund mit Radius]: die Anfahrhoehe kennt das
+        // Aufmass, nicht die Treppe, die das z-parallele Schruppen auf dem Radius
+        // stehen laesst (gemessen: Eilgang endete bei Z-48,1 ⌀83,2 in der Treppe).
+        // Die Z-Fahrt endet 1 mm vor dem Zuganfang im Eilgang, der Rest geht im
+        // Vorschub - der Stecher nimmt dort hoechstens Aufmass und Treppe mit.
+        const dirZ = (zug[0].z < zM) ? 1 : -1;
+        lines.push(`${N()} (GERADE  ) G00 Z${fmt(zug[0].z + dirZ*1)}`); bump();
+        lines.push(`${N()} (GERADE  ) G95 F${fmt(p.ff)} G01 Z${fmt(zug[0].z)}`); bump();
+      } else { lines.push(`${N()} (GERADE  ) G00 Z${fmt(zug[0].z)}`); bump(); }
       lines.push(`${N()} (GERADE  ) G95 F${fmt(p.ff)} G01 X${fmt(zug[0].x)}`); bump();
       for(let i=1;i<zug.length;i++){ lines.push(`${N()} (GERADE  ) G01 X${fmt(zug[i].x)} Z${fmt(zug[i].z)}`); bump(); }
       lines.push(`${N()} (GERADE  ) G94 G00 X${fmt(xFrei)}`); bump();
@@ -31993,6 +32110,15 @@ function genStechdrehen(p, N, bump, lines, warnings){
   for(let z=Math.max(zStart,zBlank); z>=zEnd-1e-9; z-=0.1){
     const m=matAt(z); if(isFinite(m)) matTop=Math.max(matTop,m);
     envMin=Math.min(envMin, env.at(z));
+  }
+  // KLINGENBAND HINTER DEM FENSTER [03.10.2026, Testkampagne Drehen, Saat 7]:
+  // die Bahnpunkte liegen bis zEnd, die Klinge reicht von dort eine
+  // Plattenbreite weiter. Stand dahinter ein Bund (⌀88 bei Fenster bis
+  // Z-49,6 und Rohmass 80), lagen die Umsetzfahrten auf xSicher 85 IM Bund.
+  // Dort steht die KONTUR (geschruppt, mit Aufmass), nicht das Rohmass des Zyklus.
+  for(let z=zEnd; z>=zEnd-bw-1e-9; z-=0.1){
+    const m=matAt(z); if(isFinite(m)) matTop=Math.max(matTop,m);
+    const xc=contourXatZ(z, pts); if(isFinite(xc)) matTop=Math.max(matTop, xc + 2*Math.max(0, +p.ux||0, 0.3));
   }
   if(!isFinite(matTop) || matTop<=0) matTop=p.stock;
   if(restFn) lines.push('(RESTSTAND: Material vom vorherigen Zyklus uebernommen, Start ab DM'+fmt(matTop)+')');

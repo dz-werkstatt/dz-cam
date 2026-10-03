@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="03.10.2026 07:01 (46d23c24)";</script>
+<script>window.__DZ_STAND="03.10.2026 15:23 (d0971ca1)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1714,6 +1714,22 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
    der 900er-Query. */
 #simBuehne{display:none;}
 .leerhero{display:none;}
+
+/* UEBERNEHMEN AM HANDY IMMER IM BILD [Daniel, 03.10.2026: "die Masken
+   auch unten festhalten"]. Der Maskentest vom selben Morgen fand bei 390 px
+   in fuenf Dreh-Zyklusmasken, im Programmkopf und in den meisten Fraes-
+   Masken "Uebernehmen" unter dem Bildrand - man musste erst ans Ende rollen.
+   Die Aktionszeile klebt jetzt am Boden des rollenden Bereichs, wie am
+   Laptop seit dem 09.09. (Vollbild) bzw. 19.09. (Fraes-Zyklusmaske).
+   Ausdrueckliche Ausnahme von Regel 3, von Daniel verlangt. Die Klasse
+   k-aktion setzt die Kachelansicht (Vorgabe); die Fraes-Zeilen haben ids. */
+@media(max-width:899.98px){
+  .mask .mask-body > .mrow.k-aktion, #zyAktion, #fkAktion{
+    position:sticky;bottom:0;z-index:3;background:var(--panel);
+    border-top:1px solid var(--line-light);box-shadow:0 -10px 14px -12px rgba(0,0,0,.35),0 18px 0 0 var(--panel);
+    margin-bottom:0;padding-top:6px;padding-bottom:8px;
+  }
+}
 
 @media(min-width:900px){
     /* Arbeitsplanzeile bleibt am Desktop EINZEILIG. Dort ist Platz
@@ -4174,6 +4190,7 @@ CYCLE-Parametern zu &mdash; die Masken bleiben, wie sie sind. Die Zuordnungstabe
 <dt id="ba-fk06-uebernehmen">&Uuml;bernehmen bleibt sichtbar</dt><dd>Am Laptop bleibt die Zeile mit <b>&Uuml;bernehmen</b> und <b>Abbrechen</b> am unteren Rand der
 Maske stehen, auch wenn das Formular dar&uuml;ber scrollt (19.09.2026; bei acht Masken war der Knopf vorher erst nach dem Scrollen da). Am Handy scrollt
 die ganze Maske wie bisher.</dd>
+<dt id="ba-fk06-kleben">&Uuml;bernehmen steht immer im Bild (03.10.2026)</dt><dd>Am Handy klebt die Zeile mit <b>&Uuml;bernehmen</b> und <b>Abbrechen</b> am unteren Rand jeder Maske: wer eine lange Maske hinunterscrollt, hat die Kn&ouml;pfe trotzdem vor sich. Am Laptop war das schon so.</dd>
 <dt id="ba-fk06-pruefung">&Uuml;bernehmen pr&uuml;ft die Eingabe</dt><dd>Beim &Uuml;bernehmen pr&uuml;ft die App den Schritt so, wie es sp&auml;ter die Ampel tut (Kap.&nbsp;8). Ein
 <b>roter</b> Befund &mdash; Tiefe nicht negativ, Tasche schmaler als der Fr&auml;ser, kein Werkzeug, Position &bdquo;Bohrbild&ldquo; ohne Bohrbild &mdash; wird
 <b>nicht &uuml;bernommen</b>: die Maske bleibt offen, der Grund steht rot &uuml;ber den Kn&ouml;pfen und zus&auml;tzlich im Meldebanner unten; korrigiere den Wert
@@ -4687,7 +4704,7 @@ nicht belegt. Es fehlt eine echte .MPF, ein Lauf und die f&uuml;nfachsige Bahn.<
      man konnte ihr nicht ansehen, wie alt sie ist. Wer hier ein Kapitel
      aendert, zieht das Datum mit; der Pruefstand vergleicht es gegen das
      juengste Datum im Text. -->
-<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 02.10.2026. Sie
+<p style="margin-top:18px;color:#7c8790;">Stand dieser Anleitung: 03.10.2026. Sie
 wird mit jedem Paket mitgeschrieben &mdash; wer eine Funktion baut oder erweitert,
 schreibt ihren Absatz mit. Findest Du hier eine Aussage, die die App nicht mehr
 einl&ouml;st, ist das ein Fehler und geh&ouml;rt gemeldet.</p>
@@ -9396,8 +9413,21 @@ function fStepAusrichten(modell, ausricht){
     let netz = null;
     if(f.netz){ netz = new Float64Array(f.netz.length);
       for(let q = 0; q < f.netz.length; q += 3){ const p = fStepDreh(R, [f.netz[q], f.netz[q + 1], f.netz[q + 2]]); netz[q] = p[0]; netz[q + 1] = p[1]; netz[q + 2] = p[2]; } }
+    // EBENE ALS FREIFORM [03.10.2026, Testkampagne Fraesen, Uebung-1]: hyperMILL-
+    // Exporte speichern auch ebene Boeden als B-Spline-Flaeche (84 von 84 Flaechen
+    // 'frei'). Die Ebenenliste kannte sie nicht - das Schruppen legte keine Ebene
+    // auf die Boeden (2 mm blieben ueber 18000 mm2), Boeden & Waende fand keinen
+    // Boden. Liegen Netz- und Randpunkte alle auf einer Hoehe (2 um), ist es eine
+    // waagerechte Ebene: waagZ traegt die Hoehe, Art und Normale bleiben.
+    let waagZ = null;
+    if(f.art === 'frei' && netz && netz.length >= 9){
+      let lo = Infinity, hi = -Infinity;
+      for(let q = 2; q < netz.length; q += 3){ if(netz[q] < lo) lo = netz[q]; if(netz[q] > hi) hi = netz[q]; }
+      rand.forEach(l => l.kanten.forEach(k => k.p.forEach(p => { if(p[2] < lo) lo = p[2]; if(p[2] > hi) hi = p[2]; })));
+      if(hi - lo <= 0.002) waagZ = (hi + lo) / 2;
+    }
     return {id:f.id, art:f.art, lage:lage, neigung:neigung, r:f.r, achse:n,
-      ort:f.ort ? fStepDreh(R, f.ort) : null, rand:rand, netz:netz};
+      ort:f.ort ? fStepDreh(R, f.ort) : null, rand:rand, netz:netz, waagZ:waagZ};
   });
   const box = {x0:Infinity, y0:Infinity, z0:Infinity, x1:-Infinity, y1:-Infinity, z1:-Infinity};
   flaechen.forEach(f => f.rand.forEach(lo => lo.kanten.forEach(k => k.p.forEach(p => {
@@ -9417,6 +9447,7 @@ function fStepAusrichten(modell, ausricht){
     }));
     if(f.ort){ f.ort[0] += vx; f.ort[1] += vy; f.ort[2] += vz; }
     if(f.netz) for(let q = 0; q < f.netz.length; q += 3){ f.netz[q] += vx; f.netz[q + 1] += vy; f.netz[q + 2] += vz; }
+    if(f.waagZ != null) f.waagZ += vz;
   });
   const B = {x0:fRund(box.x0 + vx), y0:fRund(box.y0 + vy), z0:fRund(box.z0 + vz),
              x1:fRund(box.x1 + vx), y1:fRund(box.y1 + vy), z1:fRund(box.z1 + vz)};
@@ -11284,8 +11315,9 @@ function fSchwenkSaetze(s, P, k){
 function fStepEbenen(A, tol){
   const t = tol || 0.01, ebenen = [];
   A.flaechen.forEach(f => {
-    if(f.art !== 'ebene' || f.lage !== 'waagerecht') return;
-    let z = f.ort ? f.ort[2] : null;
+    const waag = (f.art === 'ebene' && f.lage === 'waagerecht') || f.waagZ != null;
+    if(!waag) return;
+    let z = (f.waagZ != null) ? f.waagZ : (f.ort ? f.ort[2] : null);
     if(z == null && f.rand[0] && f.rand[0].kanten[0]) z = f.rand[0].kanten[0].p[0][2];
     if(z == null) return;
     let e = null;
@@ -12921,6 +12953,23 @@ function fStandUebernehmen(G, Gp){
 // Werkzeug in hoeherem Material stuende (zweite Wand oder Insel naeher als
 // der Durchmesser), wird uebersprungen und genannt. Schraegen gehoeren dem
 // Kugelfraeser (Schraegen schlichten): dort bleibt die Treppe des Schruppens.
+// EILGAENGE ACHSWEISE [03.10.2026, Testkampagne Fraesen, 3mm Gripp 210]: ein Satz
+// mit XY UND Z fuhr schraeg - von der sicheren Hoehe ueber 250 mm bis auf Z-19,
+// quer durch das Teil. Abwaerts erst XY, dann Z; aufwaerts erst Z, dann XY.
+// Nur, wenn die tiefere der beiden Hoehen unter der Grenze (Oberkante + SC) liegt:
+// weiter oben ist der schraege Eilgang frei, und der Programmierplatz-Beleg DZ24
+// bleibt Satz fuer Satz. Eine eigene Funktion, damit der Pruefstand sie messen kann.
+function fEilAchsweise(B, grenze){
+  const neuB = []; let pz = null;
+  B.forEach(mm => {
+    if(mm.a === 'eil' && mm.z != null && (mm.x != null || mm.y != null) && pz != null && Math.abs(mm.z - pz) > 1e-6 && Math.min(mm.z, pz) < grenze - 1e-6){
+      const xy = Object.assign({}, mm); delete xy.z; const zz = {a:'eil', z:mm.z};
+      if(mm.z < pz){ neuB.push(xy); neuB.push(zz); } else { neuB.push(zz); neuB.push(xy); }
+    } else neuB.push(mm);
+    if(mm.z != null) pz = mm.z;
+  });
+  return neuB;
+}
 function fBahnSchlichtenEben(s, tool, prog){
   const warn = [];
   const nein = (g) => ({ok:false, grund:g, bahn:[], warn:warn});
@@ -12969,7 +13018,15 @@ function fBahnSchlichtenEben(s, tool, prog){
         // mitte im Werkzeugradius). Mit der Zugabe zaehlte die fertige Wand, an der das
         // Werkzeug anliegt, als Hindernis (DZ23); mit 1,5 Rasterweiten weniger fiel
         // echter Rest am Kreisrand durch (Blisterform: eine Kollision).
-        const st = fStandMax(G, x0, y0, ax, ay, Math.max(0, rt - Math.SQRT1_2 * G.raster));
+        // SENKRECHTES ABSENKEN [03.10.2026, Testkampagne Fraesen, Bauteil fuer
+        // Schraubstock]: die Kette fuehrt den Stand in ihrem eigenen Raster - eine
+        // Zelle, die das Werkzeug nur zum Teil ueberstrichen hat, gilt dort als
+        // gefraest. Daneben blieb ein 0,33 mm breiter Streifen auf -1,96 stehen,
+        // und der Eilgang stach senkrecht auf -3,88 hinein. Beim reinen Absenken
+        // zaehlt deshalb der Stand bis r plus halbe Zellendiagonale; was darunter
+        // liegt, faehrt die Bahn im Vorschub. Querfahrten bleiben wie bisher.
+        const senkrecht = Math.abs(ax - x0) < 1e-6 && Math.abs(ay - y0) < 1e-6;
+        const st = fStandMax(G, x0, y0, ax, ay, senkrecht ? rt + Math.SQRT1_2 * G.raster : Math.max(0, rt - Math.SQRT1_2 * G.raster));
         // Eine Querfahrt ueber 50 mm geht ganz auf die sichere Hoehe: der Stand der Kette
         // ist eine Schaetzung, und eine lange Fahrt kreuzt viel davon (Bauteil-2: 300 mm
         // quer ueber das Teil, die Kette 2 mm zu niedrig). Kurze Wege in einer Tasche
@@ -12986,6 +13043,29 @@ function fBahnSchlichtenEben(s, tool, prog){
       neu.push(mm); px = ax; py = ay; pz = az;
     });
     if(n) Z.angehoben = (Z.angehoben || 0) + n;
+    return n ? neu : bahn;
+  };
+  // SENKEN IM EILGANG BIS UEBER DEN STAND [03.10.2026, Testkampagne Fraesen,
+  // Bauteil-2]: senkrechte Abstiege im Vorschub (Wand-Ebenen, Bodenzuege) begannen
+  // oben auf der sicheren Hoehe - am 114 mm tiefen Teil liefen 95 Abstiege zu je
+  // rund 109 mm mit dem Tiefenvorschub F171 durch schon ausgeraeumte Luft, 32 m
+  // und rund drei Stunden. Der Abstieg geht jetzt im Eilgang bis SC ueber den
+  // Stand der Kette (vorsichtig: Radius plus halbe Zellendiagonale, wie beim
+  // senkrechten Absenken in heben), nur der Rest im Vorschub.
+  const senken = (bahn, G) => {
+    if(!G) return bahn;
+    const neu = []; let px = null, py = null, pz = null, n = 0;
+    bahn.forEach(mm => {
+      const ax = mm.x != null ? mm.x : px, ay = mm.y != null ? mm.y : py, az = mm.z != null ? mm.z : pz;
+      if(mm.a === 'vor' && pz != null && az != null && ax != null && ay != null && az < pz - 1e-6
+         && Math.abs(ax - px) < 1e-6 && Math.abs(ay - py) < 1e-6){
+        const st = fStandMax(G, ax, ay, ax, ay, rt + Math.SQRT1_2 * G.raster);
+        const zEil = isFinite(st) ? fRund(Math.max(az, st + sc)) : pz;
+        if(zEil < pz - 1e-6 && zEil > az + 1e-6){ neu.push({a:'eil', z:zEil}); n++; }
+      }
+      neu.push(mm); px = ax; py = ay; pz = az;
+    });
+    if(n) Z.gesenkt = (Z.gesenkt || 0) + n;
     return n ? neu : bahn;
   };
   const ebenen = (F.ebenen || []).filter(e => e.z <= zOben + 1e-6 && e.z >= zTief - 1e-6);
@@ -13065,7 +13145,7 @@ function fBahnSchlichtenEben(s, tool, prog){
       });
       if(s.__debugWand){ const d = s.__debugWand[s.__debugWand.length - 1]; d.treffer = treffer; d.erst = erst; d.saetze = b.bahn.length; }
       if(treffer){ Z.uebersprungen.push('Wand Z' + oben + '..Z' + unten + ' (' + ktW.name + '): das Werkzeug ⌀' + fRund(2 * rt) + ' stuende in hoeherem Material (zweite Wand oder Insel naeher als der Durchmesser)'); return; }
-      b.bahn = heben(b.bahn, GK);   // Eilgaenge gegen den Stand (s. heben)
+      b.bahn = senken(heben(b.bahn, GK), GK);   // Eilgaenge gegen den Stand (s. heben, senken)
       gesehen.add(key);
       anhaengen(b); Z.waende++; Z.ebenenW += Math.max(1, Math.ceil((oben - unten) / dzW - 1e-9));
     };
@@ -13160,10 +13240,12 @@ function fBahnSchlichtenEben(s, tool, prog){
       try{ Object.defineProperty(s2, '__orig', {value:s.__orig || s, enumerable:false}); }catch(e){ s2.__orig = s.__orig || s; }
       const b = fBahnModell(s2, tool, prog);
       if(!b.ok){ Z.uebersprungen.push('Boden Z' + fRund(zF) + ': ' + b.grund); return; }
-      { const KB = fStandKette(prog, s, F); b.bahn = heben(b.bahn, KB ? KB.gitter : null); }
+      { const KB = fStandKette(prog, s, F); const GB = KB ? KB.gitter : null; b.bahn = senken(heben(b.bahn, GB), GB); }
       anhaengen(b); Z.boeden++; Z.zuege += b.zuege; Z.ausgelassen += b.ausgelassen || 0;
     });
   }
+  // Eilgaenge achsweise (s. fEilAchsweise).
+  { const neuB = fEilAchsweise(B, zOben + sc); B.length = 0; neuB.forEach(m => B.push(m)); }
   if(!B.length) return nein(Z.uebersprungen.length ? Z.uebersprungen.join('; ') : ('im Bereich Z' + zTief + '..Z' + zOben + ' liegt keine waagerechte Flaeche unter der Oberkante und keine Wand'));
   B.push({a:'eil', z:sicher});
   warn.unshift('BOEDEN UND WAENDE SCHLICHTEN: ' + Z.waende + ' Wand/Waende exakt entlang der Konturen der Ebenen (Aufmass 0, ' + Z.ebenenW + ' Z-Ebene(n) im Schritt ' + dzW + '), ' + Z.boeden + ' Boden/Boeden auf ' + (boeden.length ? boeden.map(z => 'Z' + z).join(', ') : '—') + ' mit ' + Z.zuege + ' Zuegen — das Material ist das Aufmass des Schruppens. Schraegen gehoeren dem Schritt Schraegen schlichten (Kugel- oder Eckenradiusfraeser).');
@@ -14383,7 +14465,14 @@ function fBahnModell(s, tool, prog){
     // Werkzeugradius zur Seite und damit ueber die naechste Zeile hinweg —
     // sie faende dort nichts mehr zu tun und fiele aus, obwohl zwischen den
     // Zeilen Material stehen bleibt (gemessen: jede zweite Zeile fiel aus).
-    for(let q = 0; q < n; q++) verboten[q] = (G.soll[q] + uZ > z + 1e-9) ? 1 : 0;
+    // FLOAT32 [03.10.2026, Testkampagne Fraesen, Bauteil-2]: G.soll ist ein
+    // Float32Array - -63,98 steht dort als -63,9799995, plus Aufmass 0,2 lag der
+    // eigene Boden UEBER seiner Ebene und galt als verboten. Gemessen war es mehr als
+    // Float32: die Ebenenliste fuehrt den Boden GERUNDET (-63,98), die Sollform traegt
+    // ihn mit -63,979889 - 0,11 um hoeher als die Ebene, die daraus entsteht. Die
+    // Ebene auf dem Boden fuhr nirgends, 2,2 mm blieben ueber 19000 mm2 stehen.
+    // Toleranz F_EBENE_EPS (1 um): deckt Rundung und Float32, liegt weit unter jedem Mass.
+    for(let q = 0; q < n; q++) verboten[q] = (G.soll[q] + uZ > z + F_EBENE_EPS) ? 1 : 0;
     fEdt(verboten, nx, ny, d2);
     // Erste Ebene, in der diese Zelle frei ist: ihr Abstand zur Wand gilt.
     for(let q = 0; q < n; q++) if(d2Hoehe[q] < 0 && !verboten[q]) d2Hoehe[q] = d2[q];
@@ -14435,7 +14524,7 @@ function fBahnModell(s, tool, prog){
       // Zugende waere je offen (gemessen an der T-Tasche: 30 Absenkungen,
       // kein Zug von aussen).
       const uXY2 = (uXY / r) * (uXY / r);
-      for(let q = 0; q < n; q++) restL[q] = (G.imRoh[q] && G.soll[q] + uZ <= z + 1e-9 && standVor[q] > z + 1e-6 && !(uXY > 0 && d2[q] <= uXY2 + 1e-9)) ? 1 : 0;
+      for(let q = 0; q < n; q++) restL[q] = (G.imRoh[q] && G.soll[q] + uZ <= z + F_EBENE_EPS && standVor[q] > z + 1e-6 && !(uXY > 0 && d2[q] <= uXY2 + 1e-9)) ? 1 : 0;
       laufBreite(restL, breitZ);
       material = 0;
       for(let q = 0; q < n; q++){ duenn[q] = (restL[q] && breitZ[q] * r < restAbMm - 1e-9) ? 1 : 0; if(duenn[q]) mat[q] = 0; material += mat[q]; }
@@ -14485,7 +14574,7 @@ function fBahnModell(s, tool, prog){
     // Zellen mit Restmaterial. Ohne sie faende der Querdurchgang nichts: das
     // Restmaterial liegt unter der SCHNEIDE, nicht unter der Mitte.
     let offen = 0;
-    for(let q = 0; q < n; q++){ const o = (G.imRoh[q] && G.soll[q] + uZ <= z + 1e-9 && G.stand[q] > z + 1e-6 && !(duenn && duenn[q])) ? 1 : 0; rest[q] = o; offen += o; }
+    for(let q = 0; q < n; q++){ const o = (G.imRoh[q] && G.soll[q] + uZ <= z + F_EBENE_EPS && G.stand[q] > z + 1e-6 && !(duenn && duenn[q])) ? 1 : 0; rest[q] = o; offen += o; }
     if(offen){
       if(!d2R) d2R = new Float64Array(n);
       fEdt(rest, nx, ny, d2R);
@@ -16453,6 +16542,17 @@ function fSimFeld(prog, raster){
 // jeden Rueckzug aus der eigenen frisch gefraesten Stelle als Kollision
 // (gemessen an Daniels Bauteil-2: 107 Meldungen, alle falsch).
 const F_SIM_EPS = 1e-4;
+// Ebene gegen Sollhoehe (fBahnModell): Rundung der Ebenenliste plus Float32, s. dort.
+const F_EBENE_EPS = 1e-3;
+// RAND DER EILGANG-PRUEFUNG [03.10.2026, Testkampagne Fraesen, 3mm Gripp]: eine
+// Zelle GENAU einen Werkzeugradius neben einer geraden Fraesbahn wird nur
+// gestempelt, wenn ein Abtastpunkt (Schritt bis 0,25 mm) genau senkrecht neben
+// ihr liegt - sonst liegt sie um s^2/(8r) ausserhalb (0,006 mm bei s 0,5, r 5).
+// Der Eilgang danach tastet anders ab, traf sie und meldete eine Kollision gegen
+// die eigene Abtastung (15 Treffer am Modell, alle 5,000 mm neben der Bahn).
+// Geprueft wird deshalb mit 0,02 mm weniger Radius - fuer das Urteil 'faehrt
+// ins Material' ohne Belang, und es haelt beide Abtastungen auseinander.
+const F_SIM_RAND = 0.02;
 function fSimStempel(F, x, y, z, r, nurPruefen, kegel){
   const i0 = Math.max(0, Math.floor((x - r - F.x0) / F.raster)), i1 = Math.min(F.nx - 1, Math.ceil((x + r - F.x0) / F.raster));
   const j0 = Math.max(0, Math.floor((y - r - F.y0) / F.raster)), j1 = Math.min(F.ny - 1, Math.ceil((y + r - F.y0) / F.raster));
@@ -16542,7 +16642,7 @@ function fSimFahren(F, e, uA, uB){
   for(let k = kA; k <= kB; k++){
     const u = k / N, p = fSimPunkt(e, u);
     if(pruef){ const qx = (m.pruefX != null) ? m.pruefX : p.x, qy = (m.pruefY != null) ? m.pruefY : p.y;
-      if(p.z < F.oben - 1e-9 && fSimStempel(F, qx, qy, p.z, (m.pruefR > 0) ? m.pruefR : e.rt, true, (m.pruefR > 0) ? 0 : kegel)) return {x:fRund(p.x), y:fRund(p.y), z:fRund(p.z), schritt:e.schritt}; }
+      if(p.z < F.oben - 1e-9 && fSimStempel(F, qx, qy, p.z, (m.pruefR > 0) ? m.pruefR : Math.max(0, e.rt - F_SIM_RAND), true, (m.pruefR > 0) ? 0 : kegel)) return {x:fRund(p.x), y:fRund(p.y), z:fRund(p.z), schritt:e.schritt}; }
     else if(m.unten){ const zk = p.z + (+m.kante || 0); if(zk > F.unten + 1e-9) fSimStempelUnten(F, p.x, p.y, zk, e.rt); }
     else if(p.z < F.oben - 1e-9) fSimStempel(F, p.x, p.y, p.z, e.rt, false, kegel);
   }
@@ -20017,6 +20117,7 @@ const F_BAHNBERICHT = [
   /^Bezug: Schritt \d+/,
   /^BOEDEN UND WAENDE SCHLICHTEN:/,
   /^\d+ Kantensegment\(e\) mit Hoehensprung/,
+  /^\d+ Eilgang\/Eilgaenge der Wandbahn liegen hoeher/,   // Anfahrt ueber Rest am Wandfuss (03.10.2026)
 ];
 
 // Die Schrittnummer steht vorn ("Schritt 2: ..."); fuer die Einteilung
