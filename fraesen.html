@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="03.10.2026 20:43 (9fffa756)";</script>
+<script>window.__DZ_STAND="03.10.2026 23:54 (8e1e3c0a)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3900,7 +3900,10 @@ Meldung nennt die Zahl. Beim <i>konturparallelen</i> Schruppen ist das Feld ohne
 Treppe stehen, die so hoch ist wie die <b>Zustellung</b>. Wer sie flacher will, m&uuml;&szlig;te enger zustellen &mdash; und zahlt das auf der <b>ganzen</b> Fl&auml;che,
 obwohl nur die Schr&auml;ge es braucht.
 <br>Das Feld <b>Stufenh&ouml;he</b> f&uuml;gt Zwischenebenen ein, und die App f&auml;hrt sie <b>nur dort, wo die Sollform geneigt ist</b> (0,2 bis 80 Grad). Auf
-waagerechten Fl&auml;chen und an senkrechten W&auml;nden &auml;ndert sich nichts. <b>0 schaltet es ab &mdash; das ist die Vorgabe</b>, denn es kostet Schnittweg.
+waagerechten Fl&auml;chen und an senkrechten W&auml;nden &auml;ndert sich nichts. <b>0 schaltet es ab &mdash; das ist die Vorgabe</b> f&uuml;r einen von Hand angelegten Schritt, denn es kostet Schnittweg.
+<br><b>Der Planer stellt 1 mm ein, wenn das Modell Schr&auml;gen hat</b> (seit 03.10.2026), ebenso die Vorlage DZ22. Am Rampenblock bleiben nach dem Schruppen damit
+bis 2,35 statt 4,85 mm &uuml;ber der Schr&auml;ge stehen; das Schruppen dauert daf&uuml;r rund 4,6 statt 1,0 min. Ganz auf Aufma&szlig; kommt die Schr&auml;ge auch so nicht: die
+zwei Aufma&szlig;e addieren sich auf ihr, dazu das Raster &mdash; den Rest nimmt &bdquo;Schr&auml;gen schlichten&ldquo;.
 <br><b>Gemessen</b> am Rampenblock (45-Grad-Schr&auml;ge, Zustellung 4, &#x2300;12): ohne Stufenh&ouml;he ist die Treppe <b>4,75 mm</b> hoch bei 471 mm Schnittweg;
 mit 2 mm sind es <b>2,75 mm</b> bei 1081 mm, mit 1 mm <b>2,35 mm</b> und mit 0,5 mm <b>1,55 mm</b> bei 5220 mm. Der Bericht nennt die <b>gemessene</b> H&ouml;he, nicht die eingestellte:
 an der Grenze der Ebenenmaske weicht die Bahn je Ebene um den Werkzeugradius zur&uuml;ck, und dort bleibt mehr stehen.
@@ -10367,6 +10370,15 @@ function fPlanFlaechen(prog, A, F){
   else {
     const grundWerte = {q203:fRund(B ? B.z1 : (+k.z1 || 0)), tiefe:fRund(zTief - (B ? B.z1 : 0)),
       zust:2, aufSeite:0.5, aufTiefe:0.2, ae:40, aeArt:'%', bahnSinn:0, dVor:0, ausgabe:'einzel'};
+    // STUFENHOEHE 1 MM AN SCHRAEGEN [03.10.2026, Daniels Befund am Rampenblock:
+    // "nach dem Schruppen sollten nur ein paar Zehntel Aufmass bleiben, da ist
+    // eine grosse Stufe"]. Z-konstantes Schruppen laesst an jeder Schraege eine
+    // Treppe so hoch wie die Zustellung stehen (Rampenblock D 4: bis 4,85 mm,
+    // mit Stufenhoehe 1: bis 2,35). Die Zwischenebenen laufen nur auf den
+    // Schraegen - an einer Platte ohne Schraege kosten sie keinen Zug. Deshalb
+    // nur, wenn das Modell Schraegen hat (im Schlichtband oder steiler).
+    const hatSchraege = bef.imBand > 0 || (A && A.flaechen ? A.flaechen : []).some(fl => fl.lage === 'schraege' && +fl.neigung < 89.5);
+    if(hatSchraege) grundWerte.stufeMax = 1;
     // DER GROESSTE FRAESER, DER WIRKLICH SCHNEIDET. Der groesste der
     // Tabelle ist es nicht immer: in eine 14 mm breite Tasche kommt ein
     // ⌀20 nirgends hinein, und die Bahn sagt das auch. Also der Reihe
@@ -19886,7 +19898,7 @@ function fDemoStepRampe(){
   Object.assign(p.kopf, {x0:0, y0:0, z0:-18, x1:80, y1:50, z1:0, sc:2, sc2:50, oberflaeche:0, rz:100, stand:'07'});
   // Schruppen mit dem Schaftfraeser 12, schlichten mit dem Kugelfraeser 8.
   const a = fSchrittNeu(p, 'modellSchruppen', 13);
-  Object.assign(a, {q203:0, tiefe:-18, zust:4, aufSeite:0.5, aufTiefe:0.3, ae:50, aeArt:'%', bahnSinn:0, ebenenArt:'gleich',   // ae 50 % von ⌀12 = 6 mm, wie vorher ueberl 1 x R
+  Object.assign(a, {q203:0, tiefe:-18, zust:4, stufeMax:1, aufSeite:0.5, aufTiefe:0.3, ae:50, aeArt:'%', bahnSinn:0, ebenenArt:'gleich',   // Stufenhoehe 1 (03.10.2026): Treppe an der Rampe 4,85 -> 2,35 mm. ae 50 % von ⌀12 = 6 mm, wie vorher ueberl 1 x R
                     sc:2, sc2:50, s:3200, f:570, fTief:200});
   // Kugelfraeser 10 (LCUTS 20): der 8er hat nur 16 mm Schneide und
   // reicht fuer 18 mm Tiefe nicht - die App sagt das auch.
@@ -20303,6 +20315,7 @@ const F_ARBEITSWEISE = [
 const F_BAHNBERICHT = [
   /^Die Bahn laeuft an \d+ Rasterstelle/,   // Ueberlauf ueber die Teilkante (23.09.2026)
   /^Modell abspanen: \d+ Ebene/,
+  /^STUFENHOEHE [\d.]+ mm: \d+ Zwischenebene/,   // Planer und DZ22 stellen sie seit 03.10.2026 an Schraegen ein - Auskunft, kein Befund
   /^Schraegen schlichten: \d+ Zug/,
   /^\d+ Zustellung\(en\) auf die naechste Ebene/,
   /^\d+ Zug\/Zuege kommen von AUSSEN/,
