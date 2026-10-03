@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="03.10.2026 06:01 (2b16878e)";</script>
+<script>window.__DZ_STAND="03.10.2026 07:01 (46d23c24)";</script>
 <link rel="manifest" href="manifest-fraesen.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2794,6 +2794,9 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     #stepPlan{overflow-x:auto;}
     #stepPlan th:nth-child(6), #stepPlan td:nth-child(6),
     #stepPlan th:nth-child(7), #stepPlan td:nth-child(7){display:none;}
+    /* Simulation am Handy: "Zeit an DZ Aufträge" schnitt in der 120-px-Zelle zu "Zeit an DZ Auft…"
+       ab (Maskentest 03.10.2026, 390 px). Zweizeilig statt abgeschnitten. */
+    #btnSimZeitExport{white-space:normal;line-height:1.15;padding-top:4px;padding-bottom:4px;}
   }
   /* ===== FRAES-FEINSCHLIFF a-h (19.09.2026, Daniels Freigabe der Nachtdurchsicht) ================
      Acht Befunde aus MORGENBERICHT-DESIGN.md, Teil 2. Was am Laptop wirkt, steht in der 900er-Query;
@@ -2825,6 +2828,11 @@ body.dunkel .zw-mbox .zw-m{border-bottom-color:hsl(var(--ton),14%,26%);}
     #maskZyklus > .mask-body > #zyAktion{position:sticky;bottom:-1px;z-index:3;margin-top:6px;padding:8px 0 6px;
       background:var(--card,#fff);border-top:1px solid var(--line-light);box-shadow:0 -10px 14px -12px rgba(0,0,0,.35);}
     body.dunkel #maskZyklus > .mask-body > #zyAktion{background:var(--panel);}
+    /* Dasselbe im Programmkopf: am Laptop lag Uebernehmen bei 879 px unter dem Rand von 768 (Maskentest
+       03.10.2026) - der Kopf ist mit Spannmittel und Sicherheit laenger als die Maske. */
+    #maskKopf > .mask-body > #fkAktion{position:sticky;bottom:-1px;z-index:3;margin-top:6px;padding:8px 0 6px;
+      background:var(--card,#fff);border-top:1px solid var(--line-light);box-shadow:0 -10px 14px -12px rgba(0,0,0,.35);}
+    body.dunkel #maskKopf > .mask-body > #fkAktion{background:var(--panel);}
     /* (c) Das Meldebanner stand rechts unten AUF der Zyklusspalte (Einlippen unerreichbar, 7 s je Meldung).
        Links unten liegt nur der Fuss der Arbeitsplan-Liste. */
     #meldeBanner{left:24px;right:auto;max-width:520px;}
@@ -5392,7 +5400,9 @@ function izBlockHtml(z, maschine, maschLabel, sollMin, eigenName){
   const fk = izFaktor(z, maschine);
   const L = (z.eintraege || []).filter(e => e.maschine === maschine);
   let h = '';
-  h += '<div class="mrow" style="padding-right:12px;"><label>Gestoppt an der Maschine <span class="kdim">(' + esc(maschLabel) + ')</span></label>' +
+  // Kein eigenes padding-right: die Einheit steht absolut in der Einheitenspalte
+  // der .mrow (26 px) - mit 12 px lag das Feld auf "min" (Maskentest 03.10.2026).
+  h += '<div class="mrow"><label>Gestoppt an der Maschine <span class="kdim">(' + esc(maschLabel) + ')</span></label>' +
        '<input type="text" id="izIst" inputmode="decimal" placeholder="m:ss oder min" style="width:108px;flex:0 0 auto;margin-left:auto;text-align:right;">' +
        '<span class="unit">min</span></div>';
   h += '<div class="mrow" style="padding-right:12px;"><button id="izMerken" style="flex:1;font-size:12px;padding:6px;" title="Die gestoppte Zeit dieses Programms merken - Schaetzung ' + izZeitText(sollMin) + ' min steht daneben">⏱ Ist-Zeit merken (Schätzung ' + izZeitText(sollMin) + ' min)</button></div>';
@@ -21389,6 +21399,16 @@ function fZyklusWerkzeugVorschlag(art){
     ausdrehen:'fraeser', senkenRueck:'fraeser', bohrfraesen:'fraeser'})[art] || ((F_ZYKLEN[art] || {}).fraes ? 'fraeser' : 'bohrer');
   const nameWunsch = ({ausdrehen:/AUSDREH|BOHRSTANGE|\bBOR\b/i, senkenRueck:/SENK|BCKBOR|RUECKW/i})[art];
   const fr = W.filter(w => w.art === 'fraeser');
+  // NUT UND RUNDE NUT: der Fraeser muss in die Vorgabebreite passen, mit Luft
+  // wie im Planer (Breite - 0,6; gleich breit waere ein Langloch). Der
+  // Maskentest vom 03.10.2026 fand beide Masken mit ihren EIGENEN Vorgaben
+  // nicht uebernehmbar: Vorschlag ⌀20 gegen Nutbreite 12 bzw. 10 - rot.
+  if(art === 'nut' || art === 'nutR'){
+    let breite = 0; try{ breite = +fSchrittNeu(fProg, art).l2 || 0; }catch(e){}
+    const passt = fr.filter(w => +w.d > 0 && +w.d <= Math.min(20, breite - 0.6))
+      .sort((a, b) => ((+b.angle > 0) - (+a.angle > 0)) || ((+b.d || 0) - (+a.d || 0)))[0];
+    if(passt) return passt;
+  }
   return (nameWunsch && W.find(w => nameWunsch.test(String(w.name || '')))) ||
     (art === 'planfraesen' && fr.length ? fr.slice().sort((a, b) => (+b.d || 0) - (+a.d || 0))[0] : null) ||
     // Schraegen schlichten braucht die Kugel (r2 = halber Durchmesser) - der

@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>html,body{touch-action:pan-y;}</style>
 <title>DZ Drehen</title>
-<script>window.__DZ_STAND="03.10.2026 06:01 (2b16878e)";</script>
+<script>window.__DZ_STAND="03.10.2026 07:01 (46d23c24)";</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -6761,7 +6761,9 @@ function izBlockHtml(z, maschine, maschLabel, sollMin, eigenName){
   const fk = izFaktor(z, maschine);
   const L = (z.eintraege || []).filter(e => e.maschine === maschine);
   let h = '';
-  h += '<div class="mrow" style="padding-right:12px;"><label>Gestoppt an der Maschine <span class="kdim">(' + esc(maschLabel) + ')</span></label>' +
+  // Kein eigenes padding-right: die Einheit steht absolut in der Einheitenspalte
+  // der .mrow (26 px) - mit 12 px lag das Feld auf "min" (Maskentest 03.10.2026).
+  h += '<div class="mrow"><label>Gestoppt an der Maschine <span class="kdim">(' + esc(maschLabel) + ')</span></label>' +
        '<input type="text" id="izIst" inputmode="decimal" placeholder="m:ss oder min" style="width:108px;flex:0 0 auto;margin-left:auto;text-align:right;">' +
        '<span class="unit">min</span></div>';
   h += '<div class="mrow" style="padding-right:12px;"><button id="izMerken" style="flex:1;font-size:12px;padding:6px;" title="Die gestoppte Zeit dieses Programms merken - Schaetzung ' + izZeitText(sollMin) + ' min steht daneben">⏱ Ist-Zeit merken (Schätzung ' + izZeitText(sollMin) + ' min)</button></div>';
