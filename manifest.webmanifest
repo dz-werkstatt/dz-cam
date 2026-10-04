@@ -1,0 +1,22 @@
+{
+ "name": "DZ Drehen",
+ "short_name": "DZ Drehen",
+ "description": "CAM fuers Drehen: Kontur, Arbeitsplan, Simulation, Kalkulation, NC fuer Monforts MTC-K und EuroTurn.",
+ "start_url": "./",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#ffffff",
+ "theme_color": "#00528c",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  }
+ ]
+}

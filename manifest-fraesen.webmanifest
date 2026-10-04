@@ -1,0 +1,22 @@
+{
+ "name": "DZ Fräsen",
+ "short_name": "DZ Fräsen",
+ "description": "Werkstattprogrammierung Fraesen: Bohrbilder und Bohrzyklen als Heidenhain-Klartext (iTNC 530).",
+ "start_url": "./fraesen.html",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#ffffff",
+ "theme_color": "#00528c",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  }
+ ]
+}
