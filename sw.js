@@ -7,21 +7,43 @@
 // 15.09.2026: 'immer noch der Stand vom 12.09.'). Jetzt aendert jede
 // Veroeffentlichung diese Zeile, der Worker installiert neu und holt
 // alle Dateien frisch.
-const STAND='07.10.2026 21:40 (0c3a75c8)';
+const STAND='07.10.2026 21:53 (0c3a75c8)';
 const CACHE='dzcam-'+STAND.replace(/[^0-9a-f]/gi,'');
 // KEIN './' in der Vorcache-Liste: nicht jeder Server liefert einen
 // Verzeichnis-Index, und EIN Fehlschlag laesst addAll die GANZE
 // Installation verwerfen (lokal genau so passiert). Navigationen
 // fallen unten auf index.html zurueck.
 const DATEIEN=['./index.html','./manifest.webmanifest','./icon-180.png','./icon-192.png','./icon-512.png','./fraesen.html','./manifest-fraesen.webmanifest'];
+// DER BAUSTEIN DRITTER (OpenCascade, ~4,3 MB) liegt als eigene Datei,
+// benannt nach Version und Pruefsumme, in einem EIGENEN Cache mit festem
+// Namen: ein neuer Stand leert ihn NICHT (sonst kaemen die 4,3 MB mit jeder
+// Veroeffentlichung neu), nur eine andere Baustein-Datei verdraengt die
+// alte. Gleicher Name = gleicher Inhalt, deshalb dort Cache zuerst.
+const BAUSTEIN_CACHE='dzcam-baustein';
+const BAUSTEIN='./occt-0.0.23-2eeaa56184e2.json';
+const BAUSTEIN_URL=new URL(BAUSTEIN, self.location).href;
+// Nur holen, was noch nicht da ist. Ein Fehlschlag hier bricht die
+// Installation NICHT ab - die App ist wichtiger als das exakte Bild;
+// die Datei kommt dann beim ersten Bedarf (fetch unten) in den Cache.
+function bausteinVorhalten(){
+  return caches.open(BAUSTEIN_CACHE).then(async c=>{
+    if(await c.match(BAUSTEIN_URL)) return;
+    try{ await c.add(BAUSTEIN_URL); }catch(err){}
+  }).catch(()=>{});
+}
 self.addEventListener('install', e=>{
-  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(DATEIEN)).then(()=>self.skipWaiting()));
+  e.waitUntil(Promise.all([caches.open(CACHE).then(c=>c.addAll(DATEIEN)), bausteinVorhalten()])
+    .then(()=>self.skipWaiting()));
 });
 self.addEventListener('activate', e=>{
   // Die alten Staende wegraeumen - sonst waechst der Speicher mit
   // jeder Veroeffentlichung, und der alte Cache koennte wieder
-  // ausgeliefert werden.
-  e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k))))
+  // ausgeliefert werden. Der Baustein-Cache bleibt; in ihm nur die
+  // Dateien ANDERER Versionen weg.
+  e.waitUntil(caches.keys()
+    .then(ks=>Promise.all(ks.filter(k=>k!==CACHE && k!==BAUSTEIN_CACHE).map(k=>caches.delete(k))))
+    .then(()=>caches.open(BAUSTEIN_CACHE))
+    .then(c=>c.keys().then(rs=>Promise.all(rs.filter(r=>r.url!==BAUSTEIN_URL).map(r=>c.delete(r)))))
     .then(()=>self.clients.claim()));
 });
 self.addEventListener('fetch', e=>{
@@ -29,6 +51,18 @@ self.addEventListener('fetch', e=>{
   // erkennt, ob sie selbst alt ist.
   if(/stand\.txt/.test(e.request.url)) return;
   if(e.request.method!=='GET') return;
+  // Baustein-Dateien: Cache zuerst (Name = Inhalt), sonst Netz und ablegen -
+  // nur eine gute Antwort, und erst NACH dem Ablegen geht sie hinaus.
+  if(/\/occt-[^\/]*\.json$/.test(new URL(e.request.url).pathname)){
+    e.respondWith(caches.open(BAUSTEIN_CACHE).then(async c=>{
+      const da=await c.match(e.request, {ignoreSearch:true});
+      if(da) return da;
+      const r=await fetch(e.request).catch(()=>null);
+      if(r && r.ok && r.url===BAUSTEIN_URL){ try{ await c.put(BAUSTEIN_URL, r.clone()); }catch(err){} }
+      return r || new Response('offline', {status:503});
+    }));
+    return;
+  }
   e.respondWith(caches.open(CACHE).then(async c=>{
     // DER NACHSCHUB MUSS ZU ENDE LAUFEN. Ohne waitUntil beendet der
     // Browser den Worker, sobald die Antwort draussen ist - der Abruf
