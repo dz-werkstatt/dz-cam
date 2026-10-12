@@ -7,20 +7,21 @@
 // 15.09.2026: 'immer noch der Stand vom 12.09.'). Jetzt aendert jede
 // Veroeffentlichung diese Zeile, der Worker installiert neu und holt
 // alle Dateien frisch.
-const STAND='12.10.2026 12:39 (37fc5173)';
+const STAND='12.10.2026 16:48 (d38feb7c)';
 const CACHE='dzcam-'+STAND.replace(/[^0-9a-f]/gi,'');
 // KEIN './' in der Vorcache-Liste: nicht jeder Server liefert einen
 // Verzeichnis-Index, und EIN Fehlschlag laesst addAll die GANZE
 // Installation verwerfen (lokal genau so passiert). Navigationen
 // fallen unten auf index.html zurueck.
 const DATEIEN=['./index.html','./manifest.webmanifest','./icon-180.png','./icon-192.png','./icon-512.png','./fraesen.html','./manifest-fraesen.webmanifest'];
-// DER BAUSTEIN DRITTER (OpenCascade, ~4,3 MB) liegt als eigene Datei,
+// DER BAUSTEIN DRITTER (OpenCascade, Vollbau seit E1a: ~9,8 MB, gzip ~7 MB)
+// liegt als eigene Datei,
 // benannt nach Version und Pruefsumme, in einem EIGENEN Cache mit festem
-// Namen: ein neuer Stand leert ihn NICHT (sonst kaemen die 4,3 MB mit jeder
+// Namen: ein neuer Stand leert ihn NICHT (sonst kaeme er mit jeder
 // Veroeffentlichung neu), nur eine andere Baustein-Datei verdraengt die
 // alte. Gleicher Name = gleicher Inhalt, deshalb dort Cache zuerst.
 const BAUSTEIN_CACHE='dzcam-baustein';
-const BAUSTEIN='./occt-0.0.23-2eeaa56184e2.json';
+const BAUSTEIN='./occt-1.1.0-ac9eddafe09b.json';
 const BAUSTEIN_URL=new URL(BAUSTEIN, self.location).href;
 // Nur holen, was noch nicht da ist. Ein Fehlschlag hier bricht die
 // Installation NICHT ab - die App ist wichtiger als das exakte Bild;
