@@ -7,7 +7,7 @@
 // 15.09.2026: 'immer noch der Stand vom 12.09.'). Jetzt aendert jede
 // Veroeffentlichung diese Zeile, der Worker installiert neu und holt
 // alle Dateien frisch.
-const STAND='11.10.2026 23:44 (d81e884c)';
+const STAND='12.10.2026 02:12 (64ed74f7)';
 const CACHE='dzcam-'+STAND.replace(/[^0-9a-f]/gi,'');
 // KEIN './' in der Vorcache-Liste: nicht jeder Server liefert einen
 // Verzeichnis-Index, und EIN Fehlschlag laesst addAll die GANZE
